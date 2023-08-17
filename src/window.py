@@ -33,6 +33,17 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.set_title("ASCII Draw")
         self.set_default_size(600, 500)
 
+        self.overlay_split_view = Adw.OverlaySplitView()
+
+        sidebar_condition = Adw.BreakpointCondition.new_length(1, 600, 2)
+        sidebar_breakpoint = Adw.Breakpoint.new(sidebar_condition)
+
+        sidebar_breakpoint.set_condition(sidebar_condition)
+        sidebar_breakpoint.add_setter(self.overlay_split_view, "collapsed", True)
+        # sidebar_breakpoint.add_setter(sidebar_button, "visible", True)
+
+        self.add_breakpoint(sidebar_breakpoint)
+
         self.set_content(self.toolbar_view)
 
         self.x_mul = 12
@@ -47,11 +58,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 self.grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
 
         self.styles = [
-                ["═", "║", "╔", "╗", "╝","╚"],
-                ["-", "|", "+", "+", "+","+"],
-                ["_", "|", " ", " ", "|","|"],
-                ["•", ":", "•", "•", "•","•"],
-                ["˜", "|", "|", "|", " "," "],
+                ["═", "═", "║", "║", "╔", "╗", "╝","╚"],
+                ["-", "-", "|", "|", "+", "+", "+","+"],
+                ["_", "_", "|", "|", " ", " ", "|","|"],
+                ["•", "•", ":", ":", "•", "•", "•","•"],
+                ["˜", "˜", "|", "|", "|", "|", " "," "],
+                ["═", "═", "│", "│", "╒", "╕", "╛","╘"],
+                ["▄", "▀", "▐", "▌", " ", " ", " "," "],
         ]
         action_bar = Gtk.ActionBar()
         rectangle_button = Gtk.ToggleButton(icon_name="window-maximize-symbolic")
@@ -110,6 +123,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             style_btn.connect("toggled", self.change_style, styles_box)
             styles_box.append(style_btn)
 
+        show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
+        show_sidebar_button.connect("clicked", self.show_sidebar)
+        headerbar.pack_end(show_sidebar_button)
+
         increase_button = Gtk.Button(icon_name="list-add-symbolic")
         increase_button.connect("clicked", self.increase_width)
         headerbar.pack_end(increase_button)
@@ -124,11 +141,27 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
 
         self.overlay = Gtk.Overlay()
-        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window = Gtk.ScrolledWindow(hexpand=True)
         scrolled_window.set_child(self.overlay)
+
+        self.overlay_split_view.set_sidebar_width_fraction(0.4)
+        self.overlay_split_view.set_max_sidebar_width(300)
+        self.overlay_split_view.set_sidebar_position(1)
+        self.overlay_split_view.set_content(scrolled_window)
+
+        box1 = Gtk.Box()
+        flow_box = Gtk.FlowBox()
+        flow_box.set_selection_mode(0)
+        scrolled = Gtk.ScrolledWindow(hexpand=True)
+        scrolled.set_child(flow_box)
+        box1.append(Gtk.Separator())
+        box1.append(scrolled)
+
+        self.overlay_split_view.set_sidebar(box1)
+
         self.overlay.set_child(self.grid)
         self.overlay.add_overlay(self.drawing_area)
-        self.toolbar_view.set_content(scrolled_window)
+        self.toolbar_view.set_content(self.overlay_split_view)
 
         drag = Gtk.GestureDrag()
         drag.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -153,7 +186,26 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.style = 1
         self.free_char = "+"
 
-        # self.connect(key-press-event)
+        self.chars = ""
+
+        char = bytes([33]).decode('cp437')
+        prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
+        prev_button.connect("toggled", self.change_char, flow_box)
+        flow_box.append(prev_button)
+
+        for i in range(34, 255):
+            char = bytes([i]).decode('cp437')
+            new_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
+            new_button.connect("toggled", self.change_char, flow_box)
+            flow_box.append(new_button)
+            new_button.set_group(prev_button)
+
+    def change_char(self, btn, flow_box):
+        self.free_char = btn.get_label()
+        self.tool = "FREE"
+
+    def show_sidebar(self, btn):
+        self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
 
     def copy_content(self, btn):
         text = ""
@@ -336,27 +388,31 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         print(width)
         print(height)
 
-        vertical = self.vertical()
-        horizontal = self.horizontal()
+        top_vertical = self.top_vertical()
+        top_horizontal = self.top_horizontal()
+
+        bottom_vertical = self.bottom_vertical()
+        bottom_horizontal = self.bottom_horizontal()
 
         if width <= 1 or height <= 1:
             return
+
         for x in range(width - 2):
             child = self.grid.get_child_at(start_x_char + x + 1, start_y_char)
             if child:
-                child.set_label(horizontal)
+                child.set_label(top_horizontal)
         for x in range(width - 2):
             child = self.grid.get_child_at(start_x_char + x + 1, start_y_char + height - 1)
             if child:
-                child.set_label(horizontal)
+                child.set_label(bottom_horizontal)
         for y in range(height - 2):
             child = self.grid.get_child_at(start_x_char, start_y_char + y + 1)
             if child:
-                child.set_label(vertical)
+                child.set_label(top_vertical)
         for y in range(height - 2):
             child = self.grid.get_child_at(start_x_char + width - 1, start_y_char + y + 1)
             if child:
-                child.set_label(vertical)
+                child.set_label(bottom_vertical)
 
         child = self.grid.get_child_at(start_x_char + width - 1, start_y_char)
         if child:
@@ -374,18 +430,22 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.drawing_area.queue_draw()
 
-    def horizontal(self):
+    def top_horizontal(self):
         return self.styles[self.style - 1][0]
-    def vertical(self):
+    def bottom_horizontal(self):
         return self.styles[self.style - 1][1]
-    def top_left(self):
+    def top_vertical(self):
         return self.styles[self.style - 1][2]
-    def top_right(self):
+    def bottom_vertical(self):
         return self.styles[self.style - 1][3]
-    def bottom_right(self):
+    def top_left(self):
         return self.styles[self.style - 1][4]
-    def bottom_left(self):
+    def top_right(self):
         return self.styles[self.style - 1][5]
+    def bottom_right(self):
+        return self.styles[self.style - 1][6]
+    def bottom_left(self):
+        return self.styles[self.style - 1][7]
 
 
     def draw_line(self, start_x_char, start_y_char, width, height):

@@ -41,6 +41,7 @@ class AsciiDrawApplication(Adw.Application):
         .ascii-textview{
             background-image:  linear-gradient(#c0bfbc 1px, transparent 1px), linear-gradient(to right, #c0bfbc 1px, #f6f5f4 1px);
             background-size: 12px 24px;
+            box-shadow: 0px 0px 10px 10px lightgray;
         }
         .ascii{
             font-family: Monospace;
