@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="ascii-draw">
+	<schema id="io.github.nokse22.asciidraw" path="/io/github/nokse22/asciidraw/">
+	</schema>
+</schemalist>
