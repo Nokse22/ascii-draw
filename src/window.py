@@ -38,8 +38,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.x_mul = 12
         self.y_mul = 24
 
-        self.canvas_x = 40
-        self.canvas_y = 20
+        self.canvas_x = 60
+        self.canvas_y = 30
         self.grid = Gtk.Grid(css_classes=["ascii-textview"], halign=Gtk.Align.START, valign=Gtk.Align.START)
 
         for y in range(self.canvas_y):
@@ -77,7 +77,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         text_char_popover = Gtk.Popover()
         text_char_button.set_popover(text_char_popover)
         entry = Gtk.Entry(max_length=1, width_chars=1)
-        entry.connect("insert-text", self.change_free_char)
+        entry.connect("activate", self.change_free_char)
         text_char_popover.set_child(entry)
         action_bar.pack_start(text_char_button)
 
