@@ -39,9 +39,34 @@ class AsciiDrawApplication(Adw.Application):
 
         css = '''
         .ascii-textview{
-            background-image:  linear-gradient(#c0bfbc 1px, transparent 1px), linear-gradient(to right, #c0bfbc 1px, #f6f5f4 1px);
+            /*background-image:  linear-gradient(#f6f5f4 1px, transparent 1px), linear-gradient(to right, #f6f5f4 1px, #f6f5f4 1px);
+            */
+            background-color: #f6f5f4;
+            background:
+                linear-gradient(-90deg, rgba(0,0,0,.05) 1px, transparent 1px),
+                linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px),
+                linear-gradient(-90deg, rgba(0, 0, 0, .04) 1px, transparent 1px),
+                linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
+                linear-gradient(transparent 3px, #f6f5f4 3px, #f6f5f4 78px, transparent 78px),
+                linear-gradient(-90deg, #aaa 1px, transparent 1px),
+                linear-gradient(-90deg, transparent 3px, #f6f5f4 3px, #f6f5f4 78px, transparent 78px),
+                linear-gradient(#aaa 1px, transparent 1px),
+                #f6f5f4;
+            background-size:
+                12px 24px,
+                12px 24px,
+                60px 72px,
+                60px 72px,
+                60px 72px,
+                60px 72px,
+                60px 72px,
+                60px 72px;
+            box-shadow: 0px 0px 10px 10px #c0bfbc44;
+        }
+        .ascii-preview{
+            background: transparent;
+            opacity: 0.3;
             background-size: 12px 24px;
-            box-shadow: 0px 0px 10px 10px lightgray;
         }
         .ascii{
             font-family: Monospace;
@@ -53,6 +78,7 @@ class AsciiDrawApplication(Adw.Application):
             font-size: 20px;
             padding: 0px;
             border-radius: 0px;
+            border: 1px solid black;
         }
         .split-button{
             padding: 0px;

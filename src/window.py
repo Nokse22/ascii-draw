@@ -19,7 +19,7 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk
+from gi.repository import Gdk, Gio
 
 class AsciiDrawWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'AsciiDrawWindow'
@@ -27,11 +27,18 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        self.settings = Gio.Settings.new('io.github.nokse22.asciidraw')
+
+        self.props.width_request=400
+        self.props.height_request=400
+
         self.toolbar_view = Adw.ToolbarView()
         headerbar = Adw.HeaderBar()
         self.toolbar_view.add_top_bar(headerbar)
         self.set_title("ASCII Draw")
-        self.set_default_size(600, 500)
+
+        self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
+        self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
         self.overlay_split_view = Adw.OverlaySplitView()
 
@@ -52,19 +59,25 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas_x = 60
         self.canvas_y = 30
         self.grid = Gtk.Grid(css_classes=["ascii-textview"], halign=Gtk.Align.START, valign=Gtk.Align.START)
+        self.preview_grid = Gtk.Grid(css_classes=["ascii-preview"], halign=Gtk.Align.START, valign=Gtk.Align.START, can_focus=False)
 
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
                 self.grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+                self.preview_grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+
+        self.empty_grid = self.preview_grid
 
         self.styles = [
-                ["═", "═", "║", "║", "╔", "╗", "╝","╚"],
-                ["-", "-", "|", "|", "+", "+", "+","+"],
-                ["_", "_", "|", "|", " ", " ", "|","|"],
-                ["•", "•", ":", ":", "•", "•", "•","•"],
-                ["˜", "˜", "|", "|", "|", "|", " "," "],
-                ["═", "═", "│", "│", "╒", "╕", "╛","╘"],
-                ["▄", "▀", "▐", "▌", " ", " ", " "," "],
+                ["═", "═", "║", "║", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬"],
+                ["-", "-", "│", "│", "+", "+", "+","+", "┼", "├", "┤", "┴","┬"],
+                ["_", "_", "│", "│", " ", " ", "│","│", "┼", "├", "┤", "┴","┬"],
+                ["•", "•", ":", ":", "•", "•", "•","•", "┼", "├", "┤", "┴","┬"],
+                ["˜", "˜", "│", "│", "│", "│", " "," ", "┼", "├", "┤", "┴","┬"],
+                ["═", "═", "│", "│", "╒", "╕", "╛","╘", "┼", "├", "┤", "┴","┬"],
+                ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬"],
+                ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬"],
+                ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬"],
         ]
         action_bar = Gtk.ActionBar()
         rectangle_button = Gtk.ToggleButton(icon_name="window-maximize-symbolic")
@@ -86,21 +99,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         free_button.set_group(rectangle_button)
         action_bar.pack_start(free_button)
 
-        text_char_button = Gtk.MenuButton(icon_name="preferences-color-symbolic")
-        text_char_popover = Gtk.Popover()
-        text_char_button.set_popover(text_char_popover)
-        entry = Gtk.Entry(max_length=1, width_chars=1)
-        entry.connect("activate", self.change_free_char)
-        text_char_popover.set_child(entry)
-        action_bar.pack_start(text_char_button)
-
         eraser_button = Gtk.ToggleButton(icon_name="switch-off-symbolic")
         eraser_button.connect("clicked", self.on_choose_eraser)
         eraser_button.set_group(rectangle_button)
         action_bar.pack_start(eraser_button)
 
         clear_button = Gtk.Button(icon_name="user-trash-symbolic")
-        clear_button.connect("clicked", self.clear)
+        clear_button.connect("clicked", self.clear, self.grid)
         action_bar.pack_end(clear_button)
 
         styles_button = Gtk.MenuButton(icon_name="preferences-color-symbolic")
@@ -112,24 +117,42 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         styles_popover.set_child(styles_box)
 
         style = self.styles[0]
-        name = style[0] + style[0] + style[0] + style[0] + style[3]
+        name = style[0] + style[0] + style[0] + style[0] + style[5]
         style1_btn = Gtk.ToggleButton(label=name, css_classes=["flat"], active=True)
         style1_btn.connect("toggled", self.change_style, styles_box)
 
         for style in self.styles:
-            name = style[0] + style[0] + style[0] + style[0] + style[3]
+            name = style[0] + style[0] + style[0] + style[0] + style[5]
             style_btn = Gtk.ToggleButton(label=name, css_classes=["flat"])
             style_btn.set_group(style1_btn)
             style_btn.connect("toggled", self.change_style, styles_box)
             styles_box.append(style_btn)
 
+        save_button = Gtk.Button(label="Save")
+        save_button.connect("clicked", self.save)
+        headerbar.pack_start(save_button)
+
         show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
         show_sidebar_button.connect("clicked", self.show_sidebar)
         headerbar.pack_end(show_sidebar_button)
 
-        increase_button = Gtk.Button(icon_name="list-add-symbolic")
-        increase_button.connect("clicked", self.increase_width)
+        increase_button = Gtk.MenuButton(icon_name="list-add-symbolic")
+        increase_canvas_popover = Gtk.Popover()
+        increase_button.set_popover(increase_canvas_popover)
+        # increase_button.connect("clicked", self.increase_size, 1, 1)
         headerbar.pack_end(increase_button)
+
+        increase_box = Gtk.Box(orientation=1)
+        increase_canvas_popover.set_child(increase_box)
+
+        width_row = Adw.SpinRow(title="Width")
+        width_row.set_range(1, 100)
+        increase_box.append(width_row)
+        height_row = Adw.SpinRow(title="Height")
+        height_row.set_range(1, 100)
+        increase_box.append(height_row)
+        increase_box.append(Gtk.Button(label="Increase canvas"))
+
 
         copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
         copy_button.connect("clicked", self.copy_content)
@@ -140,7 +163,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.drawing_area = Gtk.DrawingArea()
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
 
-        self.overlay = Gtk.Overlay()
+        self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER,
+                margin_top=20, margin_bottom=20,
+                margin_start=20, margin_end=20)
         scrolled_window = Gtk.ScrolledWindow(hexpand=True)
         scrolled_window.set_child(self.overlay)
 
@@ -160,7 +185,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.overlay_split_view.set_sidebar(box1)
 
         self.overlay.set_child(self.grid)
+        self.overlay.add_overlay(self.preview_grid)
+
         self.overlay.add_overlay(self.drawing_area)
+
         self.toolbar_view.set_content(self.overlay_split_view)
 
         drag = Gtk.GestureDrag()
@@ -200,6 +228,35 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             flow_box.append(new_button)
             new_button.set_group(prev_button)
 
+    def save(self, btn):
+        dialog = Gtk.FileChooserNative(
+            title="Save File",
+            transient_for=self,
+            action=Gtk.FileChooserAction.SAVE,
+            modal=True
+        )
+
+        dialog.set_accept_label("Save")
+        dialog.set_cancel_label("Cancel")
+
+        response = dialog.show()
+
+        dialog.connect("response", self.on_save_file_response)
+
+    def on_save_file_response(self, dialog, response):
+        path = dialog.get_file().get_path()
+
+        if response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+        elif response == Gtk.ResponseType.ACCEPT:
+            try:
+                with open(path, 'w') as file:
+                    file.write(self.get_canvas_content())
+                print(f"Content written to {path} successfully.")
+            except IOError:
+                print(f"Error writing to {path}.")
+
+        dialog.destroy()
     def change_char(self, btn, flow_box):
         self.free_char = btn.get_label()
         self.tool = "FREE"
@@ -207,7 +264,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def show_sidebar(self, btn):
         self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
 
-    def copy_content(self, btn):
+    def get_canvas_content(self):
         text = ""
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
@@ -218,6 +275,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                         char = " "
                     text += char
             text += "\n"
+        return text
+
+    def copy_content(self, btn):
+        text = self.get_canvas_content()
 
         clipboard = Gdk.Display().get_default().get_clipboard()
         clipboard.set(text)
@@ -226,10 +287,17 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.free_char = entry.get_text()
         print(self.free_char)
 
-    def increase_width(self, btn):
-        for y in range(self.canvas_y):
-            self.grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x + 1, y, 1, 1)
-        self.canvas_x += 1
+    def increase_size(self, btn, x_inc, y_inc):
+        for column in range(x_inc):
+            for y in range(self.canvas_y):
+                self.grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x + 1, y, 1, 1)
+                self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x + 1, y, 1, 1)
+            self.canvas_y += 1
+        for line in range(y_inc):
+            for x in range(self.canvas_x):
+                self.grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y + 1, 1, 1)
+                self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y + 1, 1, 1)
+            self.canvas_x += 1
 
     def change_style(self, btn, box):
         child = box.get_first_child()
@@ -241,7 +309,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 return
             child = child.get_next_sibling()
             index += 1
-
 
     def on_click_pressed(self, click, x, y, arg):
         pass
@@ -289,39 +356,69 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         else:
             self.tool = ""
 
-    def clear(self, btn=None):
-        print("clear")
+    def clear(self, btn=None, grid=None):
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
-                child = self.grid.get_child_at(x, y)
+                child = grid.get_child_at(x, y)
                 if not child:
                     continue
-                self.grid.remove(child)
-                self.grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+                grid.remove(child)
+                grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+
+        # self.overlay.remove_overlay(grid)
+        # self.overlay.add_overlay(self.empty_grid)
+        # grid = self.empty_grid
 
     def on_drag_begin(self, gesture, start_x, start_y):
         self.start_x = start_x # round((start_x) / self.x_mul) * self.x_mul - self.x_mul/2
         self.start_y = start_y # round((start_y) / self.y_mul) * self.y_mul + self.y_mul/2
 
     def on_drag_follow(self, gesture, end_x, end_y):
-        self.end_x = end_x # round((end_x) / self.x_mul) * self.x_mul
-        self.end_y = end_y # round((end_y) / self.y_mul) * self.y_mul
-        self.drawing_area.queue_draw()
+        start_x_char = self.start_x // self.x_mul
+        start_y_char = self.start_y // self.y_mul
+        width = int((end_x + self.start_x) // self.x_mul - start_x_char) # round((end_x) / self.x_mul) * self.x_mul
+        height = int((end_y + self.start_y) // self.y_mul - start_y_char) # round((end_y) / self.y_mul) * self.y_mul
+
+        self.end_x = width * self.x_mul
+        self.end_y = height * self.y_mul
 
         if self.tool == "FREE":
             self.draw_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
 
-        if self.tool == "ERASER":
+        elif self.tool == "ERASER":
             self.erase_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
+
+        elif self.tool == "RECTANGLE":
+            # self.clear(None, self.preview_grid)
+            if width < 0:
+                width = -width
+                start_x_char -= width
+            width += 1
+            if height < 0:
+                height = - height
+                start_y_char -= height
+            height += 1
+            self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
+        elif self.tool == "LINE":
+            # self.clear(None, self.preview_grid)
+            if width < 0:
+                width -= 1
+            else:
+                width += 1
+            if height < 0:
+                height -= 1
+            else:
+                height += 1
+            self.draw_line(start_x_char, start_y_char, width, height, self.preview_grid)
+            # self.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
         width = int((delta_x + self.start_x) // self.x_mul - start_x_char) # round((end_x) / self.x_mul) * self.x_mul
         height = int((delta_y + self.start_y) // self.y_mul - start_y_char) # round((end_y) / self.y_mul) * self.y_mul
-        self.drawing_area.queue_draw()
 
-        # self.clear()
+        self.clear(None, self.preview_grid)
 
         if self.tool == "RECTANGLE":
             if width < 0:
@@ -332,25 +429,22 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 height = - height
                 start_y_char -= height
             height += 1
-            self.draw_rectangle(start_x_char, start_y_char, width, height)
+            self.draw_rectangle(start_x_char, start_y_char, width, height, self.grid)
 
         if self.tool == "LINE":
             if width < 0:
-                width = -width
-                start_x_char -= width
-            width += 1
+                width -= 1
+            else:
+                width += 1
             if height < 0:
-                height = - height
-                start_y_char -= height
-            height += 1
-            self.draw_line(start_x_char, start_y_char, width, height)
+                height -= 1
+            else:
+                height += 1
+            self.draw_line(start_x_char, start_y_char, width, height, self.grid)
 
     def drawing_area_draw(self, area, cr, width, height, data):
         cr.save()
-        if self.tool == "RECTANGLE":
-            cr.rectangle(self.start_x, self.start_y, self.end_x, self.end_y)
-            pass
-        elif self.tool == "LINE":
+        if self.tool == "LINE":
             cr.rectangle(self.start_x, self.start_y, self.end_x, self.end_y)
         cr.stroke()
         cr.restore()
@@ -384,7 +478,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if child:
             child.set_label("")
 
-    def draw_rectangle(self, start_x_char, start_y_char, width, height):
+    def draw_rectangle(self, start_x_char, start_y_char, width, height, grid):
         print(width)
         print(height)
 
@@ -398,37 +492,128 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             return
 
         for x in range(width - 2):
-            child = self.grid.get_child_at(start_x_char + x + 1, start_y_char)
+            child = grid.get_child_at(start_x_char + x + 1, start_y_char)
             if child:
                 child.set_label(top_horizontal)
         for x in range(width - 2):
-            child = self.grid.get_child_at(start_x_char + x + 1, start_y_char + height - 1)
+            child = grid.get_child_at(start_x_char + x + 1, start_y_char + height - 1)
             if child:
                 child.set_label(bottom_horizontal)
         for y in range(height - 2):
-            child = self.grid.get_child_at(start_x_char, start_y_char + y + 1)
+            child = grid.get_child_at(start_x_char, start_y_char + y + 1)
             if child:
                 child.set_label(top_vertical)
         for y in range(height - 2):
-            child = self.grid.get_child_at(start_x_char + width - 1, start_y_char + y + 1)
+            child = grid.get_child_at(start_x_char + width - 1, start_y_char + y + 1)
             if child:
                 child.set_label(bottom_vertical)
 
-        child = self.grid.get_child_at(start_x_char + width - 1, start_y_char)
+        child = grid.get_child_at(start_x_char + width - 1, start_y_char)
         if child:
             child.set_label(self.top_right())
-        child = self.grid.get_child_at(start_x_char + width - 1, start_y_char + height - 1)
+        child = grid.get_child_at(start_x_char + width - 1, start_y_char + height - 1)
         if child:
             child.set_label(self.bottom_right())
-        child = self.grid.get_child_at(start_x_char, start_y_char)
+        child = grid.get_child_at(start_x_char, start_y_char)
         if child:
             child.set_label(self.top_left())
-        child = self.grid.get_child_at(start_x_char, start_y_char + height - 1)
+        child = grid.get_child_at(start_x_char, start_y_char + height - 1)
         if child:
             child.set_label(self.bottom_left())
-        # ╗ ╝ ╔ ╚
 
-        self.drawing_area.queue_draw()
+    def draw_line(self, start_x_char, start_y_char, width, height, grid):
+        print(width)
+        print(height)
+
+        vertical = self.top_vertical()
+        horizontal = self.top_horizontal()
+
+        if width > 0 and height > 0:
+            self.horizontal_line(start_y_char, start_x_char, width - 1, grid, horizontal)
+            self.vertical_line(start_x_char + width - 1, start_y_char, height, grid, vertical)
+            child = grid.get_child_at(start_x_char + width - 1, start_y_char)
+            if child:
+                child.set_label(self.top_right())
+        elif width > 0 and height < 0:
+            self.horizontal_line(start_y_char, start_x_char, width - 1, grid, horizontal)
+            self.vertical_line(start_x_char + width - 1, start_y_char + 1, height, grid, vertical)
+            child = grid.get_child_at(start_x_char + width - 1, start_y_char)
+            if child:
+                child.set_label(self.bottom_right())
+        elif width < 0 and height > 0:
+            self.horizontal_line(start_y_char, start_x_char + 1, width, grid, horizontal)
+            self.vertical_line(start_x_char + width + 1, start_y_char, height, grid, vertical)
+            child = grid.get_child_at(start_x_char + width + 1, start_y_char)
+            if child:
+                child.set_label(self.top_left())
+        elif width < 0 and height < 0:
+            self.horizontal_line(start_y_char, start_x_char + 1, width, grid, horizontal)
+            self.vertical_line(start_x_char + width + 1, start_y_char + 1, height, grid, vertical)
+            child = grid.get_child_at(start_x_char + width + 1, start_y_char)
+            if child:
+                child.set_label(self.bottom_left())
+
+        if width == 1:
+            child = grid.get_child_at(start_x_char + width - 1, start_y_char)
+            if child:
+                child.set_label(vertical)
+            return
+        elif width == -1:
+            child = grid.get_child_at(start_x_char + width + 1, start_y_char)
+            if child:
+                child.set_label(vertical)
+            return
+
+        if height == 1 and width < 0:
+            child = grid.get_child_at(start_x_char + width + 1, start_y_char)
+            if child:
+                child.set_label(horizontal)
+            return
+        elif height == 1 and width > 0:
+            child = grid.get_child_at(start_x_char + width - 1, start_y_char)
+            if child:
+                child.set_label(horizontal)
+            return
+
+    def vertical_line(self, x, start_y, lenght, grid, char):
+        if lenght > 0:
+            for y in range(abs(lenght)):
+                child = grid.get_child_at(x, start_y + y)
+                if not child:
+                    continue
+                if child.get_label() == "─":
+                    child.set_label("┼")
+                else:
+                    child.set_label(char)
+        else:
+            for y in range(abs(lenght)):
+                child = grid.get_child_at(x, start_y + y + lenght)
+                if not child:
+                    continue
+                if child.get_label() == "─":
+                    child.set_label("┼")
+                else:
+                    child.set_label(char)
+
+    def horizontal_line(self, y, start_x, width, grid, char):
+        if width > 0:
+            for x in range(abs(width)):
+                child = grid.get_child_at(start_x + x, y)
+                if not child:
+                    continue
+                if child.get_label() == "│":
+                    child.set_label("┼")
+                else:
+                    child.set_label(char)
+        else:
+            for x in range(abs(width)):
+                child = grid.get_child_at(start_x + x + width, y)
+                if not child:
+                    continue
+                if child.get_label() == "│":
+                    child.set_label("┼")
+                else:
+                    child.set_label(char)
 
     def top_horizontal(self):
         return self.styles[self.style - 1][0]
@@ -446,57 +631,3 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         return self.styles[self.style - 1][6]
     def bottom_left(self):
         return self.styles[self.style - 1][7]
-
-
-    def draw_line(self, start_x_char, start_y_char, width, height):
-        print(width)
-        print(height)
-
-        vertical = self.vertical()
-        horizontal = self.horizontal()
-
-        if width < 0:
-            for x in range(abs(width) + 2):
-                child = self.grid.get_child_at(start_x_char + x + width, start_y_char)
-                if not child:
-                    continue
-                child.set_label(horizontal)
-        else:
-            for x in range(width - 2):
-                child = self.grid.get_child_at(start_x_char + x + 1, start_y_char)
-                if not child:
-                    continue
-                child.set_label(horizontal)
-
-        if height < 0:
-            for y in range(abs(height)):
-                child = self.grid.get_child_at(start_x_char + width - 1, start_y_char + y + height)
-                if not child:
-                    continue
-                child.set_label(vertical)
-        else:
-            for y in range(height - 2):
-                child = self.grid.get_child_at(start_x_char + width - 1, start_y_char + y + 1)
-                if not child:
-                    continue
-                child.set_label(vertical)
-
-        if width > 0 and height > 0:
-            child = self.grid.get_child_at(start_x_char + width - 1, start_y_char)
-            if child:
-                child.set_label("╗")
-        elif width > 0 and height < 0:
-            child = self.grid.get_child_at(start_x_char + width - 1, start_y_char)
-            if child:
-                child.set_label("╝")
-        elif width < 0 and height > 0:
-            child = self.grid.get_child_at(start_x_char + width - 1, start_y_char)
-            if child:
-                child.set_label("╔")
-        elif width < 0 and height < 0:
-            child = self.grid.get_child_at(start_x_char + width - 1, start_y_char)
-            if child:
-                child.set_label("╚")
-        # ╗ ╝ ╔ ╚
-
-        self.drawing_area.queue_draw()
