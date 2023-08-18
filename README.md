@@ -15,7 +15,7 @@
 
 ## Installation
 ### Inspector is avalaible on
-<a href='https://flathub.org/apps/io.github.nokse22.inspector'><img height='80' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/></a>
+<a href='https://flathub.org/apps/io.github.nokse22.asciiDraw'><img height='80' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
 ### From source
 
