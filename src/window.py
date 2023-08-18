@@ -69,8 +69,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.empty_grid = self.preview_grid
 
         self.styles = [
+<<<<<<< ours
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["═", "═", "║", "║", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "^", "V", ">", "<"],
+=======
+                ["═", "═", "║", "║", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+>>>>>>> theirs
                 ["-", "-", "│", "│", "+", "+", "+","+", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["_", "_", "│", "│", " ", " ", "│","│", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["•", "•", ":", ":", "•", "•", "•","•", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
@@ -78,6 +82,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["═", "═", "│", "│", "╒", "╕", "╛","╘", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+<<<<<<< ours
+=======
+                ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+>>>>>>> theirs
         ]
         action_bar = Gtk.ActionBar()
         rectangle_button = Gtk.ToggleButton(icon_name="window-maximize-symbolic")
@@ -542,6 +550,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         sideway = abs(height) == 1
         left = width < 0
 
+<<<<<<< ours
+=======
+        # if arrow and sideway:
+        #     if left:
+        #         self.set_char_at(start_x_char + width - 1, start_y_char + height, grid, self.left_arrow())
+        #     else:
+        #         self.set_char_at(start_x_char + width, start_y_char + height - 1, grid, self.right_arrow())
+        #     arrow = False
+
+>>>>>>> theirs
         if width > 0 and height > 0:
             self.horizontal_line(start_y_char, start_x_char, width - 1, grid, horizontal)
             self.vertical_line(start_x_char + width - 1, start_y_char, height, grid, vertical)
@@ -566,12 +584,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
             if arrow:
                 self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.up_arrow())
+<<<<<<< ours
 
         if arrow and sideway:
             if left:
                 self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
             else:
                 self.set_char_at(start_x_char + width, start_y_char + height - 1, grid, self.right_arrow())
+=======
+>>>>>>> theirs
 
         if width == 1:
             child = grid.get_child_at(start_x_char + width - 1, start_y_char)
