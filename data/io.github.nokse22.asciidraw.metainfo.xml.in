@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
+  <name>ASCII Draw</name>
 	<id>io.github.nokse22.asciidraw.desktop</id>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0-or-later</project_license>
-	<description>
-	  <p>No description</p>
-	</description>
   <summary>Draw using ASCII characters</summary>
+	<description>
+	  <p>This app lets you draw using ASCII characters.
+
+There are multiple tools available:
+- Free hand brush
+- Free hand line
+- Straight Line
+- Straight Arrow
+- Rectangle
+- Character picker
+- Text
+- Eraser
+
+You can also choose between many stiles to use!
+	  </p>
+	</description>
+
 
  	<developer_name>Nokse</developer_name>
 
@@ -31,11 +46,11 @@
 
 	<screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/main/data/resources/screenshot%201.png</image>
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%201.png</image>
     </screenshot>
 
 	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/main/data/resources/screenshot%202.png</image>
+	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%202.png</image>
 	  </screenshot>
   </screenshots>
 

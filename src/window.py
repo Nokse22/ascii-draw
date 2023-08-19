@@ -113,7 +113,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         arrow_button.set_group(rectangle_button)
         action_bar.pack_start(arrow_button)
 
-        free_line_button = Gtk.ToggleButton(icon_name="emoji-people-symbolic")
+        free_line_button = Gtk.ToggleButton(icon_name="mail-attachment-symbolic")
         free_line_button.connect("clicked", self.on_choose_free_line)
         free_line_button.set_group(rectangle_button)
         action_bar.pack_start(free_line_button)
