@@ -6,4 +6,37 @@
 	<description>
 	  <p>No description</p>
 	</description>
+  <summary>Draw using ASCII characters</summary>
+
+ 	<developer_name>Nokse</developer_name>
+
+	<content_rating type="oars-1.0"></content_rating>
+
+  <launchable type="desktop-id">io.github.nokse22.asciidraw.desktop</launchable>
+
+  <url type="homepage">https://github.com/Nokse22/ascii-draw</url>
+  <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
+
+  <releases>
+    <release version="0.1.0" date="2023-08-20">
+		  <description>
+			  <p>First release!</p>
+		  </description>
+	  </release>
+  </releases>
+
+  <categories>
+    <category>Graphics;2DGraphics;</category>
+  </categories>
+
+	<screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/main/data/resources/screenshot%201.png</image>
+    </screenshot>
+
+	  <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/main/data/resources/screenshot%202.png</image>
+	  </screenshot>
+  </screenshots>
+
 </component>

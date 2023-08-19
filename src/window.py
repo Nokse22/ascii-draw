@@ -317,21 +317,36 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def show_sidebar(self, btn):
         # self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
-
         self.overlay_split_view.set_reveal_flap(not self.overlay_split_view.get_reveal_flap())
 
     def get_canvas_content(self):
+        final_text = ""
         text = ""
+        text_row = ""
+        row_empty = True
+        rows_empty = True
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
                 child = self.grid.get_child_at(x, y)
                 if child:
                     char = child.get_label()
-                    if char == None or char == "":
+                    if char == None or char == "" or char == " ":
                         char = " "
-                    text += char
-            text += "\n"
-        return text
+                        text += char
+                    else:
+                        text += char
+                        text_row += text
+                        text = ""
+                        rows_empty = False
+            text = ""
+            if not rows_empty:
+                rows_empty = True
+                text_row += "\n"
+                final_text += text_row
+                text_row = ""
+            else:
+                text_row += "\n"
+        return final_text
 
     def copy_content(self, btn):
         text = self.get_canvas_content()
