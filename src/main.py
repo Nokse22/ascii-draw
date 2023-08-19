@@ -59,6 +59,10 @@ class AsciiDrawApplication(Adw.Application):
         .mono-entry{
             font-family: Monospace;
             font-size: 20px;
+            background-size: 12px 24px;
+            background-image:
+                linear-gradient(to right, #c0bfbc55 1px, transparent 1px),
+                linear-gradient(to bottom, #c0bfbc55 1px, transparent 1px);
         }
         .padded{
             padding: 12px;
