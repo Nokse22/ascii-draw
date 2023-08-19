@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=ascii-draw
+Name=ASCII Draw
 Exec=ascii-draw
 Icon=io.github.nokse22.asciidraw
 Terminal=false
