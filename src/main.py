@@ -39,29 +39,13 @@ class AsciiDrawApplication(Adw.Application):
 
         css = '''
         .ascii-textview{
-            /*background-image:  linear-gradient(#f6f5f4 1px, transparent 1px), linear-gradient(to right, #f6f5f4 1px, #f6f5f4 1px);
-            */
-            background-color: #f6f5f4;
-            background:
-                linear-gradient(-90deg, rgba(0,0,0,.05) 1px, transparent 1px),
-                linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px),
-                linear-gradient(-90deg, rgba(0, 0, 0, .04) 1px, transparent 1px),
-                linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
-                linear-gradient(transparent 3px, #f6f5f4 3px, #f6f5f4 78px, transparent 78px),
-                linear-gradient(-90deg, #aaa 1px, transparent 1px),
-                linear-gradient(-90deg, transparent 3px, #f6f5f4 3px, #f6f5f4 78px, transparent 78px),
-                linear-gradient(#aaa 1px, transparent 1px),
-                #f6f5f4;
-            background-size:
-                12px 24px,
-                12px 24px,
-                60px 72px,
-                60px 72px,
-                60px 72px,
-                60px 72px,
-                60px 72px,
-                60px 72px;
-            box-shadow: 0px 0px 10px 10px #c0bfbc44;
+            background-size: 12px 24px;
+            background-image:
+                linear-gradient(to right, #c0bfbc55 1px, transparent 1px),
+                linear-gradient(to bottom, #c0bfbc55 1px, transparent 1px);
+            box-shadow:
+                inset 0px 0px 0px 1px #c0bfbc55,
+                0px 0px 10px 10px #c0bfbc44;
         }
         .ascii-preview{
             background: transparent;
@@ -71,18 +55,15 @@ class AsciiDrawApplication(Adw.Application):
         .ascii{
             font-family: Monospace;
             font-size: 20px;
-            color:black;
         }
         .mono-entry{
             font-family: Monospace;
             font-size: 20px;
-            padding: 0px;
-            border-radius: 0px;
-            border: 1px solid black;
         }
-        .split-button{
-            padding: 0px;
+        .padded{
+            padding: 12px;
         }
+
         '''
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(css, -1)

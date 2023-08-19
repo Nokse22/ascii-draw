@@ -2,10 +2,10 @@
 <schemalist gettext-domain="ascii-draw">
 	<schema id="io.github.nokse22.asciidraw" path="/io/github/nokse22/asciidraw/">
 	<key name="window-width" type="i">
-    <default>1000</default>
+    <default>800</default>
   </key>
   <key name="window-height" type="i">
-    <default>700</default>
+    <default>800</default>
   </key>
 	</schema>
 </schemalist>
