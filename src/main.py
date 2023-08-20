@@ -37,6 +37,15 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
+        self.create_action('rectangle-tool', self.select_rectangle_tool, ['<control>r'])
+        self.create_action('line-tool', self.select_line_tool, ['<control>l'])
+        self.create_action('text-tool', self.select_text_tool, ['<control>t'])
+        self.create_action('free-tool', self.select_free_tool, ['<control>f'])
+        self.create_action('eraser-tool', self.select_eraser_tool, ['<control>e'])
+        self.create_action('arrow-tool', self.select_arrow_tool, ['<control>a'])
+        self.create_action('free-line-tool', self.select_free_line_tool, ['<control>g'])
+        self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
+
         css = '''
         .ascii-textview{
             background-size: 12px 24px;
@@ -82,10 +91,10 @@ class AsciiDrawApplication(Adw.Application):
         We raise the application's main window, creating it if
         necessary.
         """
-        win = self.props.active_window
-        if not win:
-            win = AsciiDrawWindow(application=self)
-        win.present()
+        self.win = self.props.active_window
+        if not self.win:
+            self.win = AsciiDrawWindow(application=self)
+        self.win.present()
 
     def on_about_action(self, widget, _):
         """Callback for the app.about action."""
@@ -117,6 +126,29 @@ class AsciiDrawApplication(Adw.Application):
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
 
+    def select_rectangle_tool(self, widget, _):
+        self.win.select_rectangle_tool()
+
+    def select_line_tool(self, widget, _):
+        self.win.select_line_tool()
+
+    def select_text_tool(self, widget, _):
+        self.win.select_text_tool()
+
+    def select_free_tool(self, widget, _):
+        self.win.select_free_tool()
+
+    def select_eraser_tool(self, widget, _):
+        self.win.select_eraser_tool()
+
+    def select_arrow_tool(self, widget, _):
+        self.win.select_arrow_tool()
+
+    def select_free_line_tool(self, widget, _):
+        self.win.select_free_line_tool()
+
+    def select_picker_tool(self, widget, _):
+        self.win.select_picker_tool()
 
 def main(version):
     """The application's entry point."""

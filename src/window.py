@@ -80,48 +80,56 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["˜", "˜", "│", "│", "│", "│", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["═", "═", "│", "│", "╒", "╕", "╛","╘", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
-                ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+                ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
         ]
         action_bar = Gtk.ActionBar()
-        rectangle_button = Gtk.ToggleButton(icon_name="checkbox-symbolic")
-        rectangle_button.connect("clicked", self.on_choose_rectangle)
-        action_bar.pack_start(rectangle_button)
+        self.rectangle_button = Gtk.ToggleButton(icon_name="checkbox-symbolic",
+                tooltip_text="Rectangle Ctrl+R")
+        self.rectangle_button.connect("toggled", self.on_choose_rectangle)
+        action_bar.pack_start(self.rectangle_button)
 
-        line_button = Gtk.ToggleButton(icon_name="function-linear-symbolic")
-        line_button.connect("clicked", self.on_choose_line)
-        line_button.set_group(rectangle_button)
-        action_bar.pack_start(line_button)
+        self.line_button = Gtk.ToggleButton(icon_name="function-linear-symbolic",
+                tooltip_text="Line Ctrl+L")
+        self.line_button.connect("toggled", self.on_choose_line)
+        self.line_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.line_button)
 
-        text_button = Gtk.ToggleButton(icon_name="format-text-plaintext-symbolic")
-        text_button.connect("clicked", self.on_choose_text)
-        text_button.set_group(rectangle_button)
-        action_bar.pack_start(text_button)
+        self.text_button = Gtk.ToggleButton(icon_name="format-text-plaintext-symbolic",
+                tooltip_text="Text Ctrl+T")
+        self.text_button.connect("toggled", self.on_choose_text)
+        self.text_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.text_button)
 
-        self.free_button = Gtk.ToggleButton(icon_name="document-edit-symbolic")
+        self.free_button = Gtk.ToggleButton(icon_name="document-edit-symbolic",
+                tooltip_text="Free Hand Ctrl+f")
         self.free_button.connect("clicked", self.on_choose_free)
-        self.free_button.set_group(rectangle_button)
+        self.free_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.free_button)
 
-        eraser_button = Gtk.ToggleButton(icon_name="switch-off-symbolic")
-        eraser_button.connect("clicked", self.on_choose_eraser)
-        eraser_button.set_group(rectangle_button)
-        action_bar.pack_start(eraser_button)
+        self.eraser_button = Gtk.ToggleButton(icon_name="switch-off-symbolic",
+                tooltip_text="Eraser Ctrl+R")
+        self.eraser_button.connect("toggled", self.on_choose_eraser)
+        self.eraser_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.eraser_button)
 
-        arrow_button = Gtk.ToggleButton(icon_name="mail-forward-symbolic")
-        arrow_button.connect("clicked", self.on_choose_arrow)
-        arrow_button.set_group(rectangle_button)
-        action_bar.pack_start(arrow_button)
+        self.arrow_button = Gtk.ToggleButton(icon_name="mail-forward-symbolic",
+                tooltip_text="Arrow Ctrl+R")
+        self.arrow_button.connect("toggled", self.on_choose_arrow)
+        self.arrow_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.arrow_button)
 
-        free_line_button = Gtk.ToggleButton(icon_name="mail-attachment-symbolic")
-        free_line_button.connect("clicked", self.on_choose_free_line)
-        free_line_button.set_group(rectangle_button)
-        action_bar.pack_start(free_line_button)
+        self.free_line_button = Gtk.ToggleButton(icon_name="mail-attachment-symbolic",
+                tooltip_text="Free Line Ctrl+G")
+        self.free_line_button.connect("toggled", self.on_choose_free_line)
+        self.free_line_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.free_line_button)
 
-        picker_button = Gtk.ToggleButton(icon_name="color-select-symbolic")
-        picker_button.connect("clicked", self.on_choose_picker)
-        picker_button.set_group(rectangle_button)
-        action_bar.pack_start(picker_button)
+        self.picker_button = Gtk.ToggleButton(icon_name="color-select-symbolic",
+                tooltip_text="Picker Ctrl+P")
+        self.picker_button.connect("toggled", self.on_choose_picker)
+        self.picker_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.picker_button)
 
         clear_button = Gtk.Button(icon_name="user-trash-symbolic")
         clear_button.connect("clicked", self.clear, self.grid)
@@ -132,9 +140,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         prev_btn = None
 
         for style in self.styles:
-            name = style[4] + style[0] + style[0] + style[0] + style[5] + "\n"
-            name += style[2] + "   " + style[3] + "\n"
-            name += style[7] + style[1] + style[1] + style[1] + style[6]
+            name = style[4] + style[0] + style[0] + style[0] + style[5] + " " + style[2] + " " + style[16] + style[1] + style[1] + style[5] + "\n"
+            name += style[2] + "   " + style[3] + " " + style[2] + "    " + style[2] + "\n"
+            name += style[7] + style[1] + style[1] + style[1] + style[6] + " " + style[7] + style[1] + style[1] + style[15] + " " + style[2]
             label = Gtk.Label(label = name)
             style_btn = Gtk.ToggleButton(css_classes=["flat", "ascii"])
             style_btn.set_child(label)
@@ -276,9 +284,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.free_scale.set_value_pos(1)
         self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
 
-    def scrolled(self, scrolled_window, horizontal):
-        print("scrolled")
-
     def save(self, btn):
         dialog = Gtk.FileChooserNative(
             title="Save File",
@@ -374,7 +379,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         while child != None:
             if child.get_active():
                 self.style = index
-                print(index)
                 return
             child = child.get_next_sibling()
             index += 1
@@ -394,8 +398,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if child:
                 self.free_char = child.get_label()
 
-    def on_key_pressed(self, event, arg):
-        print(event)
+        elif self.tool == "FREE":
+            self.draw_char(x_char, y_char)
 
     def on_click_stopped(self, arg):
         pass
@@ -419,15 +423,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "PICKER"
-        else:
-            self.tool = ""
 
     def on_choose_rectangle(self, btn):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "RECTANGLE"
-        else:
-            self.tool = ""
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="RECTANGLE")
@@ -441,8 +441,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "LINE"
-        else:
-            self.tool = ""
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="LINE")
@@ -455,8 +453,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def on_choose_text(self, btn):
         if btn.get_active():
             self.tool = "TEXT"
-        else:
-            self.tool = ""
+
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="TEXT")
         box.append(self.text_entry)
@@ -466,8 +463,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "FREE"
-        else:
-            self.tool = ""
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FREE")
@@ -483,8 +478,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "ERASER"
-        else:
-            self.tool = ""
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ERASER", margin_start=12)
@@ -497,14 +490,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def on_scale_value_changed(self, scale, var):
         var = scale.get_value()
-        print(var)
 
     def on_choose_arrow(self, btn):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "ARROW"
-        else:
-            self.tool = ""
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ARROW")
@@ -645,7 +635,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         dir2 = direction
         direction = self.normalize_vector(direction)
         prev_direction = [int(self.prev_pos[0] - self.prev_char_pos[0]), int(self.prev_pos[1] - self.prev_char_pos[1])]
-        print(direction)
 
         if direction == [1, 0] or direction == [-1, 0]:
             self.set_char_at(new_x, new_y, grid, self.bottom_horizontal())
@@ -756,58 +745,60 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def draw_line(self, start_x_char, start_y_char, width, height, grid):
         arrow = self.tool == "ARROW"
 
-        vertical = self.top_vertical()
-        horizontal = self.top_horizontal()
+        end_vertical = self.top_vertical()
+        start_vertical = self.bottom_vertical()
+        end_horizontal = self.top_horizontal()
+        start_horizontal = self.bottom_horizontal()
 
         if width > 0 and height > 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height - 1, start_x_char, width - 1, grid, horizontal)
-                self.vertical_line(start_x_char, start_y_char, height, grid, vertical)
+                self.horizontal_line(start_y_char + height - 1, start_x_char, width - 1, grid, start_horizontal)
+                self.vertical_line(start_x_char, start_y_char, height, grid, end_vertical)
                 self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.right_arrow())
             else:
-                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, horizontal)
-                self.vertical_line(start_x_char + width - 1, start_y_char, height, grid, vertical)
+                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
+                self.vertical_line(start_x_char + width - 1, start_y_char, height, grid, start_vertical)
                 self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.down_arrow())
         elif width > 0 and height < 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height + 1, start_x_char, width - 1, grid, horizontal)
-                self.vertical_line(start_x_char, start_y_char + 1, height, grid, vertical)
+                self.horizontal_line(start_y_char + height + 1, start_x_char, width - 1, grid, end_horizontal)
+                self.vertical_line(start_x_char, start_y_char + 1, height, grid, end_vertical)
                 self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_left())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.right_arrow())
             else:
-                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, horizontal)
-                self.vertical_line(start_x_char + width - 1, start_y_char + 1, height, grid, vertical)
+                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
+                self.vertical_line(start_x_char + width - 1, start_y_char + 1, height, grid, end_vertical)
                 self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.bottom_right())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.up_arrow())
         elif width < 0 and height > 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width, grid, horizontal)
-                self.vertical_line(start_x_char, start_y_char, height, grid, vertical)
+                self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width, grid, start_horizontal)
+                self.vertical_line(start_x_char, start_y_char, height, grid, start_vertical)
                 self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_right())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
             else:
-                self.horizontal_line(start_y_char, start_x_char + 1, width, grid, horizontal)
-                self.vertical_line(start_x_char + width + 1, start_y_char, height, grid, vertical)
+                self.horizontal_line(start_y_char, start_x_char + 1, width, grid, end_horizontal)
+                self.vertical_line(start_x_char + width + 1, start_y_char, height, grid, end_vertical)
                 self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.top_left())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.down_arrow())
         elif width < 0 and height < 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height + 1, start_x_char + 1, width, grid, horizontal)
-                self.vertical_line(start_x_char, start_y_char + 1, height, grid, vertical)
+                self.horizontal_line(start_y_char + height + 1, start_x_char + 1, width, grid, end_horizontal)
+                self.vertical_line(start_x_char, start_y_char + 1, height, grid, start_vertical)
                 self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_right())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.left_arrow())
             else:
-                self.horizontal_line(start_y_char, start_x_char + 1, width, grid, horizontal)
-                self.vertical_line(start_x_char + width + 1, start_y_char + 1, height, grid, vertical)
+                self.horizontal_line(start_y_char, start_x_char + 1, width, grid, start_horizontal)
+                self.vertical_line(start_x_char + width + 1, start_y_char + 1, height, grid, end_vertical)
                 self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.up_arrow())
@@ -815,20 +806,20 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if width == 1:
             child = grid.get_child_at(start_x_char + width - 1, start_y_char)
             if child:
-                child.set_label(vertical)
+                child.set_label(end_vertical)
         elif width == -1:
             child = grid.get_child_at(start_x_char + width + 1, start_y_char)
             if child:
-                child.set_label(vertical)
+                child.set_label(end_vertical)
 
         elif height == 1 and width < 0:
             child = grid.get_child_at(start_x_char + width + 1, start_y_char)
             if child:
-                child.set_label(horizontal)
+                child.set_label(end_horizontal)
         elif height == 1 and width > 0:
             child = grid.get_child_at(start_x_char + width - 1, start_y_char)
             if child:
-                child.set_label(horizontal)
+                child.set_label(end_horizontal)
 
         if arrow and height == 1:
             if width < 0:
@@ -913,3 +904,34 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def right_arrow(self):
         return self.styles[self.style - 1][15]
 
+    def select_rectangle_tool(self):
+        self.rectangle_button.set_active(True)
+        self.tool = "RECTANGLE"
+
+    def select_line_tool(self):
+        self.line_button.set_active(True)
+        self.tool = "LINE"
+
+    def select_text_tool(self):
+        self.text_button.set_active(True)
+        self.tool = "TEXT"
+
+    def select_free_tool(self):
+        self.free_button.set_active(True)
+        self.tool = "FREE"
+
+    def select_eraser_tool(self):
+        self.eraser_button.set_active(True)
+        self.tool = "ERASER"
+
+    def select_arrow_tool(self):
+        self.arrow_button.set_active(True)
+        self.tool = "ARROW"
+
+    def select_free_line_tool(self):
+        self.free_line_button.set_active(True)
+        self.tool = "FREE-LINE"
+
+    def select_picker_tool(self):
+        self.picker_button.set_active(True)
+        self.tool = "PICKER"
