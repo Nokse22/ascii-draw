@@ -74,12 +74,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.styles = [
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["═", "═", "║", "║", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "A", "V", ">", "<"],
-                ["-", "-", "|", "|", "+", "+", "+","+", "┼", "├", "┤", "┴","┬", "↑", "↓", "→", "←"],
-                ["_", "_", "│", "│", " ", " ", "│","│", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
-                ["•", "•", "•", "•", "•", "•", "•","•", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["˜", "˜", "│", "│", "│", "│", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
-                ["═", "═", "│", "│", "╒", "╕", "╛","╘", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+                ["═", "═", "║", "║", "╔", "╗", "╝","╚", "╬", "╠", "╣", "╩","╦", "A", "V", ">", "<"],
+                ["-", "-", "|", "|", "+", "+", "+","+", "+", "+", "+", "+","+", "↑", "↓", "→", "←"],
+                ["_", "_", "│", "│", " ", " ", "│","│", "│", "│", "│", "┴","┬", "▲", "▼", "►", "◄"],
+                ["•", "•", "•", "•", "•", "•", "•","•", "•", "•", "•", "•","•", "▲", "▼", ">", "<"],
+                ["˜", "˜", "│", "│", "│", "│", " "," ", "│", "│", "│", "˜","˜", "▲", "▼", "►", "◄"],
+                ["═", "═", "│", "│", "╒", "╕", "╛","╘", "╪", "╞", "╡", "╧","╤", "▲", "▼", "►", "◄"],
                 ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
@@ -662,7 +662,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if direction == [1, 0] or direction == [-1, 0]:
             self.set_char_at(new_x, new_y, grid, self.bottom_horizontal())
         elif direction == [0, 1] or direction == [0, -1]:
-            self.set_char_at(new_x, new_y, grid, self.bottom_vertical())
+            self.set_char_at(new_x, new_y, grid, self.right_vertical())
 
         # ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
 
@@ -689,14 +689,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             elif prev_direction == [-1, 0]:
                 self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_left())
             else:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_vertical())
+                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.right_vertical())
         elif direction == [0, 1]:
             if prev_direction == [1, 0]:
                 self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_right())
             elif prev_direction == [-1, 0]:
                 self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_left())
             else:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_vertical())
+                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.right_vertical())
         # self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, "2")
         self.prev_char_pos = [self.prev_pos[0], self.prev_pos[1]]
         self.prev_pos = [new_x, new_y]
@@ -735,10 +735,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child.set_label("")
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, grid):
-        top_vertical = self.top_vertical()
+        top_vertical = self.left_vertical()
         top_horizontal = self.top_horizontal()
 
-        bottom_vertical = self.bottom_vertical()
+        bottom_vertical = self.right_vertical()
         bottom_horizontal = self.bottom_horizontal()
 
         if width <= 1 or height <= 1:
@@ -768,81 +768,99 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def draw_line(self, start_x_char, start_y_char, width, height, grid):
         arrow = self.tool == "ARROW"
 
-        end_vertical = self.top_vertical()
-        start_vertical = self.bottom_vertical()
+        print(width, height)
+
+        end_vertical = self.left_vertical()
+        start_vertical = self.right_vertical()
         end_horizontal = self.top_horizontal()
         start_horizontal = self.bottom_horizontal()
 
         if width > 0 and height > 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height - 1, start_x_char, width - 1, grid, start_horizontal)
-                self.vertical_line(start_x_char, start_y_char, height, grid, end_vertical)
-                self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
+                self.horizontal_line(start_y_char + height - 1, start_x_char, width, grid, start_horizontal)
+                if height > 1:
+                    self.vertical_line(start_x_char, start_y_char, height, grid, end_vertical)
+                if height != 1:
+                    self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.right_arrow())
             else:
                 self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
-                self.vertical_line(start_x_char + width - 1, start_y_char, height, grid, start_vertical)
-                self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
+                if height > 1:
+                    self.vertical_line(start_x_char + width - 1, start_y_char, height, grid, start_vertical)
+                if width != 1 and height != 1:
+                    self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.down_arrow())
         elif width > 0 and height < 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height + 1, start_x_char, width - 1, grid, end_horizontal)
-                self.vertical_line(start_x_char, start_y_char + 1, height, grid, end_vertical)
-                self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_left())
+                self.horizontal_line(start_y_char + height + 1, start_x_char, width, grid, end_horizontal)
+                if height < 1:
+                    self.vertical_line(start_x_char, start_y_char + 1, height, grid, end_vertical)
+                if width != 1 and height != 1:
+                    self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_left())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.right_arrow())
             else:
                 self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
-                self.vertical_line(start_x_char + width - 1, start_y_char + 1, height, grid, end_vertical)
-                self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.bottom_right())
+                if height < 1:
+                    self.vertical_line(start_x_char + width - 1, start_y_char + 1, height, grid, end_vertical)
+                if width != 1 and height != 1:
+                    self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.bottom_right())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.up_arrow())
         elif width < 0 and height > 0:
             if self.line_direction == [1, 0]:
                 self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width, grid, start_horizontal)
-                self.vertical_line(start_x_char, start_y_char, height, grid, start_vertical)
-                self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_right())
+                if height > 1:
+                    self.vertical_line(start_x_char, start_y_char, height, grid, start_vertical)
+                if width != 1 and height != 1:
+                    self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_right())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
             else:
                 self.horizontal_line(start_y_char, start_x_char + 1, width, grid, end_horizontal)
-                self.vertical_line(start_x_char + width + 1, start_y_char, height, grid, end_vertical)
-                self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.top_left())
+                if height > 1:
+                    self.vertical_line(start_x_char + width + 1, start_y_char, height, grid, end_vertical)
+                if width != 1 and height != 1:
+                    self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.top_left())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.down_arrow())
         elif width < 0 and height < 0:
             if self.line_direction == [1, 0]:
                 self.horizontal_line(start_y_char + height + 1, start_x_char + 1, width, grid, end_horizontal)
-                self.vertical_line(start_x_char, start_y_char + 1, height, grid, start_vertical)
-                self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_right())
+                if height < 1:
+                    self.vertical_line(start_x_char, start_y_char + 1, height, grid, start_vertical)
+                if width != 1 and height != 1:
+                    self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_right())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.left_arrow())
             else:
                 self.horizontal_line(start_y_char, start_x_char + 1, width, grid, start_horizontal)
-                self.vertical_line(start_x_char + width + 1, start_y_char + 1, height, grid, end_vertical)
-                self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
+                if height < 1:
+                    self.vertical_line(start_x_char + width + 1, start_y_char + 1, height, grid, end_vertical)
+                if width != 1 and height != 1:
+                    self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.up_arrow())
 
-        if width == 1:
-            child = grid.get_child_at(start_x_char + width - 1, start_y_char)
-            if child:
-                child.set_label(end_vertical)
-        elif width == -1:
-            child = grid.get_child_at(start_x_char + width + 1, start_y_char)
-            if child:
-                child.set_label(end_vertical)
+        # if width == 1:
+        #     child = grid.get_child_at(start_x_char + width - 1, start_y_char)
+        #     if child:
+        #         child.set_label(end_vertical)
+        # elif width == -1:
+        #     child = grid.get_child_at(start_x_char + width + 1, start_y_char)
+        #     if child:
+        #         child.set_label(end_vertical)
 
-        elif height == 1 and width < 0:
-            child = grid.get_child_at(start_x_char + width + 1, start_y_char)
-            if child:
-                child.set_label(end_horizontal)
-        elif height == 1 and width > 0:
-            child = grid.get_child_at(start_x_char + width - 1, start_y_char)
-            if child:
-                child.set_label(end_horizontal)
+        # elif height == 1 and width < 0:
+        #     child = grid.get_child_at(start_x_char + width + 1, start_y_char)
+        #     if child:
+        #         child.set_label(end_horizontal)
+        # elif height == 1 and width > 0:
+        #     child = grid.get_child_at(start_x_char + width - 1, start_y_char)
+        #     if child:
+        #         child.set_label(end_horizontal)
 
         if arrow and height == 1:
             if width < 0:
@@ -864,8 +882,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 child = grid.get_child_at(x, start_y + y)
                 if not child:
                     continue
-                if child.get_label() == "─":
-                    child.set_label("┼")
+                prev_label = child.get_label()
+                if prev_label == "" or prev_label == " ":
+                    child.set_label(char)
+                elif prev_label == self.top_horizontal():
+                    child.set_label(self.crossing())
                 else:
                     child.set_label(char)
                 self.changed_chars.append([x, start_y + y])
@@ -886,8 +907,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 child = grid.get_child_at(start_x + x, y)
                 if not child:
                     continue
-                if child.get_label() == "│":
-                    child.set_label("┼")
+                prev_label = child.get_label()
+                if prev_label == "" or prev_label == " ":
+                    child.set_label(char)
+                elif prev_label == self.left_vertical():
+                    child.set_label(self.crossing())
                 else:
                     child.set_label(char)
                 self.changed_chars.append([start_x + x, y])
@@ -896,8 +920,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 child = grid.get_child_at(start_x + x + width, y)
                 if not child:
                     continue
-                if child.get_label() == "│":
-                    child.set_label("┼")
+                prev_label = child.get_label()
+                if prev_label == "" or prev_label == " ":
+                    child.set_label(char)
+                elif prev_label == self.left_vertical():
+                    child.set_label(self.crossing())
                 else:
                     child.set_label(char)
                 self.changed_chars.append([start_x + x + width, y])
@@ -906,9 +933,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         return self.styles[self.style - 1][0]
     def bottom_horizontal(self):
         return self.styles[self.style - 1][1]
-    def top_vertical(self):
+    def left_vertical(self):
         return self.styles[self.style - 1][2]
-    def bottom_vertical(self):
+    def right_vertical(self):
         return self.styles[self.style - 1][3]
     def top_left(self):
         return self.styles[self.style - 1][4]
@@ -926,6 +953,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         return self.styles[self.style - 1][16]
     def right_arrow(self):
         return self.styles[self.style - 1][15]
+    def crossing(self):
+        return self.styles[self.style - 1][8]
+    def right_intersect(self):
+        return self.styles[self.style - 1][9]
+    def left_intersect(self):
+        return self.styles[self.style - 1][10]
+    def top_intersect(self):
+        return self.styles[self.style - 1][11]
+    def bottom_intersect(self):
+        return self.styles[self.style - 1][12]
 
     def select_rectangle_tool(self):
         self.rectangle_button.set_active(True)
