@@ -45,6 +45,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
         self.overlay_split_view = Adw.Flap(vexpand=True, flap_position=1, fold_policy=0) #Adw.OverlaySplitView()
+        self.overlay_split_view.set_reveal_flap(False)
 
         # sidebar_condition = Adw.BreakpointCondition.new_length(1, 600, 2)
         # sidebar_breakpoint = Adw.Breakpoint.new(sidebar_condition)
@@ -423,11 +424,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "PICKER"
+        self.overlay_split_view.set_reveal_flap(False)
 
     def on_choose_rectangle(self, btn):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "RECTANGLE"
+
+        self.overlay_split_view.set_reveal_flap(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="RECTANGLE")
@@ -442,6 +446,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "LINE"
 
+        self.overlay_split_view.set_reveal_flap(True)
+
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="LINE")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -454,6 +460,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "TEXT"
 
+        self.overlay_split_view.set_reveal_flap(True)
+
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="TEXT")
         box.append(self.text_entry)
@@ -463,6 +471,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "FREE"
+
+        self.overlay_split_view.set_reveal_flap(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FREE")
@@ -478,6 +488,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "ERASER"
+
+        self.overlay_split_view.set_reveal_flap(False)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ERASER", margin_start=12)
@@ -495,6 +507,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "ARROW"
+
+        self.overlay_split_view.set_reveal_flap(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ARROW")
