@@ -77,7 +77,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["═", "═", "║", "║", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "A", "V", ">", "<"],
                 ["-", "-", "|", "|", "+", "+", "+","+", "┼", "├", "┤", "┴","┬", "↑", "↓", "→", "←"],
                 ["_", "_", "│", "│", " ", " ", "│","│", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
-                ["•", "•", ":", ":", "•", "•", "•","•", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+                ["•", "•", "•", "•", "•", "•", "•","•", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
                 ["˜", "˜", "│", "│", "│", "│", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["═", "═", "│", "│", "╒", "╕", "╛","╘", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
@@ -141,9 +141,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         prev_btn = None
 
         for style in self.styles:
-            name = style[4] + style[0] + style[0] + style[0] + style[5] + " " + style[2] + " " + style[16] + style[1] + style[1] + style[5] + "\n"
-            name += style[2] + "   " + style[3] + " " + style[2] + "    " + style[2] + "\n"
-            name += style[7] + style[1] + style[1] + style[1] + style[6] + " " + style[7] + style[1] + style[1] + style[15] + " " + style[2]
+            name = style[4] + style[0] + style[0] + style[0] + style[5] + " " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "\n"
+            name += style[2] + "   " + style[3] + " " + style[2] + "    " + style[3] + "\n"
+            name += style[7] + style[1] + style[1] + style[1] + style[6] + " " + style[7] + style[1] + style[1] + style[15] + " " + style[3]
             label = Gtk.Label(label = name)
             style_btn = Gtk.ToggleButton(css_classes=["flat", "ascii"])
             style_btn.set_child(label)
