@@ -74,7 +74,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.styles = [
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["═", "═", "║", "║", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "^", "V", ">", "<"],
+                ["═", "═", "║", "║", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "A", "V", ">", "<"],
                 ["-", "-", "|", "|", "+", "+", "+","+", "┼", "├", "┤", "┴","┬", "↑", "↓", "→", "←"],
                 ["_", "_", "│", "│", " ", " ", "│","│", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
                 ["•", "•", ":", ":", "•", "•", "•","•", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
@@ -85,46 +85,46 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
         ]
         action_bar = Gtk.ActionBar()
-        self.rectangle_button = Gtk.ToggleButton(icon_name="checkbox-symbolic",
+        self.rectangle_button = Gtk.ToggleButton(icon_name="rectangle-symbolic",
                 tooltip_text="Rectangle Ctrl+R")
         self.rectangle_button.connect("toggled", self.on_choose_rectangle)
         action_bar.pack_start(self.rectangle_button)
 
-        self.line_button = Gtk.ToggleButton(icon_name="function-linear-symbolic",
+        self.line_button = Gtk.ToggleButton(icon_name="line-symbolic",
                 tooltip_text="Line Ctrl+L")
         self.line_button.connect("toggled", self.on_choose_line)
         self.line_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.line_button)
 
-        self.text_button = Gtk.ToggleButton(icon_name="format-text-plaintext-symbolic",
-                tooltip_text="Text Ctrl+T")
-        self.text_button.connect("toggled", self.on_choose_text)
-        self.text_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.text_button)
-
-        self.free_button = Gtk.ToggleButton(icon_name="document-edit-symbolic",
-                tooltip_text="Free Hand Ctrl+f")
-        self.free_button.connect("clicked", self.on_choose_free)
-        self.free_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.free_button)
-
-        self.eraser_button = Gtk.ToggleButton(icon_name="switch-off-symbolic",
-                tooltip_text="Eraser Ctrl+R")
-        self.eraser_button.connect("toggled", self.on_choose_eraser)
-        self.eraser_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.eraser_button)
-
-        self.arrow_button = Gtk.ToggleButton(icon_name="mail-forward-symbolic",
+        self.arrow_button = Gtk.ToggleButton(icon_name="arrow-symbolic",
                 tooltip_text="Arrow Ctrl+R")
         self.arrow_button.connect("toggled", self.on_choose_arrow)
         self.arrow_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.arrow_button)
 
-        self.free_line_button = Gtk.ToggleButton(icon_name="mail-attachment-symbolic",
+        self.free_line_button = Gtk.ToggleButton(icon_name="free-line-symbolic",
                 tooltip_text="Free Line Ctrl+G")
         self.free_line_button.connect("toggled", self.on_choose_free_line)
         self.free_line_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.free_line_button)
+
+        self.free_button = Gtk.ToggleButton(icon_name="paintbrush-symbolic",
+                tooltip_text="Free Hand Ctrl+f")
+        self.free_button.connect("clicked", self.on_choose_free)
+        self.free_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.free_button)
+
+        self.text_button = Gtk.ToggleButton(icon_name="text-symbolic",
+                tooltip_text="Text Ctrl+T")
+        self.text_button.connect("toggled", self.on_choose_text)
+        self.text_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.text_button)
+
+        self.eraser_button = Gtk.ToggleButton(icon_name="eraser-symbolic",
+                tooltip_text="Eraser Ctrl+R")
+        self.eraser_button.connect("toggled", self.on_choose_eraser)
+        self.eraser_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.eraser_button)
 
         self.picker_button = Gtk.ToggleButton(icon_name="color-select-symbolic",
                 tooltip_text="Picker Ctrl+P")
