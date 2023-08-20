@@ -158,6 +158,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         save_button.connect("clicked", self.save)
         headerbar.pack_start(save_button)
 
+        menu_button = Gtk.MenuButton()
+        menu_button.set_icon_name("open-menu-symbolic")
+        menu = Gio.Menu()
+        # menu.append(_("Preferences"), "app.preferences")
+        menu.append(_("Keyboard shortcuts"), "win.show-help-overlay")
+        menu.append(_("About ASCII Draw"), "app.about")
+        menu_button.set_menu_model(menu)
+        headerbar.pack_end(menu_button)
+
         show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
         show_sidebar_button.connect("clicked", self.show_sidebar)
         headerbar.pack_end(show_sidebar_button)
