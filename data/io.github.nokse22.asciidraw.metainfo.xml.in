@@ -7,21 +7,10 @@
   <summary>Draw using ASCII characters</summary>
 	<description>
 	  <p>This app lets you draw using ASCII characters.
-
-There are multiple tools available:
-- Free hand brush
-- Free hand line
-- Straight Line
-- Straight Arrow
-- Rectangle
-- Character picker
-- Text
-- Eraser
-
+There are multiple tools available: Free hand brush, Free hand line, Straight Line, Straight Arrow, Rectangle, Character picker, Text and Eraser
 You can also choose between many stiles to use!
 	  </p>
 	</description>
-
 
  	<developer_name>Nokse</developer_name>
 
@@ -33,6 +22,11 @@ You can also choose between many stiles to use!
   <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
 
   <releases>
+    <release version="0.1.1" date="2023-08-21">
+		  <description>
+			  <p>Fixed many bugs with right to left text direction</p>
+		  </description>
+	  </release>
     <release version="0.1.0" date="2023-08-20">
 		  <description>
 			  <p>First release!</p>
