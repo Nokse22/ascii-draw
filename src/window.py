@@ -136,14 +136,30 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         clear_button.connect("clicked", self.clear, self.grid)
         action_bar.pack_end(clear_button)
 
+        save_button = Gtk.Button(label="Save")
+        save_button.connect("clicked", self.save)
+        headerbar.pack_start(save_button)
+
+        text_direction = save_button.get_child().get_direction()
+
+        if text_direction == Gtk.TextDirection.LTR:
+            self.flip = False
+        elif text_direction == Gtk.TextDirection.RTL:
+            self.flip = True
+
         self.lines_styles_selection = Gtk.Box(orientation=1, css_classes=["padded"], spacing=6)
 
         prev_btn = None
 
         for style in self.styles:
-            name = style[4] + style[0] + style[0] + style[0] + style[5] + " " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "\n"
-            name += style[2] + "   " + style[3] + " " + style[2] + "    " + style[3] + "\n"
-            name += style[7] + style[1] + style[1] + style[1] + style[6] + " " + style[7] + style[1] + style[1] + style[15] + " " + style[3]
+            if self.flip:
+                name = style[5] + style[1] + style[1] + style[1] + style[4] + " " + style[3] + " " + style[15] + style[1] + style[1] + style[4] + "\n"
+                name += style[3] + "   " + style[2] + " " + style[3] + "    " + style[2] + "\n"
+                name += style[6] + style[0] + style[0] + style[0] + style[7] + " " + style[6] + style[0] + style[0] + style[16] + " " + style[2]
+            else:
+                name = style[4] + style[0] + style[0] + style[0] + style[5] + " " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "\n"
+                name += style[2] + "   " + style[3] + " " + style[2] + "    " + style[3] + "\n"
+                name += style[7] + style[1] + style[1] + style[1] + style[6] + " " + style[7] + style[1] + style[1] + style[15] + " " + style[3]
             label = Gtk.Label(label = name)
             style_btn = Gtk.ToggleButton(css_classes=["flat", "ascii"])
             style_btn.set_child(label)
@@ -153,10 +169,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             style_btn.connect("toggled", self.change_style, self.lines_styles_selection)
 
             self.lines_styles_selection.append(style_btn)
-
-        save_button = Gtk.Button(label="Save")
-        save_button.connect("clicked", self.save)
-        headerbar.pack_start(save_button)
 
         menu_button = Gtk.MenuButton()
         menu_button.set_icon_name("open-menu-symbolic")
@@ -201,6 +213,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.drawing_area = Gtk.DrawingArea()
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
+        # self.drawing_area.connect("show", self.update_area_width)
 
         self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
         scrolled_window = Gtk.ScrolledWindow(hexpand=True, width_request=300)
@@ -294,6 +307,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.free_scale.set_value_pos(1)
         self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
 
+        self.drawing_area_width = 0
+
+    def update_area_width(self):
+        allocation = self.drawing_area.get_allocation()
+        self.drawing_area_width = allocation.width
+        print(self.drawing_area_width)
+
     def save(self, btn):
         dialog = Gtk.FileChooserNative(
             title="Save File",
@@ -342,7 +362,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         rows_empty = True
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
-                child = self.grid.get_child_at(x, y)
+                if self.flip:
+                    child = self.grid.get_child_at(self.canvas_x - x, y)
+                else:
+                    child = self.grid.get_child_at(x, y)
                 if child:
                     char = child.get_label()
                     if char == None or char == "" or char == " ":
@@ -383,6 +406,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y + 1, 1, 1)
             self.canvas_x += 1
 
+        self.drawing_area_width = self.drawing_area.get_allocation().width
+
     def change_style(self, btn, box):
         child = box.get_first_child()
         index = 1
@@ -397,6 +422,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         pass
 
     def on_click_released(self, click, x, y, arg):
+        if self.flip:
+            if self.drawing_area_width == 0:
+                self.update_area_width()
+            x = self.drawing_area_width - x
         x_char = int(self.start_x / self.x_mul)
         y_char = int(self.start_y / self.y_mul)
 
@@ -545,6 +574,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def on_drag_begin(self, gesture, start_x, start_y):
         self.start_x = start_x
+        if self.flip:
+            if self.drawing_area_width == 0:
+                self.update_area_width()
+            self.start_x = self.drawing_area_width - self.start_x
         self.start_y = start_y
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
@@ -553,6 +586,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.prev_char_pos = [start_x_char, start_y_char]
 
     def on_drag_follow(self, gesture, end_x, end_y):
+        if self.flip:
+            end_x = - end_x
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
 
@@ -600,6 +635,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
+        if self.flip:
+            delta_x = - delta_x
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
         width = int((delta_x + self.start_x) // self.x_mul - start_x_char) # round((end_x) / self.x_mul) * self.x_mul
@@ -720,7 +757,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 continue
             # print(f"{char} is {ord(char)} in {x},{y}")
             child.set_label(char)
-            x += 1
+            if self.flip:
+                x -= 1
+            else:
+                x += 1
 
     def draw_char(self, x_coord, y_coord):
         # for x in self.free_size:
@@ -934,30 +974,50 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def bottom_horizontal(self):
         return self.styles[self.style - 1][1]
     def left_vertical(self):
+        if self.flip:
+            return self.styles[self.style - 1][3]
         return self.styles[self.style - 1][2]
     def right_vertical(self):
+        if self.flip:
+            return self.styles[self.style - 1][2]
         return self.styles[self.style - 1][3]
     def top_left(self):
+        if self.flip:
+            return self.styles[self.style - 1][5]
         return self.styles[self.style - 1][4]
     def top_right(self):
+        if self.flip:
+            return self.styles[self.style - 1][4]
         return self.styles[self.style - 1][5]
     def bottom_right(self):
+        if self.flip:
+            return self.styles[self.style - 1][7]
         return self.styles[self.style - 1][6]
     def bottom_left(self):
+        if self.flip:
+            return self.styles[self.style - 1][6]
         return self.styles[self.style - 1][7]
     def up_arrow(self):
         return self.styles[self.style - 1][13]
     def down_arrow(self):
         return self.styles[self.style - 1][14]
     def left_arrow(self):
+        if self.flip:
+            return self.styles[self.style - 1][15]
         return self.styles[self.style - 1][16]
     def right_arrow(self):
+        if self.flip:
+            return self.styles[self.style - 1][16]
         return self.styles[self.style - 1][15]
     def crossing(self):
         return self.styles[self.style - 1][8]
     def right_intersect(self):
+        if self.flip:
+            return self.styles[self.style - 1][10]
         return self.styles[self.style - 1][9]
     def left_intersect(self):
+        if self.flip:
+            return self.styles[self.style - 1][9]
         return self.styles[self.style - 1][10]
     def top_intersect(self):
         return self.styles[self.style - 1][11]
