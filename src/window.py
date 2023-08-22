@@ -21,7 +21,9 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
+import threading
 import math
+import time
 
 class Change():
     def __init__(self):
@@ -340,7 +342,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def update_area_width(self):
         allocation = self.drawing_area.get_allocation()
         self.drawing_area_width = allocation.width
-        print(self.drawing_area_width)
 
     def save(self, btn):
         dialog = Gtk.FileChooserNative(
@@ -604,19 +605,63 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def clear(self, btn=None, grid=None):
         if grid != self.grid:
-            for pos in self.changed_chars:
-                child = grid.get_child_at(pos[0], pos[1])
-                if not child:
-                    continue
-                child.set_label("")
-            self.changed_chars = []
-        else:
-            for y in range(self.canvas_y):
-                for x in range(self.canvas_x):
-                    child = grid.get_child_at(x, y)
+            start = time.time()
+            if len(self.changed_chars) < 100:
+                for pos in self.changed_chars:
+                    child = grid.get_child_at(pos[0], pos[1])
                     if not child:
                         continue
                     child.set_label("")
+                # print(f"normal finished in {time.time() - start} to remove{len(self.changed_chars)}")
+                self.changed_chars = []
+                return
+
+            threads = []
+            list_lenght = len(self.changed_chars)
+            divided = 5
+
+            quotient, remainder = divmod(list_lenght, divided)
+            parts = [quotient] * divided
+
+            for i in range(remainder):
+                parts[i] += 1
+
+            total = 0
+            # print(f"making threads at {time.time() - start}")
+            for part in parts:
+                if part == 0:
+                    return
+                thread = threading.Thread(target=self.clear_list_of_char, args=(total, total + part))
+                total += part
+                thread.start()
+                threads.append(thread)
+                # print(f"added threads at {time.time() - start}")
+
+            for thread in threads:
+                thread.join()
+                # print(f"joining at {time.time() - start}")
+            # print(f"threads finished in {time.time() - start} to remove {list_lenght} every one with {parts[0]}")
+            self.changed_chars = []
+
+        else:
+            self.force_clear(grid)
+
+    def force_clear(self, grid):
+        for y in range(self.canvas_y):
+            for x in range(self.canvas_x):
+                child = grid.get_child_at(x, y)
+                if not child:
+                    continue
+                child.set_label("")
+
+    def clear_list_of_char(self, chars_list_start, chars_list_end):
+        for index in range(chars_list_start, chars_list_end):
+            pos = self.changed_chars[index]
+            child = self.preview_grid.get_child_at(pos[0], pos[1])
+            if not child:
+                continue
+            child.set_label("")
+        # print("finished")
 
     def on_drag_begin(self, gesture, start_x, start_y):
         self.start_x = start_x
@@ -655,10 +700,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.erase_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
 
         elif self.tool == "RECTANGLE":
-            if self.prev_x > width or self.prev_y > height:
+            if self.prev_x != width or self.prev_y != height:
                 self.clear(None, self.preview_grid)
-            self.prev_x = width
-            self.prev_y = height
+                self.prev_x = width
+                self.prev_y = height
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -669,12 +714,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             height += 1
             self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
         elif self.tool == "FILLED-RECTANGLE":
-            if self.prev_x > width or self.prev_y > height:
+            if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height):
                 self.clear(None, self.preview_grid)
             self.prev_x = width
             self.prev_y = height
-
-            # self.clear(None, self.preview_grid)
+            self.changed_chars = []
 
             if width < 0:
                 width = -width
@@ -701,11 +745,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.draw_line(start_x_char, start_y_char, width, height, self.preview_grid)
 
         elif self.tool == "FREE-LINE":
-            self.clear(None, self.preview_grid)
             self.draw_free_line(start_x_char + width, start_y_char + height, self.grid)
             self.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
+        self.force_clear(self.preview_grid)
         if self.flip:
             delta_x = - delta_x
         start_x_char = self.start_x // self.x_mul
@@ -720,7 +764,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         if self.tool == "RECTANGLE":
             self.add_undo_action()
-            print(len(self.undo_changes))
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -906,8 +949,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def draw_line(self, start_x_char, start_y_char, width, height, grid):
         arrow = self.tool == "ARROW"
-
-        print(width, height)
 
         end_vertical = self.left_vertical()
         start_vertical = self.right_vertical()

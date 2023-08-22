@@ -22,6 +22,12 @@ You can also choose between many stiles to use!
   <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
 
   <releases>
+    <release version="0.1.3" date="2023-08-23">
+		  <description>
+			  <p>Undo functionality (Ctrl+Z)</p>
+		    <p>Performance improvements </p>
+		  </description>
+	  </release>
     <release version="0.1.2" date="2023-08-22">
 		  <description>
 			  <p>Fixed some bugs</p>
