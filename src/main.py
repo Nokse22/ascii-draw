@@ -40,13 +40,15 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
+        self.create_action('undo', self.on_undo_action, ['<control>z'])
+
         self.create_action('rectangle-tool', self.select_rectangle_tool, ['<control>r'])
         self.create_action('filled-rectangle-tool', self.select_filled_rectangle_tool, ['<control><shift>r'])
         self.create_action('line-tool', self.select_line_tool, ['<control>l'])
         self.create_action('text-tool', self.select_text_tool, ['<control>t'])
         self.create_action('free-tool', self.select_free_tool, ['<control>f'])
         self.create_action('eraser-tool', self.select_eraser_tool, ['<control>e'])
-        self.create_action('arrow-tool', self.select_arrow_tool, ['<control>a'])
+        self.create_action('arrow-tool', self.select_arrow_tool, ['<control>w'])
         self.create_action('free-line-tool', self.select_free_line_tool, ['<control>g'])
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
 
@@ -89,7 +91,8 @@ class AsciiDrawApplication(Adw.Application):
             css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-
+    def on_undo_action(self, widget, _):
+        self.win.undo_first_change()
 
     def do_activate(self):
         """Called when the application is activated.

@@ -23,6 +23,19 @@ from gi.repository import Gdk, Gio, GObject
 
 import math
 
+class Change():
+    def __init__(self):
+        self.changes = []
+
+    def add_change(self, x, y, prev_char):
+        for change in self.changes:
+            if change[0] == x and change[1] == y:
+                return
+        self.changes.append([x, y, prev_char])
+
+    def __repr__(self):
+        return f"The change has {len(self.changes)}"
+
 class AsciiDrawWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'AsciiDrawWindow'
 
@@ -70,7 +83,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 self.grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
                 self.preview_grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
 
-        # self.empty_grid = self.preview_grid
+        self.empty_grid = self.preview_grid
 
         self.styles = [
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
@@ -103,7 +116,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         action_bar.pack_start(self.line_button)
 
         self.arrow_button = Gtk.ToggleButton(icon_name="arrow-symbolic",
-                tooltip_text="Arrow Ctrl+R")
+                tooltip_text="Arrow Ctrl+W")
         self.arrow_button.connect("toggled", self.on_choose_arrow)
         self.arrow_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.arrow_button)
@@ -115,7 +128,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         action_bar.pack_start(self.free_line_button)
 
         self.free_button = Gtk.ToggleButton(icon_name="paintbrush-symbolic",
-                tooltip_text="Free Hand Ctrl+f")
+                tooltip_text="Free Hand Ctrl+F")
         self.free_button.connect("clicked", self.on_choose_free)
         self.free_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.free_button)
@@ -127,7 +140,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         action_bar.pack_start(self.text_button)
 
         self.eraser_button = Gtk.ToggleButton(icon_name="eraser-symbolic",
-                tooltip_text="Eraser Ctrl+R")
+                tooltip_text="Eraser Ctrl+E")
         self.eraser_button.connect("toggled", self.on_choose_eraser)
         self.eraser_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.eraser_button)
@@ -145,6 +158,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         save_button = Gtk.Button(label="Save")
         save_button.connect("clicked", self.save)
         headerbar.pack_start(save_button)
+
+        self.undo_button = Gtk.Button(icon_name="edit-undo-symbolic", sensitive=False)
+        self.undo_button.connect("clicked", self.undo_first_change)
+        headerbar.pack_start(self.undo_button)
 
         text_direction = save_button.get_child().get_direction()
 
@@ -185,9 +202,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
-        show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
-        show_sidebar_button.connect("clicked", self.show_sidebar)
-        headerbar.pack_end(show_sidebar_button)
+        # show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
+        # show_sidebar_button.connect("clicked", self.show_sidebar)
+        # headerbar.pack_end(show_sidebar_button)
 
         copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
         copy_button.connect("clicked", self.copy_content)
@@ -272,6 +289,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.end_x = 0
         self.end_y = 0
 
+        self.prev_x = 0
+        self.prev_y = 0
+
         self.tool = ""
         self.style = 1
         self.free_char = "+"
@@ -288,6 +308,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.line_direction = []
         self.prev_line_pos = [0,0]
+
+        self.undo_changes = []
 
         char = " "
         prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
@@ -444,8 +466,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if child:
                 self.free_char = child.get_label()
 
-        elif self.tool == "FREE":
-            self.draw_char(x_char, y_char)
+        # elif self.tool == "FREE":
+        #     self.draw_char(x_char, y_char)
 
     def on_click_stopped(self, arg):
         pass
@@ -607,7 +629,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         start_y_char = self.start_y // self.y_mul
 
         if self.tool == "FREE-LINE":
+            self.add_undo_action()
             self.prev_char_pos = [start_x_char, start_y_char]
+        elif self.tool == "FREE":
+            self.add_undo_action()
+        elif self.tool == "ERASER":
+            self.add_undo_action()
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if self.flip:
@@ -615,8 +642,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
 
-        width = int((end_x + self.start_x) // self.x_mul - start_x_char) # round((end_x) / self.x_mul) * self.x_mul
-        height = int((end_y + self.start_y) // self.y_mul - start_y_char) # round((end_y) / self.y_mul) * self.y_mul
+        width = int((end_x + self.start_x) // self.x_mul - start_x_char)
+        height = int((end_y + self.start_y) // self.y_mul - start_y_char)
 
         self.end_x = width * self.x_mul
         self.end_y = height * self.y_mul
@@ -628,7 +655,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.erase_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
 
         elif self.tool == "RECTANGLE":
-            self.clear(None, self.preview_grid)
+            if self.prev_x > width or self.prev_y > height:
+                self.clear(None, self.preview_grid)
+            self.prev_x = width
+            self.prev_y = height
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -639,7 +669,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             height += 1
             self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
         elif self.tool == "FILLED-RECTANGLE":
-            self.clear(None, self.preview_grid)
+            if self.prev_x > width or self.prev_y > height:
+                self.clear(None, self.preview_grid)
+            self.prev_x = width
+            self.prev_y = height
+
+            # self.clear(None, self.preview_grid)
+
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -674,12 +710,17 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             delta_x = - delta_x
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
-        width = int((delta_x + self.start_x) // self.x_mul - start_x_char) # round((end_x) / self.x_mul) * self.x_mul
-        height = int((delta_y + self.start_y) // self.y_mul - start_y_char) # round((end_y) / self.y_mul) * self.y_mul
+        width = int((delta_x + self.start_x) // self.x_mul - start_x_char)
+        height = int((delta_y + self.start_y) // self.y_mul - start_y_char)
+
+        self.prev_x = 0
+        self.prev_y = 0
 
         self.clear(None, self.preview_grid)
 
         if self.tool == "RECTANGLE":
+            self.add_undo_action()
+            print(len(self.undo_changes))
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -690,6 +731,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             height += 1
             self.draw_rectangle(start_x_char, start_y_char, width, height, self.grid)
         elif self.tool == "FILLED-RECTANGLE":
+            self.add_undo_action()
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -700,6 +742,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             height += 1
             self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid)
         elif self.tool == "LINE" or self.tool == "ARROW":
+            self.add_undo_action()
             if width < 0:
                 width -= 1
             else:
@@ -714,6 +757,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.prev_char = ""
             self.prev_char_pos = []
             self.prev_pos = []
+
+    def add_undo_action(self):
+        self.undo_changes.insert(0, Change())
+        self.undo_button.set_sensitive(True)
 
     def drawing_area_draw(self, area, cr, width, height, data):
         cr.save()
@@ -789,6 +836,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
         text = buffer.get_text(start, end, False)
+        if text != "":
+            self.add_undo_action()
         for char in text:
             child = self.grid.get_child_at(x, y)
             if ord(char) < 32:
@@ -800,6 +849,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if not child:
                 continue
             # print(f"{char} is {ord(char)} in {x},{y}")
+            self.undo_changes[0].add_change(x, y, child.get_label())
             child.set_label(char)
             if self.flip:
                 x -= 1
@@ -807,15 +857,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 x += 1
 
     def draw_char(self, x_coord, y_coord):
-        # for x in self.free_size:
-        #     for y in self.free_size:
         child = self.grid.get_child_at(x_coord, y_coord)
         if child:
+            self.undo_changes[0].add_change(x_coord, y_coord, child.get_label())
             child.set_label(self.free_char)
 
     def erase_char(self, x_coord, y_coord):
         child = self.grid.get_child_at(x_coord, y_coord)
         if child:
+            self.undo_changes[0].add_change(x_coord, y_coord, child.get_label())
             child.set_label("")
 
     def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid):
@@ -834,7 +884,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             return
 
         self.horizontal_line(start_y_char, start_x_char, width, grid, top_horizontal)
-        self.horizontal_line(start_y_char + height - 1, start_x_char, width, grid, bottom_horizontal)
+        self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, grid, bottom_horizontal)
         self.vertical_line(start_x_char, start_y_char + 1, height - 1, grid, top_vertical)
         self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, bottom_vertical)
 
@@ -866,9 +916,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         if width > 0 and height > 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height - 1, start_x_char, width, grid, start_horizontal)
+                self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 1, grid, start_horizontal)
                 if height > 1:
-                    self.vertical_line(start_x_char, start_y_char, height, grid, end_vertical)
+                    self.vertical_line(start_x_char, start_y_char, height - 1, grid, end_vertical)
                 if height != 1:
                     self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
                 if arrow:
@@ -876,16 +926,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             else:
                 self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
                 if height > 1:
-                    self.vertical_line(start_x_char + width - 1, start_y_char, height, grid, start_vertical)
+                    self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, start_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.down_arrow())
         elif width > 0 and height < 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height + 1, start_x_char, width, grid, end_horizontal)
+                self.horizontal_line(start_y_char + height + 1, start_x_char + 1, width - 1, grid, end_horizontal)
                 if height < 1:
-                    self.vertical_line(start_x_char, start_y_char + 1, height, grid, end_vertical)
+                    self.vertical_line(start_x_char, start_y_char + 1, height + 1, grid, end_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_left())
                 if arrow:
@@ -893,63 +943,45 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             else:
                 self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
                 if height < 1:
-                    self.vertical_line(start_x_char + width - 1, start_y_char + 1, height, grid, end_vertical)
+                    self.vertical_line(start_x_char + width - 1, start_y_char, height + 1, grid, end_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.bottom_right())
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.up_arrow())
         elif width < 0 and height > 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width, grid, start_horizontal)
+                self.horizontal_line(start_y_char + height - 1, start_x_char, width + 1, grid, start_horizontal)
                 if height > 1:
-                    self.vertical_line(start_x_char, start_y_char, height, grid, start_vertical)
+                    self.vertical_line(start_x_char, start_y_char, height - 1, grid, start_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_right())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
             else:
-                self.horizontal_line(start_y_char, start_x_char + 1, width, grid, end_horizontal)
+                self.horizontal_line(start_y_char, start_x_char + 1, width + 1, grid, end_horizontal)
                 if height > 1:
-                    self.vertical_line(start_x_char + width + 1, start_y_char, height, grid, end_vertical)
+                    self.vertical_line(start_x_char + width + 1, start_y_char + 1, height - 1, grid, end_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.top_left())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.down_arrow())
         elif width < 0 and height < 0:
             if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height + 1, start_x_char + 1, width, grid, end_horizontal)
+                self.horizontal_line(start_y_char + height + 1, start_x_char, width + 1, grid, end_horizontal)
                 if height < 1:
-                    self.vertical_line(start_x_char, start_y_char + 1, height, grid, start_vertical)
+                    self.vertical_line(start_x_char, start_y_char + 1, height + 1, grid, start_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_right())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.left_arrow())
             else:
-                self.horizontal_line(start_y_char, start_x_char + 1, width, grid, start_horizontal)
+                self.horizontal_line(start_y_char, start_x_char + 1, width + 1, grid, start_horizontal)
                 if height < 1:
-                    self.vertical_line(start_x_char + width + 1, start_y_char + 1, height, grid, end_vertical)
+                    self.vertical_line(start_x_char + width + 1, start_y_char, height + 1, grid, end_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.up_arrow())
-
-        # if width == 1:
-        #     child = grid.get_child_at(start_x_char + width - 1, start_y_char)
-        #     if child:
-        #         child.set_label(end_vertical)
-        # elif width == -1:
-        #     child = grid.get_child_at(start_x_char + width + 1, start_y_char)
-        #     if child:
-        #         child.set_label(end_vertical)
-
-        # elif height == 1 and width < 0:
-        #     child = grid.get_child_at(start_x_char + width + 1, start_y_char)
-        #     if child:
-        #         child.set_label(end_horizontal)
-        # elif height == 1 and width > 0:
-        #     child = grid.get_child_at(start_x_char + width - 1, start_y_char)
-        #     if child:
-        #         child.set_label(end_horizontal)
 
         if arrow and height == 1:
             if width < 0:
@@ -962,6 +994,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def set_char_at(self, x, y, grid, char):
         child = grid.get_child_at(x, y)
         if child:
+            if grid == self.grid:
+                self.undo_changes[0].add_change(x, y, child.get_label())
             child.set_label(char)
             self.changed_chars.append([x, y])
 
@@ -971,6 +1005,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 child = grid.get_child_at(x, start_y + y)
                 if not child:
                     continue
+                if grid == self.grid:
+                    self.undo_changes[0].add_change(x, start_y + y, child.get_label())
                 prev_label = child.get_label()
                 if prev_label == "" or prev_label == " ":
                     child.set_label(char)
@@ -984,6 +1020,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 child = grid.get_child_at(x, start_y + y + lenght)
                 if not child:
                     continue
+                if grid == self.grid:
+                    self.undo_changes[0].add_change(x, start_y + y + lenght, child.get_label())
                 if child.get_label() == "─":
                     child.set_label("┼")
                 else:
@@ -997,6 +1035,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 if not child:
                     continue
                 prev_label = child.get_label()
+                if grid == self.grid:
+                    self.undo_changes[0].add_change(start_x + x, y, prev_label)
                 if prev_label == "" or prev_label == " ":
                     child.set_label(char)
                 elif prev_label == self.left_vertical():
@@ -1010,6 +1050,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 if not child:
                     continue
                 prev_label = child.get_label()
+                if grid == self.grid:
+                    self.undo_changes[0].add_change(start_x + x + width, y, prev_label)
                 if prev_label == "" or prev_label == " ":
                     child.set_label(char)
                 elif prev_label == self.left_vertical():
@@ -1017,6 +1059,20 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 else:
                     child.set_label(char)
                 self.changed_chars.append([start_x + x + width, y])
+
+    def undo_first_change(self, btn=None):
+        try:
+            change_object = self.undo_changes[0]
+        except:
+            return
+        for change in change_object.changes:
+            child = self.grid.get_child_at(change[0], change[1])
+            if not child:
+                continue
+            child.set_label(change[2])
+        self.undo_changes.pop(0)
+        if len(self.undo_changes) == 0:
+            self.undo_button.set_sensitive(False)
 
     def top_horizontal(self):
         return self.styles[self.style - 1][0]
