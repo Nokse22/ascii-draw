@@ -372,6 +372,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                         char = " "
                         text += char
                     else:
+                        if self.flip and char == "<":
+                            char = ">"
+                        elif self.flip and char == ">":
+                            char = "<"
                         text += char
                         text_row += text
                         text = ""
@@ -1002,12 +1006,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def down_arrow(self):
         return self.styles[self.style - 1][14]
     def left_arrow(self):
-        if self.flip:
-            return self.styles[self.style - 1][15]
         return self.styles[self.style - 1][16]
     def right_arrow(self):
-        if self.flip:
-            return self.styles[self.style - 1][16]
         return self.styles[self.style - 1][15]
     def crossing(self):
         return self.styles[self.style - 1][8]
