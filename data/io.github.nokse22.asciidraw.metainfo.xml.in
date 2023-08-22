@@ -22,6 +22,12 @@ You can also choose between many stiles to use!
   <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
 
   <releases>
+    <release version="0.1.2" date="2023-08-22">
+		  <description>
+			  <p>Fixed some bugs</p>
+		    <p>Added new tool: Filled Rectangle</p>
+		  </description>
+	  </release>
     <release version="0.1.1" date="2023-08-21">
 		  <description>
 			  <p>Fixed many bugs with right to left text direction</p>

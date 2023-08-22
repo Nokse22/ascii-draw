@@ -90,6 +90,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.rectangle_button.connect("toggled", self.on_choose_rectangle)
         action_bar.pack_start(self.rectangle_button)
 
+        self.filled_rectangle_button = Gtk.ToggleButton(icon_name="filled-rectangle-symbolic",
+                tooltip_text="Rectangle Ctrl+Shift+R")
+        self.filled_rectangle_button.connect("toggled", self.on_choose_filled_rectangle)
+        self.filled_rectangle_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.filled_rectangle_button)
+
         self.line_button = Gtk.ToggleButton(icon_name="line-symbolic",
                 tooltip_text="Line Ctrl+L")
         self.line_button.connect("toggled", self.on_choose_line)
@@ -283,12 +289,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.line_direction = []
         self.prev_line_pos = [0,0]
 
-        char = bytes([33]).decode('cp437')
+        char = " "
         prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
         prev_button.connect("toggled", self.change_char, self.free_char_list)
         self.free_char_list.append(prev_button)
 
-        for i in range(34, 255):
+        for i in range(33, 255):
             if i == 127:
                 continue
             char = bytes([i]).decode('cp437')
@@ -346,9 +352,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def change_char(self, btn, flow_box):
         self.free_char = btn.get_label()
-        self.tool = "FREE"
-
-        self.free_button.set_active(True)
 
     def show_sidebar(self, btn):
         # self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
@@ -454,6 +457,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         else:
             self.tool = ""
 
+        self.overlay_split_view.set_reveal_flap(True)
+
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FREE-LINE")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -480,6 +485,21 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         scrolled = Gtk.ScrolledWindow(vexpand=True)
         scrolled.set_policy(2,1)
         scrolled.set_child(self.lines_styles_selection)
+        box.append(scrolled)
+        self.scrolled.set_child(box)
+
+    def on_choose_filled_rectangle(self, btn):
+        self.reset_text_entry()
+        if btn.get_active():
+            self.tool = "FILLED-RECTANGLE"
+
+        self.overlay_split_view.set_reveal_flap(True)
+
+        self.scrolled.set_child(None)
+        box = Gtk.Box(orientation=1, name="FILLED-RECTANGLE")
+        scrolled = Gtk.ScrolledWindow(vexpand=True)
+        scrolled.set_policy(2,1)
+        scrolled.set_child(self.free_char_list)
         box.append(scrolled)
         self.scrolled.set_child(box)
 
@@ -618,6 +638,17 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 start_y_char -= height
             height += 1
             self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
+        elif self.tool == "FILLED-RECTANGLE":
+            self.clear(None, self.preview_grid)
+            if width < 0:
+                width = -width
+                start_x_char -= width
+            width += 1
+            if height < 0:
+                height = - height
+                start_y_char -= height
+            height += 1
+            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
         elif self.tool == "LINE" or self.tool == "ARROW":
             self.clear(None, self.preview_grid)
             if width < 0:
@@ -658,7 +689,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 start_y_char -= height
             height += 1
             self.draw_rectangle(start_x_char, start_y_char, width, height, self.grid)
-
+        elif self.tool == "FILLED-RECTANGLE":
+            if width < 0:
+                width = -width
+                start_x_char -= width
+            width += 1
+            if height < 0:
+                height = - height
+                start_y_char -= height
+            height += 1
+            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid)
         elif self.tool == "LINE" or self.tool == "ARROW":
             if width < 0:
                 width -= 1
@@ -777,6 +817,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         child = self.grid.get_child_at(x_coord, y_coord)
         if child:
             child.set_label("")
+
+    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid):
+        for y in range(height):
+            for x in range(width):
+                self.set_char_at(start_x_char + x, start_y_char + y, grid, self.free_char)
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, grid):
         top_vertical = self.left_vertical()
@@ -1027,6 +1072,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def select_rectangle_tool(self):
         self.rectangle_button.set_active(True)
         self.tool = "RECTANGLE"
+
+    def select_filled_rectangle_tool(self):
+        self.filled_rectangle_button.set_active(True)
+        self.tool = "FILLED-RECTANGLE"
 
     def select_line_tool(self):
         self.line_button.set_active(True)

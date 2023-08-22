@@ -34,6 +34,12 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Filled Rectangle</property>
+                <property name="action-name">app.filled-rectangle-tool</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Line</property>
                 <property name="action-name">app.line-tool</property>
               </object>

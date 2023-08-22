@@ -6,6 +6,7 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/paintbrush-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/text-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/rectangle-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/filled-rectangle-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/free-line-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/line-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/arrow-symbolic.svg</file>

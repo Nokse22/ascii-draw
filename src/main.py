@@ -41,6 +41,7 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('preferences', self.on_preferences_action)
 
         self.create_action('rectangle-tool', self.select_rectangle_tool, ['<control>r'])
+        self.create_action('filled-rectangle-tool', self.select_filled_rectangle_tool, ['<control><shift>r'])
         self.create_action('line-tool', self.select_line_tool, ['<control>l'])
         self.create_action('text-tool', self.select_text_tool, ['<control>t'])
         self.create_action('free-tool', self.select_free_tool, ['<control>f'])
@@ -107,7 +108,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name='ASCII Draw',
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.1.1',
+                                version='0.1.2',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
@@ -135,6 +136,9 @@ class AsciiDrawApplication(Adw.Application):
 
     def select_rectangle_tool(self, widget, _):
         self.win.select_rectangle_tool()
+
+    def select_filled_rectangle_tool(self, widget, _):
+        self.win.select_filled_rectangle_tool()
 
     def select_line_tool(self, widget, _):
         self.win.select_line_tool()
