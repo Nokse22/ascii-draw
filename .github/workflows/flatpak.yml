@@ -26,5 +26,5 @@ jobs:
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v4
         with:
           bundle: io.github.nokse22.asciidraw.flatpak
-          manifest-path: io.github.nokse22.ascii-draw.json
+          manifest-path: io.github.nokse22.asciidraw.json
           cache-key: flatpak-builder-${{ github.sha }}
