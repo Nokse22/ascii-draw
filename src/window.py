@@ -369,7 +369,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         if response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
+            return
         elif response == Gtk.ResponseType.ACCEPT:
+            path = dialog.get_file().get_path()
             try:
                 with open(path, 'w') as file:
                     file.write(self.get_canvas_content())
@@ -1049,6 +1051,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
                 if arrow:
                     self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.up_arrow())
+
+        if width == 1 and height < 0:
+            self.set_char_at(start_x_char, start_y_char, grid, self.left_vertical())
+        elif width == 1 and height > 0:
+            self.set_char_at(start_x_char, start_y_char, grid, self.right_vertical())
+        elif height == 1:
+            self.set_char_at(start_x_char, start_y_char, grid, self.bottom_horizontal())
 
         if arrow and height == 1:
             if width < 0:
