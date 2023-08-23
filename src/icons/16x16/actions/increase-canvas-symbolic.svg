@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="16px"
+   viewBox="0 0 16 16"
+   width="16px"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="increase-canvas-symbolic.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="45.254834"
+     inkscape:cx="8.9161746"
+     inkscape:cy="7.8334173"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1"
+     showgrid="true">
+    <inkscape:grid
+       id="grid3"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
+  <rect
+     style="font-variation-settings:'wght' 700;display:inline;fill:#000000;fill-opacity:0.27121204;stroke:none;stroke-width:1.58238;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect9"
+     width="15.992339"
+     height="16.001095"
+     x="0.0016417503"
+     y="-0.0010948181"
+     rx="3.0010948"
+     ry="3.0010948" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:inline;fill:#000000;fill-opacity:0.99211;stroke:none;stroke-width:0.989139;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect1"
+     width="9.9967165"
+     height="10.00219"
+     x="0.0016417503"
+     y="-0.0010948181"
+     rx="1.0010948"
+     ry="1.0010948" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.197838;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect2"
+     width="2"
+     height="2"
+     x="13"
+     y="1"
+     rx="0"
+     ry="0" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.197838;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect3"
+     width="2"
+     height="2"
+     x="1"
+     y="13"
+     rx="0"
+     ry="0" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.197838;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect4"
+     width="2"
+     height="2"
+     x="13"
+     y="13"
+     rx="0"
+     ry="0" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.197838;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect5"
+     width="2"
+     height="2"
+     x="13"
+     y="5"
+     rx="0"
+     ry="0" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.197838;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect6"
+     width="2"
+     height="2"
+     x="13"
+     y="9"
+     rx="0"
+     ry="0" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.197838;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect7"
+     width="2"
+     height="2"
+     x="5"
+     y="13"
+     rx="0"
+     ry="0" />
+  <rect
+     style="font-variation-settings:'wght' 700;display:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.197838;stroke-linejoin:round;paint-order:fill markers stroke"
+     id="rect8"
+     width="2"
+     height="2"
+     x="9"
+     y="13"
+     rx="0"
+     ry="0" />
+</svg>

@@ -96,9 +96,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["•", "•", "•", "•", "•", "•", "•","•", "•", "•", "•", "•","•", "▲", "▼", ">", "<"],
                 ["˜", "˜", "│", "│", "│", "│", " "," ", "│", "│", "│", "˜","˜", "▲", "▼", "►", "◄"],
                 ["═", "═", "│", "│", "╒", "╕", "╛","╘", "╪", "╞", "╡", "╧","╤", "▲", "▼", "►", "◄"],
-                ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+                ["─", "─", "║", "║", "╓", "╖", "╜","╙", "╫", "╟", "╢", "╨","╥", "▲", "▼", ">", "<"],
                 ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+                ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
         ]
         action_bar = Gtk.ActionBar()
         self.rectangle_button = Gtk.ToggleButton(icon_name="rectangle-symbolic",
@@ -179,13 +179,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         for style in self.styles:
             if self.flip:
-                name = style[5] + style[1] + style[1] + style[1] + style[4] + " " + style[3] + " " + style[15] + style[1] + style[1] + style[4] + "\n"
+                name = style[5] + style[1] + style[1] + style[1] + style[4] + " " + style[3] + " " + style[15] + style[1] + style[1] + style[4] + style[3] + "\n"
                 name += style[3] + "   " + style[2] + " " + style[3] + "    " + style[2] + "\n"
                 name += style[6] + style[0] + style[0] + style[0] + style[7] + " " + style[6] + style[0] + style[0] + style[16] + " " + style[2]
             else:
-                name = style[4] + style[0] + style[0] + style[0] + style[5] + " " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "\n"
-                name += style[2] + "   " + style[3] + " " + style[2] + "    " + style[3] + "\n"
-                name += style[7] + style[1] + style[1] + style[1] + style[6] + " " + style[7] + style[1] + style[1] + style[15] + " " + style[3]
+                name = style[4] + style[0] + style[0] + style[0] + style[5] + " " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "  " + style[3] + "  "  + style[13] + "\n"
+                name += style[2] + "   " + style[3] + " " + style[2] + "    " + style[3] + "  " + style[3] + "  " + style[3] + "\n"
+                name += style[7] + style[1] + style[1] + style[1] + style[6] + " " + style[7] + style[1] + style[1] + style[15] + " " + style[3] + "  " + style[14] + "  " + style[3]
             label = Gtk.Label(label = name)
             style_btn = Gtk.ToggleButton(css_classes=["flat", "ascii"])
             style_btn.set_child(label)
@@ -431,17 +431,24 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def increase_size(self, btn, width_row, height_row):
         x_inc = int(width_row.get_value())
         y_inc = int(height_row.get_value())
-        for column in range(y_inc):
-            for y in range(self.canvas_y):
-                self.grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x + 1, y, 1, 1)
-                self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x + 1, y, 1, 1)
-            self.canvas_y += 1
-        for line in range(x_inc):
-            for x in range(self.canvas_x):
-                self.grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y + 1, 1, 1)
-                self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y + 1, 1, 1)
-            self.canvas_x += 1
+        print(x_inc, y_inc)
+        if y_inc != 0:
+            for line in range(y_inc):
+                self.canvas_y += 1
+                for x in range(self.canvas_x):
+                    self.grid.attach(Gtk.Label(name=str(self.canvas_y), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
+                    self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
 
+        print(self.canvas_x, self.canvas_y)
+        if x_inc != 0:
+            for column in range(x_inc):
+                self.canvas_x += 1
+                for y in range(self.canvas_y):
+                    self.grid.attach(Gtk.Label(name=str(self.canvas_x), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
+                    self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
+
+
+        print(self.canvas_x, self.canvas_y)
         self.drawing_area_width = self.drawing_area.get_allocation().width
 
     def change_style(self, btn, box):
