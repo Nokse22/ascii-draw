@@ -365,8 +365,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         dialog.connect("response", self.on_save_file_response)
 
     def on_save_file_response(self, dialog, response):
-        path = dialog.get_file().get_path()
-
         if response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
             return
