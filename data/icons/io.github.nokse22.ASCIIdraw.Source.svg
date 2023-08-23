@@ -650,9 +650,9 @@
      borderopacity="0.25490196"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9999999"
-     inkscape:cx="83.312501"
-     inkscape:cy="76.937501"
+     inkscape:zoom="4"
+     inkscape:cx="118.5"
+     inkscape:cy="79.375001"
      inkscape:current-layer="g1096-6"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -2928,12 +2928,12 @@
            id="rect929-36-9-9"
            style="display:inline;opacity:1;vector-effect:none;fill:#a51d2d;fill-opacity:1;stroke:none;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none;paint-order:normal;enable-background:new" />
         <rect
-           ry="7.3601408"
-           rx="7.3601375"
+           ry="3.008997"
+           rx="3.008997"
            y="190.99911"
            x="-351.00003"
-           height="92.999992"
-           width="94.07003"
+           height="93.000008"
+           width="94.000008"
            id="rect20"
            style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.23;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none;paint-order:normal;enable-background:new" />
         <text
@@ -3034,8 +3034,8 @@
         <path
            id="rect929-36-9-9-4"
            style="display:inline;vector-effect:none;fill:#ed333b;fill-opacity:1;stroke:none;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none;paint-order:normal;enable-background:new"
-           d="m -348.00002,183.99912 c -4.43199,0 -8,3.568 -8,8 v 84 c 0,4.432 3.56801,8 8,8 h 88 c 4.43199,0 8,-3.568 8,-8 v -84 c 0,-4.432 -3.56801,-8 -8,-8 z m 4.19063,5 h 79.61874 c 4.00991,0 7.23928,3.22745 7.23928,7.23737 v 75.76264 c 0,4.00991 -3.22939,6.98804 -7.23928,6.99999 l -79.61874,0.23737 c -4.00989,0.012 -7.23928,-3.22745 -7.23928,-7.23736 v -75.76264 c 0,-4.00992 3.22937,-7.23737 7.23928,-7.23737 z"
-           sodipodi:nodetypes="ssssssssssssssssss" />
+           d="m -348.00002,183.99912 c -4.43199,0 -8,3.568 -8,8 v 84 c 0,4.432 3.56801,8 8,8 h 88 c 4.43199,0 8,-3.568 8,-8 v -84 c 0,-4.432 -3.56801,-8 -8,-8 z m 0,5 h 88 c 2,0 3,1 3,3 v 84 c 0,2 -0.99999,3 -3,3 h -88 c -2,0 -3,-1 -3,-3 l 1e-4,-84 c 0,-2 1,-3 3,-3 z"
+           sodipodi:nodetypes="sssssssssssssssssss" />
         <rect
            ry="7.3601408"
            rx="7.3601394"
