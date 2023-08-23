@@ -662,15 +662,20 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.changed_chars = []
 
         else:
-            self.force_clear(grid)
+            self.force_clear(None)
 
-    def force_clear(self, grid):
+    def force_clear(self, grid=None):
+        if grid == None:
+            self.add_undo_action("Clear Screen")
+            grid = self.grid
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
                 child = grid.get_child_at(x, y)
                 if not child:
                     continue
-                child.set_label("")
+                if grid == self.grid:
+                    self.undo_changes[0].add_change(x, y, child.get_label())
+                child.set_label(" ")
 
     def clear_list_of_char(self, chars_list_start, chars_list_end):
         for index in range(chars_list_start, chars_list_end):

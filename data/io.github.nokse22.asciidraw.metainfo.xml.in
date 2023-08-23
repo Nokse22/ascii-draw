@@ -6,10 +6,19 @@
 	<project_license>GPL-3.0-or-later</project_license>
   <summary>Draw using ASCII characters</summary>
 	<description>
-	  <p>This app lets you draw using ASCII characters.
-There are multiple tools available: Free hand brush, Free hand line, Straight Line, Straight Arrow, Rectangle, Filled Rectangle, Character picker, Text and Eraser
-You can also choose between many stiles to use!
-	  </p>
+	  <p>This app lets you draw diagrams and more using ASCII characters.
+There are many stiles to choose from and multiple tools available to use:</p>
+	  <ul>
+      <li>Freehand Brush</li>
+      <li>Freehand Line</li>
+      <li>Straight Line</li>
+      <li>Straight Arrow</li>
+	    <li>Rectangle</li>
+	    <li>Filled Rectangle</li>
+	    <li>Character Picker</li>
+	    <li>Text</li>
+	    <li>Eraser</li>
+    </ul>
 	</description>
 
  	<developer_name>Nokse</developer_name>
