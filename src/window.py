@@ -635,10 +635,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 return
 
             threads = []
-            list_lenght = len(self.changed_chars)
+            list_length = len(self.changed_chars)
             divided = 5
 
-            quotient, remainder = divmod(list_lenght, divided)
+            quotient, remainder = divmod(list_length, divided)
             parts = [quotient] * divided
 
             for i in range(remainder):
@@ -658,7 +658,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             for thread in threads:
                 thread.join()
                 # print(f"joining at {time.time() - start}")
-            # print(f"threads finished in {time.time() - start} to remove {list_lenght} every one with {parts[0]}")
+            # print(f"threads finished in {time.time() - start} to remove {list_length} every one with {parts[0]}")
             self.changed_chars = []
 
         else:
@@ -1073,9 +1073,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child.set_label(char)
             self.changed_chars.append([x, y])
 
-    def vertical_line(self, x, start_y, lenght, grid, char):
-        if lenght > 0:
-            for y in range(abs(lenght)):
+    def vertical_line(self, x, start_y, length, grid, char):
+        if length > 0:
+            for y in range(abs(length)):
                 child = grid.get_child_at(x, start_y + y)
                 if not child:
                     continue
@@ -1090,17 +1090,17 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     child.set_label(char)
                 self.changed_chars.append([x, start_y + y])
         else:
-            for y in range(abs(lenght)):
-                child = grid.get_child_at(x, start_y + y + lenght)
+            for y in range(abs(length)):
+                child = grid.get_child_at(x, start_y + y + length)
                 if not child:
                     continue
                 if grid == self.grid:
-                    self.undo_changes[0].add_change(x, start_y + y + lenght, child.get_label())
+                    self.undo_changes[0].add_change(x, start_y + y + length, child.get_label())
                 if child.get_label() == "─":
                     child.set_label("┼")
                 else:
                     child.set_label(char)
-                self.changed_chars.append([x, start_y + y + lenght])
+                self.changed_chars.append([x, start_y + y + length])
 
     def horizontal_line(self, y, start_x, width, grid, char):
         if width > 0:
