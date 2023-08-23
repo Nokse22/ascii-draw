@@ -25,7 +25,8 @@ You can also choose between many stiles to use!
     <release version="0.1.3" date="2023-08-23">
 		  <description>
 			  <p>Undo functionality (Ctrl+Z)</p>
-		    <p>Performance improvements </p>
+		    <p>Performance improvements</p>
+		    <p>Improved text insertion with preview</p>
 		  </description>
 	  </release>
     <release version="0.1.2" date="2023-08-22">

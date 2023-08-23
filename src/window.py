@@ -26,8 +26,9 @@ import math
 import time
 
 class Change():
-    def __init__(self):
+    def __init__(self, _name):
         self.changes = []
+        self.name = _name
 
     def add_change(self, x, y, prev_char):
         for change in self.changes:
@@ -313,6 +314,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.undo_changes = []
 
+        self.text_x = 0
+        self.text_y = 0
+
+        self.text_entry.get_buffer().connect("changed", self.insert_text)
+
         char = " "
         prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
         prev_button.connect("toggled", self.change_char, self.free_char_list)
@@ -460,7 +466,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         y_char = int(self.start_y / self.y_mul)
 
         if self.tool == "TEXT":
-            self.insert_text(self.text_entry, x_char, y_char)
+            self.text_x = x_char
+            self.text_y = y_char
+            self.insert_text(None)
 
         elif self.tool == "PICKER":
             child = self.grid.get_child_at(x_char, y_char)
@@ -550,6 +558,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="TEXT")
         box.append(self.text_entry)
+        write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
+        write_button.connect("clicked", self.insert_text, self.grid)
+        box.append(write_button)
         self.scrolled.set_child(box)
 
     def on_choose_free(self, btn):
@@ -661,7 +672,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if not child:
                 continue
             child.set_label("")
-        # print("finished")
 
     def on_drag_begin(self, gesture, start_x, start_y):
         self.start_x = start_x
@@ -674,12 +684,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         start_y_char = self.start_y // self.y_mul
 
         if self.tool == "FREE-LINE":
-            self.add_undo_action()
+            self.add_undo_action("Free Hand Line")
             self.prev_char_pos = [start_x_char, start_y_char]
         elif self.tool == "FREE":
-            self.add_undo_action()
+            self.add_undo_action("Free Hand")
         elif self.tool == "ERASER":
-            self.add_undo_action()
+            self.add_undo_action("Eraser")
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if self.flip:
@@ -714,7 +724,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             height += 1
             self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
         elif self.tool == "FILLED-RECTANGLE":
-            if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height):
+            if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height) or math.copysign(1, self.prev_x) != math.copysign(1, width) or math.copysign(1, self.prev_y) != math.copysign(1, height):
                 self.clear(None, self.preview_grid)
             self.prev_x = width
             self.prev_y = height
@@ -749,7 +759,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
-        self.force_clear(self.preview_grid)
+        if self.tool != "TEXT":
+            self.force_clear(self.preview_grid)
         if self.flip:
             delta_x = - delta_x
         start_x_char = self.start_x // self.x_mul
@@ -760,10 +771,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.prev_x = 0
         self.prev_y = 0
 
-        self.clear(None, self.preview_grid)
-
         if self.tool == "RECTANGLE":
-            self.add_undo_action()
+            self.add_undo_action("Rectangle")
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -774,7 +783,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             height += 1
             self.draw_rectangle(start_x_char, start_y_char, width, height, self.grid)
         elif self.tool == "FILLED-RECTANGLE":
-            self.add_undo_action()
+            self.add_undo_action("Filled Rectangle")
             if width < 0:
                 width = -width
                 start_x_char -= width
@@ -785,7 +794,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             height += 1
             self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid)
         elif self.tool == "LINE" or self.tool == "ARROW":
-            self.add_undo_action()
+            self.add_undo_action(self.tool.capitalize())
             if width < 0:
                 width -= 1
             else:
@@ -801,9 +810,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.prev_char_pos = []
             self.prev_pos = []
 
-    def add_undo_action(self):
-        self.undo_changes.insert(0, Change())
+    def add_undo_action(self, name):
+        self.undo_changes.insert(0, Change(name))
         self.undo_button.set_sensitive(True)
+        self.undo_button.set_tooltip_text("Undo " + self.undo_changes[0].name)
 
     def drawing_area_draw(self, area, cr, width, height, data):
         cr.save()
@@ -872,28 +882,32 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.prev_char_pos = [self.prev_pos[0], self.prev_pos[1]]
         self.prev_pos = [new_x, new_y]
 
-    def insert_text(self, entry, x_coord, y_coord):
-        x = x_coord
-        y = y_coord
-        buffer = entry.get_buffer()
+    def insert_text(self, widget=None, grid=None):
+        self.clear(None, self.preview_grid)
+        if grid == None:
+            grid = self.preview_grid
+        x = self.text_x
+        y = self.text_y
+        buffer = self.text_entry.get_buffer()
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
         text = buffer.get_text(start, end, False)
-        if text != "":
-            self.add_undo_action()
+        if text != "" and grid == self.grid:
+            self.add_undo_action(self.tool.capitalize())
         for char in text:
-            child = self.grid.get_child_at(x, y)
+            child = grid.get_child_at(x, y)
             if ord(char) < 32:
                 if ord(char) == 10:
                     y += 1
-                    x = x_coord
+                    x = self.text_x
                     continue
                 continue
             if not child:
                 continue
-            # print(f"{char} is {ord(char)} in {x},{y}")
-            self.undo_changes[0].add_change(x, y, child.get_label())
+            if grid == self.grid:
+                self.undo_changes[0].add_change(x, y, child.get_label())
             child.set_label(char)
+            self.changed_chars.append([x, y])
             if self.flip:
                 x -= 1
             else:
@@ -1114,6 +1128,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.undo_changes.pop(0)
         if len(self.undo_changes) == 0:
             self.undo_button.set_sensitive(False)
+        else:
+            self.undo_button.set_tooltip_text("Undo " + self.undo_changes[0].name)
 
     def top_horizontal(self):
         return self.styles[self.style - 1][0]

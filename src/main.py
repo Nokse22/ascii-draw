@@ -59,7 +59,7 @@ class AsciiDrawApplication(Adw.Application):
                 linear-gradient(to right, #c0bfbc55 1px, transparent 1px),
                 linear-gradient(to bottom, #c0bfbc55 1px, transparent 1px);
             box-shadow:
-                inset 0px 0px 0px 1px #c0bfbc55,
+                inset 0px 0px 0px 1px #c0bfbc,
                 0px 0px 10px 10px #c0bfbc44;
         }
         .ascii-preview{
@@ -78,6 +78,8 @@ class AsciiDrawApplication(Adw.Application):
             background-image:
                 linear-gradient(to right, #c0bfbc55 1px, transparent 1px),
                 linear-gradient(to bottom, #c0bfbc55 1px, transparent 1px);
+            box-shadow:
+                inset 0px 0px 0px 1px #c0bfbc;
         }
         .padded{
             padding: 12px;
