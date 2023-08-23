@@ -29,8 +29,9 @@
             "buildsystem" : "meson",
             "sources" : [
                 {
-                    "type" : "dir",
-                    "url" : "."
+                    "type" : "git",
+                    "url" : "https://github.com/nokse22/ascii-draw.git",
+                    "branch": "master"
                 }
             ]
         }
