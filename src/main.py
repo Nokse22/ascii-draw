@@ -88,16 +88,21 @@ class AsciiDrawApplication(Adw.Application):
         .mono-entry{
             font-family: Monospace;
             font-size: 20px;
-            background-size: 12px 24px;
-            background-image:
-                linear-gradient(to right, #55555544 1px, transparent 1px),
-                linear-gradient(to bottom, #55555544 1px, transparent 1px);
+            background: @window_bg_color;
+            /*background-size: 12px 24px;*/
+            /*background-image:
+                linear-gradient(to right, #aaaaaa 1px, transparent 1px),
+                linear-gradient(to bottom, #aaaaaa 1px, @window_bg_color 1px);*/
             box-shadow:
-                inset 0px 0px 0px 1px #67676722,
-                inset 0px 0px 0px 1px #67676722;
+                inset 0px 0px 0px 1px #777777;
         }
         .padded{
             padding: 12px;
+        }
+        .font-preview{
+            font-family: Monospace;
+            font-size: 5px;
+            color: @window_fg_color;
         }
 
         '''
