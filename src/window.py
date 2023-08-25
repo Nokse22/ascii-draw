@@ -153,7 +153,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         save_button = Gtk.Button(label="Save")
         save_button.connect("clicked", self.save)
+        copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
+        copy_button.connect("clicked", self.copy_content)
+        # export_box = Gtk.Box()
+        # export_box.append(save_button)
+        # export_box.append(copy_button)
+
         headerbar.pack_start(save_button)
+        headerbar.pack_start(copy_button)
 
         self.undo_button = Gtk.Button(icon_name="edit-undo-symbolic", sensitive=False)
         self.undo_button.connect("clicked", self.undo_first_change)
@@ -202,10 +209,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.show_sidebar_button.connect("clicked", self.show_sidebar)
         headerbar.pack_end(self.show_sidebar_button)
 
-        copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
-        copy_button.connect("clicked", self.copy_content)
-        headerbar.pack_end(copy_button)
-
         increase_button = Gtk.MenuButton(icon_name="list-add-symbolic")
         increase_canvas_popover = Gtk.Popover()
         increase_button.set_popover(increase_canvas_popover)
@@ -235,14 +238,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         # self.drawing_area.connect("show", self.update_area_width)
 
         self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
-        scrolled_window = Gtk.ScrolledWindow(hexpand=True, width_request=300)
+        scrolled_window = Gtk.ScrolledWindow(hexpand=True)
         scrolled_window.set_child(self.overlay)
 
         self.overlay_split_view.set_content(scrolled_window)
 
         self.free_char_list = Gtk.FlowBox(can_focus=False)
         self.free_char_list.set_selection_mode(0)
-        self.scrolled = Gtk.ScrolledWindow(halign=Gtk.Align.END, width_request=300, css_classes=["sidebar"])
+        self.scrolled = Gtk.ScrolledWindow(halign=Gtk.Align.END, width_request=430, css_classes=["sidebar"])
         self.scrolled.set_policy(2,2)
 
         self.overlay_split_view.set_separator(Gtk.Separator())
@@ -331,8 +334,21 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.drawing_area_width = 0
 
-        self.font_list = ["Normal"]
-        self.font_list += pyfiglet.FigletFont.getFonts()
+        self.font_list = ["Normal","3x5","avatar","arrows","big","bell","brite","briteb",
+                "bubble","bulbhead","chunky","contessa","computer","crawford",
+                "cricket","cursive","cyberlarge","cybermedium","cybersmall",
+                "digital","doom","double","drpepper","eftifont",
+                "eftirobot","eftitalic","eftiwall","eftiwater","fourtops","fuzzy",
+                "gothic","graceful","graffiti","invita","italic","lcd",
+                "letters","linux","lockergnome","madrid","maxfour","mike","mini",
+                "morse","ogre","puffy","rectangles","rowancap","script","serifcap",
+                "shadow","shimrod","short","slant","slide","slscript","small",
+                "smisome1","smkeyboard","smscript","smshadow","smslant",
+                "speed","stacey","stampatello","standard","stop","straight",
+                "thin","threepoint","times","tombstone","tinker-toy","twopoint",
+                "wavy","weird"]
+
+        # self.font_list += pyfiglet.FigletFont.getFonts()
         self.font_drop_down = Gtk.DropDown.new_from_strings(self.font_list)
         self.font_drop_down.set_halign(Gtk.Align.END)
         self.font_drop_down.set_hexpand(True)
@@ -342,9 +358,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
         write_button.connect("clicked", self.insert_text, self.grid)
         self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"])
+        self.selected_font = "Normal"
         self.font_box.connect("row-selected", self.font_row_selected)
         homogeneous_box = Gtk.Box(orientation=1, homogeneous=True)
-        scrolled_window = Gtk.ScrolledWindow(width_request=300, vexpand=True, margin_bottom=12)
+        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.text_entry)
         homogeneous_box.append(scrolled_window)
@@ -357,37 +374,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.text_sidebar.append(write_button)
 
-        excluded_fonts = ["1943____","4x4_offr","5x8","64f1____","a_zooloo",
-                "advenger","aquaplan","assalt_m","asslt__m","atc_____","atc_gran",
-                "b_m__200","battle_s","battlesh","baz__bil","beer_pub","bubble_b",
-                "c1______","c2______","c_consen","caus_in_","char1___","coil_cop",
-                "deep_str","druid___","dwhistled","etcrvs__","faces_of","fair_mea",
-                "fairligh","fantasy_","fbr1____","fbr12___","fbr_stri","fbr_tilt",
-                "flyn_sh","finalass","fp1_____","fp2_____","funky_dr","future_1",
-                "future_2","future_3","future_4","future_5","future_6","future_7",
-                "future_8","gauntlet","ghost_bo","moscow","grand_pr","green_be",
-                "hades___","heavy_me","heroboti","high_noo","hills___","house_of",
-                "hypa_bal","inc_raw_","hyper___","joust___","katakana","kgames_i",
-                "kik_star","krak_out","lazy_jon","letter_w","letterw3","lexible_",
-                "mad_nurs","magic_ma","master_o","mcg_____","mayhem_d","mig_ally",
-                "modern__","nfi1____","notie_ca","p_skateb","pacos_pe","panther_",
-                "pawn_ins","phonix__","platoon_","platoon2","pod_____","rad_____",
-                "rad_phan","rainbow_","rally_s2","rally_sp","rampage_","rastan__",
-                "raw_recu","rci_____","road_rai","ripper!_","sm______","star_war",
-                "spc_demo","space_op","star_war","stealth_","stencil1","stencil2",
-                "street_s","subteran","super_te","tav1____","tec1____","tec_7000",
-                "tecrvs__","ti_pan__","tomahawk","top_duck","triad_st","ts1_____",
-                "tsm_____","tsn_base","ugalympi","unarmed_","usa_____","usa_pq__",
-                "z-pilot_","zig_zag_","zone7___", "d_dragon","dcs_bfmo","devilish",
-                "yie-ar__","yie_ar_k", "convoy__", "vortron_", "war_of_w","tsalagi",
-                "tengwar","skateord","skate_ro","skateroc","runic","rot13","rockbox_",
-                "rok_____","rockbox_","outrun__","ok_beer_"]
-
         for font in self.font_list:
             if font == "Normal":
                 text = "font 123"
-            elif font in excluded_fonts:
-                continue
             else:
                 text = pyfiglet.figlet_format("font 123", font=font)
             font_text_view = Gtk.Label(css_classes=["font-preview"], name=font)
@@ -397,12 +386,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.font_box.select_row(self.font_box.get_first_child())
 
-        self.selected_font = "Normal"
-
     def font_row_selected(self, list_box, row):
         if self.tool == "TEXT":
             self.selected_font = list_box.get_selected_row().get_child().get_name()
             self.insert_text()
+        print(self.selected_font)
 
     def update_area_width(self):
         allocation = self.drawing_area.get_allocation()
