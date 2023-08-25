@@ -253,13 +253,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.overlay.add_overlay(self.drawing_area)
 
-<<<<<<< ours
-        self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry"],
-                margin_start=12, margin_end=12, margin_top=12)
-=======
         self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
                 margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12)
->>>>>>> theirs
 
         self.toolbar_view.append(self.overlay_split_view)
         self.toolbar_view.append(action_bar)
@@ -346,15 +341,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
         write_button.connect("clicked", self.insert_text, self.grid)
-<<<<<<< ours
-        self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], hexpand=True)
-        self.font_box.connect("row-selected", self.font_row_selected)
-        homogeneous_box = Gtk.Box(orientation=1, homogeneous=True)
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
-        scrolled_window.set_child(self.text_entry)
-        homogeneous_box.append(scrolled_window)
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_start=12, margin_end=12, margin_bottom=12)
-=======
         self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"])
         self.font_box.connect("row-selected", self.font_row_selected)
         homogeneous_box = Gtk.Box(orientation=1, homogeneous=True)
@@ -364,17 +350,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         homogeneous_box.append(scrolled_window)
         scrolled_window = Gtk.ScrolledWindow(margin_start=12, margin_end=12, margin_bottom=12)
         scrolled_window.set_policy(2,1)
->>>>>>> theirs
         scrolled_window.set_child(self.font_box)
         homogeneous_box.append(scrolled_window)
 
         self.text_sidebar.append(homogeneous_box)
-<<<<<<< ours
-=======
-        # self.text_sidebar.append(scrolled_window)
 
-        # self.text_sidebar.append(homogeneous_box)
->>>>>>> theirs
         self.text_sidebar.append(write_button)
 
         excluded_fonts = ["1943____","4x4_offr","5x8","64f1____","a_zooloo",
@@ -410,30 +390,19 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 continue
             else:
                 text = pyfiglet.figlet_format("font 123", font=font)
-<<<<<<< ours
             font_text_view = Gtk.Label(css_classes=["font-preview"], name=font)
-=======
-            font_text_view = Gtk.Label(css_classes=["font-preview"], name=font, halign=Gtk.Align.CENTER)
->>>>>>> theirs
 
             font_text_view.set_label(text)
             self.font_box.append(font_text_view)
 
-<<<<<<< ours
-=======
         self.font_box.select_row(self.font_box.get_first_child())
 
->>>>>>> theirs
         self.selected_font = "Normal"
 
     def font_row_selected(self, list_box, row):
         if self.tool == "TEXT":
             self.selected_font = list_box.get_selected_row().get_child().get_name()
             self.insert_text()
-<<<<<<< ours
-        print(self.selected_font)
-=======
->>>>>>> theirs
 
     def update_area_width(self):
         allocation = self.drawing_area.get_allocation()
