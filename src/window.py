@@ -61,7 +61,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
-        self.overlay_split_view = Adw.Flap(vexpand=True, flap_position=1, fold_policy=0)
+        self.overlay_split_view = Adw.Flap(vexpand=True, flap_position=1)
+        self.overlay_split_view.set_reveal_flap(False)
 
         self.set_content(self.toolbar_view)
 
@@ -197,6 +198,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
+        show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
+        show_sidebar_button.connect("clicked", self.show_sidebar)
+        headerbar.pack_end(show_sidebar_button)
+
         copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
         copy_button.connect("clicked", self.copy_content)
         headerbar.pack_end(copy_button)
@@ -237,7 +242,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.free_char_list = Gtk.FlowBox(can_focus=False)
         self.free_char_list.set_selection_mode(0)
-        self.scrolled = Gtk.ScrolledWindow(halign=Gtk.Align.END, width_request=300)
+        self.scrolled = Gtk.ScrolledWindow(halign=Gtk.Align.END, width_request=300, css_classes=["sidebar"])
         self.scrolled.set_policy(2,2)
 
         self.overlay_split_view.set_separator(Gtk.Separator())
@@ -336,17 +341,22 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
         write_button.connect("clicked", self.insert_text, self.grid)
-        self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], hexpand=True)
+        self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"])
         self.font_box.connect("row-selected", self.font_row_selected)
         homogeneous_box = Gtk.Box(orientation=1, homogeneous=True)
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
+        scrolled_window = Gtk.ScrolledWindow(width_request=300, vexpand=True, margin_bottom=12)
+        scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.text_entry)
         homogeneous_box.append(scrolled_window)
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_start=12, margin_end=12, margin_bottom=12)
+        scrolled_window = Gtk.ScrolledWindow(margin_start=12, margin_end=12, margin_bottom=12)
+        scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.font_box)
         homogeneous_box.append(scrolled_window)
 
         self.text_sidebar.append(homogeneous_box)
+        # self.text_sidebar.append(scrolled_window)
+
+        # self.text_sidebar.append(homogeneous_box)
         self.text_sidebar.append(write_button)
 
         excluded_fonts = ["1943____","4x4_offr","5x8","64f1____","a_zooloo",
@@ -382,7 +392,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 continue
             else:
                 text = pyfiglet.figlet_format("font 123", font=font)
-            font_text_view = Gtk.Label(css_classes=["font-preview"], name=font)
+            font_text_view = Gtk.Label(css_classes=["font-preview"], name=font, halign=Gtk.Align.CENTER)
 
             font_text_view.set_label(text)
             self.font_box.append(font_text_view)
@@ -557,7 +567,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "PICKER"
 
-        self.overlay_split_view.set_reveal_flap(True)
+        self.overlay_split_view.set_reveal_flap(False)
 
     def on_choose_rectangle(self, btn):
         self.reset_text_entry()
@@ -590,7 +600,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "LINE"
 
-        self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="LINE")
@@ -629,7 +640,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "ERASER"
 
-        self.overlay_split_view.set_show_sidebar(False)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(False)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ERASER", margin_start=12)

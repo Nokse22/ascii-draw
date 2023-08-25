@@ -104,6 +104,9 @@ class AsciiDrawApplication(Adw.Application):
             font-size: 5px;
             color: @window_fg_color;
         }
+        .sidebar{
+            background-color: @window_bg_color;
+        }
 
 
         '''
