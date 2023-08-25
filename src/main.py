@@ -93,8 +93,6 @@ class AsciiDrawApplication(Adw.Application):
             /*background-image:
                 linear-gradient(to right, #aaaaaa 1px, transparent 1px),
                 linear-gradient(to bottom, #aaaaaa 1px, @window_bg_color 1px);*/
-            box-shadow:
-                inset 0px 0px 0px 1px #777777;
         }
         .padded{
             padding: 12px;
@@ -103,6 +101,9 @@ class AsciiDrawApplication(Adw.Application):
             font-family: Monospace;
             font-size: 5px;
             color: @window_fg_color;
+        }
+        .sidebar{
+            background-color: @window_bg_color;
         }
 
         '''
@@ -133,7 +134,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name='ASCII Draw',
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.1.4',
+                                version='0.1.5',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
