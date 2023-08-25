@@ -93,6 +93,7 @@ class AsciiDrawApplication(Adw.Application):
             /*background-image:
                 linear-gradient(to right, #aaaaaa 1px, transparent 1px),
                 linear-gradient(to bottom, #aaaaaa 1px, @window_bg_color 1px);*/
+
         }
         .padded{
             padding: 12px;
