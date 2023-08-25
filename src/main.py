@@ -88,17 +88,25 @@ class AsciiDrawApplication(Adw.Application):
         .mono-entry{
             font-family: Monospace;
             font-size: 20px;
-            background-size: 12px 24px;
-            background-image:
-                linear-gradient(to right, #55555544 1px, transparent 1px),
-                linear-gradient(to bottom, #55555544 1px, transparent 1px);
-            box-shadow:
-                inset 0px 0px 0px 1px #67676722,
-                inset 0px 0px 0px 1px #67676722;
+            background: @window_bg_color;
+            /*background-size: 12px 24px;*/
+            /*background-image:
+                linear-gradient(to right, #aaaaaa 1px, transparent 1px),
+                linear-gradient(to bottom, #aaaaaa 1px, @window_bg_color 1px);*/
+
         }
         .padded{
             padding: 12px;
         }
+        .font-preview{
+            font-family: Monospace;
+            font-size: 5px;
+            color: @window_fg_color;
+        }
+        .sidebar{
+            background-color: @window_bg_color;
+        }
+
 
         '''
         css_provider = Gtk.CssProvider()
@@ -128,7 +136,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name='ASCII Draw',
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.1.4',
+                                version='0.1.5',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],

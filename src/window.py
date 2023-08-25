@@ -24,6 +24,7 @@ from gi.repository import Gdk, Gio, GObject
 import threading
 import math
 import time
+import pyfiglet
 
 class Change():
     def __init__(self, _name):
@@ -47,12 +48,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.settings = Gio.Settings.new('io.github.nokse22.asciidraw')
 
-        self.props.width_request=350
+        self.props.width_request=420
         self.props.height_request=400
 
-        self.toolbar_view = Gtk.Box(orientation=1, vexpand=True) #Adw.ToolbarView()
+        self.toolbar_view = Gtk.Box(orientation=1, vexpand=True)
         headerbar = Adw.HeaderBar()
-        self.toolbar_view.append(headerbar)#add_top_bar(headerbar)
+        self.toolbar_view.append(headerbar)
         self.set_title("ASCII Draw")
 
         # self.set_default_size(800, 800)
@@ -60,16 +61,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
-        self.overlay_split_view = Adw.Flap(vexpand=True, flap_position=1, fold_policy=0) #Adw.OverlaySplitView()
+        self.overlay_split_view = Adw.Flap(vexpand=True, flap_position=1)
         self.overlay_split_view.set_reveal_flap(False)
-
-        # sidebar_condition = Adw.BreakpointCondition.new_length(1, 600, 2)
-        # sidebar_breakpoint = Adw.Breakpoint.new(sidebar_condition)
-
-        # sidebar_breakpoint.set_condition(sidebar_condition)
-        # sidebar_breakpoint.add_setter(self.overlay_split_view, "collapsed", True) #collapsed
-
-        # self.add_breakpoint(sidebar_breakpoint)
 
         self.set_content(self.toolbar_view)
 
@@ -205,9 +198,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
-        # show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
-        # show_sidebar_button.connect("clicked", self.show_sidebar)
-        # headerbar.pack_end(show_sidebar_button)
+        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", sensitive=False)
+        self.show_sidebar_button.connect("clicked", self.show_sidebar)
+        headerbar.pack_end(self.show_sidebar_button)
 
         copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
         copy_button.connect("clicked", self.copy_content)
@@ -245,33 +238,26 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         scrolled_window = Gtk.ScrolledWindow(hexpand=True, width_request=300)
         scrolled_window.set_child(self.overlay)
 
-        # self.overlay_split_view.set_sidebar_width_fraction(0.4)
-        # self.overlay_split_view.set_max_sidebar_width(300)
-        # self.overlay_split_view.set_sidebar_position(1)
         self.overlay_split_view.set_content(scrolled_window)
 
         self.free_char_list = Gtk.FlowBox(can_focus=False)
         self.free_char_list.set_selection_mode(0)
-        self.scrolled = Gtk.ScrolledWindow(halign=Gtk.Align.END, width_request=300)
+        self.scrolled = Gtk.ScrolledWindow(halign=Gtk.Align.END, width_request=300, css_classes=["sidebar"])
         self.scrolled.set_policy(2,2)
-        # scrolled = Gtk.ScrolledWindow(vexpand=True)
-        # scrolled.set_policy(2,1)
-        # scrolled.set_child(self.free_char_list)
-        # self.scrolled.set_child(scrolled)
 
         self.overlay_split_view.set_separator(Gtk.Separator())
-        self.overlay_split_view.set_flap(self.scrolled) #set_sidebar(self.scrolled)
+        self.overlay_split_view.set_flap(self.scrolled)
 
         self.overlay.add_overlay(self.preview_grid)
         self.overlay.set_child(self.grid)
 
         self.overlay.add_overlay(self.drawing_area)
 
-        self.text_entry = Gtk.TextView(css_classes=["mono-entry"], vexpand=True,
-                margin_start=12, margin_end=12, margin_top=12, margin_bottom=12)
+        self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
+                margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12)
 
-        self.toolbar_view.append(self.overlay_split_view) #set_content(self.overlay_split_view)
-        self.toolbar_view.append(action_bar)#add_bottom_bar(action_bar)
+        self.toolbar_view.append(self.overlay_split_view)
+        self.toolbar_view.append(action_bar)
 
         drag = Gtk.GestureDrag()
         drag.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -345,6 +331,81 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.drawing_area_width = 0
 
+        self.font_list = ["Normal"]
+        self.font_list += pyfiglet.FigletFont.getFonts()
+        self.font_drop_down = Gtk.DropDown.new_from_strings(self.font_list)
+        self.font_drop_down.set_halign(Gtk.Align.END)
+        self.font_drop_down.set_hexpand(True)
+
+        self.text_sidebar = Gtk.Box(orientation=1, name="TEXT")
+
+        write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
+        write_button.connect("clicked", self.insert_text, self.grid)
+        self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"])
+        self.font_box.connect("row-selected", self.font_row_selected)
+        homogeneous_box = Gtk.Box(orientation=1, homogeneous=True)
+        scrolled_window = Gtk.ScrolledWindow(width_request=300, vexpand=True, margin_bottom=12)
+        scrolled_window.set_policy(2,1)
+        scrolled_window.set_child(self.text_entry)
+        homogeneous_box.append(scrolled_window)
+        scrolled_window = Gtk.ScrolledWindow(margin_start=12, margin_end=12, margin_bottom=12)
+        scrolled_window.set_policy(2,1)
+        scrolled_window.set_child(self.font_box)
+        homogeneous_box.append(scrolled_window)
+
+        self.text_sidebar.append(homogeneous_box)
+        # self.text_sidebar.append(scrolled_window)
+
+        # self.text_sidebar.append(homogeneous_box)
+        self.text_sidebar.append(write_button)
+
+        excluded_fonts = ["1943____","4x4_offr","5x8","64f1____","a_zooloo",
+                "advenger","aquaplan","assalt_m","asslt__m","atc_____","atc_gran",
+                "b_m__200","battle_s","battlesh","baz__bil","beer_pub","bubble_b",
+                "c1______","c2______","c_consen","caus_in_","char1___","coil_cop",
+                "deep_str","druid___","dwhistled","etcrvs__","faces_of","fair_mea",
+                "fairligh","fantasy_","fbr1____","fbr12___","fbr_stri","fbr_tilt",
+                "flyn_sh","finalass","fp1_____","fp2_____","funky_dr","future_1",
+                "future_2","future_3","future_4","future_5","future_6","future_7",
+                "future_8","gauntlet","ghost_bo","moscow","grand_pr","green_be",
+                "hades___","heavy_me","heroboti","high_noo","hills___","house_of",
+                "hypa_bal","inc_raw_","hyper___","joust___","katakana","kgames_i",
+                "kik_star","krak_out","lazy_jon","letter_w","letterw3","lexible_",
+                "mad_nurs","magic_ma","master_o","mcg_____","mayhem_d","mig_ally",
+                "modern__","nfi1____","notie_ca","p_skateb","pacos_pe","panther_",
+                "pawn_ins","phonix__","platoon_","platoon2","pod_____","rad_____",
+                "rad_phan","rainbow_","rally_s2","rally_sp","rampage_","rastan__",
+                "raw_recu","rci_____","road_rai","ripper!_","sm______","star_war",
+                "spc_demo","space_op","star_war","stealth_","stencil1","stencil2",
+                "street_s","subteran","super_te","tav1____","tec1____","tec_7000",
+                "tecrvs__","ti_pan__","tomahawk","top_duck","triad_st","ts1_____",
+                "tsm_____","tsn_base","ugalympi","unarmed_","usa_____","usa_pq__",
+                "z-pilot_","zig_zag_","zone7___", "d_dragon","dcs_bfmo","devilish",
+                "yie-ar__","yie_ar_k", "convoy__", "vortron_", "war_of_w","tsalagi",
+                "tengwar","skateord","skate_ro","skateroc","runic","rot13","rockbox_",
+                "rok_____","rockbox_","outrun__","ok_beer_"]
+
+        for font in self.font_list:
+            if font == "Normal":
+                text = "font 123"
+            elif font in excluded_fonts:
+                continue
+            else:
+                text = pyfiglet.figlet_format("font 123", font=font)
+            font_text_view = Gtk.Label(css_classes=["font-preview"], name=font, halign=Gtk.Align.CENTER)
+
+            font_text_view.set_label(text)
+            self.font_box.append(font_text_view)
+
+        self.font_box.select_row(self.font_box.get_first_child())
+
+        self.selected_font = "Normal"
+
+    def font_row_selected(self, list_box, row):
+        if self.tool == "TEXT":
+            self.selected_font = list_box.get_selected_row().get_child().get_name()
+            self.insert_text()
+
     def update_area_width(self):
         allocation = self.drawing_area.get_allocation()
         self.drawing_area_width = allocation.width
@@ -383,7 +444,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.free_char = btn.get_label()
 
     def show_sidebar(self, btn):
-        # self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
         self.overlay_split_view.set_reveal_flap(not self.overlay_split_view.get_reveal_flap())
 
     def get_canvas_content(self):
@@ -495,7 +555,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         else:
             self.tool = ""
 
-        self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.show_sidebar_button.set_sensitive(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FREE-LINE")
@@ -509,6 +572,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "PICKER"
+
+        self.show_sidebar_button.set_sensitive(False)
         self.overlay_split_view.set_reveal_flap(False)
 
     def on_choose_rectangle(self, btn):
@@ -516,8 +581,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "RECTANGLE"
 
-        self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
 
+        self.show_sidebar_button.set_sensitive(True)
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="RECTANGLE")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -531,8 +598,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "FILLED-RECTANGLE"
 
-        self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
 
+        self.show_sidebar_button.set_sensitive(True)
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FILLED-RECTANGLE")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -546,7 +615,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "LINE"
 
-        self.overlay_split_view.set_reveal_flap(True)
+        self.show_sidebar_button.set_sensitive(True)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="LINE")
@@ -560,22 +631,21 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "TEXT"
 
+        self.show_sidebar_button.set_sensitive(True)
         self.overlay_split_view.set_reveal_flap(True)
 
         self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="TEXT")
-        box.append(self.text_entry)
-        write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
-        write_button.connect("clicked", self.insert_text, self.grid)
-        box.append(write_button)
-        self.scrolled.set_child(box)
+        self.scrolled.set_child(self.text_sidebar)
 
     def on_choose_free(self, btn):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "FREE"
 
-        self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.show_sidebar_button.set_sensitive(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FREE")
@@ -592,7 +662,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "ERASER"
 
-        self.overlay_split_view.set_reveal_flap(False)
+        self.show_sidebar_button.set_sensitive(False)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(False)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ERASER", margin_start=12)
@@ -611,8 +683,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "ARROW"
 
-        self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
 
+        self.show_sidebar_button.set_sensitive(True)
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ARROW")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -904,17 +978,27 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         start = buffer.get_start_iter()
         end = buffer.get_end_iter()
         text = buffer.get_text(start, end, False)
+        if self.selected_font != "Normal":
+            text = pyfiglet.figlet_format(text, font=self.selected_font)
         if text != "" and grid == self.grid:
             self.add_undo_action(self.tool.capitalize())
         for char in text:
+            if x >= self.canvas_x:
+                if ord(char) == 10: # \n char
+                    y += 1
+                    x = self.text_x
+                continue
+            if y > self.canvas_y:
+                break
             child = grid.get_child_at(x, y)
-            if ord(char) < 32:
-                if ord(char) == 10:
+            if not child:
+                continue
+
+            if ord(char) < 32: # empty chars
+                if ord(char) == 10: # \n char
                     y += 1
                     x = self.text_x
                     continue
-                continue
-            if not child:
                 continue
             if grid == self.grid:
                 self.undo_changes[0].add_change(x, y, child.get_label())
