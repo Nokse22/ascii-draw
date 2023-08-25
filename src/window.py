@@ -71,7 +71,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.canvas_x = 60
         self.canvas_y = 30
-        self.grid = Gtk.Grid(css_classes=["ascii-textview"], halign=Gtk.Align.START, valign=Gtk.Align.START)
+        self.grid = Gtk.Grid(css_classes=["ascii-textview", "canvas-shadow"], halign=Gtk.Align.START, valign=Gtk.Align.START)
         self.preview_grid = Gtk.Grid(css_classes=["ascii-preview"], halign=Gtk.Align.START, valign=Gtk.Align.START, can_focus=False)
 
         for y in range(self.canvas_y):
@@ -180,7 +180,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 name += style[2] + "   " + style[3] + "  " + style[2] + "    " + style[3] + "  " + style[3] + "  " + style[3] + "\n"
                 name += style[7] + style[1] + style[1] + style[1] + style[6] + "  " + style[7] + style[1] + style[1] + style[15] + " " + style[3] + "  " + style[14] + "  " + style[3]
             label = Gtk.Label(label = name)
-            style_btn = Gtk.ToggleButton(css_classes=["flat", "ascii"])
+            style_btn = Gtk.ToggleButton(css_classes=["flat", "styles-preview"])
             style_btn.set_child(label)
             if prev_btn != None:
                 style_btn.set_group(prev_btn)
@@ -230,7 +230,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         increase_box.append(increase_btn)
         increase_btn.connect("clicked", self.increase_size, width_spin, height_spin)
 
-        self.drawing_area = Gtk.DrawingArea()
+        self.drawing_area = Gtk.DrawingArea(css_classes=["drawing-area"])
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
         # self.drawing_area.connect("show", self.update_area_width)
 
@@ -248,8 +248,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.overlay_split_view.set_separator(Gtk.Separator())
         self.overlay_split_view.set_flap(self.scrolled)
 
-        self.overlay.set_child(self.grid)
         self.overlay.add_overlay(self.preview_grid)
+        self.overlay.set_child(self.grid)
 
         self.overlay.add_overlay(self.drawing_area)
 
