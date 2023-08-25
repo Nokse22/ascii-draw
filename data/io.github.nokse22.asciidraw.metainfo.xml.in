@@ -16,7 +16,7 @@ There are many stiles to choose from and multiple tools available to use:</p>
 	    <li>Rectangle</li>
 	    <li>Filled Rectangle</li>
 	    <li>Character Picker</li>
-	    <li>Text</li>
+	    <li>Text with also FIGlet fonts</li>
 	    <li>Eraser</li>
     </ul>
 	</description>
@@ -31,6 +31,12 @@ There are many stiles to choose from and multiple tools available to use:</p>
   <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
 
   <releases>
+    <release version="0.1.5" date="2023-08-25">
+		  <description>
+			  <p>Added big text with a lot of fonts using pyfiglet</p>
+		    <p>Fixed some bugs</p>
+		  </description>
+	  </release>
     <release version="0.1.4" date="2023-08-23">
 		  <description>
 			  <p>New icon</p>
@@ -72,6 +78,10 @@ There are many stiles to choose from and multiple tools available to use:</p>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%201.png</image>
     </screenshot>
+
+	  <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%204.png</image>
+	  </screenshot>
 
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%202.png</image>

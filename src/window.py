@@ -198,9 +198,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
-        show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
-        show_sidebar_button.connect("clicked", self.show_sidebar)
-        headerbar.pack_end(show_sidebar_button)
+        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
+        self.show_sidebar_button.connect("clicked", self.show_sidebar)
+        headerbar.pack_end(self.show_sidebar_button)
 
         copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
         copy_button.connect("clicked", self.copy_content)
@@ -253,8 +253,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.overlay.add_overlay(self.drawing_area)
 
-        self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry"],
-                margin_start=12, margin_end=12, margin_top=12)
+        self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
+                margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12)
 
         self.toolbar_view.append(self.overlay_split_view)
         self.toolbar_view.append(action_bar)
@@ -397,13 +397,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             font_text_view.set_label(text)
             self.font_box.append(font_text_view)
 
+        self.font_box.select_row(self.font_box.get_first_child())
+
         self.selected_font = "Normal"
 
     def font_row_selected(self, list_box, row):
         if self.tool == "TEXT":
             self.selected_font = list_box.get_selected_row().get_child().get_name()
             self.insert_text()
-        print(self.selected_font)
 
     def update_area_width(self):
         allocation = self.drawing_area.get_allocation()
@@ -554,6 +555,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         else:
             self.tool = ""
 
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.show_sidebar_button.set_sensitive(True)
+
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FREE-LINE")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -567,6 +573,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "PICKER"
 
+        self.show_sidebar_button.set_sensitive(False)
         self.overlay_split_view.set_reveal_flap(False)
 
     def on_choose_rectangle(self, btn):
@@ -574,6 +581,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "RECTANGLE"
 
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.show_sidebar_button.set_sensitive(True)
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="RECTANGLE")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -587,6 +598,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "FILLED-RECTANGLE"
 
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.show_sidebar_button.set_sensitive(True)
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FILLED-RECTANGLE")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
@@ -600,6 +615,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "LINE"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -615,6 +631,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "TEXT"
 
+        self.show_sidebar_button.set_sensitive(True)
         self.overlay_split_view.set_reveal_flap(True)
 
         self.scrolled.set_child(None)
@@ -624,6 +641,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "FREE"
+
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.show_sidebar_button.set_sensitive(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="FREE")
@@ -640,6 +662,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "ERASER"
 
+        self.show_sidebar_button.set_sensitive(False)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(False)
 
@@ -660,6 +683,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "ARROW"
 
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.show_sidebar_button.set_sensitive(True)
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ARROW")
         scrolled = Gtk.ScrolledWindow(vexpand=True)
