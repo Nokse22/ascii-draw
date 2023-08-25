@@ -198,7 +198,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
-        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
+        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", sensitive=False)
         self.show_sidebar_button.connect("clicked", self.show_sidebar)
         headerbar.pack_end(self.show_sidebar_button)
 
