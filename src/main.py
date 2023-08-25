@@ -53,37 +53,53 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
 
         css = '''
-        .ascii-textview{
-            background-size: 12px 24px;
-            background-image:
-                linear-gradient(to right, #c0bfbc55 1px, transparent 1px),
-                linear-gradient(to bottom, #c0bfbc55 1px, transparent 1px);
-            box-shadow:
-                inset 0px 0px 0px 1px #c0bfbc,
-                0px 0px 10px 10px #c0bfbc44;
+        .drawing-area{
+            background-color: @window_bg_color;
+            opacity:0.15;
+            background-blend-mode: lighten;
         }
+        .ascii-textview{
+
+        }
+
+        .styles-preview{
+            font-family: Monospace;
+            font-size: 20px;
+            opacity:0.8;
+            color: @window_fg_color;
+        }
+
         .ascii-preview{
             background: transparent;
-            opacity: 0.3;
             background-size: 12px 24px;
+            background-image:
+                linear-gradient(to right, #aaaaaa 1px, transparent 1px),
+                linear-gradient(to bottom, #aaaaaa 1px, transparent 1px);
+            box-shadow:
+                inset 0px 0px 0px 1px #777777,
+                0px 0px 10px 10px #67676722;
+            opacity:0.4;
         }
         .ascii{
             font-family: Monospace;
             font-size: 20px;
+            color: @window_fg_color;
         }
         .mono-entry{
             font-family: Monospace;
             font-size: 20px;
             background-size: 12px 24px;
             background-image:
-                linear-gradient(to right, #c0bfbc55 1px, transparent 1px),
-                linear-gradient(to bottom, #c0bfbc55 1px, transparent 1px);
+                linear-gradient(to right, #55555544 1px, transparent 1px),
+                linear-gradient(to bottom, #55555544 1px, transparent 1px);
             box-shadow:
-                inset 0px 0px 0px 1px #c0bfbc;
+                inset 0px 0px 0px 1px #67676722,
+                inset 0px 0px 0px 1px #67676722;
         }
         .padded{
             padding: 12px;
         }
+
 
         '''
         css_provider = Gtk.CssProvider()
