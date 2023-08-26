@@ -24,6 +24,7 @@
     ],
     "modules" : [
 	"python3-pyfiglet.json",
+	"python3-emoji.json",
         {
             "name" : "ascii-draw",
             "builddir" : true,
