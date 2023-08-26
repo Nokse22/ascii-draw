@@ -11,10 +11,6 @@ jobs:
   snap:
     name: "Test if the Snap can be built from the latest commit in the branch"
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [x86_64]
-      fail-fast: false
     steps:
       - name: Checkout Git repository
         uses: actions/checkout@v3
