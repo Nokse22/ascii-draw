@@ -465,15 +465,15 @@ use just the size you need.''')
 
         settings_box = Gtk.Box(spacing=10, margin_start=12, margin_end=12, margin_bottom=12)
         settings_box.append(Gtk.Label(label="Use first line as header"))
-        header_check = Gtk.CheckButton()
-        settings_box.append(header_check)
-        divide_check = Gtk.CheckButton()
+        self.header_check = Gtk.CheckButton()
+        settings_box.append(self.header_check)
+        self.divide_check = Gtk.CheckButton()
         settings_box.append(Gtk.Label(label="Divide each row"))
-        settings_box.append(divide_check)
+        settings_box.append(self.divide_check)
         self.table_sidebar.append(settings_box)
         rows_reset_button.connect("clicked", self.on_reset_row_clicked, columns_spin)
         enter_button = Gtk.Button(valign=Gtk.Align.END, label="Enter", margin_start=10, margin_end=10, margin_bottom=10)
-        enter_button.connect("clicked", self.insert_table_definitely, header_check, divide_check)
+        enter_button.connect("clicked", self.insert_table_definitely)
         self.table_sidebar.append(enter_button)
 
         self.table_x = 0
@@ -481,6 +481,11 @@ use just the size you need.''')
 
         self.rows_number = 0
         self.columns_number = 0
+
+    def preview_table(self, entry):
+        header = self.header_check.get_active()
+        divide = self.divide_check.get_active()
+        self.insert_table(header, divide, self.preview_grid)
 
     def insert_text_definitely(self, btn):
         start = self.text_entry_buffer.get_start_iter()
@@ -497,9 +502,9 @@ use just the size you need.''')
         text = self.text_entry_buffer.get_text(start, end, False)
         self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
 
-    def insert_table_definitely(self, btn, header_check, divide_check):
-        header = header_check.get_active()
-        divide = divide_check.get_active()
+    def insert_table_definitely(self, btn):
+        header = self.header_check.get_active()
+        divide = self.divide_check.get_active()
         self.add_undo_action("Table")
         self.insert_table(header, divide, self.grid)
 
@@ -522,9 +527,12 @@ use just the size you need.''')
 
         rows_values_box = Gtk.Box(spacing=6)
         for value in range(values):
-            rows_values_box.append(Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START))
+            entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
+            entry.connect("activate", self.preview_table)
+            rows_values_box.append(entry)
         row.add_suffix(rows_values_box)
         self.rows_box.append(row)
+
         print("new row")
 
     def is_renderable(self, character):
@@ -1257,10 +1265,6 @@ use just the size you need.''')
             table.append(this_row)
             child = child.get_next_sibling()
         print(table)
-        print(columns_widths)
-
-        self.columns_number
-        self.rows_number
 
         width = 1
         for column_width in columns_widths:
