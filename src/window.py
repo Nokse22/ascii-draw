@@ -281,6 +281,7 @@ use just the size you need.''')
         self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
                 margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12,
                 wrap_mode=2, height_request=100)
+        self.text_entry_buffer = self.text_entry.get_buffer()
 
         self.toolbar_view.append(self.overlay_split_view)
         self.toolbar_view.append(action_bar)
@@ -329,7 +330,7 @@ use just the size you need.''')
         self.text_x = 0
         self.text_y = 0
 
-        self.text_entry.get_buffer().connect("changed", self.insert_text)
+        self.text_entry.get_buffer().connect("changed", self.insert_text_preview)
 
         unicode_ranges = [
             range(0x0021, 0x007F),  # Basic Latin
@@ -393,7 +394,7 @@ use just the size you need.''')
         self.text_sidebar = Gtk.Box(orientation=1, name="TEXT")
 
         write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
-        write_button.connect("clicked", self.insert_text, self.grid)
+        write_button.connect("clicked", self.insert_text_definitely)
         self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], vexpand=True)
         self.selected_font = "Normal"
         self.font_box.connect("row-selected", self.font_row_selected)
@@ -437,7 +438,10 @@ use just the size you need.''')
     def font_row_selected(self, list_box, row):
         if self.tool == "TEXT":
             self.selected_font = list_box.get_selected_row().get_child().get_name()
-            self.insert_text()
+            start = self.text_entry_buffer.get_start_iter()
+            end = self.text_entry_buffer.get_end_iter()
+            text = self.text_entry_buffer.get_text(start, end, False)
+            self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
         print(self.selected_font)
 
     def update_area_width(self):
@@ -578,7 +582,14 @@ use just the size you need.''')
         if self.tool == "TEXT":
             self.text_x = x_char
             self.text_y = y_char
-            self.insert_text(None)
+            start = self.text_entry_buffer.get_start_iter()
+            end = self.text_entry_buffer.get_end_iter()
+            text = self.text_entry_buffer.get_text(start, end, False)
+            self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
+
+        elif self.tool == "TABLE":
+            self.table_x = x_char
+            self.table_y = y_char
 
         elif self.tool == "PICKER":
             child = self.grid.get_child_at(x_char, y_char)
@@ -714,7 +725,7 @@ use just the size you need.''')
         self.scrolled.set_child(box)
 
     def reset_text_entry(self):
-        self.text_entry.get_buffer().set_text("")
+        self.text_entry_buffer.set_text("")
 
     def on_scale_value_changed(self, scale, var):
         var = scale.get_value()
@@ -1008,26 +1019,26 @@ use just the size you need.''')
         self.prev_char_pos = [self.prev_pos[0], self.prev_pos[1]]
         self.prev_pos = [new_x, new_y]
 
-    def insert_text(self, widget=None, grid=None):
+    def insert_text(self, grid, start_x, start_y, text):
         self.clear(None, self.preview_grid)
         transparent = self.transparent_check.get_active()
-        if grid == None:
-            grid = self.preview_grid
-        x = self.text_x
-        y = self.text_y
-        buffer = self.text_entry.get_buffer()
-        start = buffer.get_start_iter()
-        end = buffer.get_end_iter()
-        text = buffer.get_text(start, end, False)
+        # if grid == None:
+        #     grid = self.preview_grid
+        # x = self.text_x
+        # y = self.text_y
+        # buffer = self.text_entry.get_buffer()
+        # start = buffer.get_start_iter()
+        # end = buffer.get_end_iter()
+        # text = buffer.get_text(start, end, False)
+        x = start_x
+        y = start_y
         if self.selected_font != "Normal":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
-        if text != "" and grid == self.grid:
-            self.add_undo_action(self.tool.capitalize())
         for char in text:
             if x >= self.canvas_x:
                 if ord(char) == 10: # \n char
                     y += 1
-                    x = self.text_x
+                    x = start_x
                 continue
             if y > self.canvas_y:
                 break
@@ -1039,7 +1050,7 @@ use just the size you need.''')
             elif ord(char) < 32: # empty chars
                 if ord(char) == 10: # \n char
                     y += 1
-                    x = self.text_x
+                    x = start_x
                     continue
                 if ord(char) == 9: # tab
                     for i in range(4):
