@@ -23,8 +23,9 @@ from gi.repository import Gdk, Gio, GObject
 
 import threading
 import math
-import time
 import pyfiglet
+import unicodedata
+import emoji
 
 class Change():
     def __init__(self, _name):
@@ -81,17 +82,32 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.empty_grid = self.preview_grid
 
-        self.styles = [
-                ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
+        self.brush_sizes = [
+                [[0,0] ],
+                [[0,0],[-1,0],[1,0] ],
+                [[0,0],[-1,0],[1,0],[0,1],[0,-1] ],
+                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0] ],
+                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1], ],
+                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1], ],
+                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0], ],
+                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0],[1,2],[1,-2],[-1,-2],[-1,2], ],
+                ]
+
+        self.styles = [#⋀⋁⋙⋘⊳⊲∠∧∨◀▶∠⊰⊱╌╎╶╸╶╎ ╺╴╏
+                ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
+                ["╶", "╶", "╎", "╎", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
+                ["─", "─", "│", "│", "╭", "╮", "╯","╰", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
+                ["━", "━", "┃", "┃", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
+                ["╺", "╺", "╏", "╏", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
                 ["═", "═", "║", "║", "╔", "╗", "╝","╚", "╬", "╠", "╣", "╩","╦", "A", "V", ">", "<"],
                 ["-", "-", "|", "|", "+", "+", "+","+", "+", "+", "+", "+","+", "↑", "↓", "→", "←"],
-                ["_", "_", "│", "│", " ", " ", "│","│", "│", "│", "│", "┴","┬", "▲", "▼", "►", "◄"],
+                ["_", "_", "│", "│", " ", " ", "│","│", "│", "│", "│", "┴","┬", "▲", "▼", "▶", "◀"],
                 ["•", "•", "•", "•", "•", "•", "•","•", "•", "•", "•", "•","•", "▲", "▼", ">", "<"],
-                ["˜", "˜", "│", "│", "│", "│", " "," ", "│", "│", "│", "˜","˜", "▲", "▼", "►", "◄"],
-                ["═", "═", "│", "│", "╒", "╕", "╛","╘", "╪", "╞", "╡", "╧","╤", "▲", "▼", "►", "◄"],
+                ["═", "═", "│", "│", "╒", "╕", "╛","╘", "╪", "╞", "╡", "╧","╤", "▲", "▼", "▶", "◀"],
                 ["─", "─", "║", "║", "╓", "╖", "╜","╙", "╫", "╟", "╢", "╨","╥", "▲", "▼", ">", "<"],
                 ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["▄", "▀", "▐", "▌", " ", " ", " "," ", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+                ["▄", "▀", "▐", "▌", "▗", "▖", "▘","▝", "┼", "├", "┤", "┴","┬", "▲", "▼", "▶", "◀"],
+                ["▀", "▄", "▌", "▐", "▛", "▜", "▟","▙", "┼", "├", "┤", "┴","┬", "▲", "▼", "▶", "◀"],
         ]
         action_bar = Gtk.ActionBar()
         self.rectangle_button = Gtk.ToggleButton(icon_name="rectangle-symbolic",
@@ -124,7 +140,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         action_bar.pack_start(self.free_line_button)
 
         self.free_button = Gtk.ToggleButton(icon_name="paintbrush-symbolic",
-                tooltip_text="Free Hand Ctrl+F")
+                tooltip_text="Freehand Ctrl+F")
         self.free_button.connect("clicked", self.on_choose_free)
         self.free_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.free_button)
@@ -229,6 +245,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         height_row.add_suffix(height_spin)
         height_spin.get_adjustment().set_step_increment(1)
         increase_box.append(height_row)
+        discaimer_row = Adw.ActionRow(title='''Increasing the canvas too
+much can slow the app down,
+use just the size you need.''')
+        increase_box.append(discaimer_row)
         increase_btn = Gtk.Button(label="Increase canvas")
         increase_box.append(increase_btn)
         increase_btn.connect("clicked", self.increase_size, width_spin, height_spin)
@@ -257,7 +277,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.overlay.add_overlay(self.drawing_area)
 
         self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
-                margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12)
+                margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12,
+                wrap_mode=2)
 
         self.toolbar_view.append(self.overlay_split_view)
         self.toolbar_view.append(action_bar)
@@ -308,33 +329,47 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.text_entry.get_buffer().connect("changed", self.insert_text)
 
+        unicode_ranges = [
+            range(0x0021, 0x007F),  # Basic Latin
+            range(0x00A0, 0x0100),  # Latin-1 Supplement
+            range(0x0100, 0x0180),  # Latin Extended-A
+            range(0x2500, 0x2580),  # Box Drawing
+            range(0x2580, 0x25A0),  # Block Elements
+            range(0x25A0, 0x2600),  # Geometric Shapes
+            range(0x2190, 0x2200),  # Arrows
+            range(0x2200, 0x2300),  # Mathematical Operators
+        ]
+
         char = " "
         prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
         prev_button.connect("toggled", self.change_char, self.free_char_list)
         self.free_char_list.append(prev_button)
 
-        for i in range(33, 255):
-            if i == 127:
-                continue
-            char = bytes([i]).decode('cp437')
-            new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
-            new_button.connect("toggled", self.change_char, self.free_char_list)
-            self.free_char_list.append(new_button)
-            new_button.set_group(prev_button)
+        for code_range in unicode_ranges:
+            for code_point in code_range:
+                char = chr(code_point)
+                if not self.is_renderable(char):
+                    continue
+                new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
+                new_button.connect("toggled", self.change_char, self.free_char_list)
+                self.free_char_list.append(new_button)
+                new_button.set_group(prev_button)
 
-        self.eraser_scale = Gtk.Scale.new_with_range(0, 1, 10,1)
+        self.eraser_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
         self.eraser_scale.set_draw_value(True)
         self.eraser_scale.set_value_pos(1)
         self.eraser_scale.connect("value-changed", self.on_scale_value_changed, self.eraser_size)
 
-        self.free_scale = Gtk.Scale.new_with_range(0, 1, 10,1)
+        self.free_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
         self.free_scale.set_draw_value(True)
         self.free_scale.set_value_pos(1)
+        self.free_scale.set_margin_start(12)
+        self.free_scale.set_margin_end(12)
         self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
 
         self.drawing_area_width = 0
 
-        self.font_list = ["Normal","3x5","avatar","arrows","big","bell","brite","briteb",
+        self.font_list = ["Normal","3x5","avatar","big","bell","brite","briteb",
                 "bubble","bulbhead","chunky","contessa","computer","crawford",
                 "cricket","cursive","cyberlarge","cybermedium","cybersmall",
                 "digital","doom","double","drpepper","eftifont",
@@ -360,18 +395,23 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"])
         self.selected_font = "Normal"
         self.font_box.connect("row-selected", self.font_row_selected)
-        homogeneous_box = Gtk.Box(orientation=1, homogeneous=True)
+        homogeneous_box = Gtk.Grid(row_homogeneous=True)
         scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.text_entry)
-        homogeneous_box.append(scrolled_window)
+        homogeneous_box.attach(scrolled_window, 0, 0, 1, 1)
         scrolled_window = Gtk.ScrolledWindow(margin_start=12, margin_end=12, margin_bottom=12)
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.font_box)
-        homogeneous_box.append(scrolled_window)
+        homogeneous_box.attach(scrolled_window, 0, 1, 1, 2)
+
+        transparent_box = Gtk.Box(margin_start=12, margin_end=12, margin_bottom=12, halign=Gtk.Align.CENTER)
+        transparent_box.append(Gtk.Label(label="Spaces do not overwrite         "))
+        self.transparent_check = Gtk.CheckButton()
+        transparent_box.append(self.transparent_check)
 
         self.text_sidebar.append(homogeneous_box)
-
+        self.text_sidebar.append(transparent_box)
         self.text_sidebar.append(write_button)
 
         for font in self.font_list:
@@ -385,6 +425,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.font_box.append(font_text_view)
 
         self.font_box.select_row(self.font_box.get_first_child())
+
+    def is_renderable(self, character):
+        return unicodedata.category(character) != "Cn"
 
     def font_row_selected(self, list_box, row):
         if self.tool == "TEXT":
@@ -507,16 +550,25 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child = child.get_next_sibling()
             index += 1
 
-    def on_click_pressed(self, click, x, y, arg):
-        pass
-
-    def on_click_released(self, click, x, y, arg):
+    def on_click_pressed(self, click, arg, x, y):
         if self.flip:
             if self.drawing_area_width == 0:
                 self.update_area_width()
             x = self.drawing_area_width - x
-        x_char = int(self.start_x / self.x_mul)
-        y_char = int(self.start_y / self.y_mul)
+        x_char = int(x / self.x_mul)
+        y_char = int(y / self.y_mul)
+
+        if self.tool == "FREE":
+            self.add_undo_action("Freehand")
+            self.draw_char(x_char, y_char)
+
+    def on_click_released(self, click, arg, x, y):
+        if self.flip:
+            if self.drawing_area_width == 0:
+                self.update_area_width()
+            x = self.drawing_area_width - x
+        x_char = int(x / self.x_mul)
+        y_char = int(y / self.y_mul)
 
         if self.tool == "TEXT":
             self.text_x = x_char
@@ -528,8 +580,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if child:
                 self.free_char = child.get_label()
 
-        # elif self.tool == "FREE":
-        #     self.draw_char(x_char, y_char)
 
     def on_click_stopped(self, arg):
         pass
@@ -639,8 +689,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         scrolled.set_policy(2,1)
         scrolled.set_child(self.free_char_list)
         box.append(scrolled)
-        # box.append(Gtk.Separator())
-        # box.append(self.free_scale)
+        box.append(Gtk.Separator())
+        box.append(self.free_scale)
         self.scrolled.set_child(box)
 
     def on_choose_eraser(self, btn):
@@ -648,14 +698,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "ERASER"
 
-        self.show_sidebar_button.set_sensitive(False)
         if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(False)
+            self.overlay_split_view.set_reveal_flap(True)
+        self.show_sidebar_button.set_sensitive(True)
 
         self.scrolled.set_child(None)
         box = Gtk.Box(orientation=1, name="ERASER", margin_start=12)
         self.eraser_size = self.eraser_scale.get_value()
-        # box.append(self.eraser_scale)
+        box.append(self.eraser_scale)
         self.scrolled.set_child(box)
 
     def reset_text_entry(self):
@@ -683,7 +733,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def clear(self, btn=None, grid=None):
         if grid != self.grid:
-            start = time.time()
             if len(self.changed_chars) < 100:
                 for pos in self.changed_chars:
                     child = grid.get_child_at(pos[0], pos[1])
@@ -756,10 +805,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         start_y_char = self.start_y // self.y_mul
 
         if self.tool == "FREE-LINE":
-            self.add_undo_action("Free Hand Line")
+            self.add_undo_action("Freehand Line")
             self.prev_char_pos = [start_x_char, start_y_char]
         elif self.tool == "FREE":
-            self.add_undo_action("Free Hand")
+            self.add_undo_action("Freehand")
         elif self.tool == "ERASER":
             self.add_undo_action("Eraser")
 
@@ -956,6 +1005,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def insert_text(self, widget=None, grid=None):
         self.clear(None, self.preview_grid)
+        transparent = self.transparent_check.get_active()
         if grid == None:
             grid = self.preview_grid
         x = self.text_x
@@ -976,15 +1026,41 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 continue
             if y > self.canvas_y:
                 break
+            if emoji.is_emoji(char):
+                continue
             child = grid.get_child_at(x, y)
             if not child:
                 continue
-
-            if ord(char) < 32: # empty chars
+            elif ord(char) < 32: # empty chars
                 if ord(char) == 10: # \n char
                     y += 1
                     x = self.text_x
                     continue
+                if ord(char) == 9: # tab
+                    for i in range(4):
+                        if transparent:
+                            if self.flip:
+                                x -= 1
+                            else:
+                                x += 1
+                            continue
+                        child = grid.get_child_at(x, y)
+                        if not child:
+                            continue
+                        if grid == self.grid:
+                            self.undo_changes[0].add_change(x, y, child.get_label())
+                        child.set_label(" ")
+                        self.changed_chars.append([x, y])
+                        if self.flip:
+                            x -= 1
+                        else:
+                            x += 1
+                    continue
+            elif char == " " and transparent:
+                if self.flip:
+                    x -= 1
+                else:
+                    x += 1
                 continue
             if grid == self.grid:
                 self.undo_changes[0].add_change(x, y, child.get_label())
@@ -996,16 +1072,22 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 x += 1
 
     def draw_char(self, x_coord, y_coord):
-        child = self.grid.get_child_at(x_coord, y_coord)
-        if child:
-            self.undo_changes[0].add_change(x_coord, y_coord, child.get_label())
-            child.set_label(self.free_char)
+        brush_size = self.free_scale.get_adjustment().get_value()
+        for delta in self.brush_sizes[int(brush_size - 1)]:
+            child = self.grid.get_child_at(x_coord + delta[0], y_coord + delta[1])
+            if child:
+                if child.get_label() == self.free_char:
+                    continue
+                self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_label())
+                child.set_label(self.free_char)
 
     def erase_char(self, x_coord, y_coord):
-        child = self.grid.get_child_at(x_coord, y_coord)
-        if child:
-            self.undo_changes[0].add_change(x_coord, y_coord, child.get_label())
-            child.set_label("")
+        brush_size = self.eraser_scale.get_adjustment().get_value()
+        for delta in self.brush_sizes[int(brush_size - 1)]:
+            child = self.grid.get_child_at(x_coord + delta[0], y_coord + delta[1])
+            if child:
+                self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_label())
+                child.set_label(" ")
 
     def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid):
         for y in range(height):
@@ -1078,9 +1160,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 if arrow:
                     self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.right_arrow())
             else:
-                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
+                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, start_horizontal)
                 if height < 1:
-                    self.vertical_line(start_x_char + width - 1, start_y_char, height + 1, grid, end_vertical)
+                    self.vertical_line(start_x_char + width - 1, start_y_char, height + 1, grid, start_vertical)
                 if width != 1 and height != 1:
                     self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.bottom_right())
                 if arrow:
