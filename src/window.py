@@ -153,6 +153,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.text_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.text_button)
 
+        self.table_button = Gtk.ToggleButton(icon_name="table-symbolic",
+                tooltip_text="Table Ctrl+Shift+T")
+        self.table_button.connect("toggled", self.on_choose_table)
+        self.table_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.table_button)
+
         self.eraser_button = Gtk.ToggleButton(icon_name="eraser-symbolic",
                 tooltip_text="Eraser Ctrl+E")
         self.eraser_button.connect("toggled", self.on_choose_eraser)
@@ -432,6 +438,95 @@ use just the size you need.''')
 
         self.font_box.select_row(self.font_box.get_first_child())
 
+        self.table_sidebar = Gtk.Box(orientation=1, name="TABLE")
+
+        columns_row = Adw.ActionRow(title="Columns") #Adw.SpinRow(title="Width")
+        columns_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
+        columns_spin.set_range(1, 5)
+        columns_spin.get_adjustment().set_step_increment(1)
+        columns_row.add_suffix(columns_spin)
+        self.table_sidebar.append(columns_row)
+        self.table_sidebar.append(Gtk.Separator())
+
+        rows_row = Adw.ActionRow(title="Rows") #Adw.SpinRow(title="Width")
+        buttons_box = Gtk.Box(spacing=10)
+        rows_adder_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="list-add-symbolic")
+        rows_adder_button.connect("clicked", self.on_add_row_clicked, columns_spin)
+        rows_reset_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="user-trash-symbolic")
+        buttons_box.append(rows_reset_button)
+        buttons_box.append(rows_adder_button)
+        rows_row.add_suffix(buttons_box)
+        self.table_sidebar.append(rows_row)
+        rows_scrolled_window = Gtk.ScrolledWindow(vexpand=True)
+        rows_scrolled_window.set_policy(2,1)
+        self.rows_box = Gtk.Box(orientation=1)
+        rows_scrolled_window.set_child(self.rows_box)
+        self.table_sidebar.append(rows_scrolled_window)
+
+        settings_box = Gtk.Box(spacing=10, margin_start=12, margin_end=12, margin_bottom=12)
+        settings_box.append(Gtk.Label(label="Use first line as header"))
+        header_check = Gtk.CheckButton()
+        settings_box.append(header_check)
+        divide_check = Gtk.CheckButton()
+        settings_box.append(Gtk.Label(label="Divide each row"))
+        settings_box.append(divide_check)
+        self.table_sidebar.append(settings_box)
+        rows_reset_button.connect("clicked", self.on_reset_row_clicked, columns_spin)
+        enter_button = Gtk.Button(valign=Gtk.Align.END, label="Enter", margin_start=10, margin_end=10, margin_bottom=10)
+        enter_button.connect("clicked", self.insert_table_definitely, header_check, divide_check)
+        self.table_sidebar.append(enter_button)
+
+        self.table_x = 0
+        self.table_y = 0
+
+        self.rows_number = 0
+        self.columns_number = 0
+
+    def insert_text_definitely(self, btn):
+        start = self.text_entry_buffer.get_start_iter()
+        end = self.text_entry_buffer.get_end_iter()
+        text = self.text_entry_buffer.get_text(start, end, False)
+        if text != "":
+            return
+        self.add_undo_action(self.tool.capitalize())
+        self.insert_text(self.grid, self.text_x, self.text_y, text)
+
+    def insert_text_preview(self, btn):
+        start = self.text_entry_buffer.get_start_iter()
+        end = self.text_entry_buffer.get_end_iter()
+        text = self.text_entry_buffer.get_text(start, end, False)
+        self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
+
+    def insert_table_definitely(self, btn, header_check, divide_check):
+        header = header_check.get_active()
+        divide = divide_check.get_active()
+        self.add_undo_action("Table")
+        self.insert_table(header, divide, self.grid)
+
+    def on_reset_row_clicked(self, btn, columns_spin):
+        child = self.rows_box.get_first_child()
+        prev_child = None
+        while child != None:
+            prev_child = child
+            child = prev_child.get_next_sibling()
+            self.rows_box.remove(prev_child)
+        columns_spin.set_sensitive(True)
+        self.rows_number = 0
+
+    def on_add_row_clicked(self, btn, columns_spin):
+        self.rows_number += 1
+        columns_spin.set_sensitive(False)
+        values = int(columns_spin.get_value())
+        self.columns_number = values
+        row = Adw.ActionRow() #Adw.SpinRow(title="Width")
+
+        rows_values_box = Gtk.Box(spacing=6)
+        for value in range(values):
+            rows_values_box.append(Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START))
+        row.add_suffix(rows_values_box)
+        self.rows_box.append(row)
+        print("new row")
+
     def is_renderable(self, character):
         return unicodedata.category(character) != "Cn"
 
@@ -688,6 +783,16 @@ use just the size you need.''')
 
         self.scrolled.set_child(None)
         self.scrolled.set_child(self.text_sidebar)
+
+    def on_choose_table(self, btn):
+        if btn.get_active():
+            self.tool = "TABLE"
+
+        self.show_sidebar_button.set_sensitive(True)
+        self.overlay_split_view.set_reveal_flap(True)
+
+        self.scrolled.set_child(None)
+        self.scrolled.set_child(self.table_sidebar)
 
     def on_choose_free(self, btn):
         self.reset_text_entry()
@@ -1129,6 +1234,71 @@ use just the size you need.''')
         self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.bottom_right())
         self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
         self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
+
+    def insert_table(self, header, divide, grid):
+        child = self.rows_box.get_first_child()
+        columns_widths = []
+        table = []
+        column = 0
+        while child != None:
+            this_row = []
+            entry = child.get_child().get_last_child().get_first_child().get_first_child()
+            while entry != None:
+                value = entry.get_text()
+                if len(columns_widths) < column + 1:
+                    columns_widths.append(len(value))
+                elif len(value) > columns_widths[column]:
+                    columns_widths[column] = len(value)
+                this_row.append(value)
+                columns_widths
+                entry = entry.get_next_sibling()
+                column += 1
+            column = 0
+            table.append(this_row)
+            child = child.get_next_sibling()
+        print(table)
+        print(columns_widths)
+
+        self.columns_number
+        self.rows_number
+
+        width = 1
+        for column_width in columns_widths:
+            width += column_width + 1
+
+        if divide:
+            heigth = 1 + self.rows_number * 2
+        else:
+            heigth = 2 + self.rows_number
+
+        self.draw_rectangle(self.table_x, self.table_y, width, heigth, grid)
+
+        x = self.table_x
+        for column in range(self.columns_number - 1):
+            x += columns_widths[column] + 1
+            self.vertical_line(x, self.table_y + 1, heigth - 2, grid, self.right_vertical())
+            self.set_char_at(x, self.table_y + heigth - 1, grid, self.top_intersect())
+            self.set_char_at(x, self.table_y, grid, self.bottom_intersect())
+
+        y = self.table_y
+        if divide:
+            for row in range(self.rows_number - 1):
+                y += 2
+                self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
+                self.set_char_at(self.table_x, y, grid, self.right_intersect())
+                self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
+
+        y = self.table_y + 1
+        x = self.table_x + 1
+        for row in table:
+            for index, column in enumerate(row):
+                self.insert_text(grid, x, y, column)
+                x += columns_widths[index] + 1
+            if divide:
+                y += 2
+            else:
+                y += 1
+            x = self.table_x + 1
 
     def draw_line(self, start_x_char, start_y_char, width, height, grid):
         arrow = self.tool == "ARROW"
