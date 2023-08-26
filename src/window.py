@@ -278,7 +278,7 @@ use just the size you need.''')
 
         self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
                 margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12,
-                wrap_mode=2)
+                wrap_mode=2, height_request=100)
 
         self.toolbar_view.append(self.overlay_split_view)
         self.toolbar_view.append(action_bar)
@@ -392,25 +392,28 @@ use just the size you need.''')
 
         write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
         write_button.connect("clicked", self.insert_text, self.grid)
-        self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"])
+        self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], vexpand=True)
         self.selected_font = "Normal"
         self.font_box.connect("row-selected", self.font_row_selected)
-        homogeneous_box = Gtk.Grid(row_homogeneous=True)
+        # homogeneous_box = Gtk.Grid(row_homogeneous=True, width_request=429)
         scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.text_entry)
-        homogeneous_box.attach(scrolled_window, 0, 0, 1, 1)
+        self.text_sidebar.append(scrolled_window)
+        # homogeneous_box.attach(scrolled_window, 0, 0, 1, 1)
         scrolled_window = Gtk.ScrolledWindow(margin_start=12, margin_end=12, margin_bottom=12)
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.font_box)
-        homogeneous_box.attach(scrolled_window, 0, 1, 1, 2)
+        # homogeneous_box.attach(scrolled_window, 0, 1, 2, 2)
+
+        self.text_sidebar.append(scrolled_window)
 
         transparent_box = Gtk.Box(margin_start=12, margin_end=12, margin_bottom=12, halign=Gtk.Align.CENTER)
         transparent_box.append(Gtk.Label(label="Spaces do not overwrite         "))
         self.transparent_check = Gtk.CheckButton()
         transparent_box.append(self.transparent_check)
 
-        self.text_sidebar.append(homogeneous_box)
+        # self.text_sidebar.append(homogeneous_box)
         self.text_sidebar.append(transparent_box)
         self.text_sidebar.append(write_button)
 
