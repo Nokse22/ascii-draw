@@ -97,12 +97,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
                 ["╶", "╶", "╎", "╎", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
                 ["─", "─", "│", "│", "╭", "╮", "╯","╰", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
+                ["▁", "▔", "▏", "▕", "▁", "▁", "▔","▔", " ", " ", " ", " "," ", "∧", "∨", ">", "<"],
                 ["━", "━", "┃", "┃", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
                 ["╺", "╺", "╏", "╏", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
                 ["═", "═", "║", "║", "╔", "╗", "╝","╚", "╬", "╠", "╣", "╩","╦", "A", "V", ">", "<"],
                 ["-", "-", "|", "|", "+", "+", "+","+", "+", "+", "+", "+","+", "↑", "↓", "→", "←"],
                 ["_", "_", "│", "│", " ", " ", "│","│", "│", "│", "│", "┴","┬", "▲", "▼", "▶", "◀"],
                 ["•", "•", "•", "•", "•", "•", "•","•", "•", "•", "•", "•","•", "▲", "▼", ">", "<"],
+                ["·", "·", "·", "·", ".", ".", "'","'", "·", "·", "·", "·","·", "∧", "∨", ">", "<"],
                 ["═", "═", "│", "│", "╒", "╕", "╛","╘", "╪", "╞", "╡", "╧","╤", "▲", "▼", "▶", "◀"],
                 ["─", "─", "║", "║", "╓", "╖", "╜","╙", "╫", "╟", "╢", "╨","╥", "▲", "▼", ">", "<"],
                 ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
@@ -1112,21 +1114,10 @@ use just the size you need.''')
         self.vertical_line(start_x_char, start_y_char + 1, height - 1, grid, top_vertical)
         self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, bottom_vertical)
 
-        child = grid.get_child_at(start_x_char + width - 1, start_y_char)
-        if child:
-            child.set_label(self.top_right())
-
-        child = grid.get_child_at(start_x_char + width - 1, start_y_char + height - 1)
-        if child:
-            child.set_label(self.bottom_right())
-
-        child = grid.get_child_at(start_x_char, start_y_char)
-        if child:
-            child.set_label(self.top_left())
-
-        child = grid.get_child_at(start_x_char, start_y_char + height - 1)
-        if child:
-            child.set_label(self.bottom_left())
+        self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
+        self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.bottom_right())
+        self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
+        self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
 
     def draw_line(self, start_x_char, start_y_char, width, height, grid):
         arrow = self.tool == "ARROW"
@@ -1221,6 +1212,8 @@ use just the size you need.''')
         self.prev_line_pos = [start_x_char + width, start_y_char + height]
 
     def set_char_at(self, x, y, grid, char):
+        if char == " " or char == "":
+            return
         child = grid.get_child_at(x, y)
         if child:
             if grid == self.grid:
@@ -1239,7 +1232,7 @@ use just the size you need.''')
                 prev_label = child.get_label()
                 if prev_label == "" or prev_label == " ":
                     child.set_label(char)
-                elif prev_label == self.top_horizontal():
+                elif prev_label == self.top_horizontal() and self.crossing() != " ":
                     child.set_label(self.crossing())
                 else:
                     child.set_label(char)
