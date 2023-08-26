@@ -11,5 +11,6 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/line-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/arrow-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/increase-canvas-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/table-symbolic.svg</file>
    </gresource>
 </gresources>
