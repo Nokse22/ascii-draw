@@ -1,0 +1,80 @@
+name: ascii-draw 
+base: core22 
+adopt-info: ascii-draw
+grade: stable 
+confinement: strict 
+website: https://github.com/Nokse22/teleprompter
+license: GPL-3.0
+source-code: https://github.com/Nokse22/teleprompter
+issues: https://github.com/Nokse22/teleprompter/issues
+contact: https://github.com/Nokse22/teleprompter
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+
+parts:
+  emoji:
+    source: https://github.com/carpedm20/emoji.git
+    source-tag: 'v2.8.0'
+# ext:updatesnap
+#   version-format:
+#     ignore: true
+    plugin: python
+    build-environment:
+      # WORKAROUND: The python plugin is broken with gnome extension
+      - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
+      - PYTHONPATH: ""
+    python-packages:
+      - pyfiglet==0.8.post1 
+    prime:
+      - -bin/activate
+      - -bin/activate.csh
+      - -bin/activate.fish
+      - -bin/Activate.ps1
+      - -bin/python
+      - -bin/python3
+      - -bin/python3.10
+      - -bin/pip
+      - -bin/pip3
+      - -bin/pip3.10
+      - -pyvenv.cfg
+      - -lib/python3.10/site-packages/gi
+      - -lib/python3.10/site-packages/pygtkcompat
+      - -lib/python3.10/site-packages/PyG*
+      - -lib/python3.10/site-packages/pycairo*
+      - -lib/python3.10/site-packages/cairo*
+      - -lib/*/*/setup*
+      - -lib/*/*/pkg*
+      - -lib/*/*/pip*
+      - -lib/*/*/_dist*
+      - -share
+      - -include
+  ascii-draw:
+    after: [ emoji ]
+    plugin: meson
+    source: .
+    parse-info: [ usr/share/metainfo/io.github.nokse22.asciidraw.metainfo.xml ]
+    build-packages:
+      - blueprint-compiler
+    meson-parameters:
+      - --prefix=/snap/ascii-draw/current/usr
+    override-build: |
+      craftctl default
+      sed -e '1c#!/usr/bin/env python3' -i ${CRAFT_PART_INSTALL}/snap/ascii-draw/current/usr/bin/ascii-draw
+      chmod +x $CRAFT_PART_INSTALL/snap/ascii-draw/current/usr/bin/ascii-draw
+    organize:
+      snap/ascii-draw/current: .
+
+slots:
+  ascii-draw:
+    interface: dbus
+    bus: session
+    name: io.github.nokse22.asciidraw
+
+apps:
+  ascii-draw:
+    command: usr/bin/ascii-draw
+    extensions: [ gnome ]
+    common-id: io.github.nokse22.asciidraw
+    desktop: usr/share/applications/io.github.nokse22.asciidraw.desktop
