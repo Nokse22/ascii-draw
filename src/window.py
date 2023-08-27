@@ -97,7 +97,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
                 ["╶", "╶", "╎", "╎", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
                 ["─", "─", "│", "│", "╭", "╮", "╯","╰", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["▁", "▔", "▏", "▕", "▁", "▁", "▔","▔", " ", " ", " ", " "," ", "∧", "∨", ">", "<"],
+                ["▁", "▔", "▏", "▕", "▁", "▁", "▔","▔", " ", "▏", "▕", "▔","▁", "∧", "∨", ">", "<"],
                 ["━", "━", "┃", "┃", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
                 ["╺", "╺", "╏", "╏", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
                 ["═", "═", "║", "║", "╔", "╗", "╝","╚", "╬", "╠", "╣", "╩","╦", "A", "V", ">", "<"],
@@ -197,7 +197,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         elif text_direction == Gtk.TextDirection.RTL:
             self.flip = True
 
-        lines_styles_box = Gtk.Box(orientation=1, css_classes=["padded"], spacing=6)
+        lines_styles_box = Gtk.Box(orientation=1, margin_start=6, margin_bottom=6, margin_end=6, margin_top=6, spacing=6)
         prev_btn = None
 
         for style in self.styles:
@@ -232,7 +232,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
-        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
+        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", sensitive=False)
         self.show_sidebar_button.connect("clicked", self.show_sidebar)
         headerbar.pack_end(self.show_sidebar_button)
 
@@ -276,11 +276,11 @@ use just the size you need.''')
 
         char_flow_box = Gtk.FlowBox(can_focus=False)
         char_flow_box.set_selection_mode(0)
-        self.free_char_list = Gtk.ScrolledWindow(vexpand=True, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        self.free_char_list = Gtk.ScrolledWindow(vexpand=True)
         self.free_char_list.set_policy(2,1)
         self.free_char_list.set_child(char_flow_box)
 
-        self.sidebar_notebook = Gtk.Notebook(width_request=430)
+        self.sidebar_notebook = Gtk.Notebook(width_request=430, css_classes=["sidebar"])
 
         self.overlay_split_view.set_separator(Gtk.Separator())
         self.overlay_split_view.set_flap(self.sidebar_notebook)
@@ -471,6 +471,7 @@ use just the size you need.''')
         self.table_sidebar.append(rows_scrolled_window)
 
         self.table_types_drop_down = Gtk.DropDown.new_from_strings(["First line as header", "Divide each row", "Not divided"])
+        self.table_types_drop_down.connect("notify::selected", self.preview_table)
         self.table_types_drop_down.set_valign(Gtk.Align.CENTER)
         settings_row = Adw.ActionRow(title="Table type", margin_bottom=12, css_classes=["card"])
         settings_row.add_suffix(self.table_types_drop_down)
@@ -488,7 +489,8 @@ use just the size you need.''')
         self.rows_number = 0
         self.columns_number = 0
 
-    def preview_table(self, entry):
+    def preview_table(self, entry=None, arg=None):
+        self.clear(None, self.preview_grid)
         table_type = self.table_types_drop_down.get_selected()
         self.insert_table(table_type, self.preview_grid)
 
@@ -500,12 +502,14 @@ use just the size you need.''')
         if text == "":
             return
         self.add_undo_action(self.tool.capitalize())
+        self.clear(None, self.preview_grid)
         self.insert_text(self.grid, self.text_x, self.text_y, text)
 
     def insert_text_preview(self, btn):
         start = self.text_entry_buffer.get_start_iter()
         end = self.text_entry_buffer.get_end_iter()
         text = self.text_entry_buffer.get_text(start, end, False)
+        self.clear(None, self.preview_grid)
         self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
 
     def insert_table_definitely(self, btn):
@@ -532,7 +536,7 @@ use just the size you need.''')
         rows_values_box = Gtk.Box(spacing=6, margin_start=12, margin_end=12, margin_bottom=6, margin_top=6)
         for value in range(values):
             entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
-            entry.connect("activate", self.preview_table)
+            entry.connect("changed", self.preview_table)
             rows_values_box.append(entry)
         self.rows_box.append(rows_values_box)
 
@@ -547,6 +551,7 @@ use just the size you need.''')
             start = self.text_entry_buffer.get_start_iter()
             end = self.text_entry_buffer.get_end_iter()
             text = self.text_entry_buffer.get_text(start, end, False)
+            self.clear(None, self.preview_grid)
             self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
         print(self.selected_font)
 
@@ -661,6 +666,8 @@ use just the size you need.''')
         while child != None:
             if child.get_active():
                 self.style = index
+                if self.tool == "TABLE":
+                    self.preview_table()
                 return
             child = child.get_next_sibling()
             index += 1
@@ -697,11 +704,15 @@ use just the size you need.''')
             start = self.text_entry_buffer.get_start_iter()
             end = self.text_entry_buffer.get_end_iter()
             text = self.text_entry_buffer.get_text(start, end, False)
+            self.clear(None, self.preview_grid)
             self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
 
         elif self.tool == "TABLE":
             self.table_x = x_char
             self.table_y = y_char
+            self.clear(None, self.preview_grid)
+            table_type = self.table_types_drop_down.get_selected()
+            self.insert_table(table_type, self.preview_grid)
 
         elif self.tool == "PICKER":
             child = self.grid.get_child_at(x_char, y_char)
@@ -718,6 +729,7 @@ use just the size you need.''')
         else:
             self.tool = ""
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -730,6 +742,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "PICKER"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -742,6 +755,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "RECTANGLE"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -754,6 +768,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "FILLED-RECTANGLE"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -766,6 +781,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "LINE"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -800,6 +816,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "FREE"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -814,6 +831,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "ERASER"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -832,6 +850,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "ARROW"
 
+        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
@@ -840,6 +859,7 @@ use just the size you need.''')
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def clear(self, btn=None, grid=None):
+        print("clear")
         if grid != self.grid:
             if len(self.changed_chars) < 100:
                 for pos in self.changed_chars:
@@ -882,6 +902,7 @@ use just the size you need.''')
             self.force_clear(None)
 
     def force_clear(self, grid=None):
+        print("force clear")
         if grid == None:
             self.add_undo_action("Clear Screen")
             grid = self.grid
@@ -988,7 +1009,7 @@ use just the size you need.''')
             self.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
-        if self.tool != "TEXT":
+        if self.tool != "TEXT" and self.tool != "TABLE":
             self.force_clear(self.preview_grid)
         if self.flip:
             delta_x = - delta_x
@@ -1111,9 +1132,9 @@ use just the size you need.''')
         self.prev_pos = [new_x, new_y]
 
     def insert_text(self, grid, start_x, start_y, text):
-        self.clear(None, self.preview_grid)
+        # self.clear(None, self.preview_grid)
         transparent = self.transparent_check.get_active()
-        print(text)
+        # print(text)
         x = start_x
         y = start_y
         if self.selected_font != "Normal" and self.tool == "TEXT":
@@ -1237,7 +1258,6 @@ use just the size you need.''')
             column = 0
             table.append(this_row)
             child = child.get_next_sibling()
-        print(table)
 
         if len(columns_widths) == 0:
             return
@@ -1398,9 +1418,9 @@ use just the size you need.''')
                 child = grid.get_child_at(x, start_y + y)
                 if not child:
                     continue
-                if grid == self.grid:
-                    self.undo_changes[0].add_change(x, start_y + y, child.get_label())
                 prev_label = child.get_label()
+                if grid == self.grid:
+                    self.undo_changes[0].add_change(x, start_y + y, prev_label)
                 if prev_label == "" or prev_label == " ":
                     child.set_label(char)
                 elif prev_label == self.top_horizontal() and self.crossing() != " ":
