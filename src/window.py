@@ -1556,6 +1556,10 @@ use just the size you need.''')
         self.text_button.set_active(True)
         self.tool = "TEXT"
 
+    def select_table_tool(self):
+        self.table_button.set_active(True)
+        self.tool = "TABLE"
+
     def select_free_tool(self):
         self.free_button.set_active(True)
         self.tool = "FREE"

@@ -70,6 +70,12 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Table</property>
+                <property name="action-name">app.table-tool</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Eraser</property>
                 <property name="action-name">app.eraser-tool</property>
               </object>
