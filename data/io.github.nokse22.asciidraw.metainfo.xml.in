@@ -15,9 +15,10 @@ There are many stiles to choose from and multiple tools available to use:</p>
       <li>Straight Arrow</li>
 	    <li>Rectangle</li>
 	    <li>Filled Rectangle</li>
-	    <li>Character Picker</li>
-	    <li>Text with also FIGlet fonts</li>
+	    <li>Text with FIGlet fonts</li>
+	    <li>Table</li>
 	    <li>Eraser</li>
+	    <li>Character Picker</li>
     </ul>
 	</description>
 
@@ -35,6 +36,8 @@ There are many stiles to choose from and multiple tools available to use:</p>
 		  <description>
 			  <p>Added tables</p>
 		    <p>Improved sidebar</p>
+		    <p>Improved text tool</p>
+		    <p>Fixed bugs</p>
 		  </description>
 	  </release>
     <release version="0.1.6" date="2023-08-26">
