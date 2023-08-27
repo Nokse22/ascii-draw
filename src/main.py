@@ -94,9 +94,6 @@ class AsciiDrawApplication(Adw.Application):
                 linear-gradient(to right, #aaaaaa 1px, transparent 1px),
                 linear-gradient(to bottom, #aaaaaa 1px, @window_bg_color 1px);*/
         }
-        .padded{
-            padding: 12px;
-        }
         .font-preview{
             font-family: Monospace;
             font-size: 10px;
@@ -134,7 +131,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name='ASCII Draw',
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.1.6',
+                                version='0.1.7',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
