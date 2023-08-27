@@ -197,8 +197,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         elif text_direction == Gtk.TextDirection.RTL:
             self.flip = True
 
-        self.lines_styles_selection = Gtk.Box(orientation=1, css_classes=["padded"], spacing=6)
-
+        lines_styles_box = Gtk.Box(orientation=1, css_classes=["padded"], spacing=6)
         prev_btn = None
 
         for style in self.styles:
@@ -216,9 +215,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if prev_btn != None:
                 style_btn.set_group(prev_btn)
             prev_btn = style_btn
-            style_btn.connect("toggled", self.change_style, self.lines_styles_selection)
+            style_btn.connect("toggled", self.change_style, lines_styles_box)
 
-            self.lines_styles_selection.append(style_btn)
+            lines_styles_box.append(style_btn)
+
+        self.lines_styles_selection = Gtk.ScrolledWindow(vexpand=True)
+        self.lines_styles_selection.set_policy(2,1)
+        self.lines_styles_selection.set_child(lines_styles_box)
 
         menu_button = Gtk.MenuButton()
         menu_button.set_icon_name("open-menu-symbolic")
@@ -229,7 +232,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
-        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", sensitive=False)
+        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic")
         self.show_sidebar_button.connect("clicked", self.show_sidebar)
         headerbar.pack_end(self.show_sidebar_button)
 
@@ -271,13 +274,16 @@ use just the size you need.''')
 
         self.overlay_split_view.set_content(scrolled_window)
 
-        self.free_char_list = Gtk.FlowBox(can_focus=False)
-        self.free_char_list.set_selection_mode(0)
-        self.scrolled = Gtk.ScrolledWindow(halign=Gtk.Align.END, width_request=430, css_classes=["sidebar"])
-        self.scrolled.set_policy(2,2)
+        char_flow_box = Gtk.FlowBox(can_focus=False)
+        char_flow_box.set_selection_mode(0)
+        self.free_char_list = Gtk.ScrolledWindow(vexpand=True, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        self.free_char_list.set_policy(2,1)
+        self.free_char_list.set_child(char_flow_box)
+
+        self.sidebar_notebook = Gtk.Notebook(width_request=430)
 
         self.overlay_split_view.set_separator(Gtk.Separator())
-        self.overlay_split_view.set_flap(self.scrolled)
+        self.overlay_split_view.set_flap(self.sidebar_notebook)
 
         self.overlay.add_overlay(self.preview_grid)
         self.overlay.set_child(self.grid)
@@ -285,8 +291,7 @@ use just the size you need.''')
         self.overlay.add_overlay(self.drawing_area)
 
         self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
-                margin_start=12, margin_end=12, margin_top=12, left_margin=12, top_margin=12,
-                wrap_mode=2, height_request=100)
+                left_margin=12, top_margin=12, wrap_mode=2, height_request=100)
         self.text_entry_buffer = self.text_entry.get_buffer()
 
         self.toolbar_view.append(self.overlay_split_view)
@@ -351,8 +356,8 @@ use just the size you need.''')
 
         char = " "
         prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
-        prev_button.connect("toggled", self.change_char, self.free_char_list)
-        self.free_char_list.append(prev_button)
+        prev_button.connect("toggled", self.change_char, char_flow_box)
+        char_flow_box.append(prev_button)
 
         for code_range in unicode_ranges:
             for code_point in code_range:
@@ -360,21 +365,29 @@ use just the size you need.''')
                 if not self.is_renderable(char):
                     continue
                 new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
-                new_button.connect("toggled", self.change_char, self.free_char_list)
-                self.free_char_list.append(new_button)
+                new_button.connect("toggled", self.change_char, char_flow_box)
+                char_flow_box.append(new_button)
                 new_button.set_group(prev_button)
 
         self.eraser_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
         self.eraser_scale.set_draw_value(True)
         self.eraser_scale.set_value_pos(1)
+        self.eraser_scale.set_size_request(200, -1)
         self.eraser_scale.connect("value-changed", self.on_scale_value_changed, self.eraser_size)
+        eraser_size_row = Adw.ActionRow(title="Size", css_classes=["card"])
+        eraser_size_row.add_suffix(self.eraser_scale)
+        self.eraser_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        self.eraser_sidebar.append(eraser_size_row)
 
         self.free_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
         self.free_scale.set_draw_value(True)
         self.free_scale.set_value_pos(1)
-        self.free_scale.set_margin_start(12)
-        self.free_scale.set_margin_end(12)
+        self.free_scale.set_size_request(200, -1)
         self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
+        freehand_size_row = Adw.ActionRow(title="Size", css_classes=["card"])
+        freehand_size_row.add_suffix(self.free_scale)
+        self.freehand_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        self.freehand_sidebar.append(freehand_size_row)
 
         self.drawing_area_width = 0
 
@@ -392,14 +405,9 @@ use just the size you need.''')
                 "thin","threepoint","times","tombstone","tinker-toy","twopoint",
                 "wavy","weird"]
 
-        # self.font_list += pyfiglet.FigletFont.getFonts()
-        self.font_drop_down = Gtk.DropDown.new_from_strings(self.font_list)
-        self.font_drop_down.set_halign(Gtk.Align.END)
-        self.font_drop_down.set_hexpand(True)
+        self.text_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
 
-        self.text_sidebar = Gtk.Box(orientation=1, name="TEXT")
-
-        write_button = Gtk.Button(label="Enter", margin_start=12, margin_end=12, margin_bottom=12)
+        write_button = Gtk.Button(label="Enter")
         write_button.connect("clicked", self.insert_text_definitely)
         self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], vexpand=True)
         self.selected_font = "Normal"
@@ -410,17 +418,16 @@ use just the size you need.''')
         scrolled_window.set_child(self.text_entry)
         self.text_sidebar.append(scrolled_window)
         # homogeneous_box.attach(scrolled_window, 0, 0, 1, 1)
-        scrolled_window = Gtk.ScrolledWindow(margin_start=12, margin_end=12, margin_bottom=12)
+        scrolled_window = Gtk.ScrolledWindow(margin_bottom=12, css_classes=["card"])
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.font_box)
         # homogeneous_box.attach(scrolled_window, 0, 1, 2, 2)
 
         self.text_sidebar.append(scrolled_window)
 
-        transparent_box = Gtk.Box(margin_start=12, margin_end=12, margin_bottom=12, halign=Gtk.Align.CENTER)
-        transparent_box.append(Gtk.Label(label="Spaces do not overwrite         "))
+        transparent_box = Adw.ActionRow(title="Spaces do not overwrite", margin_bottom=12, css_classes=["card"])
         self.transparent_check = Gtk.CheckButton()
-        transparent_box.append(self.transparent_check)
+        transparent_box.add_suffix(self.transparent_check)
 
         # self.text_sidebar.append(homogeneous_box)
         self.text_sidebar.append(transparent_box)
@@ -438,17 +445,17 @@ use just the size you need.''')
 
         self.font_box.select_row(self.font_box.get_first_child())
 
-        self.table_sidebar = Gtk.Box(orientation=1, name="TABLE")
+        self.table_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
 
-        columns_row = Adw.ActionRow(title="Columns") #Adw.SpinRow(title="Width")
+        columns_row = Adw.ActionRow(title="Columns", css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
         columns_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
         columns_spin.set_range(1, 5)
         columns_spin.get_adjustment().set_step_increment(1)
         columns_row.add_suffix(columns_spin)
         self.table_sidebar.append(columns_row)
-        self.table_sidebar.append(Gtk.Separator())
+        # self.table_sidebar.append(Gtk.Separator())
 
-        rows_row = Adw.ActionRow(title="Rows") #Adw.SpinRow(title="Width")
+        rows_row = Adw.ActionRow(title="Rows", css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
         buttons_box = Gtk.Box(spacing=10)
         rows_adder_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="list-add-symbolic")
         rows_adder_button.connect("clicked", self.on_add_row_clicked, columns_spin)
@@ -457,24 +464,23 @@ use just the size you need.''')
         buttons_box.append(rows_adder_button)
         rows_row.add_suffix(buttons_box)
         self.table_sidebar.append(rows_row)
-        rows_scrolled_window = Gtk.ScrolledWindow(vexpand=True)
+        rows_scrolled_window = Gtk.ScrolledWindow(vexpand=True, css_classes=["card"], margin_bottom=12)
         rows_scrolled_window.set_policy(2,1)
-        self.rows_box = Gtk.Box(orientation=1)
+        self.rows_box = Gtk.Box(orientation=1, margin_top=6, margin_bottom=6)
         rows_scrolled_window.set_child(self.rows_box)
         self.table_sidebar.append(rows_scrolled_window)
 
-        settings_box = Gtk.Box(spacing=10, margin_start=12, margin_end=12, margin_bottom=12)
-        settings_box.append(Gtk.Label(label="Use first line as header"))
-        self.header_check = Gtk.CheckButton()
-        settings_box.append(self.header_check)
-        self.divide_check = Gtk.CheckButton()
-        settings_box.append(Gtk.Label(label="Divide each row"))
-        settings_box.append(self.divide_check)
-        self.table_sidebar.append(settings_box)
+        self.table_types_drop_down = Gtk.DropDown.new_from_strings(["First line as header", "Divide each row", "Not divided"])
+        self.table_types_drop_down.set_valign(Gtk.Align.CENTER)
+        settings_row = Adw.ActionRow(title="Table type", margin_bottom=12, css_classes=["card"])
+        settings_row.add_suffix(self.table_types_drop_down)
+        self.table_sidebar.append(settings_row)
         rows_reset_button.connect("clicked", self.on_reset_row_clicked, columns_spin)
-        enter_button = Gtk.Button(valign=Gtk.Align.END, label="Enter", margin_start=10, margin_end=10, margin_bottom=10)
+        enter_button = Gtk.Button(valign=Gtk.Align.END, label="Enter")
         enter_button.connect("clicked", self.insert_table_definitely)
         self.table_sidebar.append(enter_button)
+
+        self.picker_sidebar = Gtk.Box(orientation=1)
 
         self.table_x = 0
         self.table_y = 0
@@ -483,15 +489,15 @@ use just the size you need.''')
         self.columns_number = 0
 
     def preview_table(self, entry):
-        header = self.header_check.get_active()
-        divide = self.divide_check.get_active()
-        self.insert_table(header, divide, self.preview_grid)
+        table_type = self.table_types_drop_down.get_selected()
+        self.insert_table(table_type, self.preview_grid)
 
     def insert_text_definitely(self, btn):
+        print("clicked")
         start = self.text_entry_buffer.get_start_iter()
         end = self.text_entry_buffer.get_end_iter()
         text = self.text_entry_buffer.get_text(start, end, False)
-        if text != "":
+        if text == "":
             return
         self.add_undo_action(self.tool.capitalize())
         self.insert_text(self.grid, self.text_x, self.text_y, text)
@@ -503,10 +509,9 @@ use just the size you need.''')
         self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
 
     def insert_table_definitely(self, btn):
-        header = self.header_check.get_active()
-        divide = self.divide_check.get_active()
+        table_type = self.table_types_drop_down.get_selected()
         self.add_undo_action("Table")
-        self.insert_table(header, divide, self.grid)
+        self.insert_table(table_type, self.grid)
 
     def on_reset_row_clicked(self, btn, columns_spin):
         child = self.rows_box.get_first_child()
@@ -523,15 +528,13 @@ use just the size you need.''')
         columns_spin.set_sensitive(False)
         values = int(columns_spin.get_value())
         self.columns_number = values
-        row = Adw.ActionRow() #Adw.SpinRow(title="Width")
 
-        rows_values_box = Gtk.Box(spacing=6)
+        rows_values_box = Gtk.Box(spacing=6, margin_start=12, margin_end=12, margin_bottom=6, margin_top=6)
         for value in range(values):
             entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
             entry.connect("activate", self.preview_table)
             rows_values_box.append(entry)
-        row.add_suffix(rows_values_box)
-        self.rows_box.append(row)
+        self.rows_box.append(rows_values_box)
 
         print("new row")
 
@@ -662,6 +665,12 @@ use just the size you need.''')
             child = child.get_next_sibling()
             index += 1
 
+    def remove_all_pages(self):
+        pages_number = self.sidebar_notebook.get_n_pages()
+        for n in range(pages_number):
+            self.sidebar_notebook.remove_page(0)
+        self.clear(None, self.preview_grid)
+
     def on_click_pressed(self, click, arg, x, y):
         if self.flip:
             if self.drawing_area_width == 0:
@@ -699,7 +708,6 @@ use just the size you need.''')
             if child:
                 self.free_char = child.get_label()
 
-
     def on_click_stopped(self, arg):
         pass
 
@@ -713,23 +721,21 @@ use just the size you need.''')
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
-        self.show_sidebar_button.set_sensitive(True)
-
-        self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="FREE-LINE")
-        scrolled = Gtk.ScrolledWindow(vexpand=True)
-        scrolled.set_policy(2,1)
-        scrolled.set_child(self.lines_styles_selection)
-        box.append(scrolled)
-        self.scrolled.set_child(box)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Styles")
+        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_picker(self, btn):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "PICKER"
 
-        self.show_sidebar_button.set_sensitive(False)
-        self.overlay_split_view.set_reveal_flap(False)
+        if not self.overlay_split_view.get_folded():
+            self.overlay_split_view.set_reveal_flap(True)
+
+        self.remove_all_pages()
+        label = Gtk.Label(label="Tool settings")
+        self.sidebar_notebook.append_page(self.picker_sidebar, label)
 
     def on_choose_rectangle(self, btn):
         self.reset_text_entry()
@@ -739,14 +745,9 @@ use just the size you need.''')
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
-        self.show_sidebar_button.set_sensitive(True)
-        self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="RECTANGLE")
-        scrolled = Gtk.ScrolledWindow(vexpand=True)
-        scrolled.set_policy(2,1)
-        scrolled.set_child(self.lines_styles_selection)
-        box.append(scrolled)
-        self.scrolled.set_child(box)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Styles")
+        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_filled_rectangle(self, btn):
         self.reset_text_entry()
@@ -756,51 +757,43 @@ use just the size you need.''')
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
-        self.show_sidebar_button.set_sensitive(True)
-        self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="FILLED-RECTANGLE")
-        scrolled = Gtk.ScrolledWindow(vexpand=True)
-        scrolled.set_policy(2,1)
-        scrolled.set_child(self.free_char_list)
-        box.append(scrolled)
-        self.scrolled.set_child(box)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Chars")
+        self.sidebar_notebook.append_page(self.free_char_list, label)
 
     def on_choose_line(self, btn):
         self.reset_text_entry()
         if btn.get_active():
             self.tool = "LINE"
 
-        self.show_sidebar_button.set_sensitive(True)
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
-        self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="LINE")
-        scrolled = Gtk.ScrolledWindow(vexpand=True)
-        scrolled.set_policy(2,1)
-        scrolled.set_child(self.lines_styles_selection)
-        box.append(scrolled)
-        self.scrolled.set_child(box)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Styles")
+        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_text(self, btn):
         if btn.get_active():
             self.tool = "TEXT"
 
-        self.show_sidebar_button.set_sensitive(True)
         self.overlay_split_view.set_reveal_flap(True)
 
-        self.scrolled.set_child(None)
-        self.scrolled.set_child(self.text_sidebar)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Text")
+        self.sidebar_notebook.append_page(self.text_sidebar, label)
 
     def on_choose_table(self, btn):
         if btn.get_active():
             self.tool = "TABLE"
 
-        self.show_sidebar_button.set_sensitive(True)
         self.overlay_split_view.set_reveal_flap(True)
 
-        self.scrolled.set_child(None)
-        self.scrolled.set_child(self.table_sidebar)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Table")
+        self.sidebar_notebook.append_page(self.table_sidebar, label)
+        label = Gtk.Label(label="Styles")
+        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_free(self, btn):
         self.reset_text_entry()
@@ -810,17 +803,11 @@ use just the size you need.''')
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
-        self.show_sidebar_button.set_sensitive(True)
-
-        self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="FREE")
-        scrolled = Gtk.ScrolledWindow(vexpand=True)
-        scrolled.set_policy(2,1)
-        scrolled.set_child(self.free_char_list)
-        box.append(scrolled)
-        box.append(Gtk.Separator())
-        box.append(self.free_scale)
-        self.scrolled.set_child(box)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Chars")
+        self.sidebar_notebook.append_page(self.free_char_list, label)
+        label = Gtk.Label(label="Tool settings")
+        self.sidebar_notebook.append_page(self.freehand_sidebar, label)
 
     def on_choose_eraser(self, btn):
         self.reset_text_entry()
@@ -829,13 +816,10 @@ use just the size you need.''')
 
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
-        self.show_sidebar_button.set_sensitive(True)
 
-        self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="ERASER", margin_start=12)
-        self.eraser_size = self.eraser_scale.get_value()
-        box.append(self.eraser_scale)
-        self.scrolled.set_child(box)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Tool settings")
+        self.sidebar_notebook.append_page(self.eraser_sidebar, label)
 
     def reset_text_entry(self):
         self.text_entry_buffer.set_text("")
@@ -851,14 +835,9 @@ use just the size you need.''')
         if not self.overlay_split_view.get_folded():
             self.overlay_split_view.set_reveal_flap(True)
 
-        self.show_sidebar_button.set_sensitive(True)
-        self.scrolled.set_child(None)
-        box = Gtk.Box(orientation=1, name="ARROW")
-        scrolled = Gtk.ScrolledWindow(vexpand=True)
-        scrolled.set_policy(2,1)
-        scrolled.set_child(self.lines_styles_selection)
-        box.append(scrolled)
-        self.scrolled.set_child(box)
+        self.remove_all_pages()
+        label = Gtk.Label(label="Styles")
+        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def clear(self, btn=None, grid=None):
         if grid != self.grid:
@@ -988,7 +967,7 @@ use just the size you need.''')
                 height = - height
                 start_y_char -= height
             height += 1
-            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
+            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.preview_grid, self.free_char)
         elif self.tool == "LINE" or self.tool == "ARROW":
             self.clear(None, self.preview_grid)
             if width < 0:
@@ -1042,7 +1021,7 @@ use just the size you need.''')
                 height = - height
                 start_y_char -= height
             height += 1
-            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid)
+            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid, self.free_char)
         elif self.tool == "LINE" or self.tool == "ARROW":
             self.add_undo_action(self.tool.capitalize())
             if width < 0:
@@ -1128,24 +1107,16 @@ use just the size you need.''')
                 self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_left())
             else:
                 self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.right_vertical())
-        # self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, "2")
         self.prev_char_pos = [self.prev_pos[0], self.prev_pos[1]]
         self.prev_pos = [new_x, new_y]
 
     def insert_text(self, grid, start_x, start_y, text):
         self.clear(None, self.preview_grid)
         transparent = self.transparent_check.get_active()
-        # if grid == None:
-        #     grid = self.preview_grid
-        # x = self.text_x
-        # y = self.text_y
-        # buffer = self.text_entry.get_buffer()
-        # start = buffer.get_start_iter()
-        # end = buffer.get_end_iter()
-        # text = buffer.get_text(start, end, False)
+        print(text)
         x = start_x
         y = start_y
-        if self.selected_font != "Normal":
+        if self.selected_font != "Normal" and self.tool == "TEXT":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
         for char in text:
             if x >= self.canvas_x:
@@ -1215,13 +1186,15 @@ use just the size you need.''')
         for delta in self.brush_sizes[int(brush_size - 1)]:
             child = self.grid.get_child_at(x_coord + delta[0], y_coord + delta[1])
             if child:
+                if child.get_label() == " ":
+                    continue
                 self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_label())
                 child.set_label(" ")
 
-    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid):
+    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid, char):
         for y in range(height):
             for x in range(width):
-                self.set_char_at(start_x_char + x, start_y_char + y, grid, self.free_char)
+                self.set_char_at(start_x_char + x, start_y_char + y, grid, char)
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, grid):
         top_vertical = self.left_vertical()
@@ -1243,14 +1216,14 @@ use just the size you need.''')
         self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
         self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
 
-    def insert_table(self, header, divide, grid):
+    def insert_table(self, table_type, grid):
         child = self.rows_box.get_first_child()
         columns_widths = []
         table = []
         column = 0
         while child != None:
             this_row = []
-            entry = child.get_child().get_last_child().get_first_child().get_first_child()
+            entry = child.get_first_child()
             while entry != None:
                 value = entry.get_text()
                 if len(columns_widths) < column + 1:
@@ -1266,15 +1239,21 @@ use just the size you need.''')
             child = child.get_next_sibling()
         print(table)
 
+        if len(columns_widths) == 0:
+            return
+
         width = 1
         for column_width in columns_widths:
             width += column_width + 1
 
-        if divide:
+        if table_type == 1: # all divided
             heigth = 1 + self.rows_number * 2
-        else:
+        elif table_type == 0: # first line divided
+            heigth = 3 + self.rows_number
+        else: # not divided
             heigth = 2 + self.rows_number
 
+        self.draw_filled_rectangle(self.table_x, self.table_y, width, heigth, grid, " ")
         self.draw_rectangle(self.table_x, self.table_y, width, heigth, grid)
 
         x = self.table_x
@@ -1285,20 +1264,27 @@ use just the size you need.''')
             self.set_char_at(x, self.table_y, grid, self.bottom_intersect())
 
         y = self.table_y
-        if divide:
+        if table_type == 1: # all divided
             for row in range(self.rows_number - 1):
                 y += 2
                 self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
                 self.set_char_at(self.table_x, y, grid, self.right_intersect())
                 self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
+        elif table_type == 0: # first line divided
+            y += 2
+            self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
+            self.set_char_at(self.table_x, y, grid, self.right_intersect())
+            self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
 
         y = self.table_y + 1
         x = self.table_x + 1
-        for row in table:
+        for index_row, row in enumerate(table):
             for index, column in enumerate(row):
                 self.insert_text(grid, x, y, column)
                 x += columns_widths[index] + 1
-            if divide:
+            if table_type == 1: # all divided
+                y += 2
+            elif table_type == 0 and index_row == 0: # first line divided
                 y += 2
             else:
                 y += 1
@@ -1397,8 +1383,8 @@ use just the size you need.''')
         self.prev_line_pos = [start_x_char + width, start_y_char + height]
 
     def set_char_at(self, x, y, grid, char):
-        if char == " " or char == "":
-            return
+        # if char == " " or char == "":
+        #     return
         child = grid.get_child_at(x, y)
         if child:
             if grid == self.grid:
