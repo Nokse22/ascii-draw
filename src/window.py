@@ -57,8 +57,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.toolbar_view.append(headerbar)
         self.set_title("ASCII Draw")
 
-        # self.set_default_size(800, 800)
-
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
@@ -159,6 +157,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.table_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.table_button)
 
+        self.tree_button = Gtk.ToggleButton(icon_name="tree-list-symbolic",
+                tooltip_text="Tree View Ctrl+U")
+        self.tree_button.connect("toggled", self.on_choose_tree_list)
+        self.tree_button.set_group(self.rectangle_button)
+        action_bar.pack_start(self.tree_button)
+
         self.eraser_button = Gtk.ToggleButton(icon_name="eraser-symbolic",
                 tooltip_text="Eraser Ctrl+E")
         self.eraser_button.connect("toggled", self.on_choose_eraser)
@@ -179,9 +183,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         save_button.connect("clicked", self.save)
         copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
         copy_button.connect("clicked", self.copy_content)
-        # export_box = Gtk.Box()
-        # export_box.append(save_button)
-        # export_box.append(copy_button)
 
         headerbar.pack_start(save_button)
         headerbar.pack_start(copy_button)
@@ -293,6 +294,7 @@ use just the size you need.''')
         self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
                 left_margin=12, top_margin=12, wrap_mode=2, height_request=100)
         self.text_entry_buffer = self.text_entry.get_buffer()
+        self.text_entry_buffer.connect("changed", self.insert_text_preview)
 
         self.toolbar_view.append(self.overlay_split_view)
         self.toolbar_view.append(action_bar)
@@ -340,8 +342,6 @@ use just the size you need.''')
 
         self.text_x = 0
         self.text_y = 0
-
-        self.text_entry.get_buffer().connect("changed", self.insert_text_preview)
 
         unicode_ranges = [
             range(0x0021, 0x007F),  # Basic Latin
@@ -412,16 +412,13 @@ use just the size you need.''')
         self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], vexpand=True)
         self.selected_font = "Normal"
         self.font_box.connect("row-selected", self.font_row_selected)
-        # homogeneous_box = Gtk.Grid(row_homogeneous=True, width_request=429)
         scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.text_entry)
         self.text_sidebar.append(scrolled_window)
-        # homogeneous_box.attach(scrolled_window, 0, 0, 1, 1)
         scrolled_window = Gtk.ScrolledWindow(margin_bottom=12, css_classes=["card"])
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.font_box)
-        # homogeneous_box.attach(scrolled_window, 0, 1, 2, 2)
 
         self.text_sidebar.append(scrolled_window)
 
@@ -453,7 +450,6 @@ use just the size you need.''')
         columns_spin.get_adjustment().set_step_increment(1)
         columns_row.add_suffix(columns_spin)
         self.table_sidebar.append(columns_row)
-        # self.table_sidebar.append(Gtk.Separator())
 
         rows_row = Adw.ActionRow(title="Rows", css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
         buttons_box = Gtk.Box(spacing=10)
@@ -489,6 +485,25 @@ use just the size you need.''')
         self.rows_number = 0
         self.columns_number = 0
 
+        self.tree_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+
+        self.tree_text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
+                left_margin=12, top_margin=12, wrap_mode=2, height_request=100, accepts_tab=False)
+        self.tree_text_entry_buffer = self.tree_text_entry.get_buffer()
+        self.tree_text_entry_buffer.connect("insert-text", self.on_tree_text_inserted)
+        self.tree_text_entry_buffer.connect("changed", self.preview_tree)
+
+        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12, width_request=405)
+        scrolled_window.set_policy(2,1)
+        scrolled_window.set_child(self.tree_text_entry)
+        self.tree_sidebar.append(scrolled_window)
+        write_button = Gtk.Button(label="Enter")
+        write_button.connect("clicked", self.insert_tree_definitely)
+        self.tree_sidebar.append(write_button)
+
+        self.tree_x = 0
+        self.tree_y = 0
+
     def preview_table(self, entry=None, arg=None):
         self.clear(None, self.preview_grid)
         table_type = self.table_types_drop_down.get_selected()
@@ -505,7 +520,7 @@ use just the size you need.''')
         self.clear(None, self.preview_grid)
         self.insert_text(self.grid, self.text_x, self.text_y, text)
 
-    def insert_text_preview(self, btn):
+    def insert_text_preview(self, widget):
         start = self.text_entry_buffer.get_start_iter()
         end = self.text_entry_buffer.get_end_iter()
         text = self.text_entry_buffer.get_text(start, end, False)
@@ -668,6 +683,8 @@ use just the size you need.''')
                 self.style = index
                 if self.tool == "TABLE":
                     self.preview_table()
+                elif self.tool == "TREE":
+                    self.preview_tree()
                 return
             child = child.get_next_sibling()
             index += 1
@@ -714,6 +731,11 @@ use just the size you need.''')
             table_type = self.table_types_drop_down.get_selected()
             self.insert_table(table_type, self.preview_grid)
 
+        elif self.tool == "TREE":
+            self.tree_x = x_char
+            self.tree_y = y_char
+            self.preview_tree()
+
         elif self.tool == "PICKER":
             child = self.grid.get_child_at(x_char, y_char)
             if child:
@@ -747,7 +769,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Tool settings")
+        label = Gtk.Label(label="Picker")
         self.sidebar_notebook.append_page(self.picker_sidebar, label)
 
     def on_choose_rectangle(self, btn):
@@ -793,6 +815,7 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "TEXT"
 
+        self.show_sidebar_button.set_sensitive(True)
         self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
@@ -803,11 +826,25 @@ use just the size you need.''')
         if btn.get_active():
             self.tool = "TABLE"
 
+        self.show_sidebar_button.set_sensitive(True)
         self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label="Table")
         self.sidebar_notebook.append_page(self.table_sidebar, label)
+        label = Gtk.Label(label="Styles")
+        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
+
+    def on_choose_tree_list(self, btn):
+        if btn.get_active():
+            self.tool = "TREE"
+
+        self.show_sidebar_button.set_sensitive(True)
+        self.overlay_split_view.set_reveal_flap(True)
+
+        self.remove_all_pages()
+        label = Gtk.Label(label="Tree View")
+        self.sidebar_notebook.append_page(self.tree_sidebar, label)
         label = Gtk.Label(label="Styles")
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
@@ -823,7 +860,7 @@ use just the size you need.''')
         self.remove_all_pages()
         label = Gtk.Label(label="Chars")
         self.sidebar_notebook.append_page(self.free_char_list, label)
-        label = Gtk.Label(label="Tool settings")
+        label = Gtk.Label(label="Freehand Brush")
         self.sidebar_notebook.append_page(self.freehand_sidebar, label)
 
     def on_choose_eraser(self, btn):
@@ -836,7 +873,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Tool settings")
+        label = Gtk.Label(label="Eraser")
         self.sidebar_notebook.append_page(self.eraser_sidebar, label)
 
     def reset_text_entry(self):
@@ -1009,7 +1046,7 @@ use just the size you need.''')
             self.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
-        if self.tool != "TEXT" and self.tool != "TABLE":
+        if self.tool != "TEXT" and self.tool != "TABLE" and self.tool != "TREE":
             self.force_clear(self.preview_grid)
         if self.flip:
             delta_x = - delta_x
@@ -1236,6 +1273,103 @@ use just the size you need.''')
         self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.bottom_right())
         self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
         self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
+
+    def on_tree_text_inserted(self, buffer, loc, text, lenght):
+        spaces = 0
+        if text == "\n":
+            start_iter = loc.copy()
+            start_iter.set_line_offset(0)
+            end_iter = start_iter.copy()
+            start_iter.backward_char()
+            while not end_iter.ends_line():
+                start_iter.forward_char()
+                end_iter.forward_char()
+                char = buffer.get_text(start_iter, end_iter, False)
+                if char != " ":
+                    break
+                spaces += 1
+            indentation = " " * spaces
+            buffer.insert(loc, f"{indentation}")
+            loc.backward_chars(spaces)
+            end_iter = buffer.get_end_iter()
+
+        self.preview_tree()
+
+    def preview_tree(self, widget=None):
+        self.clear(None, self.preview_grid)
+        start = self.tree_text_entry_buffer.get_start_iter()
+        end = self.tree_text_entry_buffer.get_end_iter()
+        input_text = self.tree_text_entry_buffer.get_text(start, end, False)
+        self.insert_tree(self.preview_grid, self.tree_x, self.tree_y, input_text)
+
+    def insert_tree_definitely(self, widget=None):
+        self.clear(None, self.preview_grid)
+        self.add_undo_action("Treeview")
+        start = self.tree_text_entry_buffer.get_start_iter()
+        end = self.tree_text_entry_buffer.get_end_iter()
+        input_text = self.tree_text_entry_buffer.get_text(start, end, False)
+        self.insert_tree(self.grid, self.tree_x, self.tree_y, input_text)
+
+    def insert_tree(self, grid, start_x, start_y, input_text):
+        lines = input_text.split("\n")
+        processed_lines = []
+        current_indent = 0
+        leading_spaces = []
+        indent_level = 0
+        print("------tree------")
+        for index, line in enumerate(lines):
+            print("------line------")
+            stripped_line = line.lstrip(' ')  # Remove leading underscores
+            indent_space = len(line) - len(stripped_line)
+            line_number = len(leading_spaces)
+            if line_number > 0:
+                if indent_space > leading_spaces[-1]:
+                    indent_level = current_indent + 1
+                elif indent_space == leading_spaces[-1]:
+                    indent_level = current_indent
+                else:
+                    previos_spaces = 0
+                    indent_level = current_indent - 1
+                    for i in range(line_number - 1, 0, -1):
+                        print(indent_level, indent_space, leading_spaces[i])
+                        if i != 0:
+                            leading_spaces[i] #previous spaces
+                            indent_space # current spaces
+                            if leading_spaces[i] < indent_space:
+                                break
+                            if leading_spaces[i] < previos_spaces:
+                                indent_level -= 1
+                                previos_spaces = leading_spaces[i]
+                            elif leading_spaces[i] > previos_spaces:
+                                print(f"the indent is {processed_lines[i - line_number][0]} was {indent_level}")
+                                indent_level = processed_lines[i - line_number][0]
+                                previos_spaces = leading_spaces[i]
+            current_indent = indent_level
+            leading_spaces.append(indent_space)
+            processed_lines.append([indent_level, stripped_line])
+
+        tree_structure = ""
+
+        y = self.tree_y
+        for index, (indent, text) in enumerate(processed_lines):
+            x = self.tree_x + (indent) * 4
+            self.insert_text(grid, x, y, text)
+            if indent != 0:
+                self.set_char_at(x - 1, y, grid, " ")
+                self.set_char_at(x - 2, y, grid, self.bottom_horizontal())
+                self.set_char_at(x - 3, y, grid, self.bottom_horizontal())
+                self.set_char_at(x - 4, y, grid, self.bottom_left())
+
+                prev_index = index - 1
+                while processed_lines[prev_index][0] != processed_lines[index][0] - 1:
+                    if prev_index < 0:
+                        break
+                    if processed_lines[prev_index][0] == processed_lines[index][0]:
+                        self.set_char_at(x - 4, y - (index - prev_index), grid, self.right_intersect())
+                    else:
+                        self.set_char_at(x - 4, y - (index - prev_index), grid, self.left_vertical())
+                    prev_index -= 1
+            y += 1
 
     def insert_table(self, table_type, grid):
         child = self.rows_box.get_first_child()
@@ -1559,6 +1693,10 @@ use just the size you need.''')
     def select_table_tool(self):
         self.table_button.set_active(True)
         self.tool = "TABLE"
+
+    def select_tree_tool(self):
+        self.tree_button.set_active(True)
+        self.tool = "TREE"
 
     def select_free_tool(self):
         self.free_button.set_active(True)
