@@ -4,5 +4,6 @@ Exec=ascii-draw
 Icon=io.github.nokse22.asciidraw
 Terminal=false
 Type=Application
-Categories=GTK;
+Categories=GNOME;GTK;ASCII;Draw;Graphics;Art;
+Keywords=GNOME;GTK;ASCII;Draw;Graphics;Art;
 StartupNotify=true
