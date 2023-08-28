@@ -52,13 +52,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Free Hand Line</property>
+                <property name="title" translatable="yes" context="shortcut window">Freehand Line</property>
                 <property name="action-name">app.free-line-tool</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Free Hand</property>
+                <property name="title" translatable="yes" context="shortcut window">Freehand brush</property>
                 <property name="action-name">app.free-tool</property>
               </object>
             </child>
@@ -72,6 +72,12 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Table</property>
                 <property name="action-name">app.table-tool</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Tree View</property>
+                <property name="action-name">app.tree-tool</property>
               </object>
             </child>
             <child>

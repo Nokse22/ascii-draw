@@ -47,6 +47,7 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('line-tool', self.select_line_tool, ['<control>l'])
         self.create_action('text-tool', self.select_text_tool, ['<control>t'])
         self.create_action('table-tool', self.select_table_tool, ['<control><shift>t'])
+        self.create_action('tree-tool', self.select_tree_tool, ['<control>U'])
         self.create_action('free-tool', self.select_free_tool, ['<control>f'])
         self.create_action('eraser-tool', self.select_eraser_tool, ['<control>e'])
         self.create_action('arrow-tool', self.select_arrow_tool, ['<control>w'])
@@ -132,7 +133,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name='ASCII Draw',
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.1.7',
+                                version='0.1.8',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
@@ -172,6 +173,9 @@ class AsciiDrawApplication(Adw.Application):
 
     def select_table_tool(self, widget, _):
         self.win.select_table_tool()
+
+    def select_tree_tool(self, widget, _):
+        self.win.select_tree_tool()
 
     def select_free_tool(self, widget, _):
         self.win.select_free_tool()
