@@ -28,28 +28,31 @@ parts:
     python-packages:
       - pyfiglet==0.8.post1 
     prime:
-      - -bin/activate
-      - -bin/activate.csh
-      - -bin/activate.fish
-      - -bin/Activate.ps1
-      - -bin/python
-      - -bin/python3
-      - -bin/python3.10
-      - -bin/pip
-      - -bin/pip3
-      - -bin/pip3.10
+      - -usr/bin/activate
+      - -usr/bin/activate.csh
+      - -usr/bin/activate.fish
+      - -usr/bin/Activate.ps1
+      - -usr/bin/python
+      - -usr/bin/python3
+      - -usr/bin/python3.10
+      - -usr/bin/pip
+      - -usr/bin/pip3
+      - -usr/bin/pip3.10
       - -pyvenv.cfg
-      - -lib/python3.10/site-packages/gi
-      - -lib/python3.10/site-packages/pygtkcompat
-      - -lib/python3.10/site-packages/PyG*
-      - -lib/python3.10/site-packages/pycairo*
-      - -lib/python3.10/site-packages/cairo*
-      - -lib/*/*/setup*
-      - -lib/*/*/pkg*
-      - -lib/*/*/pip*
-      - -lib/*/*/_dist*
+      - -usr/lib/python3.10/site-packages/gi
+      - -usr/lib/python3.10/site-packages/pygtkcompat
+      - -usr/lib/python3.10/site-packages/PyG*
+      - -usr/lib/python3.10/site-packages/pycairo*
+      - -usr/lib/python3.10/site-packages/cairo*
+      - -usr/lib/*/*/setup*
+      - -usr/lib/*/*/pkg*
+      - -usr/lib/*/*/pip*
+      - -usr/lib/*/*/_dist*
       - -share
       - -include
+    organize:
+      bin: usr/bin
+      lib/python3.10/site-packages: usr/lib/python3.10/dist-packages
   ascii-draw:
     after: [ emoji ]
     plugin: meson
@@ -77,4 +80,6 @@ apps:
     command: usr/bin/ascii-draw
     extensions: [ gnome ]
     common-id: io.github.nokse22.asciidraw
+    environment:
+      PYTHONPATH: $SNAP/usr/lib/python3.10/dist-packages:$PYTHONPATH
     desktop: usr/share/applications/io.github.nokse22.asciidraw.desktop
