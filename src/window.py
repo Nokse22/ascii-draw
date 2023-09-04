@@ -26,6 +26,7 @@ import math
 import pyfiglet
 import unicodedata
 import emoji
+import os
 
 class Change():
     def __init__(self, _name):
@@ -54,6 +55,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.toolbar_view = Gtk.Box(orientation=1, vexpand=True)
         headerbar = Adw.HeaderBar()
+        self.title_widget = Adw.WindowTitle(title="ASCII Draw")
+        headerbar.set_title_widget(self.title_widget)
         self.toolbar_view.append(headerbar)
         self.set_title("ASCII Draw")
 
@@ -68,8 +71,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.x_mul = 12
         self.y_mul = 24
 
-        self.canvas_x = 60
-        self.canvas_y = 30
+        self.canvas_x = 50
+        self.canvas_y = 25
         self.grid = Gtk.Grid(css_classes=["ascii-textview", "canvas-shadow"], halign=Gtk.Align.START, valign=Gtk.Align.START)
         self.preview_grid = Gtk.Grid(css_classes=["ascii-preview"], halign=Gtk.Align.START, valign=Gtk.Align.START, can_focus=False)
 
@@ -179,19 +182,24 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         clear_button.connect("clicked", self.clear, self.grid)
         action_bar.pack_end(clear_button)
 
-        save_button = Gtk.Button(label="Save")
-        save_button.connect("clicked", self.save)
+        save_import_button = Adw.SplitButton(label="Save")
+        import_menu = Gio.Menu()
+        import_menu.append(_("Save As"), "app.save-as")
+        # import_menu.append(_("Import"), "app.import")
+        import_menu.append(_("Open file"), "app.open")
+        save_import_button.set_menu_model(import_menu)
+        save_import_button.connect("clicked", self.save_button_clicked)
         copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
         copy_button.connect("clicked", self.copy_content)
 
-        headerbar.pack_start(save_button)
+        headerbar.pack_start(save_import_button)
         headerbar.pack_start(copy_button)
 
         self.undo_button = Gtk.Button(icon_name="edit-undo-symbolic", sensitive=False)
         self.undo_button.connect("clicked", self.undo_first_change)
         headerbar.pack_start(self.undo_button)
 
-        text_direction = save_button.get_child().get_direction()
+        text_direction = save_import_button.get_child().get_direction()
 
         if text_direction == Gtk.TextDirection.LTR:
             self.flip = False
@@ -391,7 +399,7 @@ use just the size you need.''')
 
         self.drawing_area_width = 0
 
-        self.font_list = ["Normal","3x5","avatar","big","bell","brite","briteb",
+        self.font_list = ["Normal","3x5","avatar","big","bell","briteb",
                 "bubble","bulbhead","chunky","contessa","computer","crawford",
                 "cricket","cursive","cyberlarge","cybermedium","cybersmall",
                 "digital","doom","double","drpepper","eftifont",
@@ -504,6 +512,8 @@ use just the size you need.''')
         self.tree_x = 0
         self.tree_y = 0
 
+        self.file_path = ""
+
     def preview_table(self, entry=None, arg=None):
         self.clear(None, self.preview_grid)
         table_type = self.table_types_drop_down.get_selected()
@@ -574,7 +584,16 @@ use just the size you need.''')
         allocation = self.drawing_area.get_allocation()
         self.drawing_area_width = allocation.width
 
-    def save(self, btn):
+    def save_button_clicked(self, btn):
+        if self.file_path != "":
+            self.save_file(self.file_path)
+            return
+        self.open_file_chooser()
+
+    def save_as_action(self):
+        self.open_file_chooser()
+
+    def open_file_chooser(self):
         dialog = Gtk.FileChooserNative(
             title="Save File",
             transient_for=self,
@@ -594,15 +613,20 @@ use just the size you need.''')
             dialog.destroy()
             return
         elif response == Gtk.ResponseType.ACCEPT:
-            path = dialog.get_file().get_path()
-            try:
-                with open(path, 'w') as file:
-                    file.write(self.get_canvas_content())
-                print(f"Content written to {path} successfully.")
-            except IOError:
-                print(f"Error writing to {path}.")
-
+            file_path = dialog.get_file().get_path()
+            self.save_file(file_path)
         dialog.destroy()
+
+    def save_file(self, file_path):
+        self.file_path = file_path
+        file_name = os.path.basename(file_path)
+        self.title_widget.set_subtitle(file_name)
+        try:
+            with open(file_path, 'w') as file:
+                file.write(self.get_canvas_content())
+            print(f"Content written to {file_path} successfully.")
+        except IOError:
+            print(f"Error writing to {file_path}.")
 
     def change_char(self, btn, flow_box):
         self.free_char = btn.get_label()
