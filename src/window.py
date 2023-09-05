@@ -255,13 +255,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         width_row = Adw.ActionRow(title="Width") #Adw.SpinRow(title="Width")
         width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
-        width_spin.set_range(0, 40)
+        width_spin.set_range(0, 120)
+        width_spin.set_value(self.canvas_x)
         width_spin.get_adjustment().set_step_increment(1)
         width_row.add_suffix(width_spin)
         increase_box.append(width_row)
         height_row = Adw.ActionRow(title="Height") #Adw.SpinRow(title="Height")
         height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
-        height_spin.set_range(0, 40)
+        height_spin.set_range(0, 60)
+        height_spin.set_value(self.canvas_y)
         height_row.add_suffix(height_spin)
         height_spin.get_adjustment().set_step_increment(1)
         increase_box.append(height_row)
@@ -269,9 +271,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 much can slow the app down,
 use just the size you need.''')
         increase_box.append(discaimer_row)
-        increase_btn = Gtk.Button(label="Increase canvas")
+        increase_btn = Gtk.Button(label="Change size")
         increase_box.append(increase_btn)
-        increase_btn.connect("clicked", self.increase_size, width_spin, height_spin)
+        increase_btn.connect("clicked", self.change_canvas_size, width_spin, height_spin)
 
         self.drawing_area = Gtk.DrawingArea(css_classes=["drawing-area"])
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
@@ -676,25 +678,36 @@ use just the size you need.''')
         clipboard = Gdk.Display().get_default().get_clipboard()
         clipboard.set(text)
 
-    def increase_size(self, btn, width_row, height_row):
-        x_inc = int(width_row.get_value())
-        y_inc = int(height_row.get_value())
-        print(x_inc, y_inc)
-        if y_inc != 0:
-            for line in range(y_inc):
+    def change_canvas_size(self, btn, width_row, height_row):
+        x_delta = int(width_row.get_value()) - self.canvas_x
+        y_delta = int(height_row.get_value()) - self.canvas_y
+        print(x_delta, y_delta)
+        if y_delta > 0:
+            for line in range(y_delta):
                 self.canvas_y += 1
                 for x in range(self.canvas_x):
                     self.grid.attach(Gtk.Label(name=str(self.canvas_y), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
                     self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
+        elif y_delta < 0:
+            for line in range(abs(y_delta)):
+                self.canvas_y -= 1
+                for x in range(self.canvas_x):
+                    self.grid.remove(self.grid.get_child_at(x, self.canvas_y))
+                    self.preview_grid.remove(self.preview_grid.get_child_at(x, self.canvas_y))
 
         print(self.canvas_x, self.canvas_y)
-        if x_inc != 0:
-            for column in range(x_inc):
+        if x_delta > 0:
+            for column in range(x_delta):
                 self.canvas_x += 1
                 for y in range(self.canvas_y):
                     self.grid.attach(Gtk.Label(name=str(self.canvas_x), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
                     self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
-
+        elif x_delta < 0:
+            for column in range(abs(x_delta)):
+                self.canvas_x -= 1
+                for y in range(self.canvas_y):
+                    self.grid.remove(self.grid.get_child_at(self.canvas_x, y))
+                    self.preview_grid.remove(self.preview_grid.get_child_at(self.canvas_x, y))
 
         print(self.canvas_x, self.canvas_y)
         self.drawing_area_width = self.drawing_area.get_allocation().width
