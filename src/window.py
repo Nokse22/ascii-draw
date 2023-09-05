@@ -258,14 +258,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         increase_canvas_popover.set_child(increase_box)
 
         width_row = Adw.ActionRow(title="Width") #Adw.SpinRow(title="Width")
-        self.width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
+        self.width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
         self.width_spin.set_range(10, self.canvas_max_x)
         self.width_spin.set_value(self.canvas_x)
         self.width_spin.get_adjustment().set_step_increment(1)
         width_row.add_suffix(self.width_spin)
         increase_box.append(width_row)
         height_row = Adw.ActionRow(title="Height") #Adw.SpinRow(title="Height")
-        self.height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
+        self.height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
         self.height_spin.set_range(5, self.canvas_max_y)
         self.height_spin.set_value(self.canvas_y)
         height_row.add_suffix(self.height_spin)
@@ -283,7 +283,8 @@ use just the size you need.''')
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
         # self.drawing_area.connect("show", self.update_area_width)
 
-        self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
+        self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER,
+                margin_start=10, margin_top=10, margin_bottom=10, margin_end=10)
         scrolled_window = Gtk.ScrolledWindow(hexpand=True)
         scrolled_window.set_child(self.overlay)
         self.toast_overlay = Adw.ToastOverlay()
@@ -365,9 +366,11 @@ use just the size you need.''')
             range(0x0100, 0x0180),  # Latin Extended-A
             range(0x2500, 0x2580),  # Box Drawing
             range(0x2580, 0x25A0),  # Block Elements
-            range(0x25A0, 0x2600),  # Geometric Shapes
+            range(0x25A0, 0x25FC),  # Geometric Shapes
+            range(0x25FF, 0x2600),
             range(0x2190, 0x2200),  # Arrows
-            range(0x2200, 0x2300),  # Mathematical Operators
+            range(0x2200, 0x22C7),  # Mathematical Operators
+            range(0x22CB, 0x2300),
         ]
 
         char = " "
@@ -622,15 +625,15 @@ use just the size you need.''')
             try:
                 with open(path, 'r') as file:
                     input_string = file.read()
-                print(input_string)
                 lines = input_string.split('\n')
                 num_lines = len(lines)
                 max_chars = max(len(line) for line in lines)
                 if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
-                    toast = Adw.Toast(title="Opened file exceeds the maximum canvas size", timeout=2)
+                    toast = Adw.Toast(title="Opened file exceeds the maximum canvas size")
                     self.toast_overlay.add_toast(toast)
                 self.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
                 self.add_undo_action("Open")
+                self.force_clear(self.grid)
                 self.insert_text(self.grid, 0, 0, input_string)
                 self.file_path = path
                 file_name = os.path.basename(self.file_path)
@@ -693,6 +696,7 @@ use just the size you need.''')
 
     def change_char(self, btn, flow_box):
         self.free_char = btn.get_label()
+        print(f"0x{ord(self.free_char):04X}")
 
     def show_sidebar(self, btn):
         self.overlay_split_view.set_reveal_flap(not self.overlay_split_view.get_reveal_flap())
@@ -749,7 +753,6 @@ use just the size you need.''')
         x_delta = final_x - self.canvas_x
         y_delta = final_y - self.canvas_y
 
-        print(x_delta, y_delta)
         if y_delta > 0:
             for line in range(y_delta):
                 if self.canvas_y + 1 > self.canvas_max_y:
@@ -767,7 +770,6 @@ use just the size you need.''')
                     self.grid.remove(self.grid.get_child_at(x, self.canvas_y))
                     self.preview_grid.remove(self.preview_grid.get_child_at(x, self.canvas_y))
 
-        print(self.canvas_x, self.canvas_y)
         if x_delta > 0:
             for column in range(x_delta):
                 if self.canvas_x + 1 > self.canvas_max_x:
@@ -785,7 +787,6 @@ use just the size you need.''')
                     self.grid.remove(self.grid.get_child_at(self.canvas_x, y))
                     self.preview_grid.remove(self.preview_grid.get_child_at(self.canvas_x, y))
 
-        print(self.canvas_x, self.canvas_y)
         self.drawing_area_width = self.drawing_area.get_allocation().width
 
         self.width_spin.set_value(self.canvas_x)
@@ -1298,7 +1299,7 @@ use just the size you need.''')
                     y += 1
                     x = start_x
                 continue
-            if y > self.canvas_y:
+            if y >= self.canvas_y:
                 break
             if emoji.is_emoji(char):
                 continue
@@ -1344,6 +1345,7 @@ use just the size you need.''')
                 x -= 1
             else:
                 x += 1
+        print(self.canvas_x, self.canvas_y)
 
     def draw_char(self, x_coord, y_coord):
         brush_size = self.free_scale.get_adjustment().get_value()
@@ -1736,6 +1738,7 @@ use just the size you need.''')
         self.undo_changes.pop(0)
         if len(self.undo_changes) == 0:
             self.undo_button.set_sensitive(False)
+            self.undo_button.set_tooltip_text("")
         else:
             self.undo_button.set_tooltip_text("Undo " + self.undo_changes[0].name)
 
