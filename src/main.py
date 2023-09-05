@@ -42,7 +42,7 @@ class AsciiDrawApplication(Adw.Application):
 
         self.create_action('save-as', self.on_save_as_action)
         self.create_action('open', self.on_open_action)
-        self.create_action('import', self.on_import_action)
+        self.create_action('new-canvas', self.on_new_canvas_action)
 
         self.create_action('undo', self.on_undo_action, ['<control>z'])
 
@@ -117,6 +117,9 @@ class AsciiDrawApplication(Adw.Application):
             css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
+    def on_new_canvas_action(self, widget, _):
+        self.win.new_canvas()
+
     def on_save_as_action(self, widget, _):
         self.win.save_as_action()
 
@@ -124,36 +127,7 @@ class AsciiDrawApplication(Adw.Application):
         pass
 
     def on_open_action(self, widget, _):
-        dialog = Gtk.FileChooserNative(
-            title="Open File",
-            transient_for=self.win,
-            action=Gtk.FileChooserAction.OPEN,
-            modal=True
-        )
-
-        dialog.set_accept_label("Open")
-        dialog.set_cancel_label("Cancel")
-
-        response = dialog.show()
-
-        dialog.connect("response", self.on_save_file_response)
-
-    def on_save_file_response(self, dialog, response):
-        if response == Gtk.ResponseType.CANCEL:
-            dialog.destroy()
-            return
-        elif response == Gtk.ResponseType.ACCEPT:
-            path = dialog.get_file().get_path()
-            try:
-                with open(path, 'r') as file:
-                    value = file.read()
-                print(value)
-                self.win.add_undo_action("Open")
-                self.win.insert_text(self.win.grid, 0, 0, value)
-            except IOError:
-                print(f"Error reading {path}.")
-
-        dialog.destroy()
+        self.win.open_file()
 
     def on_undo_action(self, widget, _):
         self.win.undo_first_change()

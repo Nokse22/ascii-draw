@@ -73,6 +73,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.canvas_x = 50
         self.canvas_y = 25
+
+        self.canvas_max_x = 100
+        self.canvas_max_y = 50
+
         self.grid = Gtk.Grid(css_classes=["ascii-textview", "canvas-shadow"], halign=Gtk.Align.START, valign=Gtk.Align.START)
         self.preview_grid = Gtk.Grid(css_classes=["ascii-preview"], halign=Gtk.Align.START, valign=Gtk.Align.START, can_focus=False)
 
@@ -94,7 +98,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0],[1,2],[1,-2],[-1,-2],[-1,2], ],
                 ]
 
-        self.styles = [#⋀⋁⋙⋘⊳⊲∠∧∨◀▶∠⊰⊱╌╎╶╸╶╎ ╺╴╏
+        self.styles = [
                 ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
                 ["╶", "╶", "╎", "╎", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
                 ["─", "─", "│", "│", "╭", "╮", "╯","╰", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
@@ -185,7 +189,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         save_import_button = Adw.SplitButton(label="Save")
         import_menu = Gio.Menu()
         import_menu.append(_("Save As"), "app.save-as")
-        # import_menu.append(_("Import"), "app.import")
+        import_menu.append(_("New Canvas"), "app.new-canvas")
         import_menu.append(_("Open file"), "app.open")
         save_import_button.set_menu_model(import_menu)
         save_import_button.connect("clicked", self.save_button_clicked)
@@ -254,18 +258,18 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         increase_canvas_popover.set_child(increase_box)
 
         width_row = Adw.ActionRow(title="Width") #Adw.SpinRow(title="Width")
-        width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
-        width_spin.set_range(0, 120)
-        width_spin.set_value(self.canvas_x)
-        width_spin.get_adjustment().set_step_increment(1)
-        width_row.add_suffix(width_spin)
+        self.width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
+        self.width_spin.set_range(10, self.canvas_max_x)
+        self.width_spin.set_value(self.canvas_x)
+        self.width_spin.get_adjustment().set_step_increment(1)
+        width_row.add_suffix(self.width_spin)
         increase_box.append(width_row)
         height_row = Adw.ActionRow(title="Height") #Adw.SpinRow(title="Height")
-        height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
-        height_spin.set_range(0, 60)
-        height_spin.set_value(self.canvas_y)
-        height_row.add_suffix(height_spin)
-        height_spin.get_adjustment().set_step_increment(1)
+        self.height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
+        self.height_spin.set_range(5, self.canvas_max_y)
+        self.height_spin.set_value(self.canvas_y)
+        height_row.add_suffix(self.height_spin)
+        self.height_spin.get_adjustment().set_step_increment(1)
         increase_box.append(height_row)
         discaimer_row = Adw.ActionRow(title='''Increasing the canvas too
 much can slow the app down,
@@ -273,7 +277,7 @@ use just the size you need.''')
         increase_box.append(discaimer_row)
         increase_btn = Gtk.Button(label="Change size")
         increase_box.append(increase_btn)
-        increase_btn.connect("clicked", self.change_canvas_size, width_spin, height_spin)
+        increase_btn.connect("clicked", self.on_change_canvas_size_btn_clicked)
 
         self.drawing_area = Gtk.DrawingArea(css_classes=["drawing-area"])
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
@@ -282,8 +286,10 @@ use just the size you need.''')
         self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
         scrolled_window = Gtk.ScrolledWindow(hexpand=True)
         scrolled_window.set_child(self.overlay)
+        self.toast_overlay = Adw.ToastOverlay()
+        self.toast_overlay.set_child(scrolled_window)
 
-        self.overlay_split_view.set_content(scrolled_window)
+        self.overlay_split_view.set_content(self.toast_overlay)
 
         char_flow_box = Gtk.FlowBox(can_focus=False)
         char_flow_box.set_selection_mode(0)
@@ -592,6 +598,59 @@ use just the size you need.''')
             return
         self.open_file_chooser()
 
+    def open_file(self):
+        dialog = Gtk.FileChooserNative(
+            title="Open File",
+            transient_for=self,
+            action=Gtk.FileChooserAction.OPEN,
+            modal=True
+        )
+
+        dialog.set_accept_label("Open")
+        dialog.set_cancel_label("Cancel")
+
+        response = dialog.show()
+
+        dialog.connect("response", self.on_open_file_response)
+
+    def on_open_file_response(self, dialog, response):
+        if response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+            return
+        elif response == Gtk.ResponseType.ACCEPT:
+            path = dialog.get_file().get_path()
+            try:
+                with open(path, 'r') as file:
+                    input_string = file.read()
+                print(input_string)
+                lines = input_string.split('\n')
+                num_lines = len(lines)
+                max_chars = max(len(line) for line in lines)
+                if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
+                    toast = Adw.Toast(title="Opened file exceeds the maximum canvas size", timeout=2)
+                    self.toast_overlay.add_toast(toast)
+                self.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
+                self.add_undo_action("Open")
+                self.insert_text(self.grid, 0, 0, input_string)
+                self.file_path = path
+                file_name = os.path.basename(self.file_path)
+                self.title_widget.set_subtitle(file_name)
+            except IOError:
+                print(f"Error reading {path}.")
+
+        dialog.destroy()
+
+    def new_canvas(self):
+        self.add_undo_action("Clear")
+        self.force_clear(self.grid)
+        self.change_canvas_size(50, 25)
+        self.file_path = ""
+        self.title_widget.set_subtitle("")
+        self.undo_changes = []
+        self.undo_button.set_sensitive(False)
+        self.undo_button.set_tooltip_text("")
+
+
     def save_as_action(self):
         self.open_file_chooser()
 
@@ -627,6 +686,8 @@ use just the size you need.''')
             with open(file_path, 'w') as file:
                 file.write(self.get_canvas_content())
             print(f"Content written to {file_path} successfully.")
+            toast = Adw.Toast(title="Saved successfully", timeout=2)
+            self.toast_overlay.add_toast(toast)
         except IOError:
             print(f"Error writing to {file_path}.")
 
@@ -678,18 +739,29 @@ use just the size you need.''')
         clipboard = Gdk.Display().get_default().get_clipboard()
         clipboard.set(text)
 
-    def change_canvas_size(self, btn, width_row, height_row):
-        x_delta = int(width_row.get_value()) - self.canvas_x
-        y_delta = int(height_row.get_value()) - self.canvas_y
+    def on_change_canvas_size_btn_clicked(self, btn):
+        x = int(self.width_spin.get_value())
+        y = int(self.height_spin.get_value())
+
+        self.change_canvas_size(x, y)
+
+    def change_canvas_size(self, final_x, final_y):
+        x_delta = final_x - self.canvas_x
+        y_delta = final_y - self.canvas_y
+
         print(x_delta, y_delta)
         if y_delta > 0:
             for line in range(y_delta):
+                if self.canvas_y + 1 > self.canvas_max_y:
+                    break
                 self.canvas_y += 1
                 for x in range(self.canvas_x):
                     self.grid.attach(Gtk.Label(name=str(self.canvas_y), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
                     self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
         elif y_delta < 0:
             for line in range(abs(y_delta)):
+                if self.canvas_y == 0:
+                    break
                 self.canvas_y -= 1
                 for x in range(self.canvas_x):
                     self.grid.remove(self.grid.get_child_at(x, self.canvas_y))
@@ -698,12 +770,16 @@ use just the size you need.''')
         print(self.canvas_x, self.canvas_y)
         if x_delta > 0:
             for column in range(x_delta):
+                if self.canvas_x + 1 > self.canvas_max_x:
+                    break
                 self.canvas_x += 1
                 for y in range(self.canvas_y):
                     self.grid.attach(Gtk.Label(name=str(self.canvas_x), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
                     self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
         elif x_delta < 0:
             for column in range(abs(x_delta)):
+                if self.canvas_x == 0:
+                    break
                 self.canvas_x -= 1
                 for y in range(self.canvas_y):
                     self.grid.remove(self.grid.get_child_at(self.canvas_x, y))
@@ -711,6 +787,9 @@ use just the size you need.''')
 
         print(self.canvas_x, self.canvas_y)
         self.drawing_area_width = self.drawing_area.get_allocation().width
+
+        self.width_spin.set_value(self.canvas_x)
+        self.height_spin.set_value(self.canvas_y)
 
     def change_style(self, btn, box):
         child = box.get_first_child()
