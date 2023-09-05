@@ -1392,7 +1392,7 @@ use just the size you need.''')
         self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
         self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
 
-    def on_tree_text_inserted(self, buffer, loc, text, lenght):
+    def on_tree_text_inserted(self, buffer, loc, text, length):
         spaces = 0
         if text == "\n":
             start_iter = loc.copy()
@@ -1519,20 +1519,20 @@ use just the size you need.''')
             width += column_width + 1
 
         if table_type == 1: # all divided
-            heigth = 1 + self.rows_number * 2
+            height = 1 + self.rows_number * 2
         elif table_type == 0: # first line divided
-            heigth = 3 + self.rows_number
+            height = 3 + self.rows_number
         else: # not divided
-            heigth = 2 + self.rows_number
+            height = 2 + self.rows_number
 
-        self.draw_filled_rectangle(self.table_x, self.table_y, width, heigth, grid, " ")
-        self.draw_rectangle(self.table_x, self.table_y, width, heigth, grid)
+        self.draw_filled_rectangle(self.table_x, self.table_y, width, height, grid, " ")
+        self.draw_rectangle(self.table_x, self.table_y, width, height, grid)
 
         x = self.table_x
         for column in range(self.columns_number - 1):
             x += columns_widths[column] + 1
-            self.vertical_line(x, self.table_y + 1, heigth - 2, grid, self.right_vertical())
-            self.set_char_at(x, self.table_y + heigth - 1, grid, self.top_intersect())
+            self.vertical_line(x, self.table_y + 1, height - 2, grid, self.right_vertical())
+            self.set_char_at(x, self.table_y + height - 1, grid, self.top_intersect())
             self.set_char_at(x, self.table_y, grid, self.bottom_intersect())
 
         y = self.table_y
