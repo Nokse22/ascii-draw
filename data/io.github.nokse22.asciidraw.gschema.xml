@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="ascii-draw">
 	<schema id="io.github.nokse22.asciidraw" path="/io/github/nokse22/asciidraw/">
-	<key name="window-width" type="i">
-    <default>1000</default>
-  </key>
-  <key name="window-height" type="i">
-    <default>800</default>
-  </key>
+	  <key name="window-width" type="i">
+      <default>1000</default>
+    </key>
+    <key name="window-height" type="i">
+      <default>800</default>
+    </key>
+	  <key name="palettes" type="s">
+      <default>'█░▒▓'</default>
+    </key>
 	</schema>
 </schemalist>
