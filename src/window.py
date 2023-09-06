@@ -239,9 +239,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         menu_button = Gtk.MenuButton()
         menu_button.set_icon_name("open-menu-symbolic")
         menu = Gio.Menu()
-        # menu.append(_("Preferences"), "app.preferences")
-        menu.append(_("Keyboard shortcuts"), "win.show-help-overlay")
-        menu.append(_("About ASCII Draw"), "app.about")
+        menu1 = Gio.Menu()
+        menu1.append(_("New palette"), "app.new-palette")
+        menu1.append(_("Export palettes"), "app.export-palettes")
+        menu1.append(_("Import palettes"), "app.import-palettes")
+        menu2 = Gio.Menu()
+        menu2.append(_("Keyboard shortcuts"), "win.show-help-overlay")
+        menu2.append(_("About ASCII Draw"), "app.about")
+        menu.append_section(None, menu1)
+        menu.append_section(None, menu2)
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
@@ -294,9 +300,31 @@ use just the size you need.''')
 
         char_flow_box = Gtk.FlowBox(can_focus=False)
         char_flow_box.set_selection_mode(0)
-        self.free_char_list = Gtk.ScrolledWindow(vexpand=True)
+        self.chars_sidebar = Gtk.Box(spacing=12, orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        self.free_char_list = Gtk.ScrolledWindow(vexpand=True, css_classes=["card"])
         self.free_char_list.set_policy(2,1)
         self.free_char_list.set_child(char_flow_box)
+        self.chars_sidebar.append(self.free_char_list)
+
+        self.palettes_box = Gtk.Box(orientation=1, height_request=200, css_classes=["card"])
+
+        self.palettes_box.append(Gtk.Label(label="Palette 1"))
+        self.chars_sidebar.append(self.palettes_box)
+
+        palettes = self.settings.get_string("palettes").split("\n")
+        self.palettes_flow_box = Gtk.FlowBox()
+
+        prev_button = Gtk.ToggleButton(label=palettes[0][0], css_classes=["flat"])
+        prev_button.connect("toggled", self.change_char, self.palettes_flow_box)
+        self.palettes_flow_box.append(prev_button)
+
+        for char in palettes[0]:
+            new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
+            new_button.connect("toggled", self.change_char, self.palettes_flow_box)
+            self.palettes_flow_box.append(new_button)
+            new_button.set_group(prev_button)
+
+        self.palettes_box.append(self.palettes_flow_box)
 
         self.sidebar_notebook = Gtk.Notebook(width_request=430, css_classes=["sidebar"])
 
@@ -913,7 +941,7 @@ use just the size you need.''')
 
         self.remove_all_pages()
         label = Gtk.Label(label="Chars")
-        self.sidebar_notebook.append_page(self.free_char_list, label)
+        self.sidebar_notebook.append_page(self.chars_sidebar, label)
 
     def on_choose_line(self, btn):
         self.reset_text_entry()
@@ -976,7 +1004,7 @@ use just the size you need.''')
 
         self.remove_all_pages()
         label = Gtk.Label(label="Chars")
-        self.sidebar_notebook.append_page(self.free_char_list, label)
+        self.sidebar_notebook.append_page(self.chars_sidebar, label)
         label = Gtk.Label(label="Freehand Brush")
         self.sidebar_notebook.append_page(self.freehand_sidebar, label)
 
