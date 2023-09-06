@@ -58,6 +58,10 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('free-line-tool', self.select_free_line_tool, ['<control>g'])
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
 
+        self.create_action('new-palette', self.on_new_palette_action)
+        self.create_action('export-palettes', self.on_export_palettes_action)
+        self.create_action('import-palettes', self.on_import_palettes_action)
+
         css = '''
         .drawing-area{
             background-color: @window_bg_color;
@@ -116,6 +120,15 @@ class AsciiDrawApplication(Adw.Application):
             Gdk.Display.get_default(),
             css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+    def on_new_palette_action(self, w, _):
+        pass
+
+    def on_export_palettes_action(self, w, _):
+        pass
+
+    def on_import_palettes_action(self, w, _):
+        pass
 
     def on_new_canvas_action(self, widget, _):
         self.win.new_canvas()
