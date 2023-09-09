@@ -55,10 +55,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.toolbar_view = Gtk.Box(orientation=1, vexpand=True)
         headerbar = Adw.HeaderBar()
-        self.title_widget = Adw.WindowTitle(title="ASCII Draw")
+        self.title_widget = Adw.WindowTitle(title=_("ASCII Draw"))
         headerbar.set_title_widget(self.title_widget)
         self.toolbar_view.append(headerbar)
-        self.set_title("ASCII Draw")
+        self.set_title(_("ASCII Draw"))
 
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
@@ -118,88 +118,88 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         ]
         action_bar = Gtk.ActionBar()
         self.rectangle_button = Gtk.ToggleButton(icon_name="rectangle-symbolic",
-                tooltip_text="Rectangle Ctrl+R")
+                tooltip_text=_("Rectangle Ctrl+R"))
         self.rectangle_button.connect("toggled", self.on_choose_rectangle)
         action_bar.pack_start(self.rectangle_button)
 
         self.filled_rectangle_button = Gtk.ToggleButton(icon_name="filled-rectangle-symbolic",
-                tooltip_text="Rectangle Ctrl+Shift+R")
+                tooltip_text=_("Filled Rectangle Ctrl+Shift+R"))
         self.filled_rectangle_button.connect("toggled", self.on_choose_filled_rectangle)
         self.filled_rectangle_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.filled_rectangle_button)
 
         self.line_button = Gtk.ToggleButton(icon_name="line-symbolic",
-                tooltip_text="Line Ctrl+L")
+                tooltip_text=_("Line Ctrl+L"))
         self.line_button.connect("toggled", self.on_choose_line)
         self.line_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.line_button)
 
         self.arrow_button = Gtk.ToggleButton(icon_name="arrow-symbolic",
-                tooltip_text="Arrow Ctrl+W")
+                tooltip_text=_("Arrow Ctrl+W"))
         self.arrow_button.connect("toggled", self.on_choose_arrow)
         self.arrow_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.arrow_button)
 
         self.free_line_button = Gtk.ToggleButton(icon_name="free-line-symbolic",
-                tooltip_text="Free Line Ctrl+G")
+                tooltip_text=_("Free Line Ctrl+G"))
         self.free_line_button.connect("toggled", self.on_choose_free_line)
         self.free_line_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.free_line_button)
 
         self.free_button = Gtk.ToggleButton(icon_name="paintbrush-symbolic",
-                tooltip_text="Freehand Ctrl+F")
+                tooltip_text=_("Freehand Ctrl+F"))
         self.free_button.connect("clicked", self.on_choose_free)
         self.free_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.free_button)
 
         self.text_button = Gtk.ToggleButton(icon_name="text-symbolic",
-                tooltip_text="Text Ctrl+T")
+                tooltip_text=_("Text Ctrl+T"))
         self.text_button.connect("toggled", self.on_choose_text)
         self.text_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.text_button)
 
         self.table_button = Gtk.ToggleButton(icon_name="table-symbolic",
-                tooltip_text="Table Ctrl+Shift+T")
+                tooltip_text=_("Table Ctrl+Shift+T"))
         self.table_button.connect("toggled", self.on_choose_table)
         self.table_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.table_button)
 
         self.tree_button = Gtk.ToggleButton(icon_name="tree-list-symbolic",
-                tooltip_text="Tree View Ctrl+U")
+                tooltip_text=_("Tree View Ctrl+U"))
         self.tree_button.connect("toggled", self.on_choose_tree_list)
         self.tree_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.tree_button)
 
         self.eraser_button = Gtk.ToggleButton(icon_name="eraser-symbolic",
-                tooltip_text="Eraser Ctrl+E")
+                tooltip_text=_("Eraser Ctrl+E"))
         self.eraser_button.connect("toggled", self.on_choose_eraser)
         self.eraser_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.eraser_button)
 
         self.picker_button = Gtk.ToggleButton(icon_name="color-select-symbolic",
-                tooltip_text="Picker Ctrl+P")
+                tooltip_text=_("Picker Ctrl+P"))
         self.picker_button.connect("toggled", self.on_choose_picker)
         self.picker_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.picker_button)
 
-        clear_button = Gtk.Button(icon_name="user-trash-symbolic")
+        clear_button = Gtk.Button(icon_name="user-trash-symbolic", tooltip_text=_("Remove"))
         clear_button.connect("clicked", self.clear, self.grid)
         action_bar.pack_end(clear_button)
 
-        save_import_button = Adw.SplitButton(label="Save")
+        save_import_button = Adw.SplitButton(label=_("Save"))
         import_menu = Gio.Menu()
         import_menu.append(_("Save As"), "app.save-as")
         import_menu.append(_("New Canvas"), "app.new-canvas")
-        import_menu.append(_("Open file"), "app.open")
+        import_menu.append(_("Open File"), "app.open")
         save_import_button.set_menu_model(import_menu)
         save_import_button.connect("clicked", self.save_button_clicked)
-        copy_button = Gtk.Button(icon_name="edit-copy-symbolic")
+        copy_button = Gtk.Button(icon_name="edit-copy-symbolic", tooltip_text=_("Copy"))
         copy_button.connect("clicked", self.copy_content)
 
         headerbar.pack_start(save_import_button)
         headerbar.pack_start(copy_button)
 
-        self.undo_button = Gtk.Button(icon_name="edit-undo-symbolic", sensitive=False)
+        self.undo_button = Gtk.Button(icon_name="edit-undo-symbolic", tooltip_text=_("Undo"), sensitive=False)
         self.undo_button.connect("clicked", self.undo_first_change)
         headerbar.pack_start(self.undo_button)
 
@@ -236,26 +236,25 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.lines_styles_selection.set_policy(2,1)
         self.lines_styles_selection.set_child(lines_styles_box)
 
-        menu_button = Gtk.MenuButton()
-        menu_button.set_icon_name("open-menu-symbolic")
+        menu_button = Gtk.MenuButton(icon_name="open-menu-symbolic", tooltip_text=_("Main Menu"))
         menu = Gio.Menu()
         menu1 = Gio.Menu()
-        menu1.append(_("New palette"), "app.new-palette")
-        menu1.append(_("Export palettes"), "app.export-palettes")
-        menu1.append(_("Import palettes"), "app.import-palettes")
+        menu1.append(_("New Palette"), "app.new-palette")
+        menu1.append(_("Export Palettes"), "app.export-palettes")
+        menu1.append(_("Import Palettes"), "app.import-palettes")
         menu2 = Gio.Menu()
-        menu2.append(_("Keyboard shortcuts"), "win.show-help-overlay")
+        menu2.append(_("Keyboard Shortcuts"), "win.show-help-overlay")
         menu2.append(_("About ASCII Draw"), "app.about")
         menu.append_section(None, menu1)
         menu.append_section(None, menu2)
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
 
-        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", sensitive=False)
+        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", tooltip_text = _("Show Sidebar"), sensitive=False)
         self.show_sidebar_button.connect("clicked", self.show_sidebar)
         headerbar.pack_end(self.show_sidebar_button)
 
-        increase_button = Gtk.MenuButton(icon_name="list-add-symbolic")
+        increase_button = Gtk.MenuButton(icon_name="list-add-symbolic", tooltip_text=_("Change Size"))
         increase_canvas_popover = Gtk.Popover()
         increase_button.set_popover(increase_canvas_popover)
         headerbar.pack_end(increase_button)
@@ -263,25 +262,24 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         increase_box = Gtk.Box(orientation=1, width_request=200, spacing=6)
         increase_canvas_popover.set_child(increase_box)
 
-        width_row = Adw.ActionRow(title="Width") #Adw.SpinRow(title="Width")
+        width_row = Adw.ActionRow(title=_("Width")) #Adw.SpinRow(title="Width")
         self.width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
         self.width_spin.set_range(10, self.canvas_max_x)
         self.width_spin.set_value(self.canvas_x)
         self.width_spin.get_adjustment().set_step_increment(1)
         width_row.add_suffix(self.width_spin)
         increase_box.append(width_row)
-        height_row = Adw.ActionRow(title="Height") #Adw.SpinRow(title="Height")
+        height_row = Adw.ActionRow(title=_("Height")) #Adw.SpinRow(title="Height")
         self.height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
         self.height_spin.set_range(5, self.canvas_max_y)
         self.height_spin.set_value(self.canvas_y)
         height_row.add_suffix(self.height_spin)
         self.height_spin.get_adjustment().set_step_increment(1)
         increase_box.append(height_row)
-        discaimer_row = Adw.ActionRow(title='''Increasing the canvas too
-much can slow the app down,
-use just the size you need.''')
+        discaimer_row = Adw.ActionRow(title=_("Increasing the canvas size too much can slow the app down.\n"
+                                              "Use only the size you need."))
         increase_box.append(discaimer_row)
-        increase_btn = Gtk.Button(label="Change size")
+        increase_btn = Gtk.Button(label=_("Change Size"))
         increase_box.append(increase_btn)
         increase_btn.connect("clicked", self.on_change_canvas_size_btn_clicked)
 
@@ -308,7 +306,7 @@ use just the size you need.''')
 
         self.palettes_box = Gtk.Box(orientation=1, height_request=200, css_classes=["card"])
 
-        self.palettes_box.append(Gtk.Label(label="Palette 1"))
+        self.palettes_box.append(Gtk.Label(label=_("Palette 1")))
         self.chars_sidebar.append(self.palettes_box)
 
         palettes = self.settings.get_string("palettes").split("\n")
@@ -421,7 +419,7 @@ use just the size you need.''')
         self.eraser_scale.set_value_pos(1)
         self.eraser_scale.set_size_request(200, -1)
         self.eraser_scale.connect("value-changed", self.on_scale_value_changed, self.eraser_size)
-        eraser_size_row = Adw.ActionRow(title="Size", css_classes=["card"])
+        eraser_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
         eraser_size_row.add_suffix(self.eraser_scale)
         self.eraser_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
         self.eraser_sidebar.append(eraser_size_row)
@@ -431,7 +429,7 @@ use just the size you need.''')
         self.free_scale.set_value_pos(1)
         self.free_scale.set_size_request(200, -1)
         self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
-        freehand_size_row = Adw.ActionRow(title="Size", css_classes=["card"])
+        freehand_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
         freehand_size_row.add_suffix(self.free_scale)
         self.freehand_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
         self.freehand_sidebar.append(freehand_size_row)
@@ -454,7 +452,7 @@ use just the size you need.''')
 
         self.text_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
 
-        write_button = Gtk.Button(label="Enter")
+        write_button = Gtk.Button(label=_("Enter"))
         write_button.connect("clicked", self.insert_text_definitely)
         self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], vexpand=True)
         self.selected_font = "Normal"
@@ -469,7 +467,7 @@ use just the size you need.''')
 
         self.text_sidebar.append(scrolled_window)
 
-        transparent_box = Adw.ActionRow(title="Spaces do not overwrite", margin_bottom=12, css_classes=["card"])
+        transparent_box = Adw.ActionRow(title=_("Spaces do not overwrite"), margin_bottom=12, css_classes=["card"])
         self.transparent_check = Gtk.CheckButton()
         transparent_box.add_suffix(self.transparent_check)
 
@@ -491,18 +489,18 @@ use just the size you need.''')
 
         self.table_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
 
-        columns_row = Adw.ActionRow(title="Columns", css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
+        columns_row = Adw.ActionRow(title=_("Columns"), css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
         columns_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
         columns_spin.set_range(1, 5)
         columns_spin.get_adjustment().set_step_increment(1)
         columns_row.add_suffix(columns_spin)
         self.table_sidebar.append(columns_row)
 
-        rows_row = Adw.ActionRow(title="Rows", css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
+        rows_row = Adw.ActionRow(title=_("Rows"), css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
         buttons_box = Gtk.Box(spacing=10)
-        rows_adder_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="list-add-symbolic")
+        rows_adder_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="list-add-symbolic", tooltip_text=_("Add"))
         rows_adder_button.connect("clicked", self.on_add_row_clicked, columns_spin)
-        rows_reset_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="user-trash-symbolic")
+        rows_reset_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="user-trash-symbolic", tooltip_text=_("Remove"))
         buttons_box.append(rows_reset_button)
         buttons_box.append(rows_adder_button)
         rows_row.add_suffix(buttons_box)
@@ -513,14 +511,14 @@ use just the size you need.''')
         rows_scrolled_window.set_child(self.rows_box)
         self.table_sidebar.append(rows_scrolled_window)
 
-        self.table_types_drop_down = Gtk.DropDown.new_from_strings(["First line as header", "Divide each row", "Not divided"])
+        self.table_types_drop_down = Gtk.DropDown.new_from_strings([_("First line as header"), _("Divide each row"), _("Not divided")])
         self.table_types_drop_down.connect("notify::selected", self.preview_table)
         self.table_types_drop_down.set_valign(Gtk.Align.CENTER)
-        settings_row = Adw.ActionRow(title="Table type", margin_bottom=12, css_classes=["card"])
+        settings_row = Adw.ActionRow(title=_("Table type"), margin_bottom=12, css_classes=["card"])
         settings_row.add_suffix(self.table_types_drop_down)
         self.table_sidebar.append(settings_row)
         rows_reset_button.connect("clicked", self.on_reset_row_clicked, columns_spin)
-        enter_button = Gtk.Button(valign=Gtk.Align.END, label="Enter")
+        enter_button = Gtk.Button(valign=Gtk.Align.END, label=_("Enter"))
         enter_button.connect("clicked", self.insert_table_definitely)
         self.table_sidebar.append(enter_button)
 
@@ -544,7 +542,7 @@ use just the size you need.''')
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.tree_text_entry)
         self.tree_sidebar.append(scrolled_window)
-        write_button = Gtk.Button(label="Enter")
+        write_button = Gtk.Button(label=_("Enter"))
         write_button.connect("clicked", self.insert_tree_definitely)
         self.tree_sidebar.append(write_button)
 
@@ -631,7 +629,7 @@ use just the size you need.''')
 
     def open_file(self):
         dialog = Gtk.FileChooserNative(
-            title="Open File",
+            title=_("Open File"),
             transient_for=self,
             action=Gtk.FileChooserAction.OPEN,
             modal=True
@@ -657,7 +655,7 @@ use just the size you need.''')
                 num_lines = len(lines)
                 max_chars = max(len(line) for line in lines)
                 if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
-                    toast = Adw.Toast(title="Opened file exceeds the maximum canvas size")
+                    toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
                     self.toast_overlay.add_toast(toast)
                 self.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
                 self.add_undo_action("Open")
@@ -687,7 +685,7 @@ use just the size you need.''')
 
     def open_file_chooser(self):
         dialog = Gtk.FileChooserNative(
-            title="Save File",
+            title=_("Save File"),
             transient_for=self,
             action=Gtk.FileChooserAction.SAVE,
             modal=True
@@ -717,7 +715,7 @@ use just the size you need.''')
             with open(file_path, 'w') as file:
                 file.write(self.get_canvas_content())
             print(f"Content written to {file_path} successfully.")
-            toast = Adw.Toast(title="Saved successfully", timeout=2)
+            toast = Adw.Toast(title=_("Saved successfully"), timeout=2)
             self.toast_overlay.add_toast(toast)
         except IOError:
             print(f"Error writing to {file_path}.")
@@ -901,7 +899,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Styles")
+        label = Gtk.Label(label=_("Styles"))
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_picker(self, btn):
@@ -914,7 +912,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Picker")
+        label = Gtk.Label(label=_("Picker"))
         self.sidebar_notebook.append_page(self.picker_sidebar, label)
 
     def on_choose_rectangle(self, btn):
@@ -927,7 +925,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Styles")
+        label = Gtk.Label(label=_("Styles"))
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_filled_rectangle(self, btn):
@@ -940,7 +938,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Chars")
+        label = Gtk.Label(label=_("Chars"))
         self.sidebar_notebook.append_page(self.chars_sidebar, label)
 
     def on_choose_line(self, btn):
@@ -953,7 +951,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Styles")
+        label = Gtk.Label(label=_("Styles"))
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_text(self, btn):
@@ -964,7 +962,7 @@ use just the size you need.''')
         self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Text")
+        label = Gtk.Label(label=_("Text"))
         self.sidebar_notebook.append_page(self.text_sidebar, label)
 
     def on_choose_table(self, btn):
@@ -975,9 +973,9 @@ use just the size you need.''')
         self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Table")
+        label = Gtk.Label(label=_("Table"))
         self.sidebar_notebook.append_page(self.table_sidebar, label)
-        label = Gtk.Label(label="Styles")
+        label = Gtk.Label(label=_("Styles"))
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_tree_list(self, btn):
@@ -988,9 +986,9 @@ use just the size you need.''')
         self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Tree View")
+        label = Gtk.Label(label=_("Tree View"))
         self.sidebar_notebook.append_page(self.tree_sidebar, label)
-        label = Gtk.Label(label="Styles")
+        label = Gtk.Label(label=_("Styles"))
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def on_choose_free(self, btn):
@@ -1003,9 +1001,9 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Chars")
+        label = Gtk.Label(label=_("Chars"))
         self.sidebar_notebook.append_page(self.chars_sidebar, label)
-        label = Gtk.Label(label="Freehand Brush")
+        label = Gtk.Label(label=_("Freehand Brush"))
         self.sidebar_notebook.append_page(self.freehand_sidebar, label)
 
     def on_choose_eraser(self, btn):
@@ -1018,7 +1016,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Eraser")
+        label = Gtk.Label(label=_("Eraser"))
         self.sidebar_notebook.append_page(self.eraser_sidebar, label)
 
     def reset_text_entry(self):
@@ -1037,7 +1035,7 @@ use just the size you need.''')
             self.overlay_split_view.set_reveal_flap(True)
 
         self.remove_all_pages()
-        label = Gtk.Label(label="Styles")
+        label = Gtk.Label(label=_("Styles"))
         self.sidebar_notebook.append_page(self.lines_styles_selection, label)
 
     def clear(self, btn=None, grid=None):
@@ -1242,10 +1240,10 @@ use just the size you need.''')
             self.prev_char_pos = []
             self.prev_pos = []
 
-    def add_undo_action(self, name):
+    def add_undo_action(self, name, *args):
         self.undo_changes.insert(0, Change(name))
         self.undo_button.set_sensitive(True)
-        self.undo_button.set_tooltip_text("Undo " + self.undo_changes[0].name)
+        self.undo_button.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
 
     def drawing_area_draw(self, area, cr, width, height, data):
         cr.save()
@@ -1768,7 +1766,7 @@ use just the size you need.''')
             self.undo_button.set_sensitive(False)
             self.undo_button.set_tooltip_text("")
         else:
-            self.undo_button.set_tooltip_text("Undo " + self.undo_changes[0].name)
+            self.undo_button.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
 
     def top_horizontal(self):
         return self.styles[self.style - 1][0]

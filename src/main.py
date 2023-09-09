@@ -156,10 +156,10 @@ class AsciiDrawApplication(Adw.Application):
             self.win = AsciiDrawWindow(application=self)
         self.win.present()
 
-    def on_about_action(self, widget, _):
+    def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutWindow(transient_for=self.props.active_window,
-                                application_name='ASCII Draw',
+                                application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
                                 version='0.1.9',
@@ -167,6 +167,9 @@ class AsciiDrawApplication(Adw.Application):
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
                                 copyright='© 2023 Nokse')
+        # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
+        # One name per line, please do not remove previous names.
+        about.set_translator_credits(_("translator-credits"))        
         about.present()
 
     def on_preferences_action(self, widget, _):

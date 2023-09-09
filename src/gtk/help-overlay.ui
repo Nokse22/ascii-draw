@@ -58,7 +58,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Freehand brush</property>
+                <property name="title" translatable="yes" context="shortcut window">Freehand Brush</property>
                 <property name="action-name">app.free-tool</property>
               </object>
             </child>
