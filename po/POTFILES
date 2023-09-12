@@ -1,6 +1,5 @@
 data/io.github.nokse22.asciidraw.desktop.in
 data/io.github.nokse22.asciidraw.metainfo.xml.in
-data/io.github.nokse22.asciidraw.gschema.xml
+src/gtk/help-overlay.ui
 src/main.py
 src/window.py
-src/window.ui
