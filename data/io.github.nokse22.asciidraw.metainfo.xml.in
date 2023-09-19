@@ -33,6 +33,12 @@ There are many stiles to choose from and multiple tools available to use:</p>
   <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
 
   <releases>
+    <release version="0.2.0" date="2023-09-22">
+		  <description>
+			  <p>Updated runtime to 45</p>
+		    <p>Improved sidebar for better usability</p>
+		  </description>
+	  </release>
     <release version="0.1.9" date="2023-09-06">
 		  <description>
 			  <p>Improved saving</p>
