@@ -33,6 +33,14 @@ There are many stiles to choose from and multiple tools available to use:</p>
   <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
 
   <releases>
+    <release version="0.1.9" date="2023-09-06">
+		  <description>
+			  <p>Improved saving</p>
+		    <p>Improved changing canvas size function</p>
+		    <p>Added opening files</p>
+		    <p>Fixed bugs</p>
+		  </description>
+	  </release>
     <release version="0.1.8" date="2023-08-28">
 		  <description>
 			  <p>Added tree view tool</p>

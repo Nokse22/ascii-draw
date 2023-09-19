@@ -40,6 +40,10 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
+        self.create_action('save-as', self.on_save_as_action)
+        self.create_action('open', self.on_open_action)
+        self.create_action('new-canvas', self.on_new_canvas_action)
+
         self.create_action('undo', self.on_undo_action, ['<control>z'])
 
         self.create_action('rectangle-tool', self.select_rectangle_tool, ['<control>r'])
@@ -53,6 +57,10 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('arrow-tool', self.select_arrow_tool, ['<control>w'])
         self.create_action('free-line-tool', self.select_free_line_tool, ['<control>g'])
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
+
+        self.create_action('new-palette', self.on_new_palette_action)
+        self.create_action('export-palettes', self.on_export_palettes_action)
+        self.create_action('import-palettes', self.on_import_palettes_action)
 
         css = '''
         .drawing-area{
@@ -113,6 +121,27 @@ class AsciiDrawApplication(Adw.Application):
             css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
+    def on_new_palette_action(self, w, _):
+        pass
+
+    def on_export_palettes_action(self, w, _):
+        pass
+
+    def on_import_palettes_action(self, w, _):
+        pass
+
+    def on_new_canvas_action(self, widget, _):
+        self.win.new_canvas()
+
+    def on_save_as_action(self, widget, _):
+        self.win.save_as_action()
+
+    def on_import_action(self, widget, _):
+        pass
+
+    def on_open_action(self, widget, _):
+        self.win.open_file()
+
     def on_undo_action(self, widget, _):
         self.win.undo_first_change()
 
@@ -127,17 +156,20 @@ class AsciiDrawApplication(Adw.Application):
             self.win = AsciiDrawWindow(application=self)
         self.win.present()
 
-    def on_about_action(self, widget, _):
+    def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutWindow(transient_for=self.props.active_window,
-                                application_name='ASCII Draw',
+                                application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.1.8',
+                                version='0.1.9',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
                                 copyright='© 2023 Nokse')
+        # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
+        # One name per line, please do not remove previous names.
+        about.set_translator_credits(_("translator-credits"))        
         about.present()
 
     def on_preferences_action(self, widget, _):
