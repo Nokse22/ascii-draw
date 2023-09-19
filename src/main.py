@@ -106,7 +106,7 @@ class AsciiDrawApplication(Adw.Application):
         }
         .font-preview{
             font-family: Monospace;
-            font-size: 10px;
+            font-size: 7px;
             color: @window_fg_color;
         }
         .sidebar{

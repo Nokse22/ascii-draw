@@ -53,18 +53,20 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.props.width_request=420
         self.props.height_request=400
 
-        self.toolbar_view = Gtk.Box(orientation=1, vexpand=True)
+        self.toolbar_view = Adw.ToolbarView(vexpand=True)
         headerbar = Adw.HeaderBar()
         self.title_widget = Adw.WindowTitle(title=_("ASCII Draw"))
         headerbar.set_title_widget(self.title_widget)
-        self.toolbar_view.append(headerbar)
+        self.toolbar_view.add_top_bar(headerbar)
+        self.toolbar_view.set_top_bar_style(2)
         self.set_title(_("ASCII Draw"))
 
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
-        self.overlay_split_view = Adw.Flap(vexpand=True, flap_position=1)
-        self.overlay_split_view.set_reveal_flap(False)
+        self.overlay_split_view = Adw.OverlaySplitView(vexpand=True, sidebar_position=1,
+                show_sidebar=False, sidebar_width_fraction=0.3, max_sidebar_width=500, min_sidebar_width=300)
+        # self.overlay_split_view.set_show_sidebar(False)
 
         self.set_content(self.toolbar_view)
 
@@ -238,14 +240,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         menu_button = Gtk.MenuButton(icon_name="open-menu-symbolic", tooltip_text=_("Main Menu"))
         menu = Gio.Menu()
-        menu1 = Gio.Menu()
-        menu1.append(_("New Palette"), "app.new-palette")
-        menu1.append(_("Export Palettes"), "app.export-palettes")
-        menu1.append(_("Import Palettes"), "app.import-palettes")
+        # menu1 = Gio.Menu()
+        # menu1.append(_("New Palette"), "app.new-palette")
+        # menu1.append(_("Export Palettes"), "app.export-palettes")
+        # menu1.append(_("Import Palettes"), "app.import-palettes")
         menu2 = Gio.Menu()
         menu2.append(_("Keyboard Shortcuts"), "win.show-help-overlay")
         menu2.append(_("About ASCII Draw"), "app.about")
-        menu.append_section(None, menu1)
+        # menu.append_section(None, menu1)
         menu.append_section(None, menu2)
         menu_button.set_menu_model(menu)
         headerbar.pack_end(menu_button)
@@ -307,7 +309,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.palettes_box = Gtk.Box(orientation=1, height_request=200, css_classes=["card"])
 
         self.palettes_box.append(Gtk.Label(label=_("Palette 1")))
-        self.chars_sidebar.append(self.palettes_box)
+        # self.chars_sidebar.append(self.palettes_box)
 
         palettes = self.settings.get_string("palettes").split("\n")
         self.palettes_flow_box = Gtk.FlowBox()
@@ -324,10 +326,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.palettes_box.append(self.palettes_flow_box)
 
-        self.sidebar_notebook = Gtk.Notebook(width_request=430, css_classes=["sidebar"])
+        self.sidebar_notebook = Gtk.Notebook(hexpand=True, css_classes=["sidebar"]) #width_request=430,
 
-        self.overlay_split_view.set_separator(Gtk.Separator())
-        self.overlay_split_view.set_flap(self.sidebar_notebook)
+        sidebar_box = Gtk.Box()
+        sidebar_box.append(Gtk.Separator())
+        sidebar_box.append(self.sidebar_notebook)
+
+        # self.overlay_split_view.set_separator(Gtk.Separator())
+        self.overlay_split_view.set_sidebar(sidebar_box)
 
         self.overlay.add_overlay(self.preview_grid)
         self.overlay.set_child(self.grid)
@@ -339,8 +345,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.text_entry_buffer = self.text_entry.get_buffer()
         self.text_entry_buffer.connect("changed", self.insert_text_preview)
 
-        self.toolbar_view.append(self.overlay_split_view)
-        self.toolbar_view.append(action_bar)
+        self.toolbar_view.set_content(self.overlay_split_view)
+        self.toolbar_view.add_bottom_bar(action_bar)
+        self.toolbar_view.set_bottom_bar_style(2)
 
         drag = Gtk.GestureDrag()
         drag.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -417,7 +424,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.eraser_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
         self.eraser_scale.set_draw_value(True)
         self.eraser_scale.set_value_pos(1)
-        self.eraser_scale.set_size_request(200, -1)
+        self.eraser_scale.set_hexpand(True)
         self.eraser_scale.connect("value-changed", self.on_scale_value_changed, self.eraser_size)
         eraser_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
         eraser_size_row.add_suffix(self.eraser_scale)
@@ -427,7 +434,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.free_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
         self.free_scale.set_draw_value(True)
         self.free_scale.set_value_pos(1)
-        self.free_scale.set_size_request(200, -1)
+        self.free_scale.set_hexpand(True)
         self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
         freehand_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
         freehand_size_row.add_suffix(self.free_scale)
@@ -471,7 +478,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.transparent_check = Gtk.CheckButton()
         transparent_box.add_suffix(self.transparent_check)
 
-        # self.text_sidebar.append(homogeneous_box)
         self.text_sidebar.append(transparent_box)
         self.text_sidebar.append(write_button)
 
@@ -538,7 +544,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.tree_text_entry_buffer.connect("insert-text", self.on_tree_text_inserted)
         self.tree_text_entry_buffer.connect("changed", self.preview_tree)
 
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12, width_request=405)
+        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12) #, width_request=405
         scrolled_window.set_policy(2,1)
         scrolled_window.set_child(self.tree_text_entry)
         self.tree_sidebar.append(scrolled_window)
@@ -725,7 +731,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         print(f"0x{ord(self.free_char):04X}")
 
     def show_sidebar(self, btn):
-        self.overlay_split_view.set_reveal_flap(not self.overlay_split_view.get_reveal_flap())
+        self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
 
     def get_canvas_content(self):
         final_text = ""
@@ -895,8 +901,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = ""
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Styles"))
@@ -908,8 +914,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "PICKER"
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Picker"))
@@ -921,8 +927,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "RECTANGLE"
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Styles"))
@@ -934,8 +940,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "FILLED-RECTANGLE"
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Chars"))
@@ -947,8 +953,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "LINE"
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Styles"))
@@ -959,7 +965,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "TEXT"
 
         self.show_sidebar_button.set_sensitive(True)
-        self.overlay_split_view.set_reveal_flap(True)
+        self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Text"))
@@ -970,7 +976,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "TABLE"
 
         self.show_sidebar_button.set_sensitive(True)
-        self.overlay_split_view.set_reveal_flap(True)
+        self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Table"))
@@ -983,7 +989,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "TREE"
 
         self.show_sidebar_button.set_sensitive(True)
-        self.overlay_split_view.set_reveal_flap(True)
+        self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Tree View"))
@@ -997,8 +1003,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "FREE"
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Chars"))
@@ -1012,8 +1018,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "ERASER"
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Eraser"))
@@ -1031,8 +1037,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.tool = "ARROW"
 
         self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_folded():
-            self.overlay_split_view.set_reveal_flap(True)
+        if not self.overlay_split_view.get_collapsed():
+            self.overlay_split_view.set_show_sidebar(True)
 
         self.remove_all_pages()
         label = Gtk.Label(label=_("Styles"))
