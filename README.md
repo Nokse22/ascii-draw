@@ -14,7 +14,7 @@
   </div>
 
 ## Installation
-### Inspector is available on
+### ASCII Draw is available on
 <a href='https://flathub.org/apps/io.github.nokse22.asciidraw'><img height='80' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/></a>
 <h>&emsp;</h> <a href="https://snapcraft.io/ascii-draw"><img height='80' alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg"/></a>
 
