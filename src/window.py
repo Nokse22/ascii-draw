@@ -184,7 +184,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.picker_button.set_group(self.rectangle_button)
         action_bar.pack_start(self.picker_button)
 
-        clear_button = Gtk.Button(icon_name="user-trash-symbolic", tooltip_text=_("Remove"))
+        clear_button = Gtk.Button(icon_name="user-trash-symbolic", tooltip_text=_("Remove"), css_classes=["error", "flat"])
         clear_button.connect("clicked", self.clear, self.grid)
         action_bar.pack_end(clear_button)
 
@@ -278,7 +278,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         height_row.add_suffix(self.height_spin)
         self.height_spin.get_adjustment().set_step_increment(1)
         increase_box.append(height_row)
-        discaimer_row = Adw.ActionRow(title=_("Increasing the canvas size too much can slow the app down.\n"
+        discaimer_row = Adw.ActionRow(title=_("Increasing the canvas size\ntoo much can slow the app down.\n"
                                               "Use only the size you need."))
         increase_box.append(discaimer_row)
         increase_btn = Gtk.Button(label=_("Change Size"))

@@ -37,6 +37,7 @@ There are many stiles to choose from and multiple tools available to use:</p>
 		  <description>
 			  <p>Updated runtime to 45</p>
 		    <p>Improved sidebar for better usability</p>
+		    <p>Fixed typo</p>
 		  </description>
 	  </release>
     <release version="0.1.9" date="2023-09-06">
