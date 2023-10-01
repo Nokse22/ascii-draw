@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 16:44+0300\n"
+"POT-Creation-Date: 2023-09-30 21:51+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: data/io.github.nokse22.asciidraw.desktop.in:3
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/main.py:162
-#: src/window.py:58 src/window.py:61
+#: src/window.py:58 src/window.py:62
 msgid "ASCII Draw"
 msgstr ""
 
@@ -33,11 +33,12 @@ msgstr ""
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:9
 msgid ""
-"This app lets you draw diagrams and more using ASCII characters. There are "
-"many stiles to choose from and multiple tools available to use:"
+"This app lets you draw diagrams, tables, treeview and more using ASCII "
+"characters. There are many stiles to choose from and multiple tools "
+"available to use:"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:12 src/window.py:1006
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:12 src/window.py:1012
 msgid "Freehand Brush"
 msgstr ""
 
@@ -65,15 +66,15 @@ msgstr ""
 msgid "Text with FIGlet fonts"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19 src/window.py:976
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19 src/window.py:982
 msgid "Table"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 src/window.py:989
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 src/window.py:995
 msgid "Tree View"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 src/window.py:1019
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 src/window.py:1025
 msgid "Eraser"
 msgstr ""
 
@@ -83,135 +84,6 @@ msgstr ""
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:26
 msgid "Nokse"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:38
-msgid "Improved saving"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:39
-msgid "Improved changing canvas size function"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:40
-msgid "Added opening files"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:41
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:55
-msgid "Fixed bugs"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:46
-msgid "Added tree view tool"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:47
-msgid "Fixed bugs with sidebar show button"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:52
-msgid "Added tables"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:53
-msgid "Improved sidebar"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:54
-msgid "Improved text tool"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:60
-msgid "Remove unusable fonts"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:61
-msgid "Added brush and eraser sizes"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:62
-msgid "Added transparent mode to text tool"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:63
-msgid "Added many more chars in the list"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:64
-msgid "Reorganized chars list"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:65
-msgid "Added new box/lines styles"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:66
-msgid "Improved lines styles"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:67
-msgid "Added transparent mode for text"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:68
-msgid "Fixed bug with tabs"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:69
-msgid "Fixed bugs when writing emojis in the text tool"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:74
-msgid "Added big text with a lot of fonts using pyfiglet"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:75
-msgid "Fixed some contrast problems"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:80
-msgid "New icon"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:81
-msgid "Fixed bugs when increasing canvas size"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:82
-msgid "Updated screenshots"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:83
-msgid "Fixed some bugs with lines/arrows"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:88
-msgid "Undo functionality (Ctrl+Z)"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:89
-msgid "Performance improvements"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:90
-msgid "Improved text insertion with preview"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:95
-msgid "Fixed some bugs"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:96
-msgid "Added new tool: Filled Rectangle"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:101
-msgid "Fixed many bugs with right to left text direction"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:106
-msgid "First release!"
 msgstr ""
 
 #: src/gtk/help-overlay.ui:11
@@ -289,203 +161,190 @@ msgctxt "shortcut window"
 msgid "Picker"
 msgstr ""
 
-#. Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
-#. One name per line, please do not remove previous names.
 #: src/main.py:172
 msgid "translator-credits"
 msgstr ""
 
-#: src/window.py:121
+#: src/window.py:123
 msgid "Rectangle Ctrl+R"
 msgstr ""
 
-#: src/window.py:126
+#: src/window.py:128
 msgid "Filled Rectangle Ctrl+Shift+R"
 msgstr ""
 
-#: src/window.py:132
+#: src/window.py:134
 msgid "Line Ctrl+L"
 msgstr ""
 
-#: src/window.py:138
+#: src/window.py:140
 msgid "Arrow Ctrl+W"
 msgstr ""
 
-#: src/window.py:144
+#: src/window.py:146
 msgid "Free Line Ctrl+G"
 msgstr ""
 
-#: src/window.py:150
+#: src/window.py:152
 msgid "Freehand Ctrl+F"
 msgstr ""
 
-#: src/window.py:156
+#: src/window.py:158
 msgid "Text Ctrl+T"
 msgstr ""
 
-#: src/window.py:162
+#: src/window.py:164
 msgid "Table Ctrl+Shift+T"
 msgstr ""
 
-#: src/window.py:168
+#: src/window.py:170
 msgid "Tree View Ctrl+U"
 msgstr ""
 
-#: src/window.py:174
+#: src/window.py:176
 msgid "Eraser Ctrl+E"
 msgstr ""
 
-#: src/window.py:180
+#: src/window.py:182
 msgid "Picker Ctrl+P"
 msgstr ""
 
-#: src/window.py:185 src/window.py:503
+#: src/window.py:187 src/window.py:509
 msgid "Remove"
 msgstr ""
 
-#: src/window.py:189
+#: src/window.py:191
 msgid "Save"
 msgstr ""
 
-#: src/window.py:191
+#: src/window.py:193
 msgid "Save As"
 msgstr ""
 
-#: src/window.py:192
+#: src/window.py:194
 msgid "New Canvas"
 msgstr ""
 
-#: src/window.py:193 src/window.py:632
+#: src/window.py:195 src/window.py:638
 msgid "Open File"
 msgstr ""
 
-#: src/window.py:196
+#: src/window.py:198
 msgid "Copy"
 msgstr ""
 
-#: src/window.py:202
+#: src/window.py:204
 msgid "Undo"
 msgstr ""
 
-#: src/window.py:239
+#: src/window.py:241
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.py:242
-msgid "New Palette"
-msgstr ""
-
-#: src/window.py:243
-msgid "Export Palettes"
-msgstr ""
-
-#: src/window.py:244
-msgid "Import Palettes"
-msgstr ""
-
-#: src/window.py:246
+#: src/window.py:248
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.py:247
+#: src/window.py:249
 msgid "About ASCII Draw"
 msgstr ""
 
-#: src/window.py:253
+#: src/window.py:255
 msgid "Show Sidebar"
 msgstr ""
 
-#: src/window.py:257 src/window.py:282
+#: src/window.py:259 src/window.py:284
 msgid "Change Size"
 msgstr ""
 
-#: src/window.py:265
+#: src/window.py:267
 msgid "Width"
 msgstr ""
 
-#: src/window.py:272
+#: src/window.py:274
 msgid "Height"
 msgstr ""
 
-#: src/window.py:279
+#: src/window.py:281
 msgid ""
-"Increasing the canvas size too much can slow the app down.\n"
+"Increasing the canvas size\n"
+"too much can slow the app down.\n"
 "Use only the size you need."
 msgstr ""
 
-#: src/window.py:309
+#: src/window.py:311
 msgid "Palette 1"
 msgstr ""
 
-#: src/window.py:422 src/window.py:432
+#: src/window.py:429 src/window.py:439
 msgid "Size"
 msgstr ""
 
-#: src/window.py:455 src/window.py:521 src/window.py:545
+#: src/window.py:462 src/window.py:527 src/window.py:551
 msgid "Enter"
 msgstr ""
 
-#: src/window.py:470
+#: src/window.py:477
 msgid "Spaces do not overwrite"
 msgstr ""
 
-#: src/window.py:492
+#: src/window.py:498
 msgid "Columns"
 msgstr ""
 
-#: src/window.py:499
+#: src/window.py:505
 msgid "Rows"
 msgstr ""
 
-#: src/window.py:501
+#: src/window.py:507
 msgid "Add"
 msgstr ""
 
-#: src/window.py:514
+#: src/window.py:520
 msgid "First line as header"
 msgstr ""
 
-#: src/window.py:514
+#: src/window.py:520
 msgid "Divide each row"
 msgstr ""
 
-#: src/window.py:514
+#: src/window.py:520
 msgid "Not divided"
 msgstr ""
 
-#: src/window.py:517
+#: src/window.py:523
 msgid "Table type"
 msgstr ""
 
-#: src/window.py:658
+#: src/window.py:664
 msgid "Opened file exceeds the maximum canvas size"
 msgstr ""
 
-#: src/window.py:688
+#: src/window.py:694
 msgid "Save File"
 msgstr ""
 
-#: src/window.py:718
+#: src/window.py:724
 msgid "Saved successfully"
 msgstr ""
 
-#: src/window.py:902 src/window.py:928 src/window.py:954 src/window.py:978
-#: src/window.py:991 src/window.py:1038
+#: src/window.py:908 src/window.py:934 src/window.py:960 src/window.py:984
+#: src/window.py:997 src/window.py:1044
 msgid "Styles"
 msgstr ""
 
-#: src/window.py:915
+#: src/window.py:921
 msgid "Picker"
 msgstr ""
 
-#: src/window.py:941 src/window.py:1004
+#: src/window.py:947 src/window.py:1010
 msgid "Chars"
 msgstr ""
 
-#: src/window.py:965
+#: src/window.py:971
 msgid "Text"
 msgstr ""
 
-#: src/window.py:1246 src/window.py:1769
+#: src/window.py:1252 src/window.py:1775
 msgid "Undo "
 msgstr ""
