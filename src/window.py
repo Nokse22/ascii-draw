@@ -84,8 +84,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
-                self.grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
-                self.preview_grid.attach(Gtk.Label(label="", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+                self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+                self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
 
         self.empty_grid = self.preview_grid
 
@@ -746,7 +746,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 else:
                     child = self.grid.get_child_at(x, y)
                 if child:
-                    char = child.get_label()
+                    char = child.get_text()
                     if char == None or char == "" or char == " ":
                         char = " "
                         text += char
@@ -791,8 +791,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     break
                 self.canvas_y += 1
                 for x in range(self.canvas_x):
-                    self.grid.attach(Gtk.Label(name=str(self.canvas_y), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
-                    self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
+                    self.grid.attach(Gtk.Inscription(name=str(self.canvas_y), css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
+                    self.preview_grid.attach(Gtk.Inscription(css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
         elif y_delta < 0:
             for line in range(abs(y_delta)):
                 if self.canvas_y == 0:
@@ -808,8 +808,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     break
                 self.canvas_x += 1
                 for y in range(self.canvas_y):
-                    self.grid.attach(Gtk.Label(name=str(self.canvas_x), label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
-                    self.preview_grid.attach(Gtk.Label(label=" ", css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
+                    self.grid.attach(Gtk.Inscription(name=str(self.canvas_x), css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
+                    self.preview_grid.attach(Gtk.Inscription(css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
         elif x_delta < 0:
             for column in range(abs(x_delta)):
                 if self.canvas_x == 0:
@@ -888,7 +888,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         elif self.tool == "PICKER":
             child = self.grid.get_child_at(x_char, y_char)
             if child:
-                self.free_char = child.get_label()
+                self.free_char = child.get_text()
 
     def on_click_stopped(self, arg):
         pass
@@ -1052,7 +1052,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     child = grid.get_child_at(pos[0], pos[1])
                     if not child:
                         continue
-                    child.set_label("")
+                    child.set_text("")
                 # print(f"normal finished in {time.time() - start} to remove{len(self.changed_chars)}")
                 self.changed_chars = []
                 return
@@ -1098,8 +1098,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 if not child:
                     continue
                 if grid == self.grid:
-                    self.undo_changes[0].add_change(x, y, child.get_label())
-                child.set_label(" ")
+                    self.undo_changes[0].add_change(x, y, child.get_text())
+                child.set_text(" ")
 
     def clear_list_of_char(self, chars_list_start, chars_list_end):
         for index in range(chars_list_start, chars_list_end):
@@ -1107,7 +1107,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child = self.preview_grid.get_child_at(pos[0], pos[1])
             if not child:
                 continue
-            child.set_label("")
+            child.set_text("")
 
     def on_drag_begin(self, gesture, start_x, start_y):
         self.start_x = start_x
@@ -1355,8 +1355,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                         if not child:
                             continue
                         if grid == self.grid:
-                            self.undo_changes[0].add_change(x, y, child.get_label())
-                        child.set_label(" ")
+                            self.undo_changes[0].add_change(x, y, child.get_text())
+                        child.set_text(" ")
                         self.changed_chars.append([x, y])
                         if self.flip:
                             x -= 1
@@ -1370,8 +1370,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     x += 1
                 continue
             if grid == self.grid:
-                self.undo_changes[0].add_change(x, y, child.get_label())
-            child.set_label(char)
+                self.undo_changes[0].add_change(x, y, child.get_text())
+            child.set_text(char)
             self.changed_chars.append([x, y])
             if self.flip:
                 x -= 1
@@ -1384,20 +1384,20 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         for delta in self.brush_sizes[int(brush_size - 1)]:
             child = self.grid.get_child_at(x_coord + delta[0], y_coord + delta[1])
             if child:
-                if child.get_label() == self.free_char:
+                if child.get_text() == self.free_char:
                     continue
-                self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_label())
-                child.set_label(self.free_char)
+                self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_text())
+                child.set_text(self.free_char)
 
     def erase_char(self, x_coord, y_coord):
         brush_size = self.eraser_scale.get_adjustment().get_value()
         for delta in self.brush_sizes[int(brush_size - 1)]:
             child = self.grid.get_child_at(x_coord + delta[0], y_coord + delta[1])
             if child:
-                if child.get_label() == " ":
+                if child.get_text() == " ":
                     continue
-                self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_label())
-                child.set_label(" ")
+                self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_text())
+                child.set_text(" ")
 
     def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid, char):
         for y in range(height):
@@ -1692,8 +1692,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         child = grid.get_child_at(x, y)
         if child:
             if grid == self.grid:
-                self.undo_changes[0].add_change(x, y, child.get_label())
-            child.set_label(char)
+                self.undo_changes[0].add_change(x, y, child.get_text())
+            child.set_text(char)
             self.changed_chars.append([x, y])
 
     def vertical_line(self, x, start_y, length, grid, char):
@@ -1702,15 +1702,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 child = grid.get_child_at(x, start_y + y)
                 if not child:
                     continue
-                prev_label = child.get_label()
+                prev_label = child.get_text()
                 if grid == self.grid:
                     self.undo_changes[0].add_change(x, start_y + y, prev_label)
                 if prev_label == "" or prev_label == " ":
-                    child.set_label(char)
+                    child.set_text(char)
                 elif prev_label == self.top_horizontal() and self.crossing() != " ":
-                    child.set_label(self.crossing())
+                    child.set_text(self.crossing())
                 else:
-                    child.set_label(char)
+                    child.set_text(char)
                 self.changed_chars.append([x, start_y + y])
         else:
             for y in range(abs(length)):
@@ -1718,11 +1718,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 if not child:
                     continue
                 if grid == self.grid:
-                    self.undo_changes[0].add_change(x, start_y + y + length, child.get_label())
-                if child.get_label() == "─":
-                    child.set_label("┼")
+                    self.undo_changes[0].add_change(x, start_y + y + length, child.get_text())
+                if child.get_text() == "─": # FIXME make it work universally
+                    child.set_text("┼")
                 else:
-                    child.set_label(char)
+                    child.set_text(char)
                 self.changed_chars.append([x, start_y + y + length])
 
     def horizontal_line(self, y, start_x, width, grid, char):
@@ -1731,30 +1731,30 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 child = grid.get_child_at(start_x + x, y)
                 if not child:
                     continue
-                prev_label = child.get_label()
+                prev_label = child.get_text()
                 if grid == self.grid:
                     self.undo_changes[0].add_change(start_x + x, y, prev_label)
                 if prev_label == "" or prev_label == " ":
-                    child.set_label(char)
+                    child.set_text(char)
                 elif prev_label == self.left_vertical():
-                    child.set_label(self.crossing())
+                    child.set_text(self.crossing())
                 else:
-                    child.set_label(char)
+                    child.set_text(char)
                 self.changed_chars.append([start_x + x, y])
         else:
             for x in range(abs(width)):
                 child = grid.get_child_at(start_x + x + width, y)
                 if not child:
                     continue
-                prev_label = child.get_label()
+                prev_label = child.get_text()
                 if grid == self.grid:
                     self.undo_changes[0].add_change(start_x + x + width, y, prev_label)
                 if prev_label == "" or prev_label == " ":
-                    child.set_label(char)
+                    child.set_text(char)
                 elif prev_label == self.left_vertical():
-                    child.set_label(self.crossing())
+                    child.set_text(self.crossing())
                 else:
-                    child.set_label(char)
+                    child.set_text(char)
                 self.changed_chars.append([start_x + x + width, y])
 
     def undo_first_change(self, btn=None):
@@ -1766,7 +1766,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child = self.grid.get_child_at(change[0], change[1])
             if not child:
                 continue
-            child.set_label(change[2])
+            child.set_text(change[2])
         self.undo_changes.pop(0)
         if len(self.undo_changes) == 0:
             self.undo_button.set_sensitive(False)
