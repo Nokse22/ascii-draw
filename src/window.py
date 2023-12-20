@@ -40,10 +40,34 @@ class Change():
         self.changes.append([x, y, prev_char])
 
     def __repr__(self):
-        return f"The change has {len(self.changes)}"
+        return f"The change has {len(self.changes)} changes"
 
+@Gtk.Template(resource_path='/io/github/nokse22/asciidraw/window.ui')
 class AsciiDrawWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'AsciiDrawWindow'
+
+    drawing_area = Gtk.Template.Child()
+    toast_overlay = Gtk.Template.Child()
+    char_flow_box = Gtk.Template.Child()
+    font_box = Gtk.Template.Child()
+    tree_text_entry = Gtk.Template.Child()
+    tree_text_entry_buffer = Gtk.Template.Child()
+    transparent_check = Gtk.Template.Child()
+    text_entry_buffer = Gtk.Template.Child()
+    undo_button = Gtk.Template.Child()
+
+    save_import_button = Gtk.Template.Child()
+    preview_grid = Gtk.Template.Child()
+    grid = Gtk.Template.Child()
+    lines_styles_box = Gtk.Template.Child()
+
+    sidebar_stack = Gtk.Template.Child()
+
+    free_scale = Gtk.Template.Child()
+    eraser_scale = Gtk.Template.Child()
+    # tree_stack_page = Gtk.Template.Child()
+    # freehand_stack_page = Gtk.Template.Child()
+    # eraser_stack_page = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -53,22 +77,22 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.props.width_request=420
         self.props.height_request=400
 
-        self.toolbar_view = Adw.ToolbarView(vexpand=True)
-        headerbar = Adw.HeaderBar()
-        self.title_widget = Adw.WindowTitle(title=_("ASCII Draw"))
-        headerbar.set_title_widget(self.title_widget)
-        self.toolbar_view.add_top_bar(headerbar)
-        self.toolbar_view.set_top_bar_style(2)
-        self.set_title(_("ASCII Draw"))
+        # self.toolbar_view = Adw.ToolbarView(vexpand=True)
+        # headerbar = Adw.HeaderBar()
+        # self.title_widget = Adw.WindowTitle(title=_("ASCII Draw"))
+        # headerbar.set_title_widget(self.title_widget)
+        # self.toolbar_view.add_top_bar(headerbar)
+        # self.toolbar_view.set_top_bar_style(2)
+        # self.set_title(_("ASCII Draw"))
 
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
-        self.overlay_split_view = Adw.OverlaySplitView(vexpand=True, sidebar_position=1,
-                show_sidebar=False, sidebar_width_fraction=0.3, max_sidebar_width=500, min_sidebar_width=300)
+        # self.overlay_split_view = Adw.OverlaySplitView(vexpand=True, sidebar_position=1,
+        #         show_sidebar=False, sidebar_width_fraction=0.3, max_sidebar_width=500, min_sidebar_width=300)
         # self.overlay_split_view.set_show_sidebar(False)
 
-        self.set_content(self.toolbar_view)
+        # self.set_content(self.toolbar_view)
 
         self.x_mul = 12
         self.y_mul = 24
@@ -79,15 +103,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas_max_x = 100
         self.canvas_max_y = 50
 
-        self.grid = Gtk.Grid(css_classes=["ascii-textview", "canvas-shadow"], halign=Gtk.Align.START, valign=Gtk.Align.START)
-        self.preview_grid = Gtk.Grid(css_classes=["ascii-preview"], halign=Gtk.Align.START, valign=Gtk.Align.START, can_focus=False)
+        # self.grid = Gtk.Grid(css_classes=["ascii-textview", "canvas-shadow"], halign=Gtk.Align.START, valign=Gtk.Align.START)
+        # self.preview_grid = Gtk.Grid(css_classes=["ascii-preview"], halign=Gtk.Align.START, valign=Gtk.Align.START, can_focus=False)
 
         for y in range(self.canvas_y):
             for x in range(self.canvas_x):
                 self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
                 self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
-
-        self.empty_grid = self.preview_grid
 
         self.brush_sizes = [
                 [[0,0] ],
@@ -118,101 +140,35 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 ["▄", "▀", "▐", "▌", "▗", "▖", "▘","▝", "▛", "▐", "▌", "▀","▄", "▲", "▼", "▶", "◀"],
                 ["▀", "▄", "▌", "▐", "▛", "▜", "▟","▙", "▜", "▙", "▟", "▟","▜", "▲", "▼", "▶", "◀"],
         ]
-        action_bar = Gtk.ActionBar()
-        self.rectangle_button = Gtk.ToggleButton(icon_name="rectangle-symbolic",
-                tooltip_text=_("Rectangle Ctrl+R"))
-        self.rectangle_button.connect("toggled", self.on_choose_rectangle)
-        action_bar.pack_start(self.rectangle_button)
 
-        self.filled_rectangle_button = Gtk.ToggleButton(icon_name="filled-rectangle-symbolic",
-                tooltip_text=_("Filled Rectangle Ctrl+Shift+R"))
-        self.filled_rectangle_button.connect("toggled", self.on_choose_filled_rectangle)
-        self.filled_rectangle_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.filled_rectangle_button)
+        # clear_button = Gtk.Button(icon_name="user-trash-symbolic", tooltip_text=_("Remove"), css_classes=["error", "flat"])
+        # clear_button.connect("clicked", self.clear, self.grid)
+        # action_bar.pack_end(clear_button)
 
-        self.line_button = Gtk.ToggleButton(icon_name="line-symbolic",
-                tooltip_text=_("Line Ctrl+L"))
-        self.line_button.connect("toggled", self.on_choose_line)
-        self.line_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.line_button)
+        # save_import_button = Adw.SplitButton(label=_("Save"))
+        # import_menu = Gio.Menu()
+        # import_menu.append(_("Save As"), "app.save-as")
+        # import_menu.append(_("New Canvas"), "app.new-canvas")
+        # import_menu.append(_("Open File"), "app.open")
+        # save_import_button.set_menu_model(import_menu)
+        # save_import_button.connect("clicked", self.save_button_clicked)
+        # copy_button = Gtk.Button(icon_name="edit-copy-symbolic", tooltip_text=_("Copy"))
+        # copy_button.connect("clicked", self.copy_content)
 
-        self.arrow_button = Gtk.ToggleButton(icon_name="arrow-symbolic",
-                tooltip_text=_("Arrow Ctrl+W"))
-        self.arrow_button.connect("toggled", self.on_choose_arrow)
-        self.arrow_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.arrow_button)
+        # headerbar.pack_start(save_import_button)
+        # headerbar.pack_start(copy_button)
 
-        self.free_line_button = Gtk.ToggleButton(icon_name="free-line-symbolic",
-                tooltip_text=_("Free Line Ctrl+G"))
-        self.free_line_button.connect("toggled", self.on_choose_free_line)
-        self.free_line_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.free_line_button)
+        # self.undo_button = Gtk.Button(icon_name="edit-undo-symbolic", tooltip_text=_("Undo"), sensitive=False)
+        # self.undo_button.connect("clicked", self.undo_first_change)
+        # headerbar.pack_start(self.undo_button)
 
-        self.free_button = Gtk.ToggleButton(icon_name="paintbrush-symbolic",
-                tooltip_text=_("Freehand Ctrl+F"))
-        self.free_button.connect("clicked", self.on_choose_free)
-        self.free_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.free_button)
-
-        self.text_button = Gtk.ToggleButton(icon_name="text-symbolic",
-                tooltip_text=_("Text Ctrl+T"))
-        self.text_button.connect("toggled", self.on_choose_text)
-        self.text_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.text_button)
-
-        self.table_button = Gtk.ToggleButton(icon_name="table-symbolic",
-                tooltip_text=_("Table Ctrl+Shift+T"))
-        self.table_button.connect("toggled", self.on_choose_table)
-        self.table_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.table_button)
-
-        self.tree_button = Gtk.ToggleButton(icon_name="tree-list-symbolic",
-                tooltip_text=_("Tree View Ctrl+U"))
-        self.tree_button.connect("toggled", self.on_choose_tree_list)
-        self.tree_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.tree_button)
-
-        self.eraser_button = Gtk.ToggleButton(icon_name="eraser-symbolic",
-                tooltip_text=_("Eraser Ctrl+E"))
-        self.eraser_button.connect("toggled", self.on_choose_eraser)
-        self.eraser_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.eraser_button)
-
-        self.picker_button = Gtk.ToggleButton(icon_name="color-select-symbolic",
-                tooltip_text=_("Picker Ctrl+P"))
-        self.picker_button.connect("toggled", self.on_choose_picker)
-        self.picker_button.set_group(self.rectangle_button)
-        action_bar.pack_start(self.picker_button)
-
-        clear_button = Gtk.Button(icon_name="user-trash-symbolic", tooltip_text=_("Remove"), css_classes=["error", "flat"])
-        clear_button.connect("clicked", self.clear, self.grid)
-        action_bar.pack_end(clear_button)
-
-        save_import_button = Adw.SplitButton(label=_("Save"))
-        import_menu = Gio.Menu()
-        import_menu.append(_("Save As"), "app.save-as")
-        import_menu.append(_("New Canvas"), "app.new-canvas")
-        import_menu.append(_("Open File"), "app.open")
-        save_import_button.set_menu_model(import_menu)
-        save_import_button.connect("clicked", self.save_button_clicked)
-        copy_button = Gtk.Button(icon_name="edit-copy-symbolic", tooltip_text=_("Copy"))
-        copy_button.connect("clicked", self.copy_content)
-
-        headerbar.pack_start(save_import_button)
-        headerbar.pack_start(copy_button)
-
-        self.undo_button = Gtk.Button(icon_name="edit-undo-symbolic", tooltip_text=_("Undo"), sensitive=False)
-        self.undo_button.connect("clicked", self.undo_first_change)
-        headerbar.pack_start(self.undo_button)
-
-        text_direction = save_import_button.get_child().get_direction()
+        text_direction = self.save_import_button.get_child().get_direction()
 
         if text_direction == Gtk.TextDirection.LTR:
             self.flip = False
         elif text_direction == Gtk.TextDirection.RTL:
             self.flip = True
 
-        lines_styles_box = Gtk.Box(orientation=1, margin_start=6, margin_bottom=6, margin_end=6, margin_top=6, spacing=6)
         prev_btn = None
 
         for style in self.styles:
@@ -230,124 +186,110 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if prev_btn != None:
                 style_btn.set_group(prev_btn)
             prev_btn = style_btn
-            style_btn.connect("toggled", self.change_style, lines_styles_box)
+            style_btn.connect("toggled", self.change_style, self.lines_styles_box)
 
-            lines_styles_box.append(style_btn)
+            self.lines_styles_box.append(style_btn)
 
-        self.lines_styles_selection = Gtk.ScrolledWindow(vexpand=True)
-        self.lines_styles_selection.set_policy(2,1)
-        self.lines_styles_selection.set_child(lines_styles_box)
+        # self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", tooltip_text = _("Show Sidebar"), sensitive=False)
+        # self.show_sidebar_button.connect("clicked", self.show_sidebar)
+        # headerbar.pack_end(self.show_sidebar_button)
 
-        menu_button = Gtk.MenuButton(icon_name="open-menu-symbolic", tooltip_text=_("Main Menu"))
-        menu = Gio.Menu()
-        # menu1 = Gio.Menu()
-        # menu1.append(_("New Palette"), "app.new-palette")
-        # menu1.append(_("Export Palettes"), "app.export-palettes")
-        # menu1.append(_("Import Palettes"), "app.import-palettes")
-        menu2 = Gio.Menu()
-        menu2.append(_("Keyboard Shortcuts"), "win.show-help-overlay")
-        menu2.append(_("About ASCII Draw"), "app.about")
-        # menu.append_section(None, menu1)
-        menu.append_section(None, menu2)
-        menu_button.set_menu_model(menu)
-        headerbar.pack_end(menu_button)
+        # increase_button = Gtk.MenuButton(icon_name="list-add-symbolic", tooltip_text=_("Change Size"))
+        # increase_canvas_popover = Gtk.Popover()
+        # increase_button.set_popover(increase_canvas_popover)
+        # headerbar.pack_end(increase_button)
 
-        self.show_sidebar_button = Gtk.Button(icon_name="sidebar-show-right-symbolic", tooltip_text = _("Show Sidebar"), sensitive=False)
-        self.show_sidebar_button.connect("clicked", self.show_sidebar)
-        headerbar.pack_end(self.show_sidebar_button)
+        # increase_box = Gtk.Box(orientation=1, width_request=200, spacing=6)
+        # increase_canvas_popover.set_child(increase_box)
 
-        increase_button = Gtk.MenuButton(icon_name="list-add-symbolic", tooltip_text=_("Change Size"))
-        increase_canvas_popover = Gtk.Popover()
-        increase_button.set_popover(increase_canvas_popover)
-        headerbar.pack_end(increase_button)
+        # width_row = Adw.ActionRow(title=_("Width"))
+        # self.width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
+        # self.width_spin.set_range(10, self.canvas_max_x)
+        # self.width_spin.set_value(self.canvas_x)
+        # self.width_spin.get_adjustment().set_step_increment(1)
+        # width_row.add_suffix(self.width_spin)
+        # increase_box.append(width_row)
+        # height_row = Adw.ActionRow(title=_("Height"))
+        # self.height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
+        # self.height_spin.set_range(5, self.canvas_max_y)
+        # self.height_spin.set_value(self.canvas_y)
+        # height_row.add_suffix(self.height_spin)
+        # self.height_spin.get_adjustment().set_step_increment(1)
+        # increase_box.append(height_row)
+        # discaimer_row = Adw.ActionRow(title=_("Increasing the canvas size\ntoo much can slow the app down.\n"
+        #                                       "Use only the size you need."))
+        # increase_box.append(discaimer_row)
+        # increase_btn = Gtk.Button(label=_("Change Size"))
+        # increase_box.append(increase_btn)
+        # increase_btn.connect("clicked", self.on_change_canvas_size_btn_clicked)
 
-        increase_box = Gtk.Box(orientation=1, width_request=200, spacing=6)
-        increase_canvas_popover.set_child(increase_box)
+        # self.drawing_area = Gtk.DrawingArea(css_classes=["drawing-area"])
 
-        width_row = Adw.ActionRow(title=_("Width")) #Adw.SpinRow(title="Width")
-        self.width_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
-        self.width_spin.set_range(10, self.canvas_max_x)
-        self.width_spin.set_value(self.canvas_x)
-        self.width_spin.get_adjustment().set_step_increment(1)
-        width_row.add_suffix(self.width_spin)
-        increase_box.append(width_row)
-        height_row = Adw.ActionRow(title=_("Height")) #Adw.SpinRow(title="Height")
-        self.height_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER, width_request=120)
-        self.height_spin.set_range(5, self.canvas_max_y)
-        self.height_spin.set_value(self.canvas_y)
-        height_row.add_suffix(self.height_spin)
-        self.height_spin.get_adjustment().set_step_increment(1)
-        increase_box.append(height_row)
-        discaimer_row = Adw.ActionRow(title=_("Increasing the canvas size\ntoo much can slow the app down.\n"
-                                              "Use only the size you need."))
-        increase_box.append(discaimer_row)
-        increase_btn = Gtk.Button(label=_("Change Size"))
-        increase_box.append(increase_btn)
-        increase_btn.connect("clicked", self.on_change_canvas_size_btn_clicked)
 
-        self.drawing_area = Gtk.DrawingArea(css_classes=["drawing-area"])
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
+
+
         # self.drawing_area.connect("show", self.update_area_width)
 
-        self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER,
-                margin_start=10, margin_top=10, margin_bottom=10, margin_end=10)
-        scrolled_window = Gtk.ScrolledWindow(hexpand=True)
-        scrolled_window.set_child(self.overlay)
-        self.toast_overlay = Adw.ToastOverlay()
-        self.toast_overlay.set_child(scrolled_window)
+        # self.overlay = Gtk.Overlay(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER,
+        #         margin_start=10, margin_top=10, margin_bottom=10, margin_end=10)
+        # scrolled_window = Gtk.ScrolledWindow(hexpand=True)
+        # scrolled_window.set_child(self.overlay)
+        # self.toast_overlay = Adw.ToastOverlay()
+        # self.toast_overlay.set_child(scrolled_window)
 
-        self.overlay_split_view.set_content(self.toast_overlay)
+        # self.overlay_split_view.set_content(self.toast_overlay)
 
-        char_flow_box = Gtk.FlowBox(can_focus=False)
-        char_flow_box.set_selection_mode(0)
-        self.chars_sidebar = Gtk.Box(spacing=12, orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
-        self.free_char_list = Gtk.ScrolledWindow(vexpand=True, css_classes=["card"])
-        self.free_char_list.set_policy(2,1)
-        self.free_char_list.set_child(char_flow_box)
-        self.chars_sidebar.append(self.free_char_list)
+        # self.char_flow_box = Gtk.FlowBox(can_focus=False)
+        # self.char_flow_box.set_selection_mode(0)
+        # self.chars_sidebar = Gtk.Box(spacing=12, orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        # self.free_char_list = Gtk.ScrolledWindow(vexpand=True, css_classes=["card"])
+        # self.free_char_list.set_policy(2,1)
+        # self.free_char_list.set_child(self.char_flow_box)
+        # self.chars_sidebar.append(self.free_char_list)
 
-        self.palettes_box = Gtk.Box(orientation=1, height_request=200, css_classes=["card"])
+        # self.palettes_box = Gtk.Box(orientation=1, height_request=200, css_classes=["card"])
 
-        self.palettes_box.append(Gtk.Label(label=_("Palette 1")))
+        # self.palettes_box.append(Gtk.Label(label=_("Palette 1")))
         # self.chars_sidebar.append(self.palettes_box)
 
-        palettes = self.settings.get_string("palettes").split("\n")
-        self.palettes_flow_box = Gtk.FlowBox()
+        # palettes = self.settings.get_string("palettes").split("\n")
+        # self.palettes_flow_box = Gtk.FlowBox()
 
-        prev_button = Gtk.ToggleButton(label=palettes[0][0], css_classes=["flat"])
-        prev_button.connect("toggled", self.change_char, self.palettes_flow_box)
-        self.palettes_flow_box.append(prev_button)
+        # prev_button = Gtk.ToggleButton(label=palettes[0][0], css_classes=["flat"])
+        # prev_button.connect("toggled", self.change_char, self.palettes_flow_box)
+        # self.palettes_flow_box.append(prev_button)
 
-        for char in palettes[0]:
-            new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
-            new_button.connect("toggled", self.change_char, self.palettes_flow_box)
-            self.palettes_flow_box.append(new_button)
-            new_button.set_group(prev_button)
+        # for char in palettes[0]:
+        #     new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
+        #     new_button.connect("toggled", self.change_char, self.palettes_flow_box)
+        #     self.palettes_flow_box.append(new_button)
+        #     new_button.set_group(prev_button)
 
-        self.palettes_box.append(self.palettes_flow_box)
+        # self.palettes_box.append(self.palettes_flow_box)
 
-        self.sidebar_notebook = Gtk.Notebook(hexpand=True, css_classes=["sidebar"]) #width_request=430,
+        # self.sidebar_notebook = Gtk.Notebook(hexpand=True, css_classes=["sidebar"]) #width_request=430,
 
-        sidebar_box = Gtk.Box()
-        sidebar_box.append(Gtk.Separator())
-        sidebar_box.append(self.sidebar_notebook)
+        # sidebar_box = Gtk.Box()
+        # sidebar_box.append(Gtk.Separator())
+        # sidebar_box.append(self.sidebar_notebook)
 
         # self.overlay_split_view.set_separator(Gtk.Separator())
-        self.overlay_split_view.set_sidebar(sidebar_box)
+        # self.overlay_split_view.set_sidebar(sidebar_box)
 
-        self.overlay.add_overlay(self.preview_grid)
-        self.overlay.set_child(self.grid)
+        # self.overlay.add_overlay(self.preview_grid)
+        # self.overlay.set_child(self.grid)
 
-        self.overlay.add_overlay(self.drawing_area)
+        # self.overlay.add_overlay(self.drawing_area)
 
-        self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
-                left_margin=12, top_margin=12, wrap_mode=2, height_request=100)
-        self.text_entry_buffer = self.text_entry.get_buffer()
-        self.text_entry_buffer.connect("changed", self.insert_text_preview)
+        # self.text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
+        #         left_margin=12, top_margin=12, wrap_mode=2, height_request=100)
+        # self.text_entry_buffer = self.text_entry.get_buffer()
+        # self.text_entry_buffer.connect("changed", self.insert_text_preview)
 
-        self.toolbar_view.set_content(self.overlay_split_view)
-        self.toolbar_view.add_bottom_bar(action_bar)
-        self.toolbar_view.set_bottom_bar_style(2)
+        # self.toolbar_view.set_content(self.overlay_split_view)
+        # self.toolbar_view.add_bottom_bar(action_bar)
+        # self.toolbar_view.set_bottom_bar_style(2)
 
         drag = Gtk.GestureDrag()
         drag.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -408,8 +350,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         char = " "
         prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
-        prev_button.connect("toggled", self.change_char, char_flow_box)
-        char_flow_box.append(prev_button)
+        prev_button.connect("toggled", self.change_char, self.char_flow_box)
+        self.char_flow_box.append(prev_button)
 
         for code_range in unicode_ranges:
             for code_point in code_range:
@@ -417,29 +359,29 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 if not self.is_renderable(char):
                     continue
                 new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
-                new_button.connect("toggled", self.change_char, char_flow_box)
-                char_flow_box.append(new_button)
+                new_button.connect("toggled", self.change_char, self.char_flow_box)
+                self.char_flow_box.append(new_button)
                 new_button.set_group(prev_button)
 
-        self.eraser_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
-        self.eraser_scale.set_draw_value(True)
-        self.eraser_scale.set_value_pos(1)
-        self.eraser_scale.set_hexpand(True)
-        self.eraser_scale.connect("value-changed", self.on_scale_value_changed, self.eraser_size)
-        eraser_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
-        eraser_size_row.add_suffix(self.eraser_scale)
-        self.eraser_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
-        self.eraser_sidebar.append(eraser_size_row)
+        # self.eraser_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
+        # self.eraser_scale.set_draw_value(True)
+        # self.eraser_scale.set_value_pos(1)
+        # self.eraser_scale.set_hexpand(True)
+        # self.eraser_scale.connect("value-changed", self.on_scale_value_changed, self.eraser_size)
+        # eraser_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
+        # eraser_size_row.add_suffix(self.eraser_scale)
+        # self.eraser_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        # self.eraser_sidebar.append(eraser_size_row)
 
-        self.free_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
-        self.free_scale.set_draw_value(True)
-        self.free_scale.set_value_pos(1)
-        self.free_scale.set_hexpand(True)
-        self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
-        freehand_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
-        freehand_size_row.add_suffix(self.free_scale)
-        self.freehand_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
-        self.freehand_sidebar.append(freehand_size_row)
+        # self.free_scale = Gtk.Scale.new_with_range(0, 1, len(self.brush_sizes), 1)
+        # self.free_scale.set_draw_value(True)
+        # self.free_scale.set_value_pos(1)
+        # self.free_scale.set_hexpand(True)
+        # self.free_scale.connect("value-changed", self.on_scale_value_changed, self.free_size)
+        # freehand_size_row = Adw.ActionRow(title=_("Size"), css_classes=["card"])
+        # freehand_size_row.add_suffix(self.free_scale)
+        # self.freehand_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        # self.freehand_sidebar.append(freehand_size_row)
 
         self.drawing_area_width = 0
 
@@ -457,29 +399,29 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 "thin","threepoint","times","tombstone","tinker-toy","twopoint",
                 "wavy","weird"]
 
-        self.text_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        # self.text_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
 
-        write_button = Gtk.Button(label=_("Enter"))
-        write_button.connect("clicked", self.insert_text_definitely)
-        self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], vexpand=True)
+        # write_button = Gtk.Button(label=_("Enter"))
+        # write_button.connect("clicked", self.insert_text_definitely)
+        # self.font_box = Gtk.ListBox(css_classes=["navigation-sidebar"], vexpand=True)
         self.selected_font = "Normal"
-        self.font_box.connect("row-selected", self.font_row_selected)
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
-        scrolled_window.set_policy(2,1)
-        scrolled_window.set_child(self.text_entry)
-        self.text_sidebar.append(scrolled_window)
-        scrolled_window = Gtk.ScrolledWindow(margin_bottom=12, css_classes=["card"])
-        scrolled_window.set_policy(2,1)
-        scrolled_window.set_child(self.font_box)
+        # self.font_box.connect("row-selected", self.font_row_selected)
+        # scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12)
+        # scrolled_window.set_policy(2,1)
+        # scrolled_window.set_child(self.text_entry)
+        # self.text_sidebar.append(scrolled_window)
+        # scrolled_window = Gtk.ScrolledWindow(margin_bottom=12, css_classes=["card"])
+        # scrolled_window.set_policy(2,1)
+        # scrolled_window.set_child(self.font_box)
 
-        self.text_sidebar.append(scrolled_window)
+        # self.text_sidebar.append(scrolled_window)
 
-        transparent_box = Adw.ActionRow(title=_("Spaces do not overwrite"), margin_bottom=12, css_classes=["card"])
-        self.transparent_check = Gtk.CheckButton()
-        transparent_box.add_suffix(self.transparent_check)
+        # transparent_box = Adw.ActionRow(title=_("Spaces do not overwrite"), margin_bottom=12, css_classes=["card"])
+        # self.transparent_check = Gtk.CheckButton()
+        # transparent_box.add_suffix(self.transparent_check)
 
-        self.text_sidebar.append(transparent_box)
-        self.text_sidebar.append(write_button)
+        # self.text_sidebar.append(transparent_box)
+        # self.text_sidebar.append(write_button)
 
         for font in self.font_list:
             if font == "Normal":
@@ -493,42 +435,42 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.font_box.select_row(self.font_box.get_first_child())
 
-        self.table_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        # self.table_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
 
-        columns_row = Adw.ActionRow(title=_("Columns"), css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
-        columns_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
-        columns_spin.set_range(1, 5)
-        columns_spin.get_adjustment().set_step_increment(1)
-        columns_row.add_suffix(columns_spin)
-        self.table_sidebar.append(columns_row)
+        # columns_row = Adw.ActionRow(title=_("Columns"), css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
+        # columns_spin = Gtk.SpinButton(valign=Gtk.Align.CENTER)
+        # columns_spin.set_range(1, 5)
+        # columns_spin.get_adjustment().set_step_increment(1)
+        # columns_row.add_suffix(columns_spin)
+        # self.table_sidebar.append(columns_row)
 
-        rows_row = Adw.ActionRow(title=_("Rows"), css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
-        buttons_box = Gtk.Box(spacing=10)
-        rows_adder_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="list-add-symbolic", tooltip_text=_("Add"))
-        rows_adder_button.connect("clicked", self.on_add_row_clicked, columns_spin)
-        rows_reset_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="user-trash-symbolic", tooltip_text=_("Remove"))
-        buttons_box.append(rows_reset_button)
-        buttons_box.append(rows_adder_button)
-        rows_row.add_suffix(buttons_box)
-        self.table_sidebar.append(rows_row)
-        rows_scrolled_window = Gtk.ScrolledWindow(vexpand=True, css_classes=["card"], margin_bottom=12)
-        rows_scrolled_window.set_policy(2,1)
-        self.rows_box = Gtk.Box(orientation=1, margin_top=6, margin_bottom=6)
-        rows_scrolled_window.set_child(self.rows_box)
-        self.table_sidebar.append(rows_scrolled_window)
+        # rows_row = Adw.ActionRow(title=_("Rows"), css_classes=["card"], margin_bottom=12) #Adw.SpinRow(title="Width")
+        # buttons_box = Gtk.Box(spacing=10)
+        # rows_adder_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="list-add-symbolic", tooltip_text=_("Add"))
+        # rows_adder_button.connect("clicked", self.on_add_row_clicked, columns_spin)
+        # rows_reset_button = Gtk.Button(valign=Gtk.Align.CENTER, icon_name="user-trash-symbolic", tooltip_text=_("Remove"))
+        # buttons_box.append(rows_reset_button)
+        # buttons_box.append(rows_adder_button)
+        # rows_row.add_suffix(buttons_box)
+        # self.table_sidebar.append(rows_row)
+        # rows_scrolled_window = Gtk.ScrolledWindow(vexpand=True, css_classes=["card"], margin_bottom=12)
+        # rows_scrolled_window.set_policy(2,1)
+        # self.rows_box = Gtk.Box(orientation=1, margin_top=6, margin_bottom=6)
+        # rows_scrolled_window.set_child(self.rows_box)
+        # self.table_sidebar.append(rows_scrolled_window)
 
-        self.table_types_drop_down = Gtk.DropDown.new_from_strings([_("First line as header"), _("Divide each row"), _("Not divided")])
-        self.table_types_drop_down.connect("notify::selected", self.preview_table)
-        self.table_types_drop_down.set_valign(Gtk.Align.CENTER)
-        settings_row = Adw.ActionRow(title=_("Table type"), margin_bottom=12, css_classes=["card"])
-        settings_row.add_suffix(self.table_types_drop_down)
-        self.table_sidebar.append(settings_row)
-        rows_reset_button.connect("clicked", self.on_reset_row_clicked, columns_spin)
-        enter_button = Gtk.Button(valign=Gtk.Align.END, label=_("Enter"))
-        enter_button.connect("clicked", self.insert_table_definitely)
-        self.table_sidebar.append(enter_button)
+        # self.table_types_drop_down = Gtk.DropDown.new_from_strings([_("First line as header"), _("Divide each row"), _("Not divided")])
+        # self.table_types_drop_down.connect("notify::selected", self.preview_table)
+        # self.table_types_drop_down.set_valign(Gtk.Align.CENTER)
+        # settings_row = Adw.ActionRow(title=_("Table type"), margin_bottom=12, css_classes=["card"])
+        # settings_row.add_suffix(self.table_types_drop_down)
+        # self.table_sidebar.append(settings_row)
+        # rows_reset_button.connect("clicked", self.on_reset_row_clicked, columns_spin)
+        # enter_button = Gtk.Button(valign=Gtk.Align.END, label=_("Enter"))
+        # enter_button.connect("clicked", self.insert_table_definitely)
+        # self.table_sidebar.append(enter_button)
 
-        self.picker_sidebar = Gtk.Box(orientation=1)
+        # self.picker_sidebar = Gtk.Box(orientation=1)
 
         self.table_x = 0
         self.table_y = 0
@@ -536,32 +478,36 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.rows_number = 0
         self.columns_number = 0
 
-        self.tree_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
+        # self.tree_sidebar = Gtk.Box(orientation=1, margin_start=12, margin_end=12, margin_bottom=12, margin_top=12)
 
-        self.tree_text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
-                left_margin=12, top_margin=12, wrap_mode=2, height_request=100, accepts_tab=False)
-        self.tree_text_entry_buffer = self.tree_text_entry.get_buffer()
-        self.tree_text_entry_buffer.connect("insert-text", self.on_tree_text_inserted)
-        self.tree_text_entry_buffer.connect("changed", self.preview_tree)
+        # self.tree_text_entry = Gtk.TextView(vexpand=True, css_classes=["mono-entry", "card"],
+        #         left_margin=12, top_margin=12, wrap_mode=2, height_request=100, accepts_tab=False)
+        # self.tree_text_entry_buffer = self.tree_text_entry.get_buffer()
+        # self.tree_text_entry_buffer.connect("insert-text", self.on_tree_text_inserted)
+        # self.tree_text_entry_buffer.connect("changed", self.preview_tree)
 
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12) #, width_request=405
-        scrolled_window.set_policy(2,1)
-        scrolled_window.set_child(self.tree_text_entry)
-        self.tree_sidebar.append(scrolled_window)
-        write_button = Gtk.Button(label=_("Enter"))
-        write_button.connect("clicked", self.insert_tree_definitely)
-        self.tree_sidebar.append(write_button)
+        # scrolled_window = Gtk.ScrolledWindow(vexpand=True, margin_bottom=12) #, width_request=405
+        # scrolled_window.set_policy(2,1)
+        # scrolled_window.set_child(self.tree_text_entry)
+        # self.tree_sidebar.append(scrolled_window)
+        # write_button = Gtk.Button(label=_("Enter"))
+        # write_button.connect("clicked", self.insert_tree_definitely)
+        # self.tree_sidebar.append(write_button)
 
         self.tree_x = 0
         self.tree_y = 0
 
         self.file_path = ""
 
+        self.sidebar_stack.set_visible_child_name("character_page")
+
+    @Gtk.Template.Callback("preview_table")
     def preview_table(self, entry=None, arg=None):
         self.clear(None, self.preview_grid)
         table_type = self.table_types_drop_down.get_selected()
         self.insert_table(table_type, self.preview_grid)
 
+    @Gtk.Template.Callback("insert_text_definitely")
     def insert_text_definitely(self, btn):
         print("clicked")
         start = self.text_entry_buffer.get_start_iter()
@@ -573,6 +519,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.clear(None, self.preview_grid)
         self.insert_text(self.grid, self.text_x, self.text_y, text)
 
+    @Gtk.Template.Callback("insert_text_preview")
     def insert_text_preview(self, widget):
         start = self.text_entry_buffer.get_start_iter()
         end = self.text_entry_buffer.get_end_iter()
@@ -595,6 +542,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         columns_spin.set_sensitive(True)
         self.rows_number = 0
 
+    @Gtk.Template.Callback("on_add_row_clicked")
     def on_add_row_clicked(self, btn, columns_spin):
         self.rows_number += 1
         columns_spin.set_sensitive(False)
@@ -613,6 +561,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def is_renderable(self, character):
         return unicodedata.category(character) != "Cn"
 
+    @Gtk.Template.Callback("font_row_selected")
     def font_row_selected(self, list_box, row):
         if self.tool == "TEXT":
             self.selected_font = list_box.get_selected_row().get_child().get_name()
@@ -623,10 +572,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
         print(self.selected_font)
 
+    @Gtk.Template.Callback("on_delete_all_button_clicked")
+    def on_delete_all_button_clicked(self, btn):
+        self.clear(btn, self.grid)
+
+    @Gtk.Template.Callback("update_area_width")
     def update_area_width(self):
         allocation = self.drawing_area.get_allocation()
         self.drawing_area_width = allocation.width
 
+    @Gtk.Template.Callback("save_button_clicked")
     def save_button_clicked(self, btn):
         if self.file_path != "":
             self.save_file(self.file_path)
@@ -684,7 +639,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.undo_changes = []
         self.undo_button.set_sensitive(False)
         self.undo_button.set_tooltip_text("")
-
 
     def save_as_action(self):
         self.open_file_chooser()
@@ -893,137 +847,85 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def on_click_stopped(self, arg):
         pass
 
+    @Gtk.Template.Callback("on_choose_free_line")
     def on_choose_free_line(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "FREE-LINE"
         else:
             self.tool = ""
+        print("free line")
+        self.sidebar_stack.set_visible_child_name("style_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Styles"))
-        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
-
+    @Gtk.Template.Callback("on_choose_picker")
     def on_choose_picker(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "PICKER"
+        print("picker")
+        self.sidebar_stack.set_visible_child_name("character_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Picker"))
-        self.sidebar_notebook.append_page(self.picker_sidebar, label)
-
+    @Gtk.Template.Callback("on_choose_rectangle")
     def on_choose_rectangle(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "RECTANGLE"
+        print("rect")
+        self.sidebar_stack.set_visible_child_name("style_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Styles"))
-        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
-
+    @Gtk.Template.Callback("on_choose_filled_rectangle")
     def on_choose_filled_rectangle(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "FILLED-RECTANGLE"
+        print("f rect")
+        self.sidebar_stack.set_visible_child_name("character_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Chars"))
-        self.sidebar_notebook.append_page(self.chars_sidebar, label)
-
+    @Gtk.Template.Callback("on_choose_line")
     def on_choose_line(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "LINE"
+        print("line")
+        self.sidebar_stack.set_visible_child_name("style_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Styles"))
-        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
-
+    @Gtk.Template.Callback("on_choose_text")
     def on_choose_text(self, btn):
         if btn.get_active():
             self.tool = "TEXT"
+        print("text")
+        self.sidebar_stack.set_visible_child_name("text_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Text"))
-        self.sidebar_notebook.append_page(self.text_sidebar, label)
-
+    @Gtk.Template.Callback("on_choose_table")
     def on_choose_table(self, btn):
         if btn.get_active():
             self.tool = "TABLE"
 
-        self.show_sidebar_button.set_sensitive(True)
-        self.overlay_split_view.set_show_sidebar(True)
+        print("table")
+        self.sidebar_stack.set_visible_child_name("table_page")
 
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Table"))
-        self.sidebar_notebook.append_page(self.table_sidebar, label)
-        label = Gtk.Label(label=_("Styles"))
-        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
-
+    @Gtk.Template.Callback("on_choose_tree_list")
     def on_choose_tree_list(self, btn):
         if btn.get_active():
             self.tool = "TREE"
+        print("tree")
+        self.sidebar_stack.set_visible_child_name("tree_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Tree View"))
-        self.sidebar_notebook.append_page(self.tree_sidebar, label)
-        label = Gtk.Label(label=_("Styles"))
-        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
-
+    @Gtk.Template.Callback("on_choose_free")
     def on_choose_free(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "FREE"
+        print("free")
+        self.sidebar_stack.set_visible_child_name("freehand_page")
 
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Chars"))
-        self.sidebar_notebook.append_page(self.chars_sidebar, label)
-        label = Gtk.Label(label=_("Freehand Brush"))
-        self.sidebar_notebook.append_page(self.freehand_sidebar, label)
-
+    @Gtk.Template.Callback("on_choose_eraser")
     def on_choose_eraser(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "ERASER"
-
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Eraser"))
-        self.sidebar_notebook.append_page(self.eraser_sidebar, label)
+        print("eraser")
+        self.sidebar_stack.set_visible_child_name("eraser_page")
 
     def reset_text_entry(self):
         self.text_entry_buffer.set_text("")
@@ -1031,18 +933,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def on_scale_value_changed(self, scale, var):
         var = scale.get_value()
 
+    @Gtk.Template.Callback("on_choose_arrow")
     def on_choose_arrow(self, btn):
-        self.reset_text_entry()
+        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "ARROW"
-
-        self.show_sidebar_button.set_sensitive(True)
-        if not self.overlay_split_view.get_collapsed():
-            self.overlay_split_view.set_show_sidebar(True)
-
-        self.remove_all_pages()
-        label = Gtk.Label(label=_("Styles"))
-        self.sidebar_notebook.append_page(self.lines_styles_selection, label)
+        print("arrow")
+        self.sidebar_stack.set_visible_child_name("style_page")
 
     def clear(self, btn=None, grid=None):
         print("clear")
@@ -1424,6 +1321,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
         self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
 
+    @Gtk.Template.Callback("on_tree_text_inserted")
     def on_tree_text_inserted(self, buffer, loc, text, length):
         spaces = 0
         if text == "\n":
@@ -1445,6 +1343,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.preview_tree()
 
+    @Gtk.Template.Callback("preview_tree")
     def preview_tree(self, widget=None):
         self.clear(None, self.preview_grid)
         start = self.tree_text_entry_buffer.get_start_iter()
@@ -1466,9 +1365,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         current_indent = 0
         leading_spaces = []
         indent_level = 0
-        print("------tree------")
+        # print("------tree------")
         for index, line in enumerate(lines):
-            print("------line------")
+            # print("------line------")
             stripped_line = line.lstrip(' ')  # Remove leading underscores
             indent_space = len(line) - len(stripped_line)
             line_number = len(leading_spaces)
@@ -1481,7 +1380,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     previos_spaces = 0
                     indent_level = current_indent - 1
                     for i in range(line_number - 1, 0, -1):
-                        print(indent_level, indent_space, leading_spaces[i])
+                        # print(indent_level, indent_space, leading_spaces[i])
                         if i != 0:
                             leading_spaces[i] #previous spaces
                             indent_space # current spaces
@@ -1491,7 +1390,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                                 indent_level -= 1
                                 previos_spaces = leading_spaces[i]
                             elif leading_spaces[i] > previos_spaces:
-                                print(f"the indent is {processed_lines[i - line_number][0]} was {indent_level}")
+                                # print(f"the indent is {processed_lines[i - line_number][0]} was {indent_level}")
                                 indent_level = processed_lines[i - line_number][0]
                                 previos_spaces = leading_spaces[i]
             current_indent = indent_level
@@ -1757,6 +1656,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     child.set_text(char)
                 self.changed_chars.append([start_x + x + width, y])
 
+    @Gtk.Template.Callback("undo_first_change")
     def undo_first_change(self, btn=None):
         try:
             change_object = self.undo_changes[0]

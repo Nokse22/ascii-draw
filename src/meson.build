@@ -30,6 +30,7 @@ ascii_draw_sources = [
   '__init__.py',
   'main.py',
   'window.py',
+  'window.ui',
 ]
 
 install_data(ascii_draw_sources, install_dir: moduledir)
