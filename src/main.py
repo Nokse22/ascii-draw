@@ -40,9 +40,9 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
-        self.create_action('save-as', self.on_save_as_action)
-        self.create_action('open', self.on_open_action)
-        self.create_action('new-canvas', self.on_new_canvas_action)
+        self.create_action('save-as', self.on_save_as_action, ['<control><shift>s'])
+        self.create_action('open', self.on_open_action, ['<control>o'])
+        self.create_action('new-canvas', self.on_new_canvas_action, ['<control>n'])
 
         self.create_action('undo', self.on_undo_action, ['<control>z'])
 
@@ -64,9 +64,9 @@ class AsciiDrawApplication(Adw.Application):
 
         css = '''
         .drawing-area{
-            background-color: @window_bg_color;
-            opacity:0.15;
-            background-blend-mode: lighten;
+            // background-color: @window_bg_color;
+            // opacity:0.15;
+            // background-blend-mode: lighten;
         }
         .ascii-textview{
 
@@ -109,10 +109,18 @@ class AsciiDrawApplication(Adw.Application):
             font-size: 7px;
             color: @window_fg_color;
         }
-        .sidebar{
-            background-color: @window_bg_color;
+        .switcher button{
+	        margin-left:3px;
+	        margin-right:3px;
+            background-color:transparent;
+            transition: background-color 0ms linear;
         }
-
+        .switcher button:hover{
+	        background-color:@shade_color;
+        }
+        .switcher button:checked{
+	        background-color:@headerbar_shade_color;
+        }
         '''
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(css, -1)

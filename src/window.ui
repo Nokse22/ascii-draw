@@ -2,6 +2,7 @@
 <!-- Created with Cambalache 0.17.0 -->
 <interface>
   <!-- interface-name ascii-draw.ui -->
+  <requires lib="gio" version="2.0"/>
   <requires lib="gtk" version="4.12"/>
   <requires lib="libadwaita" version="1.4"/>
   <template class="AsciiDrawWindow" parent="AdwApplicationWindow">
@@ -185,10 +186,11 @@ canvas-shadow</property>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton">
+                                              <object class="GtkButton" id="rows_reset_button">
                                                 <property name="css-classes">error</property>
                                                 <property name="icon-name">user-trash-symbolic</property>
                                                 <property name="tooltip-text">Delete rows</property>
+                                                <signal name="clicked" handler="on_reset_row_clicked"/>
                                               </object>
                                             </child>
                                           </object>
@@ -202,7 +204,7 @@ canvas-shadow</property>
                                     <property name="css-classes">card</property>
                                     <property name="vexpand">True</property>
                                     <child>
-                                      <object class="GtkBox">
+                                      <object class="GtkBox" id="rows_box">
                                         <property name="margin-bottom">6</property>
                                         <property name="margin-end">6</property>
                                         <property name="margin-start">6</property>
@@ -213,7 +215,7 @@ canvas-shadow</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="AdwComboRow">
+                                  <object class="AdwComboRow" id="table_types_drop_down">
                                     <property name="css-classes">card</property>
                                     <property name="model">
                                       <object class="GtkStringList">
@@ -412,11 +414,12 @@ canvas-shadow</property>
                   </object>
                 </property>
                 <child type="top">
-                  <object class="GtkStackSwitcher">
+                  <object class="GtkStackSwitcher" id="sidebar_stack_switcher">
+                    <property name="css-classes">switcher</property>
                     <property name="hexpand">True</property>
                     <property name="margin-bottom">6</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-start">6</property>
+                    <property name="margin-end">3</property>
+                    <property name="margin-start">3</property>
                     <property name="margin-top">6</property>
                     <property name="stack">sidebar_stack</property>
                   </object>
@@ -440,18 +443,21 @@ canvas-shadow</property>
             <child>
               <object class="AdwSplitButton" id="save_import_button">
                 <property name="label">Save</property>
+                <property name="menu-model">save_menu</property>
                 <signal name="clicked" handler="save_button_clicked"/>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="undo_button">
                 <property name="icon-name">edit-undo-symbolic</property>
+                <property name="sensitive">False</property>
                 <signal name="clicked" handler="undo_first_change"/>
               </object>
             </child>
             <child type="end">
               <object class="GtkMenuButton">
                 <property name="icon-name">open-menu-symbolic</property>
+                <property name="menu-model">primary_menu</property>
               </object>
             </child>
             <child type="end">
@@ -592,6 +598,15 @@ canvas-shadow</property>
                   </object>
                 </child>
                 <child>
+                  <object class="GtkToggleButton" id="select_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">edit-select-all-symbolic</property>
+                    <signal name="clicked" handler="on_choose_select"/>
+                  </object>
+                </child>
+                <child>
                   <object class="GtkButton">
                     <property name="css-classes">error
 flat</property>
@@ -608,6 +623,38 @@ flat</property>
         </child>
         <!-- Custom fragments -->
       </object>
+    </child>
+    <child>
+      <menu id="primary_menu">
+        <section>
+          <item>
+            <attribute name="action">win.show-help-overlay</attribute>
+            <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.about</attribute>
+            <attribute name="label" translatable="yes">About ASCII Draw</attribute>
+          </item>
+        </section>
+      </menu>
+    </child>
+    <child>
+      <menu id="save_menu">
+        <section>
+          <item>
+            <attribute name="action">app.save-as</attribute>
+            <attribute name="label">Save As</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.open</attribute>
+            <attribute name="label">Open</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.new-canvas</attribute>
+            <attribute name="label">New Canvas</attribute>
+          </item>
+        </section>
+      </menu>
     </child>
   </template>
 </interface>

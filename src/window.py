@@ -65,9 +65,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     free_scale = Gtk.Template.Child()
     eraser_scale = Gtk.Template.Child()
-    # tree_stack_page = Gtk.Template.Child()
-    # freehand_stack_page = Gtk.Template.Child()
-    # eraser_stack_page = Gtk.Template.Child()
+    columns_spin = Gtk.Template.Child()
+    rows_box = Gtk.Template.Child()
+    table_types_drop_down = Gtk.Template.Child()
+
+    sidebar_stack_switcher = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -532,21 +534,22 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.add_undo_action("Table")
         self.insert_table(table_type, self.grid)
 
-    def on_reset_row_clicked(self, btn, columns_spin):
+    @Gtk.Template.Callback("on_reset_row_clicked")
+    def on_reset_row_clicked(self, btn):
         child = self.rows_box.get_first_child()
         prev_child = None
         while child != None:
             prev_child = child
             child = prev_child.get_next_sibling()
             self.rows_box.remove(prev_child)
-        columns_spin.set_sensitive(True)
+        self.columns_spin.set_sensitive(True)
         self.rows_number = 0
 
     @Gtk.Template.Callback("on_add_row_clicked")
-    def on_add_row_clicked(self, btn, columns_spin):
+    def on_add_row_clicked(self, btn):
         self.rows_number += 1
-        columns_spin.set_sensitive(False)
-        values = int(columns_spin.get_value())
+        self.columns_spin.set_sensitive(False)
+        values = int(self.columns_spin.get_value())
         self.columns_number = values
 
         rows_values_box = Gtk.Box(spacing=6, margin_start=12, margin_end=12, margin_bottom=6, margin_top=6)
@@ -911,6 +914,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         print("tree")
         self.sidebar_stack.set_visible_child_name("tree_page")
 
+    @Gtk.Template.Callback("on_choose_select")
+    def on_choose_select(self, btn):
+        if btn.get_active():
+            self.tool = "SELECT"
+        print("select")
+        self.sidebar_stack.set_visible_child_name("select_page")
+
     @Gtk.Template.Callback("on_choose_free")
     def on_choose_free(self, btn):
         # self.reset_text_entry()
@@ -1091,6 +1101,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.draw_free_line(start_x_char + width, start_y_char + height, self.grid)
             self.drawing_area.queue_draw()
 
+        elif self.tool == "SELECT":
+            # self.draw_free_line(start_x_char + width, start_y_char + height, self.grid)
+            self.drawing_area.queue_draw()
+
     def on_drag_end(self, gesture, delta_x, delta_y):
         if self.tool != "TEXT" and self.tool != "TABLE" and self.tool != "TREE":
             self.force_clear(self.preview_grid)
@@ -1150,8 +1164,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def drawing_area_draw(self, area, cr, width, height, data):
         cr.save()
-        # if self.tool == "FREE-LINE":
-        #     cr.rectangle(self.prev_char_pos[0]*self.x_mul + self.x_mul/2, self.prev_char_pos[1]*self.y_mul + self.y_mul/2, self.x_mul, self.y_mul)
+        cr.set_source_rgb(0.208, 0.518, 0.894)
+        if self.tool == "SELECT":
+            cr.rectangle(self.start_x, self.start_y, self.end_x, self.end_y)
         cr.stroke()
         cr.restore()
 
