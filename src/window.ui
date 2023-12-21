@@ -44,6 +44,7 @@ canvas-shadow</property>
                         <property name="valign">center</property>
                         <child type="overlay">
                           <object class="GtkGrid" id="preview_grid">
+                            <property name="can-focus">False</property>
                             <property name="css-classes">ascii-preview</property>
                             <property name="halign">start</property>
                             <property name="valign">start</property>
@@ -161,7 +162,7 @@ canvas-shadow</property>
                                           <object class="GtkAdjustment">
                                             <property name="lower">1.0</property>
                                             <property name="step-increment">1.0</property>
-                                            <property name="upper">100.0</property>
+                                            <property name="upper">6.0</property>
                                             <property name="value">1.0</property>
                                           </object>
                                         </property>
@@ -255,7 +256,6 @@ canvas-shadow</property>
                                 <property name="margin-top">6</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
-                                <property name="visible" bind-source="text_button" bind-property="active">True</property>
                                 <child>
                                   <object class="GtkScrolledWindow">
                                     <property name="vexpand">True</property>
@@ -269,6 +269,7 @@ canvas-shadow</property>
                                         </property>
                                         <property name="css-classes">card</property>
                                         <property name="left-margin">12</property>
+                                        <property name="monospace">True</property>
                                         <property name="top-margin">12</property>
                                       </object>
                                     </child>
@@ -436,7 +437,6 @@ canvas-shadow</property>
           <object class="AdwHeaderBar">
             <property name="title-widget">
               <object class="AdwWindowTitle" id="title_widget">
-                <property name="subtitle">test.txt</property>
                 <property name="title">ASCII Draw</property>
               </object>
             </property>
@@ -469,6 +469,52 @@ canvas-shadow</property>
             <child type="end">
               <object class="GtkMenuButton">
                 <property name="icon-name">list-add-symbolic</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="AdwSpinRow" id="width_spin">
+                            <property name="activatable">False</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">10.0</property>
+                                <property name="step-increment">1.0</property>
+                                <property name="upper">100.0</property>
+                                <property name="value">50.0</property>
+                              </object>
+                            </property>
+                            <property name="can-focus">False</property>
+                            <property name="title">Width</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwSpinRow" id="height_spin">
+                            <property name="activatable">False</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">5.0</property>
+                                <property name="step-increment">1.0</property>
+                                <property name="upper">50.0</property>
+                                <property name="value">25.0</property>
+                              </object>
+                            </property>
+                            <property name="can-focus">False</property>
+                            <property name="title">Height</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="label">Change size</property>
+                            <property name="margin-top">6</property>
+                            <signal name="clicked" handler="on_change_canvas_size_btn_clicked"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
               </object>
             </child>
           </object>
