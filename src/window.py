@@ -49,6 +49,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     drawing_area = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
     char_flow_box = Gtk.Template.Child()
+    box_char_flow_box = Gtk.Template.Child()
+    block_char_flow_box = Gtk.Template.Child()
+    geometric_char_flow_box = Gtk.Template.Child()
+    math_char_flow_box = Gtk.Template.Child()
+    arrow_char_flow_box = Gtk.Template.Child()
+    chars_carousel = Gtk.Template.Child()
+    char_group_label = Gtk.Template.Child()
+    char_carousel_go_back = Gtk.Template.Child()
+    char_carousel_go_next = Gtk.Template.Child()
+
     font_box = Gtk.Template.Child()
     tree_text_entry = Gtk.Template.Child()
     tree_text_entry_buffer = Gtk.Template.Child()
@@ -205,33 +215,37 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.text_x = 0
         self.text_y = 0
 
-        unicode_ranges = [
-            range(0x0021, 0x007F),  # Basic Latin
-            range(0x00A0, 0x0100),  # Latin-1 Supplement
-            range(0x0100, 0x0180),  # Latin Extended-A
-            range(0x2500, 0x2580),  # Box Drawing
-            range(0x2580, 0x25A0),  # Block Elements
-            range(0x25A0, 0x25FC),  # Geometric Shapes
-            range(0x25FF, 0x2600),
-            range(0x2190, 0x2200),  # Arrows
-            range(0x2200, 0x22C7),  # Mathematical Operators
-            range(0x22CB, 0x2300),
+        ranges_and_pages = [
+            [[  range(0x0021, 0x007F),  # Basic Latin
+                range(0x00A0, 0x0100),  # Latin-1 Supplement
+                range(0x0100, 0x0180),  # Latin Extended-A
+                ], self.char_flow_box],
+            [[  range(0x2500, 0x2580),  # Box Drawing
+                ], self.box_char_flow_box],
+            [[  range(0x2580, 0x25A0),  # Block Elements
+                ], self.block_char_flow_box],
+            [[  range(0x25A0, 0x25FC),  # Geometric Shapes
+                range(0x25FF, 0x2600),
+                ], self.geometric_char_flow_box],
+            [[  range(0x2190, 0x2200),
+                ], self.arrow_char_flow_box],
+            [[  range(0x2200, 0x22C7),  # Mathematical Operators
+                range(0x22CB, 0x2300),
+                ], self.math_char_flow_box]
         ]
 
-        char = " "
-        prev_button = Gtk.ToggleButton(label=char, css_classes=["flat"])
-        prev_button.connect("toggled", self.change_char, self.char_flow_box)
-        self.char_flow_box.append(prev_button)
+        for chars_group in ranges_and_pages:
+            unicode_ranges = chars_group[0]
+            flow_box = chars_group[1]
 
-        for code_range in unicode_ranges:
-            for code_point in code_range:
-                char = chr(code_point)
-                if not self.is_renderable(char):
-                    continue
-                new_button = Gtk.ToggleButton(label=char, css_classes=["flat", "ascii"])
-                new_button.connect("toggled", self.change_char, self.char_flow_box)
-                self.char_flow_box.append(new_button)
-                new_button.set_group(prev_button)
+            for code_range in unicode_ranges:
+                for code_point in code_range:
+                    char = chr(code_point)
+                    if not self.is_renderable(char):
+                        continue
+                    new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
+                    new_button.connect("clicked", self.change_char, flow_box)
+                    flow_box.append(new_button)
 
         self.drawing_area_width = 0
 
@@ -275,6 +289,32 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.file_path = ""
 
         self.sidebar_stack.set_visible_child_name("character_page")
+
+    @Gtk.Template.Callback("char_pages_go_back")
+    def char_pages_go_back(self, btn):
+        print("back")
+        pos = self.chars_carousel.get_position()
+        if pos == 0:
+            return
+        new_page = self.chars_carousel.get_nth_page(pos - 1)
+        self.chars_carousel.scroll_to(new_page, False)
+        self.char_group_label.set_label(new_page.get_name())
+        self.char_carousel_go_next.set_sensitive(True)
+        if pos - 1 == 0:
+            btn.set_sensitive(False)
+
+    @Gtk.Template.Callback("char_pages_go_next")
+    def char_pages_go_next(self, btn):
+        print("next")
+        pos = self.chars_carousel.get_position()
+        if pos == self.chars_carousel.get_n_pages() - 1:
+            return
+        new_page = self.chars_carousel.get_nth_page(pos + 1)
+        self.chars_carousel.scroll_to(new_page, False)
+        self.char_group_label.set_label(new_page.get_name())
+        self.char_carousel_go_back.set_sensitive(True)
+        if pos + 1 == self.chars_carousel.get_n_pages() - 1:
+            btn.set_sensitive(False)
 
     @Gtk.Template.Callback("preview_table")
     def preview_table(self, entry=None, arg=None):

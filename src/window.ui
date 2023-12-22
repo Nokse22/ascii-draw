@@ -11,7 +11,7 @@
     <child>
       <object class="AdwBreakpoint">
         <!-- Custom fragments -->
-        <condition>max-width: 500px</condition>
+        <condition>max-width: 530px</condition>
         <setter object="toolbar_layout_box" property="orientation">vertical</setter>
         <setter object="overlay_split_view" property="collapsed">true</setter>
         <setter object="overlay_split_view" property="show-sidebar">true</setter>
@@ -80,12 +80,12 @@ canvas-shadow</property>
                           <object class="GtkStackPage" id="text_stack_page">
                             <property name="child">
                               <object class="GtkBox" id="text_sidebar">
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">10</property>
                                 <property name="orientation">vertical</property>
-                                <property name="spacing">6</property>
+                                <property name="spacing">10</property>
                                 <property name="visible" bind-source="text_button" bind-property="active">True</property>
                                 <child>
                                   <object class="GtkScrolledWindow">
@@ -129,6 +129,7 @@ canvas-shadow</property>
                                 </child>
                                 <child>
                                   <object class="GtkButton">
+                                    <property name="css-classes">suggested-action</property>
                                     <property name="label">Enter</property>
                                     <signal name="clicked" handler="insert_text_definitely"/>
                                   </object>
@@ -145,12 +146,12 @@ canvas-shadow</property>
                           <object class="GtkStackPage" id="table_stack_page">
                             <property name="child">
                               <object class="GtkBox" id="table_sidebar">
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">10</property>
                                 <property name="orientation">vertical</property>
-                                <property name="spacing">6</property>
+                                <property name="spacing">10</property>
                                 <property name="visible" bind-source="table_button" bind-property="active">True</property>
                                 <child>
                                   <object class="GtkListBox">
@@ -216,25 +217,31 @@ canvas-shadow</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="AdwComboRow" id="table_types_drop_down">
-                                    <property name="css-classes">card</property>
-                                    <property name="model">
-                                      <object class="GtkStringList">
-                                        <items>
-                                          <item>First line as header</item>
-                                          <item>Divide each row</item>
-                                          <item>Not divided</item>
-                                        </items>
+                                  <object class="GtkListBox">
+                                    <property name="css-classes">boxed-list</property>
+                                    <property name="selection-mode">none</property>
+                                    <child>
+                                      <object class="AdwComboRow" id="table_types_drop_down">
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item>First line as header</item>
+                                              <item>Divide each row</item>
+                                              <item>Not divided</item>
+                                            </items>
+                                          </object>
+                                        </property>
+                                        <property name="selected">0</property>
+                                        <property name="title">Type</property>
+                                        <!-- Custom fragments -->
+                                        <signal name="notify::selected" handler="preview_table"/>
                                       </object>
-                                    </property>
-                                    <property name="selected">0</property>
-                                    <property name="title">Type</property>
-                                    <!-- Custom fragments -->
-                                    <signal name="notify::selected" handler="preview_table"/>
+                                    </child>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton">
+                                    <property name="css-classes">suggested-action</property>
                                     <property name="label">Enter</property>
                                   </object>
                                 </child>
@@ -250,12 +257,12 @@ canvas-shadow</property>
                           <object class="GtkStackPage" id="tree_stack_page">
                             <property name="child">
                               <object class="GtkBox" id="tree_sidebar">
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">10</property>
                                 <property name="orientation">vertical</property>
-                                <property name="spacing">6</property>
+                                <property name="spacing">10</property>
                                 <child>
                                   <object class="GtkScrolledWindow">
                                     <property name="vexpand">True</property>
@@ -277,6 +284,7 @@ canvas-shadow</property>
                                 </child>
                                 <child>
                                   <object class="GtkButton">
+                                    <property name="css-classes">suggested-action</property>
                                     <property name="label">Enter</property>
                                   </object>
                                 </child>
@@ -293,10 +301,10 @@ canvas-shadow</property>
                             <property name="child">
                               <object class="GtkBox">
                                 <property name="hexpand">True</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">10</property>
                                 <child>
                                   <object class="AdwActionRow">
                                     <property name="css-classes">card</property>
@@ -334,10 +342,10 @@ canvas-shadow</property>
                             <property name="child">
                               <object class="GtkBox">
                                 <property name="hexpand">True</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-top">6</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">10</property>
                                 <child>
                                   <object class="AdwActionRow">
                                     <property name="css-classes">card</property>
@@ -371,16 +379,207 @@ canvas-shadow</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkStackPage">
+                          <object class="GtkStackPage" id="select_stack_page">
                             <property name="child">
-                              <object class="GtkScrolledWindow">
+                              <object class="GtkBox">
+                                <property name="margin-bottom">6</property>
+                                <property name="margin-end">6</property>
+                                <property name="margin-start">6</property>
+                                <property name="margin-top">6</property>
                                 <child>
-                                  <object class="GtkFlowBox" id="char_flow_box">
-                                    <property name="margin-bottom">3</property>
-                                    <property name="margin-end">3</property>
-                                    <property name="margin-start">3</property>
-                                    <property name="margin-top">3</property>
-                                    <property name="selection-mode">none</property>
+                                  <object class="GtkGrid">
+                                    <property name="column-spacing">6</property>
+                                    <property name="halign">center</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="row-spacing">6</property>
+                                    <property name="valign">start</property>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="icon-name">go-up-symbolic</property>
+                                        <layout>
+                                          <property name="column">1</property>
+                                          <property name="row">0</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="icon-name">go-previous-symbolic</property>
+                                        <layout>
+                                          <property name="column">0</property>
+                                          <property name="row">1</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="icon-name">go-next-symbolic</property>
+                                        <layout>
+                                          <property name="column">2</property>
+                                          <property name="row">1</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="icon-name">go-down-symbolic</property>
+                                        <layout>
+                                          <property name="column">1</property>
+                                          <property name="row">2</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">edit-select-all-symbolic</property>
+                            <property name="name">select_page</property>
+                            <property name="title">Select</property>
+                            <property name="visible" bind-source="select_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="character_stack_page">
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="margin-bottom">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkButton" id="char_carousel_go_back">
+                                        <property name="icon-name">go-previous-symbolic</property>
+                                        <property name="sensitive">False</property>
+                                        <signal name="clicked" handler="char_pages_go_back"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="char_group_label">
+                                        <property name="hexpand">True</property>
+                                        <property name="label">Extended latin</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="char_carousel_go_next">
+                                        <property name="icon-name">go-next-symbolic</property>
+                                        <signal name="clicked" handler="char_pages_go_next"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwCarousel" id="chars_carousel">
+                                    <property name="allow-mouse-drag">False</property>
+                                    <property name="allow-scroll-wheel">False</property>
+                                    <property name="hexpand">True</property>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Extended latin</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Box drawing</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="box_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Block drawing</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="block_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                            <property name="valign">start</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="hexpand">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Geometric</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="geometric_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Arrows</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="arrow_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Math</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="math_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -391,7 +590,7 @@ canvas-shadow</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkStackPage">
+                          <object class="GtkStackPage" id="style_stack_page">
                             <property name="child">
                               <object class="GtkScrolledWindow">
                                 <child>
@@ -672,6 +871,12 @@ flat</property>
     </child>
     <child>
       <menu id="primary_menu">
+        <section>
+          <item>
+            <attribute name="action">app.new_palette</attribute>
+            <attribute name="label">New char palette</attribute>
+          </item>
+        </section>
         <section>
           <item>
             <attribute name="action">win.show-help-overlay</attribute>
