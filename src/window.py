@@ -21,6 +21,8 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
+from .palette import Palette
+
 import threading
 import math
 import pyfiglet
@@ -241,8 +243,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             for code_range in unicode_ranges:
                 for code_point in code_range:
                     char = chr(code_point)
-                    if not self.is_renderable(char):
-                        continue
                     new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
                     new_button.connect("clicked", self.change_char, flow_box)
                     flow_box.append(new_button)
@@ -289,6 +289,49 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.file_path = ""
 
         self.sidebar_stack.set_visible_child_name("character_page")
+
+        self.palettes = []
+
+        directory_path = "palettes"
+        os.makedirs(directory_path, exist_ok=True)
+        files = os.listdir(directory_path)
+
+        for filename in os.listdir(directory_path):
+            filepath = os.path.join(directory_path, filename)
+            if os.path.isfile(filepath):
+                with open(filepath, 'r') as file:
+                    chars = file.read()
+                palette_name = os.path.splitext(filename)[0]
+                palette = Palette(palette_name, chars)
+                self.palettes.append(palette)
+
+        self.add_palette_to_ui(self.palettes)
+
+    def add_palette_to_ui(self, palettes):
+        for palette in palettes:
+            flow_box = Gtk.FlowBox(selection_mode=2, margin_top=3, margin_bottom=3, margin_start=3, margin_end=3, valign=Gtk.Align.START)
+            for char in palette.chars:
+                new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
+                new_button.connect("clicked", self.change_char, flow_box)
+                flow_box.append(new_button)
+            scrolled_window = Gtk.ScrolledWindow(name=palette.name)
+            scrolled_window.set_child(flow_box)
+            self.chars_carousel.append(scrolled_window)
+            print(f"added {palette}")
+
+        pos = self.chars_carousel.get_position()
+        if pos != self.chars_carousel.get_n_pages() - 1:
+            self.char_carousel_go_next.set_sensitive(True)
+
+    def add_new_palette(self, palette_name, palette_chars):
+        os.makedirs("/palettes", exist_ok=True)
+
+        with open(f"palettes/{palette_name}", 'w') as file:
+            file.write(palette_chars)
+
+        palette = Palette(palette_name ,palette_chars)
+
+        self.add_palette_to_ui([palette])
 
     @Gtk.Template.Callback("char_pages_go_back")
     def char_pages_go_back(self, btn):
@@ -980,7 +1023,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         cr.save()
         cr.set_source_rgb(0.208, 0.518, 0.894)
         if self.tool == "SELECT":
-            cr.rectangle((self.start_x // self.x_mul) * self.x_mul, (self.start_y // self.y_mul) * self.y_mul, self.end_x, self.end_y)
+            cr.rectangle((self.start_x // self.x_mul) * self.x_mul + self.x_mul/2, (self.start_y // self.y_mul) * self.y_mul + self.y_mul/2, self.end_x, self.end_y)
         cr.stroke()
         cr.restore()
 

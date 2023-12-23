@@ -88,8 +88,7 @@
 	(1,312,"(item)",None,311,None,None,None,None,None),
 	(1,313,"(item)",None,311,None,None,None,1,None),
 	(1,314,"(menu)","save_menu",1,None,None,None,3,None),
-	(1,315,"(section)",None,314,None,None,None,None,None),
-	(1,316,"(item)",None,315,None,None,None,None,None),
+	(1,315,"(section)",None,314,None,None,None,1,None),
 	(1,317,"(item)",None,315,None,None,None,1,None),
 	(1,318,"(item)",None,315,None,None,None,2,None),
 	(1,319,"GtkToggleButton","select_button",37,None,None,None,4,None),
@@ -129,7 +128,9 @@
 	(1,371,"GtkScrolledWindow",None,360,None,None,None,5,None),
 	(1,372,"GtkFlowBox","math_char_flow_box",371,None,None,None,None,None),
 	(1,373,"(section)",None,310,None,None,None,None,None),
-	(1,374,"(item)",None,373,None,None,None,-1,None)
+	(1,374,"(item)",None,373,None,None,None,-1,None),
+	(1,375,"(section)",None,314,None,None,None,None,None),
+	(1,376,"(item)",None,375,None,None,None,None,None)
   </object>
   <object_property>
 	(1,1,"GtkWidget","height-request","360",None,None,None,None,None,None,None,None,None),
@@ -401,8 +402,6 @@
 	(1,312,"(item)","label","Keyboard Shortcuts","yes",None,None,None,None,None,None,None,None),
 	(1,313,"(item)","action","app.about",None,None,None,None,None,None,None,None,None),
 	(1,313,"(item)","label","About ASCII Draw","yes",None,None,None,None,None,None,None,None),
-	(1,316,"(item)","action","app.save-as",None,None,None,None,None,None,None,None,None),
-	(1,316,"(item)","label","Save As",None,None,None,None,None,None,None,None,None),
 	(1,317,"(item)","action","app.open",None,None,None,None,None,None,None,None,None),
 	(1,317,"(item)","label","Open",None,None,None,None,None,None,None,None,None),
 	(1,318,"(item)","action","app.new-canvas",None,None,None,None,None,None,None,None,None),
@@ -522,8 +521,10 @@
 	(1,372,"GtkWidget","margin-end","3",None,None,None,None,None,None,None,None,None),
 	(1,372,"GtkWidget","margin-start","3",None,None,None,None,None,None,None,None,None),
 	(1,372,"GtkWidget","margin-top","3",None,None,None,None,None,None,None,None,None),
-	(1,374,"(item)","action","app.new_palette",None,None,None,None,None,None,None,None,None),
-	(1,374,"(item)","label","New char palette",None,None,None,None,None,None,None,None,None)
+	(1,374,"(item)","action","app.new-palette",None,None,None,None,None,None,None,None,None),
+	(1,374,"(item)","label","New char palette",None,None,None,None,None,None,None,None,None),
+	(1,376,"(item)","action","app.save-as",None,None,None,None,None,None,None,None,None),
+	(1,376,"(item)","label","Save As",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,332,333,"GtkGridLayoutChild","column","1",None,None,None,None),

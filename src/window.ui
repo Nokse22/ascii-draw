@@ -873,7 +873,7 @@ flat</property>
       <menu id="primary_menu">
         <section>
           <item>
-            <attribute name="action">app.new_palette</attribute>
+            <attribute name="action">app.new-palette</attribute>
             <attribute name="label">New char palette</attribute>
           </item>
         </section>
@@ -896,6 +896,8 @@ flat</property>
             <attribute name="action">app.save-as</attribute>
             <attribute name="label">Save As</attribute>
           </item>
+        </section>
+        <section>
           <item>
             <attribute name="action">app.open</attribute>
             <attribute name="label">Open</attribute>

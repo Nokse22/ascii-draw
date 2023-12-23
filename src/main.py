@@ -129,28 +129,37 @@ class AsciiDrawApplication(Adw.Application):
             css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-    def on_new_palette_action(self, w, _):
+    def on_new_palette_action(self, *args):
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/new_palette.ui")
+
+        def on_add_clicked(btn, win):
+            palette_name = builder.get_object("palette_name_entry").get_text()
+            buffer = builder.get_object("palette_chars_buffer")
+            palette_chars = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), False)
+            win.add_new_palette(palette_name, palette_chars)
+
+        builder.get_object("add_button").connect("clicked", on_add_clicked, self.win)
+        builder.get_object("new_palette_window").present()
+
+    def on_export_palettes_action(self, *args):
         pass
 
-    def on_export_palettes_action(self, w, _):
+    def on_import_palettes_action(self, *args):
         pass
 
-    def on_import_palettes_action(self, w, _):
-        pass
-
-    def on_new_canvas_action(self, widget, _):
+    def on_new_canvas_action(self, *args):
         self.win.new_canvas()
 
-    def on_save_as_action(self, widget, _):
+    def on_save_as_action(self, *args):
         self.win.save_as_action()
 
-    def on_import_action(self, widget, _):
+    def on_import_action(self, *args):
         pass
 
-    def on_open_action(self, widget, _):
+    def on_open_action(self, *args):
         self.win.open_file()
 
-    def on_undo_action(self, widget, _):
+    def on_undo_action(self, *args):
         self.win.undo_first_change()
 
     def do_activate(self):
