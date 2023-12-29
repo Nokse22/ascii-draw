@@ -23,6 +23,9 @@ from gi.repository import Gdk, Gio, GObject
 
 from .palette import Palette
 
+from .tools import Freehand
+from .drawing_canvas import Canvas
+
 import threading
 import math
 import pyfiglet
@@ -108,10 +111,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas_max_x = 100
         self.canvas_max_y = 50
 
-        for y in range(self.canvas_y):
-            for x in range(self.canvas_x):
-                self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
-                self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+        # for y in range(self.canvas_y):
+        #     for x in range(self.canvas_x):
+        #         self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+        #         self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
+
+        self.canvas = Canvas()
 
         self.brush_sizes = [
                 [[0,0] ],
@@ -173,19 +178,19 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.drawing_area.set_draw_func(self.drawing_area_draw, None)
 
-        drag = Gtk.GestureDrag()
-        drag.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        drag.connect("drag-begin", self.on_drag_begin)
-        drag.connect("drag-update", self.on_drag_follow)
-        drag.connect("drag-end", self.on_drag_end)
-        self.drawing_area.add_controller(drag)
+        self.drag = Gtk.GestureDrag()
+        self.drag.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.drag.connect("drag-begin", self.on_drag_begin)
+        self.drag.connect("drag-update", self.on_drag_follow)
+        self.drag.connect("drag-end", self.on_drag_end)
+        self.drawing_area.add_controller(self.drag)
 
-        click = Gtk.GestureClick()
-        click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        click.connect("pressed", self.on_click_pressed)
-        click.connect("released", self.on_click_released)
-        click.connect("stopped", self.on_click_stopped)
-        self.drawing_area.add_controller(click)
+        self.click = Gtk.GestureClick()
+        self.click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.click.connect("pressed", self.on_click_pressed)
+        self.click.connect("released", self.on_click_released)
+        self.click.connect("stopped", self.on_click_stopped)
+        self.drawing_area.add_controller(self.click)
 
         self.start_x = 0
         self.start_y = 0
@@ -306,6 +311,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 self.palettes.append(palette)
 
         self.add_palette_to_ui(self.palettes)
+
+        self.freehand = Freehand(self.canvas)
 
     def add_palette_to_ui(self, palettes):
         for palette in palettes:
@@ -903,10 +910,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.end_x = width * self.x_mul
         self.end_y = height * self.y_mul
 
-        if self.tool == "FREE":
-            self.draw_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
+        # if self.tool == "FREE":
+        #     self.draw_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
 
-        elif self.tool == "ERASER":
+        if self.tool == "ERASER":
             self.erase_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
 
         elif self.tool == "RECTANGLE":

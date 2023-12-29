@@ -31,6 +31,9 @@ ascii_draw_sources = [
   'main.py',
   'window.py',
   'palette.py',
+  'tool.py',
 ]
 
 install_data(ascii_draw_sources, install_dir: moduledir)
+
+install_subdir('.', install_dir: moduledir)
