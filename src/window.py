@@ -23,8 +23,8 @@ from gi.repository import Gdk, Gio, GObject
 
 from .palette import Palette
 
-from .tools import Freehand
-from .drawing_canvas import Canvas
+from .tools import *
+from .canvas import Canvas
 
 import threading
 import math
@@ -33,25 +33,11 @@ import unicodedata
 import emoji
 import os
 
-class Change():
-    def __init__(self, _name):
-        self.changes = []
-        self.name = _name
-
-    def add_change(self, x, y, prev_char):
-        for change in self.changes:
-            if change[0] == x and change[1] == y:
-                return
-        self.changes.append([x, y, prev_char])
-
-    def __repr__(self):
-        return f"The change has {len(self.changes)} changes"
-
 @Gtk.Template(resource_path='/io/github/nokse22/asciidraw/window.ui')
 class AsciiDrawWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'AsciiDrawWindow'
 
-    drawing_area = Gtk.Template.Child()
+    # drawing_area = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
     char_flow_box = Gtk.Template.Child()
     box_char_flow_box = Gtk.Template.Child()
@@ -71,9 +57,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     text_entry_buffer = Gtk.Template.Child()
     undo_button = Gtk.Template.Child()
 
+    free_button = Gtk.Template.Child()
+    rectangle_button = Gtk.Template.Child()
+    freehand_brush_adjustment = Gtk.Template.Child()
+
     save_import_button = Gtk.Template.Child()
-    preview_grid = Gtk.Template.Child()
-    grid = Gtk.Template.Child()
+    # preview_grid = Gtk.Template.Child()
+    # grid = Gtk.Template.Child()
     lines_styles_box = Gtk.Template.Child()
 
     sidebar_stack = Gtk.Template.Child()
@@ -116,8 +106,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         #         self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
         #         self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
 
-        self.canvas = Canvas()
-
         self.brush_sizes = [
                 [[0,0] ],
                 [[0,0],[-1,0],[1,0] ],
@@ -155,6 +143,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         elif text_direction == Gtk.TextDirection.RTL:
             self.flip = True
 
+        self.canvas = Canvas(self.styles, self.flip)
+        self.canvas.connect("undo-added", self.on_undo_added)
+        self.toast_overlay.set_child(self.canvas)
+
         prev_btn = None
 
         for style in self.styles:
@@ -176,21 +168,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
             self.lines_styles_box.append(style_btn)
 
-        self.drawing_area.set_draw_func(self.drawing_area_draw, None)
-
-        self.drag = Gtk.GestureDrag()
-        self.drag.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.drag.connect("drag-begin", self.on_drag_begin)
-        self.drag.connect("drag-update", self.on_drag_follow)
-        self.drag.connect("drag-end", self.on_drag_end)
-        self.drawing_area.add_controller(self.drag)
-
-        self.click = Gtk.GestureClick()
-        self.click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.click.connect("pressed", self.on_click_pressed)
-        self.click.connect("released", self.on_click_released)
-        self.click.connect("stopped", self.on_click_stopped)
-        self.drawing_area.add_controller(self.click)
+        # self.drawing_area.set_draw_func(self.drawing_area_draw, None)
 
         self.start_x = 0
         self.start_y = 0
@@ -313,6 +291,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.add_palette_to_ui(self.palettes)
 
         self.freehand = Freehand(self.canvas)
+        self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.freehand.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+        self.freehand.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
+
+        self.rectangle = Rectangle(self.canvas)
+        self.rectangle.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
     def add_palette_to_ui(self, palettes):
         for palette in palettes:
@@ -438,12 +422,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_delete_all_button_clicked")
     def on_delete_all_button_clicked(self, btn):
-        self.clear(btn, self.grid)
+        # self.clear(btn, self.grid)
+        self.canvas.clear_canvas()
 
-    @Gtk.Template.Callback("update_area_width")
-    def update_area_width(self):
-        allocation = self.drawing_area.get_allocation()
-        self.drawing_area_width = allocation.width
+    # @Gtk.Template.Callback("update_area_width")
+    # def update_area_width(self):
+    #     allocation = self.drawing_area.get_allocation()
+    #     self.drawing_area_width = allocation.width
 
     @Gtk.Template.Callback("save_button_clicked")
     def save_button_clicked(self, btn):
@@ -546,6 +531,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def change_char(self, btn, flow_box):
         self.free_char = btn.get_label()
+        self.canvas.char = btn.get_label()
         print(f"0x{ord(self.free_char):04X}")
 
     def show_sidebar(self, btn):
@@ -649,6 +635,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         while child != None:
             if child.get_active():
                 self.style = index
+                self.canvas.style = index
                 if self.tool == "TABLE":
                     self.preview_table()
                 elif self.tool == "TREE":
@@ -671,9 +658,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         x_char = int(x / self.x_mul)
         y_char = int(y / self.y_mul)
 
-        if self.tool == "FREE":
-            self.add_undo_action("Freehand")
-            self.draw_char(x_char, y_char)
+        # if self.tool == "FREE":
+        #     self.add_undo_action("Freehand")
+        #     self.draw_char(x_char, y_char)
 
     def on_click_released(self, click, arg, x, y):
         if self.flip:
@@ -785,9 +772,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_choose_free")
     def on_choose_free(self, btn):
-        # self.reset_text_entry()
         if btn.get_active():
             self.tool = "FREE"
+            self.freehand.active = True
         print("free")
         self.sidebar_stack.set_visible_child_name("freehand_page")
 
@@ -893,8 +880,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if self.tool == "FREE-LINE":
             self.add_undo_action("Freehand Line")
             self.prev_char_pos = [start_x_char, start_y_char]
-        elif self.tool == "FREE":
-            self.add_undo_action("Freehand")
+        # elif self.tool == "FREE":
+        #     self.add_undo_action("Freehand")
         elif self.tool == "ERASER":
             self.add_undo_action("Eraser")
 
@@ -1025,6 +1012,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.undo_changes.insert(0, Change(name))
         self.undo_button.set_sensitive(True)
         self.undo_button.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
+
+    def on_undo_added(self, widget, undo_name):
+        self.undo_button.set_sensitive(True)
+        self.undo_button.set_tooltip_text(_("Undo ") + undo_name)
 
     def drawing_area_draw(self, area, cr, width, height, data):
         cr.save()
@@ -1628,9 +1619,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.tree_button.set_active(True)
         self.tool = "TREE"
 
-    def select_free_tool(self):
-        self.free_button.set_active(True)
-        self.tool = "FREE"
+    # def select_free_tool(self):
+    #     self.free_button.set_active(True)
+    #     self.tool = "FREE"
 
     def select_eraser_tool(self):
         self.eraser_button.set_active(True)

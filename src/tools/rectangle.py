@@ -1,4 +1,4 @@
-# freehand.py
+# rectangle.py
 #
 # Copyright 2023 Nokse
 #
@@ -21,7 +21,7 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-class Freehand(GObject.GObject):
+class Rectangle(GObject.GObject):
     def __init__(self, _canvas, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.canvas = _canvas
@@ -46,19 +46,10 @@ class Freehand(GObject.GObject):
         self.end_x = 0
         self.end_y = 0
 
-        self._size = 1
-        self._char = '#'
+        self._style = 0
 
-        self.brush_sizes = [
-                [[0,0] ],
-                [[0,0],[-1,0],[1,0] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0],[1,2],[1,-2],[-1,-2],[-1,2], ],
-                ]
+        self.prev_x = 0
+        self.prev_y = 0
 
     @GObject.Property(type=bool, default=False)
     def active(self):
@@ -69,30 +60,19 @@ class Freehand(GObject.GObject):
         self._active = value
         self.notify('active')
 
-    @GObject.Property(type=int, default=1)
-    def size(self):
-        return self._size
-
-    @size.setter
-    def size(self, value):
-        self._size = value
-        self.notify('size')
-
     @GObject.Property(type=str, default='#')
-    def char(self):
-        return self._char
+    def style(self):
+        return self._style
 
-    @char.setter
-    def char(self, value):
-        self._char = value
-        self.notify('char')
+    @style.setter
+    def style(self, value):
+        self._style = value
+        self.notify('style')
 
     def on_drag_begin(self, gesture, start_x, start_y):
         if not self._active: return
         self.start_x = start_x
         self.start_y = start_y
-
-        self.canvas.add_undo_action("Freehand")
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return
@@ -107,14 +87,46 @@ class Freehand(GObject.GObject):
         self.end_x = width * self.x_mul
         self.end_y = height * self.y_mul
 
-        x_coord = (self.start_x + self.end_x)/self.x_mul
-        y_coord = (self.start_y + self.end_y)/self.y_mul
-        for delta in self.brush_sizes[int(self._size - 1)]:
-            self.canvas.draw_char(x_coord + delta[0], y_coord + delta[1], self.char)
+        if self.prev_x != width or self.prev_y != height:
+            self.canvas.clear_preview()
+            self.prev_x = width
+            self.prev_y = height
+        if width < 0:
+            width = -width
+            start_x_char -= width
+        width += 1
+        if height < 0:
+            height = - height
+            start_y_char -= height
+        height += 1
+        self.canvas.preview_rectangle(start_x_char, start_y_char, width, height)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
-        pass
+
+        self.canvas.clear_preview()
+
+        if self.flip:
+            delta_x = - delta_x
+        start_x_char = self.start_x // self.x_mul
+        start_y_char = self.start_y // self.y_mul
+        width = int((delta_x + self.start_x) // self.x_mul - start_x_char)
+        height = int((delta_y + self.start_y) // self.y_mul - start_y_char)
+
+        self.prev_x = 0
+        self.prev_y = 0
+
+        self.canvas.add_undo_action("Rectangle")
+
+        if width < 0:
+            width = -width
+            start_x_char -= width
+        width += 1
+        if height < 0:
+            height = - height
+            start_y_char -= height
+        height += 1
+        self.canvas.draw_rectangle(start_x_char, start_y_char, width, height)
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
