@@ -22,6 +22,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
 import threading
+import math
 
 class Change():
     def __init__(self, _name):
@@ -206,6 +207,20 @@ class Canvas(Adw.Bin):
     def set_char_at(self, x, y, grid, char):
         # if char == " " or char == "":
         #     return
+        child = grid.get_child_at(x, y)
+        if child:
+            if grid == self.draw_grid:
+                self.undo_changes[0].add_change(x, y, child.get_text())
+            child.set_text(char)
+            self.changed_chars.append([x, y])
+
+    def preview_char_at(self, x, y, char):
+        self.trace_char_at(x, y, char, self.preview_grid)
+
+    def draw_char_at(self, x, y, char):
+        self.trace_char_at(x, y, char, self.draw_grid)
+
+    def trace_char_at(self, x, y, char, grid):
         child = grid.get_child_at(x, y)
         if child:
             if grid == self.draw_grid:

@@ -112,14 +112,14 @@ class AsciiDrawApplication(Adw.Application):
         .switcher button{
 	        margin-left:3px;
 	        margin-right:3px;
-            background-color:transparent;
+            # background-color:transparent;
             transition: background-color 0ms linear;
         }
         .switcher button:hover{
-	        background-color:@shade_color;
+	        # background-color:@shade_color;
         }
         .switcher button:checked{
-	        background-color:@headerbar_shade_color;
+	        # background-color:@headerbar_shade_color;
         }
         '''
         css_provider = Gtk.CssProvider()

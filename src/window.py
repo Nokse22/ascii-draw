@@ -59,6 +59,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     free_button = Gtk.Template.Child()
     rectangle_button = Gtk.Template.Child()
+    filled_rectangle_button = Gtk.Template.Child()
     freehand_brush_adjustment = Gtk.Template.Child()
 
     save_import_button = Gtk.Template.Child()
@@ -100,11 +101,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.canvas_max_x = 100
         self.canvas_max_y = 50
-
-        # for y in range(self.canvas_y):
-        #     for x in range(self.canvas_x):
-        #         self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
-        #         self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
 
         self.brush_sizes = [
                 [[0,0] ],
@@ -297,6 +293,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.rectangle = Rectangle(self.canvas)
         self.rectangle.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+
+        self.filled_rectangle = FilledRectangle(self.canvas)
+        self.filled_rectangle.bind_property('active', self.filled_rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
     def add_palette_to_ui(self, palettes):
         for palette in palettes:
@@ -903,36 +902,36 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if self.tool == "ERASER":
             self.erase_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
 
-        elif self.tool == "RECTANGLE":
-            if self.prev_x != width or self.prev_y != height:
-                self.clear(None, self.preview_grid)
-                self.prev_x = width
-                self.prev_y = height
-            if width < 0:
-                width = -width
-                start_x_char -= width
-            width += 1
-            if height < 0:
-                height = - height
-                start_y_char -= height
-            height += 1
-            self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
-        elif self.tool == "FILLED-RECTANGLE":
-            if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height) or math.copysign(1, self.prev_x) != math.copysign(1, width) or math.copysign(1, self.prev_y) != math.copysign(1, height):
-                self.clear(None, self.preview_grid)
-            self.prev_x = width
-            self.prev_y = height
-            self.changed_chars = []
+        # elif self.tool == "RECTANGLE":
+        #     if self.prev_x != width or self.prev_y != height:
+        #         self.clear(None, self.preview_grid)
+        #         self.prev_x = width
+        #         self.prev_y = height
+        #     if width < 0:
+        #         width = -width
+        #         start_x_char -= width
+        #     width += 1
+        #     if height < 0:
+        #         height = - height
+        #         start_y_char -= height
+        #     height += 1
+        #     self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
+        # elif self.tool == "FILLED-RECTANGLE":
+        #     if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height) or math.copysign(1, self.prev_x) != math.copysign(1, width) or math.copysign(1, self.prev_y) != math.copysign(1, height):
+        #         self.clear(None, self.preview_grid)
+        #     self.prev_x = width
+        #     self.prev_y = height
+        #     self.changed_chars = []
 
-            if width < 0:
-                width = -width
-                start_x_char -= width
-            width += 1
-            if height < 0:
-                height = - height
-                start_y_char -= height
-            height += 1
-            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.preview_grid, self.free_char)
+        #     if width < 0:
+        #         width = -width
+        #         start_x_char -= width
+        #     width += 1
+        #     if height < 0:
+        #         height = - height
+        #         start_y_char -= height
+        #     height += 1
+        #     self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.preview_grid, self.free_char)
         elif self.tool == "LINE" or self.tool == "ARROW":
             self.clear(None, self.preview_grid)
             if width < 0:
@@ -969,29 +968,29 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.prev_x = 0
         self.prev_y = 0
 
-        if self.tool == "RECTANGLE":
-            self.add_undo_action("Rectangle")
-            if width < 0:
-                width = -width
-                start_x_char -= width
-            width += 1
-            if height < 0:
-                height = - height
-                start_y_char -= height
-            height += 1
-            self.draw_rectangle(start_x_char, start_y_char, width, height, self.grid)
-        elif self.tool == "FILLED-RECTANGLE":
-            self.add_undo_action("Filled Rectangle")
-            if width < 0:
-                width = -width
-                start_x_char -= width
-            width += 1
-            if height < 0:
-                height = - height
-                start_y_char -= height
-            height += 1
-            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid, self.free_char)
-        elif self.tool == "LINE" or self.tool == "ARROW":
+        # if self.tool == "RECTANGLE":
+        #     self.add_undo_action("Rectangle")
+        #     if width < 0:
+        #         width = -width
+        #         start_x_char -= width
+        #     width += 1
+        #     if height < 0:
+        #         height = - height
+        #         start_y_char -= height
+        #     height += 1
+        #     self.draw_rectangle(start_x_char, start_y_char, width, height, self.grid)
+        # elif self.tool == "FILLED-RECTANGLE":
+        #     self.add_undo_action("Filled Rectangle")
+        #     if width < 0:
+        #         width = -width
+        #         start_x_char -= width
+        #     width += 1
+        #     if height < 0:
+        #         height = - height
+        #         start_y_char -= height
+        #     height += 1
+        #     self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid, self.free_char)
+        if self.tool == "LINE" or self.tool == "ARROW":
             self.add_undo_action(self.tool.capitalize())
             if width < 0:
                 width -= 1
