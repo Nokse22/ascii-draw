@@ -60,6 +60,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     free_button = Gtk.Template.Child()
     rectangle_button = Gtk.Template.Child()
     filled_rectangle_button = Gtk.Template.Child()
+    line_button = Gtk.Template.Child()
+    arrow_button = Gtk.Template.Child()
     freehand_brush_adjustment = Gtk.Template.Child()
 
     save_import_button = Gtk.Template.Child()
@@ -289,13 +291,19 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.freehand = Freehand(self.canvas)
         self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.freehand.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
-        self.freehand.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.freehand.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.rectangle = Rectangle(self.canvas)
         self.rectangle.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.filled_rectangle = FilledRectangle(self.canvas)
         self.filled_rectangle.bind_property('active', self.filled_rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+
+        self.line = Line(self.canvas)
+        self.line.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+
+        self.arrow = Line(self.canvas)
+        self.arrow.bind_property('active', self.arrow_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
     def add_palette_to_ui(self, palettes):
         for palette in palettes:

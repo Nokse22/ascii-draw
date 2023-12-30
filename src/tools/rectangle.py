@@ -99,7 +99,7 @@ class Rectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.canvas.preview_rectangle(start_x_char, start_y_char, width, height)
+        self.canvas.draw_rectangle(start_x_char, start_y_char, width, height, False)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -126,7 +126,7 @@ class Rectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.canvas.draw_rectangle(start_x_char, start_y_char, width, height)
+        self.canvas.draw_rectangle(start_x_char, start_y_char, width, height, True)
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return

@@ -104,7 +104,7 @@ class FilledRectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.preview_filled_rectangle(start_x_char, start_y_char, width, height, self._char)
+        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self._char, False)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -131,7 +131,7 @@ class FilledRectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self._char)
+        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self._char, True)
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
@@ -145,12 +145,7 @@ class FilledRectangle(GObject.GObject):
         if not self._active: return
         pass
 
-    def preview_filled_rectangle(self, start_x_char, start_y_char, width, height, char):
+    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, char, draw):
         for y in range(height):
             for x in range(width):
-                self.canvas.preview_char_at(start_x_char + x, start_y_char + y, char)
-
-    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, char):
-        for y in range(height):
-            for x in range(width):
-                self.canvas.draw_char_at(start_x_char + x, start_y_char + y, char)
+                self.canvas.set_char_at(start_x_char + x, start_y_char + y, char, draw)

@@ -117,13 +117,7 @@ class Canvas(Adw.Bin):
         self.undo_changes.insert(0, Change(undo_name))
         self.emit('undo_added', undo_name)
 
-    def draw_rectangle(self, start_x_char, start_y_char, width, height):
-        self._rectangle(start_x_char, start_y_char, width, height, self.draw_grid)
-
-    def preview_rectangle(self, start_x_char, start_y_char, width, height):
-        self._rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
-
-    def _rectangle(self, start_x_char, start_y_char, width, height, grid):
+    def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
         top_vertical = self.left_vertical()
         top_horizontal = self.top_horizontal()
 
@@ -133,17 +127,19 @@ class Canvas(Adw.Bin):
         if width <= 1 or height <= 1:
             return
 
-        self.horizontal_line(start_y_char, start_x_char, width, grid, top_horizontal)
-        self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, grid, bottom_horizontal)
-        self.vertical_line(start_x_char, start_y_char + 1, height - 1, grid, top_vertical)
-        self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, bottom_vertical)
+        self.horizontal_line(start_y_char, start_x_char, width, top_horizontal, draw)
+        self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, bottom_horizontal, draw)
+        self.vertical_line(start_x_char, start_y_char + 1, height - 1, top_vertical, draw)
+        self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, bottom_vertical, draw)
 
-        self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
-        self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.bottom_right())
-        self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
-        self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
+        self.set_char_at(start_x_char + width - 1, start_y_char, self.top_right(), draw)
+        self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.bottom_right(), draw)
+        self.set_char_at(start_x_char, start_y_char, self.top_left(), draw)
+        self.set_char_at(start_x_char, start_y_char + height - 1, self.bottom_left(), draw)
 
-    def horizontal_line(self, y, start_x, width, grid, char):
+    def horizontal_line(self, y, start_x, width, char, draw):
+        grid = self.draw_grid if draw else self.preview_grid
+
         if width > 0:
             for x in range(abs(width)):
                 child = grid.get_child_at(start_x + x, y)
@@ -175,7 +171,9 @@ class Canvas(Adw.Bin):
                     child.set_text(char)
                 self.changed_chars.append([start_x + x + width, y])
 
-    def vertical_line(self, x, start_y, length, grid, char):
+    def vertical_line(self, x, start_y, length, char, draw):
+        grid = self.draw_grid if draw else self.preview_grid
+
         if length > 0:
             for y in range(abs(length)):
                 child = grid.get_child_at(x, start_y + y)
@@ -204,9 +202,9 @@ class Canvas(Adw.Bin):
                     child.set_text(char)
                 self.changed_chars.append([x, start_y + y + length])
 
-    def set_char_at(self, x, y, grid, char):
-        # if char == " " or char == "":
-        #     return
+    def set_char_at(self, x, y, char, draw):
+        grid = self.draw_grid if draw else self.preview_grid
+
         child = grid.get_child_at(x, y)
         if child:
             if grid == self.draw_grid:
@@ -215,18 +213,10 @@ class Canvas(Adw.Bin):
             self.changed_chars.append([x, y])
 
     def preview_char_at(self, x, y, char):
-        self.trace_char_at(x, y, char, self.preview_grid)
+        self.set_char_at(x, y, self.preview_grid, char)
 
     def draw_char_at(self, x, y, char):
-        self.trace_char_at(x, y, char, self.draw_grid)
-
-    def trace_char_at(self, x, y, char, grid):
-        child = grid.get_child_at(x, y)
-        if child:
-            if grid == self.draw_grid:
-                self.undo_changes[0].add_change(x, y, child.get_text())
-            child.set_text(char)
-            self.changed_chars.append([x, y])
+        self.set_char_at(x, y, self.draw_grid, char)
 
     def clear_preview(self):
         self.clear(self.preview_grid)
