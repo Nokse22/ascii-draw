@@ -706,7 +706,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "SELECT"
         print("select")
-        self.sidebar_stack.set_visible_child_name("select_page")
+        self.sidebar_stack.set_visible_child_name("character_page")
 
     @Gtk.Template.Callback("on_choose_free")
     def on_choose_free(self, btn):

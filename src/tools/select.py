@@ -59,6 +59,8 @@ class Select(GObject.GObject):
         self.has_selection = False
         self.is_dragging = False
 
+        self.moved_text: str = ''
+
     @GObject.Property(type=bool, default=False)
     def active(self):
         return self._active
@@ -85,17 +87,29 @@ class Select(GObject.GObject):
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
 
-        print(f"""here: {this_x_char}, {this_y_char}
-selection start: {self.selection_start_x_char}, {self.selection_start_y_char}
-selection size: {self.selection_delta_char_x}, {self.selection_delta_char_y}
-dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
+#         print(f"""here: {this_x_char}, {this_y_char}
+# selection start: {self.selection_start_x_char}, {self.selection_start_y_char}
+# selection size: {self.selection_delta_char_x}, {self.selection_delta_char_y}
+# dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
 
         if (this_x_char > (self.selection_start_x_char + self.dragging_delta_char_x)
                 and this_x_char < (self.selection_start_x_char + self.selection_delta_char_x + self.dragging_delta_char_x)
                 and this_y_char > (self.selection_start_y_char + self.dragging_delta_char_y)
                 and this_y_char < (self.selection_start_y_char + self.selection_delta_char_y + self.dragging_delta_char_x)):
             self.is_dragging = True
-            print(f"dragging selection? {self.is_dragging}")
+
+            for y in range(1, int(self.selection_delta_char_y)):
+                for x in range(1, int(self.selection_delta_char_x)):
+                    # print(self.canvas.get_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y))
+                    self.moved_text += self.canvas.get_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y) or " "
+                self.moved_text += '\n'
+
+            print(self.moved_text)
+
+            # Delete selection
+            for y in range(1, int(self.selection_delta_char_y)):
+                for x in range(1, int(self.selection_delta_char_x)):
+                    self.canvas.set_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y, ' ', True)
         else:
             print("new selection")
             self.selection_start_x_char = this_x // self.x_mul
@@ -116,6 +130,11 @@ dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
         if self.is_dragging:
             self.dragging_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
             self.dragging_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
+
+            self.canvas.clear_preview()
+            self.canvas.draw_text(self.selection_start_x_char + self.dragging_delta_char_x + 1,
+                            self.selection_start_y_char + self.dragging_delta_char_y + 1, self.moved_text, False, False)
+
         else:
             self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
             self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
@@ -133,6 +152,9 @@ dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
             self.selection_start_y_char += self.dragging_delta_char_y
             self.is_dragging = False
 
+            self.canvas.clear_preview()
+            self.canvas.draw_text(self.selection_start_x_char + 1, self.selection_start_y_char + 1, self.moved_text, True, True)
+            self.moved_text = ''
             self.dragging_delta_char_x = 0
             self.dragging_delta_char_y = 0
 
@@ -140,6 +162,8 @@ dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
+
+        print("pressed")
 
         return
 
@@ -164,14 +188,11 @@ dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
 
     def on_click_stopped(self, click):
         if not self._active: return
-        pass
+        print("stopped")
 
     def on_click_released(self, click, arg, x, y):
         if not self._active: return
-
-        # self.has_selection = False
-
-        # print("unselected")
+        print("released")
 
     def drawing_function(self, area, cr, width, height, data):
         cr.save()

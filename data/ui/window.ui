@@ -343,67 +343,6 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkStackPage" id="select_stack_page">
-                            <property name="child">
-                              <object class="GtkBox">
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-top">6</property>
-                                <child>
-                                  <object class="GtkGrid">
-                                    <property name="column-spacing">6</property>
-                                    <property name="halign">center</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="row-spacing">6</property>
-                                    <property name="valign">start</property>
-                                    <child>
-                                      <object class="GtkButton">
-                                        <property name="icon-name">go-up-symbolic</property>
-                                        <layout>
-                                          <property name="column">1</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton">
-                                        <property name="icon-name">go-previous-symbolic</property>
-                                        <layout>
-                                          <property name="column">0</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton">
-                                        <property name="icon-name">go-next-symbolic</property>
-                                        <layout>
-                                          <property name="column">2</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton">
-                                        <property name="icon-name">go-down-symbolic</property>
-                                        <layout>
-                                          <property name="column">1</property>
-                                          <property name="row">2</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </property>
-                            <property name="icon-name">edit-select-all-symbolic</property>
-                            <property name="name">select_page</property>
-                            <property name="title">Select</property>
-                            <property name="visible" bind-source="select_button" bind-property="active">False</property>
-                          </object>
-                        </child>
-                        <child>
                           <object class="GtkStackPage" id="character_stack_page">
                             <property name="child">
                               <object class="GtkBox">
