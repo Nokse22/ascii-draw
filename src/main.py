@@ -59,19 +59,12 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
 
         self.create_action('new-palette', self.on_new_palette_action)
-        self.create_action('export-palettes', self.on_export_palettes_action)
+        self.create_action('new-palette-from-selection', self.on_new_palette_from_selection_action)
         self.create_action('import-palettes', self.on_import_palettes_action)
 
+        self.create_action('clear-canvas', self.on_clear_canvas_action)
+
         css = '''
-        .drawing-area{
-            // background-color: @window_bg_color;
-            // opacity:0.15;
-            // background-blend-mode: lighten;
-        }
-        .ascii-textview{
-
-        }
-
         .styles-preview{
             font-family: Monospace;
             font-size: 20px;
@@ -99,10 +92,6 @@ class AsciiDrawApplication(Adw.Application):
             font-family: Monospace;
             font-size: 20px;
             background: @window_bg_color;
-            /*background-size: 12px 24px;*/
-            /*background-image:
-                linear-gradient(to right, #aaaaaa 1px, transparent 1px),
-                linear-gradient(to bottom, #aaaaaa 1px, @window_bg_color 1px);*/
         }
         .font-preview{
             font-family: Monospace;
@@ -112,14 +101,10 @@ class AsciiDrawApplication(Adw.Application):
         .switcher button{
 	        margin-left:3px;
 	        margin-right:3px;
-            # background-color:transparent;
             transition: background-color 0ms linear;
         }
-        .switcher button:hover{
-	        # background-color:@shade_color;
-        }
-        .switcher button:checked{
-	        # background-color:@headerbar_shade_color;
+        .selected-char-button{
+            border: 2px solid @accent_color;
         }
         '''
         css_provider = Gtk.CssProvider()
@@ -141,7 +126,10 @@ class AsciiDrawApplication(Adw.Application):
         builder.get_object("add_button").connect("clicked", on_add_clicked, self.win)
         builder.get_object("new_palette_window").present()
 
-    def on_export_palettes_action(self, *args):
+    def on_clear_canvas_action(self, *args):
+        self.win.canvas.clear_canvas()
+
+    def on_new_palette_from_selection_action(self, *args):
         pass
 
     def on_import_palettes_action(self, *args):

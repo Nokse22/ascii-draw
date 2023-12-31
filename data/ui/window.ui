@@ -57,7 +57,7 @@
                                       <object class="GtkTextView">
                                         <property name="buffer">
                                           <object class="GtkTextBuffer" id="text_entry_buffer">
-                                            <signal name="changed" handler="insert_text_preview"/>
+                                            <signal name="changed" handler="preview_text" after="yes"/>
                                           </object>
                                         </property>
                                         <property name="css-classes">card</property>
@@ -94,7 +94,7 @@
                                   <object class="GtkButton">
                                     <property name="css-classes">suggested-action</property>
                                     <property name="label">Enter</property>
-                                    <signal name="clicked" handler="insert_text_definitely"/>
+                                    <signal name="clicked" handler="insert_text"/>
                                   </object>
                                 </child>
                               </object>
@@ -184,7 +184,7 @@
                                     <property name="css-classes">boxed-list</property>
                                     <property name="selection-mode">none</property>
                                     <child>
-                                      <object class="AdwComboRow" id="table_types_drop_down">
+                                      <object class="AdwComboRow" id="table_types_combo">
                                         <property name="model">
                                           <object class="GtkStringList">
                                             <items>
@@ -206,6 +206,7 @@
                                   <object class="GtkButton">
                                     <property name="css-classes">suggested-action</property>
                                     <property name="label">Enter</property>
+                                    <signal name="clicked" handler="insert_table"/>
                                   </object>
                                 </child>
                               </object>
@@ -567,7 +568,7 @@
                                 </child>
                               </object>
                             </property>
-                            <property name="icon-name">format-justify-fill-symbolic</property>
+                            <property name="icon-name">line-style-symbolic</property>
                             <property name="name">style_page</property>
                             <property name="title">Style</property>
                           </object>
@@ -815,14 +816,21 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
-                    <property name="css-classes">error
-flat</property>
+                  <object class="GtkToggleButton" id="primary_char_button">
+                    <property name="active">True</property>
+                    <property name="css-classes">circular</property>
                     <property name="halign">end</property>
                     <property name="hexpand">True</property>
-                    <property name="icon-name">user-trash-symbolic</property>
-                    <property name="tooltip-text">Delete all</property>
-                    <signal name="clicked" handler="on_delete_all_button_clicked"/>
+                    <property name="label">#</property>
+                    <property name="tooltip-text">Primary Character</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="secondary_char_button">
+                    <property name="css-classes">circular</property>
+                    <property name="group">primary_char_button</property>
+                    <property name="label">+</property>
+                    <property name="tooltip-text">Secondary Character</property>
                   </object>
                 </child>
               </object>
@@ -836,8 +844,18 @@ flat</property>
       <menu id="primary_menu">
         <section>
           <item>
+            <attribute name="action">app.clear-canvas</attribute>
+            <attribute name="label">Clear Canvas</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
             <attribute name="action">app.new-palette</attribute>
             <attribute name="label">New char palette</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.new-palette-from-selection</attribute>
+            <attribute name="label">New Palette From Selection</attribute>
           </item>
         </section>
         <section>

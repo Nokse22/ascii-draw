@@ -153,8 +153,6 @@ class Arrow(GObject.GObject):
         end_horizontal = self.canvas.top_horizontal()
         start_horizontal = self.canvas.bottom_horizontal()
 
-        arrow = False
-
         if width > 0 and height > 0:
             if self.line_direction == [1, 0]:
                 self.canvas.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 1, start_horizontal, draw)
@@ -199,7 +197,7 @@ class Arrow(GObject.GObject):
                     self.canvas.vertical_line(start_x_char + width + 1, start_y_char + 1, height - 1, end_vertical, draw)
                 if width != 1 and height != 1:
                     self.canvas.set_char_at(start_x_char + width + 1, start_y_char, self.canvas.top_left(), draw)
-                self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
+                self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
         elif width < 0 and height < 0:
             if self.line_direction == [1, 0]:
                 self.canvas.horizontal_line(start_y_char + height + 1, start_x_char, width + 1, end_horizontal, draw)
@@ -223,10 +221,10 @@ class Arrow(GObject.GObject):
         elif height == 1:
             self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.bottom_horizontal(), draw)
 
-        if width < 0:
-            self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
-        else:
-            self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.right_arrow())
+        # if width < 0 and height == 1:
+        #     self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.left_arrow(), draw)
+        # else:
+        #     self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.right_arrow(), draw)
 
     def normalize_vector(self, vector):
         magnitude = math.sqrt(vector[0]**2 + vector[1]**2)

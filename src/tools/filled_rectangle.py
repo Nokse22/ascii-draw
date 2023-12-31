@@ -29,7 +29,6 @@ class FilledRectangle(GObject.GObject):
         self.canvas = _canvas
 
         self._active = False
-        self._char = '#'
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
@@ -63,15 +62,6 @@ class FilledRectangle(GObject.GObject):
         self._active = value
         self.notify('active')
 
-    @GObject.Property(type=str, default='#')
-    def char(self):
-        return self._char
-
-    @char.setter
-    def char(self, value):
-        self._char = value
-        self.notify('char')
-
     def on_drag_begin(self, gesture, start_x, start_y):
         if not self._active: return
         self.start_x = start_x
@@ -104,7 +94,7 @@ class FilledRectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self._char, False)
+        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, False)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -131,7 +121,7 @@ class FilledRectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self._char, True)
+        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, True)
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
@@ -145,7 +135,24 @@ class FilledRectangle(GObject.GObject):
         if not self._active: return
         pass
 
-    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, char, draw):
-        for y in range(height):
-            for x in range(width):
-                self.canvas.set_char_at(start_x_char + x, start_y_char + y, char, draw)
+    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, draw):
+
+        for x in range(width):
+            self.canvas.draw_primary_at(start_x_char + x, start_y_char, draw)
+
+        # Draw the bottom border
+        for x in range(width):
+            self.canvas.draw_primary_at(start_x_char + x, start_y_char + height - 1, draw)
+
+        # Draw the left border (avoid filling the corners)
+        for y in range(1, height - 1):
+            self.canvas.draw_primary_at(start_x_char, start_y_char + y, draw)
+
+        # Draw the right border (avoid filling the corners)
+        for y in range(1, height - 1):
+            self.canvas.draw_primary_at(start_x_char + width - 1, start_y_char + y, draw)
+
+        # Fill the inside of the rectangle
+        for y in range(1, height - 1):
+            for x in range(1, width - 1):
+                self.canvas.draw_secondary_at(start_x_char + x, start_y_char + y, draw)

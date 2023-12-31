@@ -33,11 +33,10 @@ import unicodedata
 import emoji
 import os
 
-@Gtk.Template(resource_path='/io/github/nokse22/asciidraw/window.ui')
+@Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/window.ui')
 class AsciiDrawWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'AsciiDrawWindow'
 
-    # drawing_area = Gtk.Template.Child()
     toast_overlay = Gtk.Template.Child()
     char_flow_box = Gtk.Template.Child()
     box_char_flow_box = Gtk.Template.Child()
@@ -62,11 +61,18 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     filled_rectangle_button = Gtk.Template.Child()
     line_button = Gtk.Template.Child()
     arrow_button = Gtk.Template.Child()
+    select_button = Gtk.Template.Child()
+    text_button = Gtk.Template.Child()
+    free_line_button = Gtk.Template.Child()
+    table_button = Gtk.Template.Child()
+    picker_button = Gtk.Template.Child()
+
     freehand_brush_adjustment = Gtk.Template.Child()
 
+    primary_char_button = Gtk.Template.Child()
+    secondary_char_button = Gtk.Template.Child()
+
     save_import_button = Gtk.Template.Child()
-    # preview_grid = Gtk.Template.Child()
-    # grid = Gtk.Template.Child()
     lines_styles_box = Gtk.Template.Child()
 
     sidebar_stack = Gtk.Template.Child()
@@ -75,7 +81,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     eraser_scale = Gtk.Template.Child()
     columns_spin = Gtk.Template.Child()
     rows_box = Gtk.Template.Child()
-    table_types_drop_down = Gtk.Template.Child()
+    table_types_combo = Gtk.Template.Child()
 
     sidebar_stack_switcher = Gtk.Template.Child()
 
@@ -94,15 +100,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
-
-        self.x_mul = 12
-        self.y_mul = 24
-
-        self.canvas_x = 50
-        self.canvas_y = 25
-
-        self.canvas_max_x = 100
-        self.canvas_max_y = 50
 
         self.brush_sizes = [
                 [[0,0] ],
@@ -142,6 +139,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.flip = True
 
         self.canvas = Canvas(self.styles, self.flip)
+        self.canvas.bind_property('primary_selected', self.primary_char_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.canvas.bind_property('primary_char', self.primary_char_button, 'label', GObject.BindingFlags.BIDIRECTIONAL)
+        self.canvas.bind_property('secondary_char', self.secondary_char_button, 'label', GObject.BindingFlags.BIDIRECTIONAL)
         self.canvas.connect("undo-added", self.on_undo_added)
         self.toast_overlay.set_child(self.canvas)
 
@@ -166,37 +166,41 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
             self.lines_styles_box.append(style_btn)
 
-        # self.drawing_area.set_draw_func(self.drawing_area_draw, None)
+        self.freehand = Freehand(self.canvas)
+        self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.freehand.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.freehand.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.start_x = 0
-        self.start_y = 0
-        self.end_x = 0
-        self.end_y = 0
+        self.rectangle = Rectangle(self.canvas)
+        self.rectangle.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.prev_x = 0
-        self.prev_y = 0
+        self.filled_rectangle = FilledRectangle(self.canvas)
+        self.filled_rectangle.bind_property('active', self.filled_rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.tool = ""
-        self.style = 1
-        self.free_char = "+"
-        self.free_size = 1
-        self.eraser_size = 1
+        self.line = Line(self.canvas)
+        self.line.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.chars = ""
+        self.freehand_line = FreehandLine(self.canvas)
+        self.freehand_line.bind_property('active', self.free_line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.prev_char = ""
-        self.prev_char_pos = []
-        self.prev_pos = []
+        self.arrow = Arrow(self.canvas)
+        self.arrow.bind_property('active', self.arrow_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.changed_chars = []
+        self.select = Select(self.canvas)
+        self.select.bind_property('active', self.select_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.line_direction = []
-        self.prev_line_pos = [0,0]
+        self.text = Text(self.canvas)
+        self.text.bind_property('active', self.text_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.text.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.text.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.undo_changes = []
+        self.table = Table(self.canvas, self.rows_box)
+        self.table.bind_property('active', self.table_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.table.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.table.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.text_x = 0
-        self.text_y = 0
+        self.piker = Picker(self.canvas)
+        self.piker.bind_property('active', self.picker_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
         ranges_and_pages = [
             [[  range(0x0021, 0x007F),  # Basic Latin
@@ -288,23 +292,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.add_palette_to_ui(self.palettes)
 
-        self.freehand = Freehand(self.canvas)
-        self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.freehand.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
-        # self.freehand.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
-
-        self.rectangle = Rectangle(self.canvas)
-        self.rectangle.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-
-        self.filled_rectangle = FilledRectangle(self.canvas)
-        self.filled_rectangle.bind_property('active', self.filled_rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-
-        self.line = Line(self.canvas)
-        self.line.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-
-        self.arrow = Line(self.canvas)
-        self.arrow.bind_property('active', self.arrow_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-
     def add_palette_to_ui(self, palettes):
         for palette in palettes:
             flow_box = Gtk.FlowBox(selection_mode=2, margin_top=3, margin_bottom=3, margin_start=3, margin_end=3, valign=Gtk.Align.START)
@@ -357,38 +344,29 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if pos + 1 == self.chars_carousel.get_n_pages() - 1:
             btn.set_sensitive(False)
 
-    @Gtk.Template.Callback("preview_table")
-    def preview_table(self, entry=None, arg=None):
-        self.clear(None, self.preview_grid)
-        table_type = self.table_types_drop_down.get_selected()
-        self.insert_table(table_type, self.preview_grid)
+    @Gtk.Template.Callback("insert_text")
+    def insert_text_callback(self, *args):
+        self.text.insert_text()
 
-    @Gtk.Template.Callback("insert_text_definitely")
-    def insert_text_definitely(self, btn):
-        print("clicked")
-        start = self.text_entry_buffer.get_start_iter()
-        end = self.text_entry_buffer.get_end_iter()
-        text = self.text_entry_buffer.get_text(start, end, False)
-        if text == "":
-            return
-        self.add_undo_action(self.tool.capitalize())
-        self.clear(None, self.preview_grid)
-        self.insert_text(self.grid, self.text_x, self.text_y, text)
+    @Gtk.Template.Callback("preview_text")
+    def preview_text_callback(self,  *args):
+        self.text.preview_text()
 
-    @Gtk.Template.Callback("insert_text_preview")
-    def insert_text_preview(self, widget):
-        start = self.text_entry_buffer.get_start_iter()
-        end = self.text_entry_buffer.get_end_iter()
-        text = self.text_entry_buffer.get_text(start, end, False)
-        self.clear(None, self.preview_grid)
-        self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
+    @Gtk.Template.Callback("preview_table") # TABLE
+    def preview_table_callback(self, *args):
+        self.table.preview_table()
+        # self.clear(None, self.preview_grid)
+        # table_type = self.table_types_combo.get_selected()
+        # self.insert_table(table_type, self.preview_grid)
 
-    def insert_table_definitely(self, btn):
-        table_type = self.table_types_drop_down.get_selected()
-        self.add_undo_action("Table")
-        self.insert_table(table_type, self.grid)
+    @Gtk.Template.Callback("insert_table") # TABLE
+    def insert_table_callback(self, btn):
+        self.table.insert_table()
+        # table_type = self.table_types_combo.get_selected()
+        # self.add_undo_action("Table")
+        # self.insert_table(table_type, self.grid)
 
-    @Gtk.Template.Callback("on_reset_row_clicked")
+    @Gtk.Template.Callback("on_reset_row_clicked") # TABLE
     def on_reset_row_clicked(self, btn):
         child = self.rows_box.get_first_child()
         prev_child = None
@@ -399,7 +377,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.columns_spin.set_sensitive(True)
         self.rows_number = 0
 
-    @Gtk.Template.Callback("on_add_row_clicked")
+    @Gtk.Template.Callback("on_add_row_clicked") # TABLE
     def on_add_row_clicked(self, btn):
         self.rows_number += 1
         self.columns_spin.set_sensitive(False)
@@ -418,19 +396,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("font_row_selected")
     def font_row_selected(self, list_box, row):
-        if self.tool == "TEXT":
-            self.selected_font = list_box.get_selected_row().get_child().get_name()
-            start = self.text_entry_buffer.get_start_iter()
-            end = self.text_entry_buffer.get_end_iter()
-            text = self.text_entry_buffer.get_text(start, end, False)
-            self.clear(None, self.preview_grid)
-            self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
-        print(self.selected_font)
+        self.text.set_selected_font(list_box.get_selected_row().get_child().get_name())
+        self.text.preview_text()
 
-    @Gtk.Template.Callback("on_delete_all_button_clicked")
-    def on_delete_all_button_clicked(self, btn):
-        # self.clear(btn, self.grid)
-        self.canvas.clear_canvas()
+    # @Gtk.Template.Callback("on_delete_all_button_clicked")
+    # def on_delete_all_button_clicked(self, btn):
+    #     self.canvas.clear_canvas()
 
     # @Gtk.Template.Callback("update_area_width")
     # def update_area_width(self):
@@ -537,9 +508,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             print(f"Error writing to {file_path}.")
 
     def change_char(self, btn, flow_box):
-        self.free_char = btn.get_label()
-        self.canvas.char = btn.get_label()
-        print(f"0x{ord(self.free_char):04X}")
+        if self.primary_char_button.get_active():
+            self.primary_char_button.set_label(btn.get_label())
+            self.canvas.primary_char = btn.get_label()
+        else:
+            self.secondary_char_button.set_label(btn.get_label())
+            self.canvas.secondary_char = btn.get_label()
 
     def show_sidebar(self, btn):
         self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
@@ -591,50 +565,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         x = int(self.width_spin.get_value())
         y = int(self.height_spin.get_value())
 
-        self.change_canvas_size(x, y)
-
-    def change_canvas_size(self, final_x, final_y):
-        x_delta = final_x - self.canvas_x
-        y_delta = final_y - self.canvas_y
-
-        if y_delta > 0:
-            for line in range(y_delta):
-                if self.canvas_y + 1 > self.canvas_max_y:
-                    break
-                self.canvas_y += 1
-                for x in range(self.canvas_x):
-                    self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
-                    self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
-        elif y_delta < 0:
-            for line in range(abs(y_delta)):
-                if self.canvas_y == 0:
-                    break
-                self.canvas_y -= 1
-                for x in range(self.canvas_x):
-                    self.grid.remove(self.grid.get_child_at(x, self.canvas_y))
-                    self.preview_grid.remove(self.preview_grid.get_child_at(x, self.canvas_y))
-
-        if x_delta > 0:
-            for column in range(x_delta):
-                if self.canvas_x + 1 > self.canvas_max_x:
-                    break
-                self.canvas_x += 1
-                for y in range(self.canvas_y):
-                    self.grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
-                    self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
-        elif x_delta < 0:
-            for column in range(abs(x_delta)):
-                if self.canvas_x == 0:
-                    break
-                self.canvas_x -= 1
-                for y in range(self.canvas_y):
-                    self.grid.remove(self.grid.get_child_at(self.canvas_x, y))
-                    self.preview_grid.remove(self.preview_grid.get_child_at(self.canvas_x, y))
-
-        self.drawing_area_width = self.drawing_area.get_allocation().width
-
-        self.width_spin.set_value(self.canvas_x)
-        self.height_spin.set_value(self.canvas_y)
+        self.canvas.change_canvas_size(x, y)
 
     def change_style(self, btn, box):
         child = box.get_first_child()
@@ -643,10 +574,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if child.get_active():
                 self.style = index
                 self.canvas.style = index
-                if self.tool == "TABLE":
-                    self.preview_table()
-                elif self.tool == "TREE":
-                    self.preview_tree()
+                # if self.tool == "TABLE":
+                #     self.preview_table()
+                # elif self.tool == "TREE":
+                #     self.preview_tree()
                 return
             child = child.get_next_sibling()
             index += 1
@@ -677,23 +608,23 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         x_char = int(x / self.x_mul)
         y_char = int(y / self.y_mul)
 
-        if self.tool == "TEXT":
-            self.text_x = x_char
-            self.text_y = y_char
-            start = self.text_entry_buffer.get_start_iter()
-            end = self.text_entry_buffer.get_end_iter()
-            text = self.text_entry_buffer.get_text(start, end, False)
-            self.clear(None, self.preview_grid)
-            self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
+        # if self.tool == "TEXT":
+        #     self.text_x = x_char
+        #     self.text_y = y_char
+        #     start = self.text_entry_buffer.get_start_iter()
+        #     end = self.text_entry_buffer.get_end_iter()
+        #     text = self.text_entry_buffer.get_text(start, end, False)
+        #     self.clear(None, self.preview_grid)
+        #     self.insert_text(self.preview_grid, self.text_x, self.text_y, text)
 
-        elif self.tool == "TABLE":
-            self.table_x = x_char
-            self.table_y = y_char
-            self.clear(None, self.preview_grid)
-            table_type = self.table_types_drop_down.get_selected()
-            self.insert_table(table_type, self.preview_grid)
+        # if self.tool == "TABLE":
+        #     self.table_x = x_char
+        #     self.table_y = y_char
+        #     self.clear(None, self.preview_grid)
+        #     table_type = self.table_types_combo.get_selected()
+        #     self.insert_table(table_type, self.preview_grid)
 
-        elif self.tool == "TREE":
+        if self.tool == "TREE":
             self.tree_x = x_char
             self.tree_y = y_char
             self.preview_tree()
@@ -904,63 +835,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.end_x = width * self.x_mul
         self.end_y = height * self.y_mul
 
-        # if self.tool == "FREE":
-        #     self.draw_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
-
         if self.tool == "ERASER":
             self.erase_char((self.start_x + self.end_x)/self.x_mul, (self.start_y + self.end_y)/self.y_mul)
 
-        # elif self.tool == "RECTANGLE":
-        #     if self.prev_x != width or self.prev_y != height:
-        #         self.clear(None, self.preview_grid)
-        #         self.prev_x = width
-        #         self.prev_y = height
-        #     if width < 0:
-        #         width = -width
-        #         start_x_char -= width
-        #     width += 1
-        #     if height < 0:
-        #         height = - height
-        #         start_y_char -= height
-        #     height += 1
-        #     self.draw_rectangle(start_x_char, start_y_char, width, height, self.preview_grid)
-        # elif self.tool == "FILLED-RECTANGLE":
-        #     if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height) or math.copysign(1, self.prev_x) != math.copysign(1, width) or math.copysign(1, self.prev_y) != math.copysign(1, height):
-        #         self.clear(None, self.preview_grid)
-        #     self.prev_x = width
-        #     self.prev_y = height
-        #     self.changed_chars = []
-
-        #     if width < 0:
-        #         width = -width
-        #         start_x_char -= width
-        #     width += 1
-        #     if height < 0:
-        #         height = - height
-        #         start_y_char -= height
-        #     height += 1
-        #     self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.preview_grid, self.free_char)
-        elif self.tool == "LINE" or self.tool == "ARROW":
-            self.clear(None, self.preview_grid)
-            if width < 0:
-                width -= 1
-            else:
-                width += 1
-            if height < 0:
-                height -= 1
-            else:
-                height += 1
-            if self.prev_line_pos != [start_x_char + width, start_y_char + height]:
-                self.line_direction = self.normalize_vector([start_x_char + width - self.prev_line_pos[0], start_y_char + height - self.prev_line_pos[1]])
-                self.line_direction = [abs(self.line_direction[0]), abs(self.line_direction[1])]
-            self.draw_line(start_x_char, start_y_char, width, height, self.preview_grid)
-
         elif self.tool == "FREE-LINE":
             self.draw_free_line(start_x_char + width, start_y_char + height, self.grid)
-            self.drawing_area.queue_draw()
-
-        elif self.tool == "SELECT":
-            # self.draw_free_line(start_x_char + width, start_y_char + height, self.grid)
             self.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
@@ -976,41 +855,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.prev_x = 0
         self.prev_y = 0
 
-        # if self.tool == "RECTANGLE":
-        #     self.add_undo_action("Rectangle")
-        #     if width < 0:
-        #         width = -width
-        #         start_x_char -= width
-        #     width += 1
-        #     if height < 0:
-        #         height = - height
-        #         start_y_char -= height
-        #     height += 1
-        #     self.draw_rectangle(start_x_char, start_y_char, width, height, self.grid)
-        # elif self.tool == "FILLED-RECTANGLE":
-        #     self.add_undo_action("Filled Rectangle")
-        #     if width < 0:
-        #         width = -width
-        #         start_x_char -= width
-        #     width += 1
-        #     if height < 0:
-        #         height = - height
-        #         start_y_char -= height
-        #     height += 1
-        #     self.draw_filled_rectangle(start_x_char, start_y_char, width, height, self.grid, self.free_char)
-        if self.tool == "LINE" or self.tool == "ARROW":
-            self.add_undo_action(self.tool.capitalize())
-            if width < 0:
-                width -= 1
-            else:
-                width += 1
-            if height < 0:
-                height -= 1
-            else:
-                height += 1
-            self.draw_line(start_x_char, start_y_char, width, height, self.grid)
-
-        elif self.tool == "FREE-LINE":
+        if self.tool == "FREE-LINE":
             self.prev_char = ""
             self.prev_char_pos = []
             self.prev_pos = []
@@ -1023,14 +868,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def on_undo_added(self, widget, undo_name):
         self.undo_button.set_sensitive(True)
         self.undo_button.set_tooltip_text(_("Undo ") + undo_name)
-
-    def drawing_area_draw(self, area, cr, width, height, data):
-        cr.save()
-        cr.set_source_rgb(0.208, 0.518, 0.894)
-        if self.tool == "SELECT":
-            cr.rectangle((self.start_x // self.x_mul) * self.x_mul + self.x_mul/2, (self.start_y // self.y_mul) * self.y_mul + self.y_mul/2, self.end_x, self.end_y)
-        cr.stroke()
-        cr.restore()
 
     def normalize_vector(self, vector):
         magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
@@ -1048,7 +885,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         direction = [int(pos[0] - self.prev_pos[0]), int(pos[1] - self.prev_pos[1])]
         dir2 = direction
         direction = self.normalize_vector(direction)
-        prev_direction = [int(self.prev_pos[0] - self.prev_char_pos[0]), int(self.prev_pos[1] - self.prev_char_pos[1])]
+        prev_direction = [int(self.prev_pos[0] - self.prev_char_pos[0]),
+                                    int(self.prev_pos[1] - self.prev_char_pos[1])]
 
         if direction == [1, 0] or direction == [-1, 0]:
             self.set_char_at(new_x, new_y, grid, self.bottom_horizontal())
@@ -1297,79 +1135,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     prev_index -= 1
             y += 1
 
-    def insert_table(self, table_type, grid):
-        child = self.rows_box.get_first_child()
-        columns_widths = []
-        table = []
-        column = 0
-        while child != None:
-            this_row = []
-            entry = child.get_first_child()
-            while entry != None:
-                value = entry.get_text()
-                if len(columns_widths) < column + 1:
-                    columns_widths.append(len(value))
-                elif len(value) > columns_widths[column]:
-                    columns_widths[column] = len(value)
-                this_row.append(value)
-                columns_widths
-                entry = entry.get_next_sibling()
-                column += 1
-            column = 0
-            table.append(this_row)
-            child = child.get_next_sibling()
-
-        if len(columns_widths) == 0:
-            return
-
-        width = 1
-        for column_width in columns_widths:
-            width += column_width + 1
-
-        if table_type == 1: # all divided
-            height = 1 + self.rows_number * 2
-        elif table_type == 0: # first line divided
-            height = 3 + self.rows_number
-        else: # not divided
-            height = 2 + self.rows_number
-
-        self.draw_filled_rectangle(self.table_x, self.table_y, width, height, grid, " ")
-        self.draw_rectangle(self.table_x, self.table_y, width, height, grid)
-
-        x = self.table_x
-        for column in range(self.columns_number - 1):
-            x += columns_widths[column] + 1
-            self.vertical_line(x, self.table_y + 1, height - 2, grid, self.right_vertical())
-            self.set_char_at(x, self.table_y + height - 1, grid, self.top_intersect())
-            self.set_char_at(x, self.table_y, grid, self.bottom_intersect())
-
-        y = self.table_y
-        if table_type == 1: # all divided
-            for row in range(self.rows_number - 1):
-                y += 2
-                self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
-                self.set_char_at(self.table_x, y, grid, self.right_intersect())
-                self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
-        elif table_type == 0: # first line divided
-            y += 2
-            self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
-            self.set_char_at(self.table_x, y, grid, self.right_intersect())
-            self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
-
-        y = self.table_y + 1
-        x = self.table_x + 1
-        for index_row, row in enumerate(table):
-            for index, column in enumerate(row):
-                self.insert_text(grid, x, y, column)
-                x += columns_widths[index] + 1
-            if table_type == 1: # all divided
-                y += 2
-            elif table_type == 0 and index_row == 0: # first line divided
-                y += 2
-            else:
-                y += 1
-            x = self.table_x + 1
-
     def draw_line(self, start_x_char, start_y_char, width, height, grid):
         arrow = self.tool == "ARROW"
 
@@ -1534,22 +1299,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 self.changed_chars.append([start_x + x + width, y])
 
     @Gtk.Template.Callback("undo_first_change")
-    def undo_first_change(self, btn=None):
-        try:
-            change_object = self.undo_changes[0]
-        except:
-            return
-        for change in change_object.changes:
-            child = self.grid.get_child_at(change[0], change[1])
-            if not child:
-                continue
-            child.set_text(change[2])
-        self.undo_changes.pop(0)
-        if len(self.undo_changes) == 0:
-            self.undo_button.set_sensitive(False)
-            self.undo_button.set_tooltip_text("")
-        else:
-            self.undo_button.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
+    def undo_first_change(self, btn):
+        self.canvas.undo(btn)
 
     def top_horizontal(self):
         return self.styles[self.style - 1][0]
@@ -1604,44 +1355,33 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def select_rectangle_tool(self):
         self.rectangle_button.set_active(True)
-        self.tool = "RECTANGLE"
 
     def select_filled_rectangle_tool(self):
         self.filled_rectangle_button.set_active(True)
-        self.tool = "FILLED-RECTANGLE"
 
     def select_line_tool(self):
         self.line_button.set_active(True)
-        self.tool = "LINE"
 
     def select_text_tool(self):
         self.text_button.set_active(True)
-        self.tool = "TEXT"
 
     def select_table_tool(self):
         self.table_button.set_active(True)
-        self.tool = "TABLE"
 
     def select_tree_tool(self):
         self.tree_button.set_active(True)
-        self.tool = "TREE"
 
-    # def select_free_tool(self):
-    #     self.free_button.set_active(True)
-    #     self.tool = "FREE"
+    def select_free_tool(self):
+        self.free_button.set_active(True)
 
     def select_eraser_tool(self):
         self.eraser_button.set_active(True)
-        self.tool = "ERASER"
 
     def select_arrow_tool(self):
         self.arrow_button.set_active(True)
-        self.tool = "ARROW"
 
     def select_free_line_tool(self):
         self.free_line_button.set_active(True)
-        self.tool = "FREE-LINE"
 
     def select_picker_tool(self):
         self.picker_button.set_active(True)
-        self.tool = "PICKER"

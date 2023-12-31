@@ -23,6 +23,7 @@ from gi.repository import Gdk, Gio, GObject
 
 import threading
 import math
+import emoji
 
 class Change():
     def __init__(self, _name):
@@ -38,7 +39,7 @@ class Change():
     def __repr__(self):
         return f"The change has {len(self.changes)} changes"
 
-@Gtk.Template(resource_path='/io/github/nokse22/asciidraw/canvas.ui')
+@Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/canvas.ui')
 class Canvas(Adw.Bin):
     __gtype_name__ = 'Canvas'
     drawing_area = Gtk.Template.Child()
@@ -53,6 +54,11 @@ class Canvas(Adw.Bin):
         super().__init__()
 
         self.styles = _styles
+        self.primary_char = '#'
+        self.secondary_char = '+'
+
+        self.primary_selected = True
+
         self.flip = _flip
         self._style = 1
 
@@ -89,14 +95,35 @@ class Canvas(Adw.Bin):
         self.undo_changes = []
         self.changed_chars = []
 
-    @GObject.Property(type=str, default='#')
-    def char(self):
-        return self._char
+        self.canvas_max_x = 100
+        self.canvas_max_y = 50
 
-    @char.setter
-    def char(self, value):
-        self._char = value
-        self.notify('char')
+    @GObject.Property(type=bool, default=True)
+    def primary_selected(self):
+        return self._primary_selected
+
+    @primary_selected.setter
+    def primary_selected(self, value):
+        self._primary_selected = value
+        self.notify('primary_selected')
+
+    @GObject.Property(type=str, default='#')
+    def primary_char(self):
+        return self._primary_char
+
+    @primary_char.setter
+    def primary_char(self, value):
+        self._primary_char = value
+        self.notify('primary_char')
+
+    @GObject.Property(type=str, default='#')
+    def secondary_char(self):
+        return self._secondary_char
+
+    @secondary_char.setter
+    def secondary_char(self, value):
+        self._secondary_char = value
+        self.notify('secondary_char')
 
     @GObject.Property(type=int, default=0)
     def style(self):
@@ -107,6 +134,23 @@ class Canvas(Adw.Bin):
         self._style = value
         self.notify('style')
 
+    def undo(self, btn):
+        try:
+            change_object = self.undo_changes[0]
+        except:
+            return
+        for change in change_object.changes:
+            child = self.draw_grid.get_child_at(change[0], change[1])
+            if not child:
+                continue
+            child.set_text(change[2])
+        self.undo_changes.pop(0)
+        if len(self.undo_changes) == 0:
+            btn.set_sensitive(False)
+            btn.set_tooltip_text("")
+        else:
+            btn.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
+
     def draw_char(self, x_coord, y_coord, char):
         child = self.draw_grid.get_child_at(x_coord, y_coord)
         if child:
@@ -116,6 +160,78 @@ class Canvas(Adw.Bin):
     def add_undo_action(self, undo_name):
         self.undo_changes.insert(0, Change(undo_name))
         self.emit('undo_added', undo_name)
+
+    def get_char_at(self, x: int, y: int):
+        return self.draw_grid.get_child_at(x, y).get_text()
+
+    def set_selected_char(self, char):
+        if self._primary_selected:
+            self.primary_char = char
+        else:
+            self.secondary_char = char
+
+    def get_selected_char(self):
+        if self._primary_selected:
+            return self.primary_char
+        return self.secondary_char
+
+    def draw_text(self, start_x, start_y, text, transparent, draw):
+        grid = self.draw_grid if draw else self.preview_grid
+        # print(text)
+        x = start_x
+        y = start_y
+        for char in text:
+            if x >= self.canvas_x:
+                if ord(char) == 10: # \n char
+                    y += 1
+                    x = start_x
+                continue
+            if y >= self.canvas_y:
+                break
+            if emoji.is_emoji(char):
+                continue
+            child = grid.get_child_at(x, y)
+            if not child:
+                continue
+            elif ord(char) < 32: # empty chars
+                if ord(char) == 10: # \n char
+                    y += 1
+                    x = start_x
+                    continue
+                if ord(char) == 9: # tab
+                    for i in range(4):
+                        if transparent:
+                            if self.flip:
+                                x -= 1
+                            else:
+                                x += 1
+                            continue
+                        child = grid.get_child_at(x, y)
+                        if not child:
+                            continue
+                        if grid == self.draw_grid:
+                            self.undo_changes[0].add_change(x, y, child.get_text())
+                        child.set_text(" ")
+                        self.changed_chars.append([x, y])
+                        if self.flip:
+                            x -= 1
+                        else:
+                            x += 1
+                    continue
+            elif char == " " and transparent:
+                if self.flip:
+                    x -= 1
+                else:
+                    x += 1
+                continue
+            if grid == self.draw_grid:
+                self.undo_changes[0].add_change(x, y, child.get_text())
+            child.set_text(char)
+            self.changed_chars.append([x, y])
+            if self.flip:
+                x -= 1
+            else:
+                x += 1
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
         top_vertical = self.left_vertical()
@@ -212,6 +328,33 @@ class Canvas(Adw.Bin):
             child.set_text(char)
             self.changed_chars.append([x, y])
 
+    def draw_at(self, x, y):
+        child = self.draw_grid.get_child_at(x, y)
+        if child:
+            self.undo_changes[0].add_change(x, y, child.get_text())
+            child.set_text(self.get_selected_char())
+            self.changed_chars.append([x, y])
+
+    def draw_primary_at(self, x, y, draw):
+        grid = self.draw_grid if draw else self.preview_grid
+
+        child = grid.get_child_at(x, y)
+        if child:
+            if grid == self.draw_grid:
+                self.undo_changes[0].add_change(x, y, child.get_text())
+            child.set_text(self.primary_char)
+            self.changed_chars.append([x, y])
+
+    def draw_secondary_at(self, x, y, draw):
+        grid = self.draw_grid if draw else self.preview_grid
+
+        child = grid.get_child_at(x, y)
+        if child:
+            if grid == self.draw_grid:
+                self.undo_changes[0].add_change(x, y, child.get_text())
+            child.set_text(self.secondary_char)
+            self.changed_chars.append([x, y])
+
     def preview_char_at(self, x, y, char):
         self.set_char_at(x, y, self.preview_grid, char)
 
@@ -287,6 +430,49 @@ class Canvas(Adw.Bin):
             if not child:
                 continue
             child.set_text("")
+
+    def change_canvas_size(self, final_x, final_y):
+        x_delta = final_x - self.canvas_x
+        y_delta = final_y - self.canvas_y
+
+        if y_delta > 0:
+            for line in range(y_delta):
+                if self.canvas_y + 1 > self.canvas_max_y:
+                    break
+                self.canvas_y += 1
+                for x in range(self.canvas_x):
+                    self.draw_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
+                    self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
+        elif y_delta < 0:
+            for line in range(abs(y_delta)):
+                if self.canvas_y == 0:
+                    break
+                self.canvas_y -= 1
+                for x in range(self.canvas_x):
+                    self.draw_grid.remove(self.draw_grid.get_child_at(x, self.canvas_y))
+                    self.preview_grid.remove(self.preview_grid.get_child_at(x, self.canvas_y))
+
+        if x_delta > 0:
+            for column in range(x_delta):
+                if self.canvas_x + 1 > self.canvas_max_x:
+                    break
+                self.canvas_x += 1
+                for y in range(self.canvas_y):
+                    self.draw_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
+                    self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
+        elif x_delta < 0:
+            for column in range(abs(x_delta)):
+                if self.canvas_x == 0:
+                    break
+                self.canvas_x -= 1
+                for y in range(self.canvas_y):
+                    self.draw_grid.remove(self.draw_grid.get_child_at(self.canvas_x, y))
+                    self.preview_grid.remove(self.preview_grid.get_child_at(self.canvas_x, y))
+
+        self.drawing_area_width = self.drawing_area.get_allocation().width
+
+        self.width_spin.set_value(self.canvas_x)
+        self.height_spin.set_value(self.canvas_y)
 
     def top_horizontal(self):
         return self.styles[self._style - 1][0]

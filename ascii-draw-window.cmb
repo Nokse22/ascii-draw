@@ -28,7 +28,6 @@
 	(1,39,"GtkToggleButton","tree_button",37,None,None,None,1,None),
 	(1,40,"GtkToggleButton","eraser_button",37,None,None,None,2,None),
 	(1,41,"GtkToggleButton","picker_button",37,None,None,None,3,None),
-	(1,42,"GtkButton",None,37,None,None,None,5,None),
 	(1,43,"AdwBreakpoint",None,1,None,None,None,None,"&lt;condition&gt;max-width: 530px&lt;/condition&gt;\n&lt;setter object=\"toolbar_layout_box\" property=\"orientation\"&gt;vertical&lt;/setter&gt;\n&lt;setter object=\"overlay_split_view\" property=\"collapsed\"&gt;true&lt;/setter&gt;\n        &lt;setter object=\"overlay_split_view\" property=\"show-sidebar\"&gt;true&lt;/setter&gt;"),
 	(1,62,"GtkToggleButton","sidebar_show_button",4,None,"end",None,3,None),
 	(1,71,"AdwWindowTitle","title_widget",4,None,None,None,-1,None),
@@ -79,7 +78,7 @@
 	(1,308,"GtkTextBuffer","tree_text_entry_buffer",300,None,None,None,-1,None),
 	(1,309,"GtkTextBuffer","text_entry_buffer",257,None,None,None,-1,None),
 	(1,310,"(menu)","primary_menu",1,None,None,None,2,None),
-	(1,311,"(section)",None,310,None,None,None,1,None),
+	(1,311,"(section)",None,310,None,None,None,2,None),
 	(1,312,"(item)",None,311,None,None,None,None,None),
 	(1,313,"(item)",None,311,None,None,None,1,None),
 	(1,314,"(menu)","save_menu",1,None,None,None,3,None),
@@ -95,7 +94,7 @@
 	(1,325,"GtkAdjustment",None,322,None,None,None,-1,None),
 	(1,326,"GtkButton",None,321,None,None,None,2,None),
 	(1,327,"GtkListBox",None,263,None,None,None,2,None),
-	(1,328,"AdwComboRow","table_types_drop_down",327,None,None,None,None,None),
+	(1,328,"AdwComboRow","table_types_combo",327,None,None,None,None,None),
 	(1,329,"GtkStringList",None,328,None,None,None,None,None),
 	(1,330,"GtkStackPage","select_stack_page",253,None,None,None,5,None),
 	(1,331,"GtkBox",None,330,None,None,None,-1,None),
@@ -122,10 +121,15 @@
 	(1,370,"GtkFlowBox","char_flow_box",369,None,None,None,None,None),
 	(1,371,"GtkScrolledWindow",None,360,None,None,None,5,None),
 	(1,372,"GtkFlowBox","math_char_flow_box",371,None,None,None,None,None),
-	(1,373,"(section)",None,310,None,None,None,None,None),
+	(1,373,"(section)",None,310,None,None,None,1,None),
 	(1,374,"(item)",None,373,None,None,None,-1,None),
 	(1,375,"(section)",None,314,None,None,None,None,None),
-	(1,376,"(item)",None,375,None,None,None,None,None)
+	(1,376,"(item)",None,375,None,None,None,None,None),
+	(1,377,"(item)",None,373,None,None,None,-1,None),
+	(1,378,"GtkToggleButton","secondary_char_button",37,None,None,None,6,None),
+	(1,379,"GtkToggleButton","primary_char_button",37,None,None,None,5,None),
+	(1,380,"(section)",None,310,None,None,None,None,None),
+	(1,381,"(item)",None,380,None,None,None,-1,None)
   </object>
   <object_property>
 	(1,1,"GtkWidget","height-request","360",None,None,None,None,None,None,None,None,None),
@@ -211,11 +215,6 @@
 	(1,41,"GtkWidget","css-classes","flat",None,None,None,None,None,None,None,None,None),
 	(1,41,"GtkWidget","halign","center",None,None,None,None,None,None,None,None,None),
 	(1,41,"GtkWidget","tooltip-text","Picker Ctrl+P",None,None,None,None,None,None,None,None,None),
-	(1,42,"GtkButton","icon-name","user-trash-symbolic",None,None,None,None,None,None,None,None,None),
-	(1,42,"GtkWidget","css-classes","error\nflat",None,None,None,None,None,None,None,None,None),
-	(1,42,"GtkWidget","halign","end",None,None,None,None,None,None,None,None,None),
-	(1,42,"GtkWidget","hexpand","True",None,None,None,None,None,None,None,None,None),
-	(1,42,"GtkWidget","tooltip-text","Delete all",None,None,None,None,None,None,None,None,None),
 	(1,62,"GtkButton","icon-name","sidebar-show-right-symbolic",None,None,None,None,None,None,None,None,None),
 	(1,62,"GtkToggleButton","active","True",None,None,None,None,None,None,None,None,None),
 	(1,71,"AdwWindowTitle","title","ASCII Draw",None,None,None,None,None,None,None,None,None),
@@ -296,7 +295,7 @@
 	(1,276,"GtkStackPage","name","character_page",None,None,None,None,None,None,None,None,None),
 	(1,276,"GtkStackPage","title","Character",None,None,None,None,None,None,None,None,None),
 	(1,278,"GtkStackPage","child",None,None,None,None,None,279,None,None,None,None),
-	(1,278,"GtkStackPage","icon-name","format-justify-fill-symbolic",None,None,None,None,None,None,None,None,None),
+	(1,278,"GtkStackPage","icon-name","line-style-symbolic",None,None,None,None,None,None,None,None,None),
 	(1,278,"GtkStackPage","name","style_page",None,None,None,None,None,None,None,None,None),
 	(1,278,"GtkStackPage","title","Style",None,None,None,None,None,None,None,None,None),
 	(1,286,"GtkStackSwitcher","stack","253",None,None,None,None,None,None,None,None,None),
@@ -502,7 +501,21 @@
 	(1,374,"(item)","action","app.new-palette",None,None,None,None,None,None,None,None,None),
 	(1,374,"(item)","label","New char palette",None,None,None,None,None,None,None,None,None),
 	(1,376,"(item)","action","app.save-as",None,None,None,None,None,None,None,None,None),
-	(1,376,"(item)","label","Save As",None,None,None,None,None,None,None,None,None)
+	(1,376,"(item)","label","Save As",None,None,None,None,None,None,None,None,None),
+	(1,377,"(item)","action","app.new-palette-from-selection",None,None,None,None,None,None,None,None,None),
+	(1,377,"(item)","label","New Palette From Selection",None,None,None,None,None,None,None,None,None),
+	(1,378,"GtkButton","label","+",None,None,None,None,None,None,None,None,None),
+	(1,378,"GtkToggleButton","group","379",None,None,None,None,None,None,None,None,None),
+	(1,378,"GtkWidget","css-classes","circular",None,None,None,None,None,None,None,None,None),
+	(1,378,"GtkWidget","tooltip-text","Secondary Character",None,None,None,None,None,None,None,None,None),
+	(1,379,"GtkButton","label","#",None,None,None,None,None,None,None,None,None),
+	(1,379,"GtkToggleButton","active","True",None,None,None,None,None,None,None,None,None),
+	(1,379,"GtkWidget","css-classes","circular",None,None,None,None,None,None,None,None,None),
+	(1,379,"GtkWidget","halign","end",None,None,None,None,None,None,None,None,None),
+	(1,379,"GtkWidget","hexpand","True",None,None,None,None,None,None,None,None,None),
+	(1,379,"GtkWidget","tooltip-text","Primary Character",None,None,None,None,None,None,None,None,None),
+	(1,381,"(item)","action","app.clear-canvas",None,None,None,None,None,None,None,None,None),
+	(1,381,"(item)","label","Clear Canvas",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,332,333,"GtkGridLayoutChild","column","1",None,None,None,None),
@@ -515,12 +528,11 @@
   <object_signal>
 	(2,1,9,"AdwSplitButton","clicked","save_button_clicked",None,None,None,None,None),
 	(14,1,10,"GtkButton","clicked","undo_first_change",None,None,None,None,None),
-	(15,1,42,"GtkButton","clicked","on_delete_all_button_clicked",None,None,None,None,None),
 	(16,1,308,"GtkTextBuffer","insert-text","on_tree_text_inserted",None,None,None,None,None),
 	(17,1,308,"GtkTextBuffer","changed","preview_tree",None,None,None,None,None),
-	(18,1,309,"GtkTextBuffer","changed","insert_text_preview",None,None,None,None,None),
+	(18,1,309,"GtkTextBuffer","changed","preview_text",None,None,None,1,None),
 	(19,1,259,"GtkListBox","row-selected","font_row_selected",None,None,None,None,None),
-	(20,1,261,"GtkButton","clicked","insert_text_definitely",None,None,None,None,None),
+	(20,1,261,"GtkButton","clicked","insert_text",None,None,None,None,None),
 	(21,1,269,"GtkButton","clicked","on_add_row_clicked",None,None,None,None,None),
 	(23,1,38,"GtkButton","clicked","on_choose_table",None,None,None,None,None),
 	(24,1,39,"GtkButton","clicked","on_choose_tree_list",None,None,None,None,None),
@@ -538,7 +550,8 @@
 	(36,1,326,"GtkButton","clicked","on_change_canvas_size_btn_clicked",None,None,None,None,None),
 	(37,1,328,"GObject","notify","preview_table","selected",None,None,None," Custom fragments "),
 	(38,1,341,"GtkButton","clicked","char_pages_go_back",None,None,None,None,None),
-	(39,1,342,"GtkButton","clicked","char_pages_go_next",None,None,None,None,None)
+	(39,1,342,"GtkButton","clicked","char_pages_go_next",None,None,None,None,None),
+	(40,1,275,"GtkButton","clicked","insert_table",None,None,None,None,None)
   </object_signal>
   <object_data>
 	(1,329,"GtkStringList",1,1,None,None,None,None,None,None),

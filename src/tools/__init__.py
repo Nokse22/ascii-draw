@@ -5,5 +5,6 @@ from .line import Line
 from .arrow import Arrow
 from .text import Text
 from .table import Table
-from .selection import Selection
+from .select import Select
 from .freehand_line import FreehandLine
+from .picker import Picker

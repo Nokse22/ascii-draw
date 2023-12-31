@@ -2,9 +2,9 @@
 <gresources>
   <gresource prefix="/io/github/nokse22/asciidraw">
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
-    <file preprocess="xml-stripblanks">window.ui</file>
+    <file preprocess="xml-stripblanks">ui/window.ui</file>
     <file preprocess="xml-stripblanks">ui/new_palette.ui</file>
-    <file preprocess="xml-stripblanks">canvas.ui</file>
+    <file preprocess="xml-stripblanks">ui/canvas.ui</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/eraser-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/paintbrush-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/text-symbolic.svg</file>
@@ -16,5 +16,9 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/increase-canvas-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/table-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/tree-list-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/format-text-italic-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/sidebar-show-right-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/line-style-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/edit-undo-symbolic.svg</file>
    </gresource>
 </gresources>

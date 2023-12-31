@@ -22,16 +22,13 @@ from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
 class Table(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
+    def __init__(self, _canvas, _rows_box, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.canvas = _canvas
+        self.rows_box = _rows_box
 
         self._active = False
         self._style = 0
-
-        self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
-        self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
-        self.canvas.drag_gesture.connect("drag-end", self.on_drag_end)
 
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
         self.canvas.click_gesture.connect("released", self.on_click_released)
@@ -44,14 +41,8 @@ class Table(GObject.GObject):
         self.x_mul = 12
         self.y_mul = 24
 
-        self.end_x = 0
-        self.end_y = 0
-
-        self.prev_x = 0
-        self.prev_y = 0
-
-        self.prev_line_pos = [0,0]
-        self.line_direction = [0,0]
+        self.table_x = 0
+        self.table_y = 0
 
     @GObject.Property(type=bool, default=False)
     def active(self):
@@ -71,68 +62,6 @@ class Table(GObject.GObject):
         self._style = value
         self.notify('style')
 
-    def on_drag_begin(self, gesture, start_x, start_y):
-        if not self._active: return
-        self.start_x = start_x
-        self.start_y = start_y
-
-    def on_drag_follow(self, gesture, end_x, end_y):
-        if not self._active: return
-        if self.flip:
-            end_x = - end_x
-        start_x_char = self.start_x // self.x_mul
-        start_y_char = self.start_y // self.y_mul
-
-        width = int((end_x + self.start_x) // self.x_mul - start_x_char)
-        height = int((end_y + self.start_y) // self.y_mul - start_y_char)
-
-        self.end_x = width * self.x_mul
-        self.end_y = height * self.y_mul
-
-        self.canvas.clear_preview()
-        if width < 0:
-            width -= 1
-        else:
-            width += 1
-        if height < 0:
-            height -= 1
-        else:
-            height += 1
-        # if self.prev_line_pos != [self.start_x + width, self.start_y + height]:
-        self.line_direction = self.normalize_vector([end_x - self.prev_line_pos[0], end_y - self.prev_line_pos[1]])
-        self.line_direction = [abs(self.line_direction[0]), abs(self.line_direction[1])]
-        self.draw_line(start_x_char, start_y_char, width, height, False)
-
-        self.prev_line_pos = [end_x, end_y]
-
-        print(self.line_direction)
-
-    def on_drag_end(self, gesture, delta_x, delta_y):
-        if not self._active: return
-
-        self.canvas.clear_preview()
-
-        if self.flip:
-            delta_x = - delta_x
-        start_x_char = self.start_x // self.x_mul
-        start_y_char = self.start_y // self.y_mul
-        width = int((delta_x + self.start_x) // self.x_mul - start_x_char)
-        height = int((delta_y + self.start_y) // self.y_mul - start_y_char)
-
-        self.prev_x = 0
-        self.prev_y = 0
-
-        self.canvas.add_undo_action("Line")
-        if width < 0:
-            width -= 1
-        else:
-            width += 1
-        if height < 0:
-            height -= 1
-        else:
-            height += 1
-        self.draw_line(start_x_char, start_y_char, width, height, True)
-
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
         pass
@@ -143,95 +72,98 @@ class Table(GObject.GObject):
 
     def on_click_released(self, click, arg, x, y):
         if not self._active: return
-        pass
 
-    def draw_line(self, start_x_char, start_y_char, width, height, draw):
-        end_vertical = self.canvas.left_vertical()
-        start_vertical = self.canvas.right_vertical()
-        end_horizontal = self.canvas.top_horizontal()
-        start_horizontal = self.canvas.bottom_horizontal()
+        if self.flip:
+            if self.drawing_area_width == 0:
+                self.update_area_width()
+            x = self.drawing_area_width - x
+        x_char = int(x / self.x_mul)
+        y_char = int(y / self.y_mul)
 
-        arrow = False
+        self.table_x = x_char
+        self.table_y = y_char
+        self.canvas.clear_preview()
+        # table_type = self.table_types_combo.get_selected()
+        self.preview_table()
 
-        if width > 0 and height > 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 1, start_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height - 1, end_vertical, draw)
-                if height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height - 1, self.canvas.bottom_left(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.right_arrow(), draw)
+    def draw_table(self):
+        self.insert_table(0, True)
+
+    def preview_table(self):
+        self.insert_table(0, False)
+
+    def insert_table(self, table_type: int, draw: bool):
+        child = self.rows_box.get_first_child()
+        columns_widths = []
+        table = []
+        column = 0
+        while child != None:
+            this_row = []
+            entry = child.get_first_child()
+            while entry != None:
+                value = entry.get_text()
+                if len(columns_widths) < column + 1:
+                    columns_widths.append(len(value))
+                elif len(value) > columns_widths[column]:
+                    columns_widths[column] = len(value)
+                this_row.append(value)
+                columns_widths
+                entry = entry.get_next_sibling()
+                column += 1
+            column = 0
+            table.append(this_row)
+            child = child.get_next_sibling()
+
+        if len(columns_widths) == 0:
+            return
+
+        width = 1
+        for column_width in columns_widths:
+            width += column_width + 1
+
+        if table_type == 1: # all divided
+            height = 1 + self.rows_number * 2
+        elif table_type == 0: # first line divided
+            height = 3 + self.rows_number
+        else: # not divided
+            height = 2 + self.rows_number
+
+        for y in range(height):
+            for x in range(width):
+                self.canvas.set_char_at(self.table_x + x, self.table_y + y, ' ',True)
+
+        self.canvas.draw_rectangle(self.table_x, self.table_y, width, height, draw)
+
+        x = self.table_x
+        for column in range(self.columns_number - 1):
+            x += columns_widths[column] + 1
+            self.vertical_line(x, self.table_y + 1, height - 2, grid, self.right_vertical())
+            self.set_char_at(x, self.table_y + height - 1, grid, self.top_intersect())
+            self.set_char_at(x, self.table_y, grid, self.bottom_intersect())
+
+        y = self.table_y
+        if table_type == 1: # all divided
+            for row in range(self.rows_number - 1):
+                y += 2
+                self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
+                self.set_char_at(self.table_x, y, grid, self.right_intersect())
+                self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
+        elif table_type == 0: # first line divided
+            y += 2
+            self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
+            self.set_char_at(self.table_x, y, grid, self.right_intersect())
+            self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
+
+        y = self.table_y + 1
+        x = self.table_x + 1
+        for index_row, row in enumerate(table):
+            for index, column in enumerate(row):
+                self.insert_text(grid, x, y, column)
+                x += columns_widths[index] + 1
+            if table_type == 1: # all divided
+                y += 2
+            elif table_type == 0 and index_row == 0: # first line divided
+                y += 2
             else:
-                self.canvas.horizontal_line(start_y_char, start_x_char, width - 1, end_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char, self.canvas.top_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
-        elif width > 0 and height < 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height + 1, start_x_char + 1, width - 1, end_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height + 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height + 1, self.canvas.top_left(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.right_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char, width - 1, start_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char + width - 1, start_y_char, height + 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char, self.canvas.bottom_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.up_arrow(), draw)
-        elif width < 0 and height > 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height - 1, start_x_char, width + 1, start_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height - 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height - 1, self.canvas.bottom_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.left_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width + 1, end_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char + width + 1, start_y_char + 1, height - 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char, self.canvas.top_left(), draw)
-                if arrow:
-                    self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
-        elif width < 0 and height < 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height + 1, start_x_char, width + 1, end_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height + 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height + 1, self.canvas.top_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height + 1, self.canvas.left_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width + 1, start_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char + width + 1, start_y_char, height + 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char, self.canvas.bottom_left(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height + 1, self.canvas.up_arrow(), draw)
-
-        if width == 1 and height < 0:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.left_vertical(), draw)
-        elif width == 1 and height > 0:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.right_vertical(), draw)
-        elif height == 1:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.bottom_horizontal(), draw)
-
-    def normalize_vector(self, vector):
-        magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
-        if magnitude == 0:
-            return [0, 0]
-        normalized = [round(vector[0] / magnitude), round(vector[1] / magnitude)]
-        return normalized
+                y += 1
+            x = self.table_x + 1

@@ -21,6 +21,8 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
+import pyfiglet
+
 class Text(GObject.GObject):
     def __init__(self, _canvas, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,14 +46,17 @@ class Text(GObject.GObject):
         self.x_mul = 12
         self.y_mul = 24
 
-        self.end_x = 0
-        self.end_y = 0
+        self.text_x = 0
+        self.text_y = 0
 
-        self.prev_x = 0
-        self.prev_y = 0
+        self._text = ''
 
-        self.prev_line_pos = [0,0]
-        self.line_direction = [0,0]
+        self.selected_font = "Normal"
+
+        self._transparent = False
+
+    def set_selected_font(self, value):
+        self.selected_font = value
 
     @GObject.Property(type=bool, default=False)
     def active(self):
@@ -71,71 +76,47 @@ class Text(GObject.GObject):
         self._style = value
         self.notify('style')
 
+    @GObject.Property(type=bool, default=False)
+    def transparent(self):
+        return self._transparent
+
+    @transparent.setter
+    def transparent(self, value):
+        self._transparent = value
+        self.notify('transparent')
+
+    @GObject.Property(type=str, default='')
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        self._text = value
+        self.notify('text')
+
     def on_drag_begin(self, gesture, start_x, start_y):
         if not self._active: return
-        self.start_x = start_x
-        self.start_y = start_y
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return
-        if self.flip:
-            end_x = - end_x
-        start_x_char = self.start_x // self.x_mul
-        start_y_char = self.start_y // self.y_mul
-
-        width = int((end_x + self.start_x) // self.x_mul - start_x_char)
-        height = int((end_y + self.start_y) // self.y_mul - start_y_char)
-
-        self.end_x = width * self.x_mul
-        self.end_y = height * self.y_mul
-
-        self.canvas.clear_preview()
-        if width < 0:
-            width -= 1
-        else:
-            width += 1
-        if height < 0:
-            height -= 1
-        else:
-            height += 1
-        # if self.prev_line_pos != [self.start_x + width, self.start_y + height]:
-        self.line_direction = self.normalize_vector([end_x - self.prev_line_pos[0], end_y - self.prev_line_pos[1]])
-        self.line_direction = [abs(self.line_direction[0]), abs(self.line_direction[1])]
-        self.draw_line(start_x_char, start_y_char, width, height, False)
-
-        self.prev_line_pos = [end_x, end_y]
-
-        print(self.line_direction)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
 
-        self.canvas.clear_preview()
-
-        if self.flip:
-            delta_x = - delta_x
-        start_x_char = self.start_x // self.x_mul
-        start_y_char = self.start_y // self.y_mul
-        width = int((delta_x + self.start_x) // self.x_mul - start_x_char)
-        height = int((delta_y + self.start_y) // self.y_mul - start_y_char)
-
-        self.prev_x = 0
-        self.prev_y = 0
-
-        self.canvas.add_undo_action("Line")
-        if width < 0:
-            width -= 1
-        else:
-            width += 1
-        if height < 0:
-            height -= 1
-        else:
-            height += 1
-        self.draw_line(start_x_char, start_y_char, width, height, True)
-
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
-        pass
+        if self.flip:
+            if self.drawing_area_width == 0:
+                self.update_area_width()
+            x = self.drawing_area_width - x
+        x_char = int(x / self.x_mul)
+        y_char = int(y / self.y_mul)
+
+        self.text_x = x_char
+        self.text_y = y_char
+
+        self.canvas.clear_preview()
+        self.preview_text()
 
     def on_click_stopped(self, click):
         if not self._active: return
@@ -145,93 +126,21 @@ class Text(GObject.GObject):
         if not self._active: return
         pass
 
-    def draw_line(self, start_x_char, start_y_char, width, height, draw):
-        end_vertical = self.canvas.left_vertical()
-        start_vertical = self.canvas.right_vertical()
-        end_horizontal = self.canvas.top_horizontal()
-        start_horizontal = self.canvas.bottom_horizontal()
+    def insert_text(self):
+        self.canvas.add_undo_action("Text")
+        self.canvas.clear_preview()
 
-        arrow = False
+        text = self._text
+        if self.selected_font != "Normal":
+            text = pyfiglet.figlet_format(text, font=self.selected_font)
 
-        if width > 0 and height > 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 1, start_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height - 1, end_vertical, draw)
-                if height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height - 1, self.canvas.bottom_left(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.right_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char, width - 1, end_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char, self.canvas.top_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
-        elif width > 0 and height < 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height + 1, start_x_char + 1, width - 1, end_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height + 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height + 1, self.canvas.top_left(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.right_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char, width - 1, start_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char + width - 1, start_y_char, height + 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char, self.canvas.bottom_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.up_arrow(), draw)
-        elif width < 0 and height > 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height - 1, start_x_char, width + 1, start_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height - 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height - 1, self.canvas.bottom_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.left_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width + 1, end_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char + width + 1, start_y_char + 1, height - 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char, self.canvas.top_left(), draw)
-                if arrow:
-                    self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
-        elif width < 0 and height < 0:
-            if self.line_direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height + 1, start_x_char, width + 1, end_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height + 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height + 1, self.canvas.top_right(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height + 1, self.canvas.left_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width + 1, start_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char + width + 1, start_y_char, height + 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char, self.canvas.bottom_left(), draw)
-                if arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height + 1, self.canvas.up_arrow(), draw)
+        self.canvas.draw_text(self.text_x, self.text_y, text, self._transparent, True)
 
-        if width == 1 and height < 0:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.left_vertical(), draw)
-        elif width == 1 and height > 0:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.right_vertical(), draw)
-        elif height == 1:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.bottom_horizontal(), draw)
+    def preview_text(self):
+        self.canvas.clear_preview()
 
-    def normalize_vector(self, vector):
-        magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
-        if magnitude == 0:
-            return [0, 0]
-        normalized = [round(vector[0] / magnitude), round(vector[1] / magnitude)]
-        return normalized
+        text = self._text
+        if self.selected_font != "Normal":
+            text = pyfiglet.figlet_format(text, font=self.selected_font)
+
+        self.canvas.draw_text(self.text_x, self.text_y, text, self._transparent, False)
