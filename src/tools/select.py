@@ -47,23 +47,17 @@ class Select(GObject.GObject):
         self.drag_start_x = 0
         self.drag_start_y = 0
 
-        self.delta_x = 0
-        self.delta_y = 0
-
-        self.prev_x = 0
-        self.prev_y = 0
-
-        self.has_selection = False
-        self.is_dragging = False
+        self.dragging_delta_char_x = 0
+        self.dragging_delta_char_y = 0
 
         self.selection_start_x_char = 0
         self.selection_start_y_char = 0
 
-        self.start_x_char = 0
-        self.start_y_char = 0
+        self.selection_delta_char_x = 0
+        self.selection_delta_char_y = 0
 
-        self.selection_width = 0
-        self.selection_height = 0
+        self.has_selection = False
+        self.is_dragging = False
 
     @GObject.Property(type=bool, default=False)
     def active(self):
@@ -73,7 +67,6 @@ class Select(GObject.GObject):
     def active(self, value):
         self._active = value
         self.notify('active')
-
         if value:
             self.canvas.drawing_area.set_draw_func(self.drawing_function, None)
 
@@ -86,37 +79,46 @@ class Select(GObject.GObject):
         self._style = value
         self.notify('style')
 
-    def on_drag_begin(self, gesture, start_x, start_y):
+    def on_drag_begin(self, gesture, this_x, this_y):
         if not self._active: return
 
-        print(f"coords: {start_x}, {start_y}")
+        this_x_char = this_x // self.x_mul
+        this_y_char = this_y // self.y_mul
 
-        if self.has_selection and start_x > self.drag_start_x and start_x < self.delta_x and start_y > self.drag_start_y and start_y < self.delta_y:
-            print("dragging selection")
+        print(f"""here: {this_x_char}, {this_y_char}
+selection start: {self.selection_start_x_char}, {self.selection_start_y_char}
+selection size: {self.selection_delta_char_x}, {self.selection_delta_char_y}
+dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
+
+        if (this_x_char > (self.selection_start_x_char + self.dragging_delta_char_x)
+                and this_x_char < (self.selection_start_x_char + self.selection_delta_char_x + self.dragging_delta_char_x)
+                and this_y_char > (self.selection_start_y_char + self.dragging_delta_char_y)
+                and this_y_char < (self.selection_start_y_char + self.selection_delta_char_y + self.dragging_delta_char_x)):
             self.is_dragging = True
+            print(f"dragging selection? {self.is_dragging}")
         else:
-            self.start_x_char = (start_x // self.x_mul) * self.x_mul
-            self.start_y_char = (start_y // self.y_mul) * self.y_mul
+            print("new selection")
+            self.selection_start_x_char = this_x // self.x_mul
+            self.selection_start_y_char = this_y // self.y_mul
+
+            self.drag_start_x = this_x # used to fix drag alignment
+            self.drag_start_y = this_y # used to fix drag alignment
+
+            self.is_dragging = False
+
+            # print(f"{this_y} is {self.selection_start_y_char} chars {this_y / self.y_mul}")
 
     def on_drag_follow(self, gesture, delta_x, delta_y):
         if not self._active: return
         if self.flip:
             delta_x = - delta_x
-        start_x_char = self.drag_start_x // self.x_mul
-        start_y_char = self.drag_start_y // self.y_mul
-
-        width = int((delta_x + self.drag_start_x) // self.x_mul - start_x_char)
-        height = int((delta_y + self.drag_start_y) // self.y_mul - start_y_char)
-
-        self.delta_x = width * self.x_mul
-        self.delta_y = height * self.y_mul
 
         if self.is_dragging:
-            self.selection_start_x_char = self.start_x_char + self.delta_x
-            self.selection_start_y_char = self.start_y_char + self.delta_y
+            self.dragging_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
+            self.dragging_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
         else:
-            self.selection_width = self.delta_x
-            self.selection_height = self.delta_y
+            self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
+            self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
 
         self.canvas.drawing_area.queue_draw()
 
@@ -125,27 +127,40 @@ class Select(GObject.GObject):
 
         if self.flip:
             delta_x = - delta_x
-        start_x_char = self.drag_start_x // self.x_mul
-        start_y_char = self.drag_start_y // self.y_mul
 
-        width = int((delta_x + self.drag_start_x) // self.x_mul - start_x_char)
-        height = int((delta_y + self.drag_start_y) // self.y_mul - start_y_char)
+        if self.is_dragging:
+            self.selection_start_x_char += self.dragging_delta_char_x
+            self.selection_start_y_char += self.dragging_delta_char_y
+            self.is_dragging = False
 
-        self.start_x_char = start_x_char
-        self.start_y_char = start_y_char
-
-        self.delta_x = width * self.x_mul
-        self.delta_y = height * self.y_mul
-
-        if not self.is_dragging:
-            self.selection_width = self.delta_x
-            self.selection_height = self.delta_y
+            self.dragging_delta_char_x = 0
+            self.dragging_delta_char_y = 0
 
         self.has_selection = True
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
-        pass
+
+        return
+
+        self.drag_start_x = 0
+        self.drag_start_y = 0
+
+        self.dragging_delta_char_x = 0
+        self.dragging_delta_char_y = 0
+
+        self.selection_start_x_char = 0
+        self.selection_start_y_char = 0
+
+        self.selection_delta_char_x = 0
+        self.selection_delta_char_y = 0
+
+        self.has_selection = False
+        self.is_dragging = False
+
+        self.canvas.drawing_area.queue_draw()
+
+        print("clicked")
 
     def on_click_stopped(self, click):
         if not self._active: return
@@ -161,8 +176,9 @@ class Select(GObject.GObject):
     def drawing_function(self, area, cr, width, height, data):
         cr.save()
         cr.set_source_rgb(0.208, 0.518, 0.894)
-        cr.rectangle(self.selection_start_x_char + self.x_mul/2,
-                            self.selection_start_y_char + self.y_mul/2,
-                            self.selection_width, self.selection_height)
+        cr.rectangle(self.selection_start_x_char * self.x_mul + self.x_mul/2 + self.dragging_delta_char_x * self.x_mul,
+                            self.selection_start_y_char * self.y_mul + self.y_mul/2 + self.dragging_delta_char_y * self.y_mul,
+                            self.selection_delta_char_x * self.x_mul,
+                            self.selection_delta_char_y * self.y_mul)
         cr.stroke()
         cr.restore()
