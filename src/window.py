@@ -60,12 +60,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     rectangle_button = Gtk.Template.Child()
     filled_rectangle_button = Gtk.Template.Child()
     line_button = Gtk.Template.Child()
-    arrow_button = Gtk.Template.Child()
+    # arrow_button = Gtk.Template.Child()
     select_button = Gtk.Template.Child()
     text_button = Gtk.Template.Child()
-    free_line_button = Gtk.Template.Child()
+    # free_line_button = Gtk.Template.Child()
     table_button = Gtk.Template.Child()
     picker_button = Gtk.Template.Child()
+
+    line_arrow_switch = Gtk.Template.Child()
+    line_type_combo = Gtk.Template.Child()
 
     freehand_brush_adjustment = Gtk.Template.Child()
 
@@ -179,12 +182,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.line = Line(self.canvas)
         self.line.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.line.bind_property('arrow', self.line_arrow_switch, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.line.bind_property('line_type', self.line_type_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.freehand_line = FreehandLine(self.canvas)
-        self.freehand_line.bind_property('active', self.free_line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-
-        self.arrow = Arrow(self.canvas)
-        self.arrow.bind_property('active', self.arrow_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.freehand_line = FreehandLine(self.canvas)
+        # self.freehand_line.bind_property('active', self.free_line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.select = Select(self.canvas)
         self.select.bind_property('active', self.select_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -637,16 +639,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def on_click_stopped(self, arg):
         pass
 
-    @Gtk.Template.Callback("on_choose_free_line")
-    def on_choose_free_line(self, btn):
-        # self.reset_text_entry()
-        if btn.get_active():
-            self.tool = "FREE-LINE"
-        else:
-            self.tool = ""
-        print("free line")
-        self.sidebar_stack.set_visible_child_name("style_page")
-
     @Gtk.Template.Callback("on_choose_picker")
     def on_choose_picker(self, btn):
         # self.reset_text_entry()
@@ -677,7 +669,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if btn.get_active():
             self.tool = "LINE"
         print("line")
-        self.sidebar_stack.set_visible_child_name("style_page")
+        self.sidebar_stack.set_visible_child_name("line_page")
 
     @Gtk.Template.Callback("on_choose_text")
     def on_choose_text(self, btn):
@@ -729,14 +721,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def on_scale_value_changed(self, scale, var):
         var = scale.get_value()
-
-    @Gtk.Template.Callback("on_choose_arrow")
-    def on_choose_arrow(self, btn):
-        # self.reset_text_entry()
-        if btn.get_active():
-            self.tool = "ARROW"
-        print("arrow")
-        self.sidebar_stack.set_visible_child_name("style_page")
 
     def clear(self, btn=None, grid=None):
         print("clear")

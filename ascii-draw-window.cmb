@@ -64,7 +64,7 @@
 	(1,289,"AdwActionRow",None,288,None,None,None,-1,None),
 	(1,290,"GtkScale","free_scale",289,None,None,None,-1,None),
 	(1,291,"GtkAdjustment","freehand_brush_adjustment",290,None,None,None,-1,None),
-	(1,292,"GtkStackPage","eraser_stack_page",253,None,None,None,4,None),
+	(1,292,"GtkStackPage","eraser_stack_page",253,None,None,None,5,None),
 	(1,293,"GtkBox",None,292,None,None,None,None,None),
 	(1,294,"AdwActionRow",None,293,None,None,None,None,None),
 	(1,295,"GtkScale","eraser_scale",294,None,None,None,None,None),
@@ -122,7 +122,14 @@
 	(1,378,"GtkToggleButton","secondary_char_button",37,None,None,None,6,None),
 	(1,379,"GtkToggleButton","primary_char_button",37,None,None,None,5,None),
 	(1,380,"(section)",None,310,None,None,None,None,None),
-	(1,381,"(item)",None,380,None,None,None,-1,None)
+	(1,381,"(item)",None,380,None,None,None,-1,None),
+	(1,382,"GtkStackPage","line_stack_page",253,None,None,None,4,None),
+	(1,383,"GtkBox","line_sidebar",382,None,None,None,None,None),
+	(1,393,"GtkListBox",None,383,None,None,None,None,None),
+	(1,394,"AdwComboRow","line_type_combo",393,None,None,None,None,None),
+	(1,396,"GtkListBox",None,383,None,None,None,1,None),
+	(1,397,"AdwSwitchRow","line_arrow_switch",396,None,None,None,-1,None),
+	(1,398,"GtkStringList",None,394,None,None,None,-1,None)
   </object>
   <object_property>
 	(1,1,"GtkWidget","height-request","360",None,None,None,None,None,None,None,None,None),
@@ -490,7 +497,27 @@
 	(1,379,"GtkWidget","hexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,379,"GtkWidget","tooltip-text","Primary Character",None,None,None,None,None,None,None,None,None),
 	(1,381,"(item)","action","app.clear-canvas",None,None,None,None,None,None,None,None,None),
-	(1,381,"(item)","label","Clear Canvas",None,None,None,None,None,None,None,None,None)
+	(1,381,"(item)","label","Clear Canvas",None,None,None,None,None,None,None,None,None),
+	(1,382,"GtkStackPage","child",None,None,None,None,None,383,None,None,None,None),
+	(1,382,"GtkStackPage","icon-name","line-symbolic",None,None,None,None,None,None,None,None,None),
+	(1,382,"GtkStackPage","name","line_page",None,None,None,None,None,None,None,None,None),
+	(1,382,"GtkStackPage","title","Line",1,None,None,None,None,None,None,None,None),
+	(1,382,"GtkStackPage","visible","False",None,None,None,None,None,32,"GtkToggleButton","active",None),
+	(1,383,"GtkBox","spacing","10",None,None,None,None,None,None,None,None,None),
+	(1,383,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(1,383,"GtkWidget","margin-bottom","10",None,None,None,None,None,None,None,None,None),
+	(1,383,"GtkWidget","margin-end","10",None,None,None,None,None,None,None,None,None),
+	(1,383,"GtkWidget","margin-start","10",None,None,None,None,None,None,None,None,None),
+	(1,383,"GtkWidget","margin-top","10",None,None,None,None,None,None,None,None,None),
+	(1,383,"GtkWidget","visible","True",None,None,None,None,None,38,"GtkToggleButton","active",None),
+	(1,393,"GtkListBox","selection-mode","none",None,None,None,None,None,None,None,None,None),
+	(1,393,"GtkWidget","css-classes","boxed-list",None,None,None,None,None,None,None,None,None),
+	(1,394,"AdwComboRow","model",None,None,None,None,None,398,None,None,None,None),
+	(1,394,"AdwComboRow","selected","0",None,None,None,None,None,None,None,None,None),
+	(1,394,"AdwPreferencesRow","title","Type",None,None,None,None,None,None,None,None,None),
+	(1,396,"GtkListBox","selection-mode","none",None,None,None,None,None,None,None,None,None),
+	(1,396,"GtkWidget","css-classes","boxed-list",None,None,None,None,None,None,None,None,None),
+	(1,397,"AdwPreferencesRow","title","Arrow",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_signal>
 	(2,1,9,"AdwSplitButton","clicked","save_button_clicked",None,None,None,None,None),
@@ -518,12 +545,17 @@
 	(37,1,328,"GObject","notify","preview_table","selected",None,None,None," Custom fragments "),
 	(38,1,341,"GtkButton","clicked","char_pages_go_back",None,None,None,None,None),
 	(39,1,342,"GtkButton","clicked","char_pages_go_next",None,None,None,None,None),
-	(40,1,275,"GtkButton","clicked","insert_table",None,None,None,None,None)
+	(40,1,275,"GtkButton","clicked","insert_table",None,None,None,None,None),
+	(43,1,394,"GObject","notify","preview_table","selected",None,None,None," Custom fragments ")
   </object_signal>
   <object_data>
 	(1,329,"GtkStringList",1,1,None,None,None,None,None,None),
 	(1,329,"GtkStringList",2,2,"First line as header",1,None,None,None,None),
 	(1,329,"GtkStringList",2,3,"Divide each row",1,None,None,None,None),
-	(1,329,"GtkStringList",2,4,"Not divided",1,None,None,None,None)
+	(1,329,"GtkStringList",2,4,"Not divided",1,None,None,None,None),
+	(1,398,"GtkStringList",1,1,None,None,None,None,None,None),
+	(1,398,"GtkStringList",2,2,"Cartesian",1,None,None,None,None),
+	(1,398,"GtkStringList",2,3,"Step",1,None,None,None,None),
+	(1,398,"GtkStringList",2,4,"Freehand",1,None,None,None,None)
   </object_data>
 </cambalache-project>

@@ -302,6 +302,59 @@
                           </object>
                         </child>
                         <child>
+                          <object class="GtkStackPage" id="line_stack_page">
+                            <property name="child">
+                              <object class="GtkBox" id="line_sidebar">
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">10</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">10</property>
+                                <property name="visible" bind-source="table_button" bind-property="active">True</property>
+                                <child>
+                                  <object class="GtkListBox">
+                                    <property name="css-classes">boxed-list</property>
+                                    <property name="selection-mode">none</property>
+                                    <child>
+                                      <object class="AdwComboRow" id="line_type_combo">
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item>Cartesian</item>
+                                              <item>Step</item>
+                                              <item>Freehand</item>
+                                            </items>
+                                          </object>
+                                        </property>
+                                        <property name="selected">0</property>
+                                        <property name="title">Type</property>
+                                        <!-- Custom fragments -->
+                                        <signal name="notify::selected" handler="preview_table"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBox">
+                                    <property name="css-classes">boxed-list</property>
+                                    <property name="selection-mode">none</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="line_arrow_switch">
+                                        <property name="title">Arrow</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">line-symbolic</property>
+                            <property name="name">line_page</property>
+                            <property name="title" translatable="yes">Line</property>
+                            <property name="visible" bind-source="line_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
                           <object class="GtkStackPage" id="eraser_stack_page">
                             <property name="child">
                               <object class="GtkBox">
@@ -658,26 +711,6 @@
                     <property name="icon-name">line-symbolic</property>
                     <property name="tooltip-text">Line Ctrl+L</property>
                     <signal name="clicked" handler="on_choose_line"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="arrow_button">
-                    <property name="css-classes">flat</property>
-                    <property name="group">rectangle_button</property>
-                    <property name="halign">center</property>
-                    <property name="icon-name">arrow-symbolic</property>
-                    <property name="tooltip-text">Arrow Ctrl+W</property>
-                    <signal name="clicked" handler="on_choose_arrow"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="free_line_button">
-                    <property name="css-classes">flat</property>
-                    <property name="group">rectangle_button</property>
-                    <property name="halign">center</property>
-                    <property name="icon-name">free-line-symbolic</property>
-                    <property name="tooltip-text">Free line Ctrl+G</property>
-                    <signal name="clicked" handler="on_choose_free_line"/>
                   </object>
                 </child>
                 <child>
