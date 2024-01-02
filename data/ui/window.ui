@@ -62,6 +62,7 @@
                                         </property>
                                         <property name="css-classes">card</property>
                                         <property name="left-margin">12</property>
+                                        <property name="monospace">True</property>
                                         <property name="top-margin">12</property>
                                       </object>
                                     </child>
@@ -849,6 +850,10 @@
     <child>
       <menu id="save_menu">
         <section>
+          <item>
+            <attribute name="action">app.copy-to-clipboard</attribute>
+            <attribute name="label">Copy To Clipboard</attribute>
+          </item>
           <item>
             <attribute name="action">app.save-as</attribute>
             <attribute name="label" translatable="yes">Save As</attribute>

@@ -41,6 +41,7 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('preferences', self.on_preferences_action)
 
         self.create_action('save-as', self.on_save_as_action, ['<control><shift>s'])
+        self.create_action('copy-to-clipboard', self.on_copy_to_clipboard_action)
         self.create_action('open', self.on_open_action, ['<control>o'])
         self.create_action('new-canvas', self.on_new_canvas_action, ['<control>n'])
 
@@ -132,6 +133,9 @@ class AsciiDrawApplication(Adw.Application):
 
     def on_new_canvas_action(self, *args):
         self.win.new_canvas()
+
+    def on_copy_to_clipboard_action(self, *args):
+        self.win.copy_to_clipboard()
 
     def on_save_as_action(self, *args):
         self.win.save_as_action()

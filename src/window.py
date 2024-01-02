@@ -539,8 +539,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def show_sidebar(self, btn):
         self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
 
-    def copy_content(self, btn):
-        text = self.get_canvas_content()
+    def copy_to_clipboard(self):
+        text = self.canvas.get_content()
 
         clipboard = Gdk.Display().get_default().get_clipboard()
         clipboard.set(text)
@@ -1204,8 +1204,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     #             self.changed_chars.append([start_x + x + width, y])
 
     @Gtk.Template.Callback("undo_first_change")
-    def undo_first_change(self, btn):
-        self.canvas.undo(btn)
+    def undo_first_change(self, btn=None):
+        self.canvas.undo(btn or self.undo_button)
 
     # def top_horizontal(self):
     #     return self.styles[self.style - 1][0]

@@ -95,24 +95,37 @@ class Select(GObject.GObject):
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
 
-        if (this_x_char > (self.selection_start_x_char + self.dragging_delta_char_x)
-                and this_x_char < (self.selection_start_x_char + self.selection_delta_char_x + self.dragging_delta_char_x)
-                and this_y_char > (self.selection_start_y_char + self.dragging_delta_char_y)
-                and this_y_char < (self.selection_start_y_char + self.selection_delta_char_y + self.dragging_delta_char_x)):
+        width = self.selection_delta_char_x
+        height = self.selection_delta_char_y
+
+        start_x_char = self.selection_start_x_char
+        start_y_char = self.selection_start_y_char
+
+        if width < 0:
+            width = -width
+            start_x_char -= width
+        if height < 0:
+            height = - height
+            start_y_char -= height
+
+        print(self.selection_delta_char_x, self.selection_delta_char_y)
+        if (this_x_char > (start_x_char)
+                and this_x_char < (start_x_char + width)
+                and this_y_char > (start_y_char)
+                and this_y_char < (start_y_char + height)):
             self.is_dragging = True
 
             self.canvas.add_undo_action("Move")
 
-            for y in range(1, int(self.selection_delta_char_y)):
-                for x in range(1, int(self.selection_delta_char_x)):
-                    # print(self.canvas.get_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y))
-                    self.moved_text += self.canvas.get_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y) or " "
+            for y in range(1, int(height)):
+                for x in range(1, int(width)):
+                    self.moved_text += self.canvas.get_char_at(start_x_char + x, start_y_char + y) or " "
                 self.moved_text += '\n'
 
             # Delete selection
-            for y in range(1, int(self.selection_delta_char_y)):
-                for x in range(1, int(self.selection_delta_char_x)):
-                    self.canvas.set_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y, ' ', True)
+            for y in range(1, int(height)):
+                for x in range(1, int(width)):
+                    self.canvas.set_char_at(start_x_char + x, start_y_char + y, ' ', True)
         else:
             print("new selection")
             self.selection_start_x_char = this_x // self.x_mul
@@ -122,8 +135,6 @@ class Select(GObject.GObject):
             self.drag_start_y = this_y # used to fix drag alignment
 
             self.is_dragging = False
-
-            # print(f"{this_y} is {self.selection_start_y_char} chars {this_y / self.y_mul}")
 
     def on_drag_follow(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -135,11 +146,32 @@ class Select(GObject.GObject):
             self.dragging_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
 
             self.canvas.clear_preview()
-            self.canvas.draw_text(self.selection_start_x_char + self.dragging_delta_char_x + 1,
-                            self.selection_start_y_char + self.dragging_delta_char_y + 1, self.moved_text, False, False)
+
+            start_x_char = self.selection_start_x_char
+            start_y_char = self.selection_start_y_char
+
+            if self.selection_delta_char_x < 0:
+                start_x_char += self.selection_delta_char_x
+            if self.selection_delta_char_y < 0:
+                start_y_char += self.selection_delta_char_y
+
+            self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
+                            start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
         else:
             self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
             self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
+
+            # start_x_char = self.selection_start_x_char
+            # start_y_char = self.selection_start_y_char
+
+            # if self.selection_delta_char_x < 0:
+            #     self.selection_delta_char_x = -self.selection_delta_char_x
+            #     self.selection_start_x_char -= self.selection_delta_char_x
+            # self.selection_delta_char_x += 1
+            # if self.selection_delta_char_y < 0:
+            #     self.selection_delta_char_y = - self.selection_delta_char_y
+            #     self.selection_start_y_char -= self.selection_delta_char_y
+            # self.selection_delta_char_y += 1
 
         self.canvas.drawing_area.queue_draw()
 
@@ -155,7 +187,15 @@ class Select(GObject.GObject):
             self.is_dragging = False
 
             self.canvas.clear_preview()
-            self.canvas.draw_text(self.selection_start_x_char + 1, self.selection_start_y_char + 1, self.moved_text, True, True)
+            start_x_char = self.selection_start_x_char
+            start_y_char = self.selection_start_y_char
+
+            if self.selection_delta_char_x < 0:
+                start_x_char += self.selection_delta_char_x
+            if self.selection_delta_char_y < 0:
+                start_y_char += self.selection_delta_char_y
+
+            self.canvas.draw_text(start_x_char + 1, start_y_char + 1, self.moved_text, True, True)
             self.moved_text = ''
             self.dragging_delta_char_x = 0
             self.dragging_delta_char_y = 0
@@ -199,6 +239,7 @@ class Select(GObject.GObject):
     def drawing_function(self, area, cr, width, height, data):
         cr.save()
         cr.set_source_rgb(0.208, 0.518, 0.894)
+        cr.set_dash([5], 0)
         cr.rectangle(self.selection_start_x_char * self.x_mul + self.x_mul/2 + self.dragging_delta_char_x * self.x_mul,
                             self.selection_start_y_char * self.y_mul + self.y_mul/2 + self.dragging_delta_char_y * self.y_mul,
                             self.selection_delta_char_x * self.x_mul,

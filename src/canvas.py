@@ -234,22 +234,18 @@ class Canvas(Adw.Bin):
                 x += 1
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
-        top_vertical = self.left_vertical()
-        top_horizontal = self.top_horizontal()
-
-        bottom_vertical = self.right_vertical()
-        bottom_horizontal = self.bottom_horizontal()
+        print(width, height)
 
         if width <= 1 or height <= 1:
             return
 
-        self.horizontal_line(start_y_char, start_x_char, width, top_horizontal, draw)
-        self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, bottom_horizontal, draw)
-        self.vertical_line(start_x_char, start_y_char + 1, height - 1, top_vertical, draw)
-        self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, bottom_vertical, draw)
+        self.horizontal_line(start_y_char, start_x_char + 1, width - 2, self.top_horizontal(), draw)
+        self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, self.bottom_horizontal(), draw)
+        self.vertical_line(start_x_char, start_y_char + 1, height - 2, self.left_vertical(), draw)
+        self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 2, self.right_vertical(), draw)
 
         self.set_char_at(start_x_char + width - 1, start_y_char, self.top_right(), draw)
-        self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.bottom_right(), draw)
+        self.set_char_at(start_x_char + width - 1, start_y_char + height  - 1, self.bottom_right(), draw)
         self.set_char_at(start_x_char, start_y_char, self.top_left(), draw)
         self.set_char_at(start_x_char, start_y_char + height - 1, self.bottom_left(), draw)
 

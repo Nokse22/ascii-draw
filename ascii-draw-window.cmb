@@ -128,7 +128,8 @@
 	(1,396,"GtkListBox",None,383,None,None,None,1,None),
 	(1,397,"AdwSwitchRow","line_arrow_switch",396,None,None,None,-1,None),
 	(1,398,"GtkStringList",None,394,None,None,None,-1,None),
-	(1,399,"(item)",None,373,None,None,None,-1,None)
+	(1,399,"(item)",None,373,None,None,None,-1,None),
+	(1,400,"(item)",None,375,None,None,None,-1,None)
   </object>
   <object_property>
 	(1,1,"GtkWidget","height-request","360",None,None,None,None,None,None,None,None,None),
@@ -225,6 +226,7 @@
 	(1,256,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,257,"GtkTextView","buffer",None,None,None,None,None,309,None,None,None,None),
 	(1,257,"GtkTextView","left-margin","12",None,None,None,None,None,None,None,None,None),
+	(1,257,"GtkTextView","monospace","True",None,None,None,None,None,None,None,None,None),
 	(1,257,"GtkTextView","top-margin","12",None,None,None,None,None,None,None,None,None),
 	(1,257,"GtkWidget","css-classes","card",None,None,None,None,None,None,None,None,None),
 	(1,258,"GtkWidget","css-classes","card",None,None,None,None,None,None,None,None,None),
@@ -508,7 +510,9 @@
 	(1,396,"GtkWidget","css-classes","boxed-list",None,None,None,None,None,None,None,None,None),
 	(1,397,"AdwPreferencesRow","title","Arrow",None,None,None,None,None,None,None,None,None),
 	(1,399,"(item)","action","app.new-palette-from-canvas",None,None,None,None,None,None,None,None,None),
-	(1,399,"(item)","label","New Palette From Canvas",None,None,None,None,None,None,None,None,None)
+	(1,399,"(item)","label","New Palette From Canvas",None,None,None,None,None,None,None,None,None),
+	(1,400,"(item)","action","app.copy-to-clipboard",None,None,None,None,None,None,None,None,None),
+	(1,400,"(item)","label","Copy To Clipboard",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_signal>
 	(2,1,9,"AdwSplitButton","clicked","save_button_clicked",None,None,None,None,None),
