@@ -176,8 +176,7 @@ class Line(GObject.GObject):
             self.draw_free_line(line[i + 2][0], line[i + 2][1], line[i + 1][0], line[i + 1][1], line[i][0], line[i][1], draw)
 
         if self._arrow:
-            print(f"{width}, {height}")
-            if abs(width) < (abs(height) + 13):
+            if abs(width) < (abs(height)*2):
                 if height > 0:
                     char = self.canvas.down_arrow()
                 else:
@@ -236,13 +235,15 @@ class Line(GObject.GObject):
         end_horizontal = self.canvas.top_horizontal()
         start_horizontal = self.canvas.bottom_horizontal()
 
-        if width > 0 and height > 0:
-            if direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 1, start_horizontal, draw)
+        print(width, height)
+
+        if width >= 0 and height >= 0:
+            if direction == [1, 0]: # FIXED
+                self.canvas.horizontal_line(start_y_char + height, start_x_char + 1, width, start_horizontal, draw)
                 if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height - 1, end_vertical, draw)
+                    self.canvas.vertical_line(start_x_char, start_y_char, height, end_vertical, draw)
                 if height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height - 1, self.canvas.bottom_left(), draw)
+                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.bottom_left(), draw)
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.right_arrow(), draw)
             else:
@@ -254,12 +255,12 @@ class Line(GObject.GObject):
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
         elif width > 0 and height < 0:
-            if direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height + 1, start_x_char + 1, width - 1, end_horizontal, draw)
+            if direction == [1, 0]: # FIXED
+                self.canvas.horizontal_line(start_y_char + height, start_x_char + 1, width, end_horizontal, draw)
                 if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height + 1, end_vertical, draw)
+                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height, end_vertical, draw)
                 if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height + 1, self.canvas.top_left(), draw)
+                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.top_left(), draw)
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.right_arrow(), draw)
             else:
@@ -271,31 +272,31 @@ class Line(GObject.GObject):
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.up_arrow(), draw)
         elif width < 0 and height > 0:
-            if direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height - 1, start_x_char, width + 1, start_horizontal, draw)
+            if direction == [1, 0]: # FIXED
+                self.canvas.horizontal_line(start_y_char + height, start_x_char, width, start_horizontal, draw)
                 if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height - 1, start_vertical, draw)
+                    self.canvas.vertical_line(start_x_char, start_y_char, height, start_vertical, draw)
                 if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height - 1, self.canvas.bottom_right(), draw)
+                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.bottom_right(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.left_arrow(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.left_arrow(), draw)
             else:
-                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width + 1, end_horizontal, draw)
+                self.canvas.horizontal_line(start_y_char, start_x_char, width, end_horizontal, draw)
                 if height > 1:
-                    self.canvas.vertical_line(start_x_char + width + 1, start_y_char + 1, height - 1, end_vertical, draw)
+                    self.canvas.vertical_line(start_x_char + width, start_y_char, height + 1, end_vertical, draw)
                 if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char, self.canvas.top_left(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.top_left(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.down_arrow(), draw)
         elif width < 0 and height < 0:
             if direction == [1, 0]:
-                self.canvas.horizontal_line(start_y_char + height + 1, start_x_char, width + 1, end_horizontal, draw)
+                self.canvas.horizontal_line(start_y_char + height, start_x_char, width, end_horizontal, draw)
                 if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height + 1, start_vertical, draw)
+                    self.canvas.vertical_line(start_x_char, start_y_char, height, start_vertical, draw)
                 if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height + 1, self.canvas.top_right(), draw)
+                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.top_right(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height + 1, self.canvas.left_arrow(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.left_arrow(), draw)
             else:
                 self.canvas.horizontal_line(start_y_char, start_x_char + 1, width + 1, start_horizontal, draw)
                 if height < 1:

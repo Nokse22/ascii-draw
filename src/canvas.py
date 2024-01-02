@@ -1,4 +1,4 @@
-# drawing_canvas.py
+# canvas.py
 #
 # Copyright 2023 Nokse
 #
@@ -471,8 +471,44 @@ class Canvas(Adw.Bin):
 
         self.drawing_area_width = self.drawing_area.get_allocation().width
 
-        self.width_spin.set_value(self.canvas_x)
-        self.height_spin.set_value(self.canvas_y)
+        # self.width_spin.set_value(self.canvas_x)
+        # self.height_spin.set_value(self.canvas_y)
+
+    def get_content(self):
+        final_text = ""
+        text = ""
+        text_row = ""
+        row_empty = True
+        rows_empty = True
+        for y in range(self.canvas_y):
+            for x in range(self.canvas_x):
+                if self.flip:
+                    child = self.draw_grid.get_child_at(self.canvas_x - x, y)
+                else:
+                    child = self.draw_grid.get_child_at(x, y)
+                if child:
+                    char = child.get_text()
+                    if char == None or char == "" or char == " ":
+                        char = " "
+                        text += char
+                    else:
+                        if self.flip and char == "<":
+                            char = ">"
+                        elif self.flip and char == ">":
+                            char = "<"
+                        text += char
+                        text_row += text
+                        text = ""
+                        rows_empty = False
+            text = ""
+            if not rows_empty:
+                rows_empty = True
+                text_row += "\n"
+                final_text += text_row
+                text_row = ""
+            else:
+                text_row += "\n"
+        return final_text
 
     def top_horizontal(self):
         return self.styles[self._style - 1][0]

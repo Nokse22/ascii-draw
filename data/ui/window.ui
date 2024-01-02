@@ -93,7 +93,7 @@
                                 <child>
                                   <object class="GtkButton">
                                     <property name="css-classes">suggested-action</property>
-                                    <property name="label">Enter</property>
+                                    <property name="label" translatable="yes">Enter</property>
                                     <signal name="clicked" handler="insert_text"/>
                                   </object>
                                 </child>
@@ -188,9 +188,9 @@
                                         <property name="model">
                                           <object class="GtkStringList">
                                             <items>
-                                              <item>First line as header</item>
-                                              <item>Divide each row</item>
-                                              <item>Not divided</item>
+                                              <item translatable="yes">First line as header</item>
+                                              <item translatable="yes">Divide each row</item>
+                                              <item translatable="yes">Not divided</item>
                                             </items>
                                           </object>
                                         </property>
@@ -205,7 +205,7 @@
                                 <child>
                                   <object class="GtkButton">
                                     <property name="css-classes">suggested-action</property>
-                                    <property name="label">Enter</property>
+                                    <property name="label" translatable="yes">Enter</property>
                                     <signal name="clicked" handler="insert_table"/>
                                   </object>
                                 </child>
@@ -249,7 +249,7 @@
                                 <child>
                                   <object class="GtkButton">
                                     <property name="css-classes">suggested-action</property>
-                                    <property name="label">Enter</property>
+                                    <property name="label" translatable="yes">Enter</property>
                                   </object>
                                 </child>
                               </object>
@@ -321,9 +321,9 @@
                                         <property name="model">
                                           <object class="GtkStringList">
                                             <items>
-                                              <item>Cartesian</item>
-                                              <item>Step</item>
-                                              <item>Freehand</item>
+                                              <item translatable="yes">Cartesian</item>
+                                              <item translatable="yes">Step</item>
+                                              <item translatable="yes">Freehand</item>
                                             </items>
                                           </object>
                                         </property>
@@ -417,7 +417,7 @@
                                     <child>
                                       <object class="GtkLabel" id="char_group_label">
                                         <property name="hexpand">True</property>
-                                        <property name="label">Extended latin</property>
+                                        <property name="label" translatable="yes">Extended latin</property>
                                       </object>
                                     </child>
                                     <child>
@@ -597,7 +597,7 @@
             </property>
             <child>
               <object class="AdwSplitButton" id="save_import_button">
-                <property name="label">Save</property>
+                <property name="label" translatable="yes">Save</property>
                 <property name="menu-model">save_menu</property>
                 <signal name="clicked" handler="save_button_clicked"/>
               </object>
@@ -661,7 +661,7 @@
                         </child>
                         <child>
                           <object class="GtkButton">
-                            <property name="label">Change size</property>
+                            <property name="label" translatable="yes">Change size</property>
                             <property name="margin-top">6</property>
                             <signal name="clicked" handler="on_change_canvas_size_btn_clicked"/>
                           </object>
@@ -817,17 +817,21 @@
         <section>
           <item>
             <attribute name="action">app.clear-canvas</attribute>
-            <attribute name="label">Clear Canvas</attribute>
+            <attribute name="label" translatable="yes">Clear Canvas</attribute>
           </item>
         </section>
         <section>
           <item>
             <attribute name="action">app.new-palette</attribute>
-            <attribute name="label">New char palette</attribute>
+            <attribute name="label" translatable="yes">New char palette</attribute>
           </item>
           <item>
             <attribute name="action">app.new-palette-from-selection</attribute>
-            <attribute name="label">New Palette From Selection</attribute>
+            <attribute name="label" translatable="yes">New Palette From Selection</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.new-palette-from-canvas</attribute>
+            <attribute name="label">New Palette From Canvas</attribute>
           </item>
         </section>
         <section>
@@ -847,17 +851,17 @@
         <section>
           <item>
             <attribute name="action">app.save-as</attribute>
-            <attribute name="label">Save As</attribute>
+            <attribute name="label" translatable="yes">Save As</attribute>
           </item>
         </section>
         <section>
           <item>
             <attribute name="action">app.open</attribute>
-            <attribute name="label">Open</attribute>
+            <attribute name="label" translatable="yes">Open</attribute>
           </item>
           <item>
             <attribute name="action">app.new-canvas</attribute>
-            <attribute name="label">New Canvas</attribute>
+            <attribute name="label" translatable="yes">New Canvas</attribute>
           </item>
         </section>
       </menu>

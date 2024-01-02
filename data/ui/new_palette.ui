@@ -4,10 +4,11 @@
   <!-- interface-name ascii-draw-new-palette.ui -->
   <requires lib="gtk" version="4.12"/>
   <requires lib="libadwaita" version="1.2"/>
-  <object class="AdwApplicationWindow" id="new_palette_window">
+  <template class="NewPaletteWindow" parent="AdwWindow">
     <property name="default-height">360</property>
     <property name="default-width">360</property>
-    <property name="title">New palette</property>
+    <property name="modal">True</property>
+    <property name="title" translatable="yes">New palette</property>
     <child>
       <object class="GtkBox">
         <property name="orientation">vertical</property>
@@ -31,7 +32,7 @@
                 <child>
                   <object class="AdwEntryRow" id="palette_name_entry">
                     <property name="css-classes">card</property>
-                    <property name="title">Palette name</property>
+                    <property name="title" translatable="yes">Palette name</property>
                   </object>
                 </child>
                 <child>
@@ -53,9 +54,10 @@
                     <property name="css-classes">suggested-action
 pill</property>
                     <property name="halign">center</property>
-                    <property name="label">Save</property>
+                    <property name="label" translatable="yes">Save</property>
                     <property name="valign">center</property>
                     <property name="vexpand">True</property>
+                    <signal name="clicked" handler="on_add_clicked"/>
                   </object>
                 </child>
               </object>
@@ -64,6 +66,6 @@ pill</property>
         </child>
       </object>
     </child>
-  </object>
+  </template>
 </interface>
 

@@ -60,6 +60,7 @@ class AsciiDrawApplication(Adw.Application):
 
         self.create_action('new-palette', self.on_new_palette_action)
         self.create_action('new-palette-from-selection', self.on_new_palette_from_selection_action)
+        self.create_action('new-palette-from-canvas', self.on_new_palette_from_canvas_action)
         self.create_action('import-palettes', self.on_import_palettes_action)
 
         self.create_action('clear-canvas', self.on_clear_canvas_action)
@@ -115,22 +116,16 @@ class AsciiDrawApplication(Adw.Application):
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
     def on_new_palette_action(self, *args):
-        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/new_palette.ui")
-
-        def on_add_clicked(btn, win):
-            palette_name = builder.get_object("palette_name_entry").get_text()
-            buffer = builder.get_object("palette_chars_buffer")
-            palette_chars = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), False)
-            win.add_new_palette(palette_name, palette_chars)
-
-        builder.get_object("add_button").connect("clicked", on_add_clicked, self.win)
-        builder.get_object("new_palette_window").present()
+        self.win.show_new_palette_window()
 
     def on_clear_canvas_action(self, *args):
         self.win.canvas.clear_canvas()
 
     def on_new_palette_from_selection_action(self, *args):
         pass
+
+    def on_new_palette_from_canvas_action(self, *args):
+        self.win.new_palette_from_canvas()
 
     def on_import_palettes_action(self, *args):
         pass

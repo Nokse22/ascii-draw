@@ -71,6 +71,14 @@ class Select(GObject.GObject):
         self.notify('active')
         if value:
             self.canvas.drawing_area.set_draw_func(self.drawing_function, None)
+        else:
+            self.selection_start_x_char = 0
+            self.selection_start_y_char = 0
+
+            self.selection_delta_char_x = 0
+            self.selection_delta_char_y = 0
+
+            self.canvas.drawing_area.queue_draw()
 
     @GObject.Property(type=str, default='#')
     def style(self):
@@ -87,24 +95,19 @@ class Select(GObject.GObject):
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
 
-#         print(f"""here: {this_x_char}, {this_y_char}
-# selection start: {self.selection_start_x_char}, {self.selection_start_y_char}
-# selection size: {self.selection_delta_char_x}, {self.selection_delta_char_y}
-# dragging: {self.dragging_delta_char_x}, {self.dragging_delta_char_y}""")
-
         if (this_x_char > (self.selection_start_x_char + self.dragging_delta_char_x)
                 and this_x_char < (self.selection_start_x_char + self.selection_delta_char_x + self.dragging_delta_char_x)
                 and this_y_char > (self.selection_start_y_char + self.dragging_delta_char_y)
                 and this_y_char < (self.selection_start_y_char + self.selection_delta_char_y + self.dragging_delta_char_x)):
             self.is_dragging = True
 
+            self.canvas.add_undo_action("Move")
+
             for y in range(1, int(self.selection_delta_char_y)):
                 for x in range(1, int(self.selection_delta_char_x)):
                     # print(self.canvas.get_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y))
                     self.moved_text += self.canvas.get_char_at(self.selection_start_x_char + x, self.selection_start_y_char + y) or " "
                 self.moved_text += '\n'
-
-            print(self.moved_text)
 
             # Delete selection
             for y in range(1, int(self.selection_delta_char_y)):
@@ -134,7 +137,6 @@ class Select(GObject.GObject):
             self.canvas.clear_preview()
             self.canvas.draw_text(self.selection_start_x_char + self.dragging_delta_char_x + 1,
                             self.selection_start_y_char + self.dragging_delta_char_y + 1, self.moved_text, False, False)
-
         else:
             self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
             self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul

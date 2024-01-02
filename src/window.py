@@ -22,6 +22,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
 from .palette import Palette
+from .new_palette_window import NewPaletteWindow
 
 from .tools import *
 from .canvas import Canvas
@@ -66,7 +67,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     # free_line_button = Gtk.Template.Child()
     table_button = Gtk.Template.Child()
     picker_button = Gtk.Template.Child()
+    eraser_button = Gtk.Template.Child()
 
+    eraser_adjustment = Gtk.Template.Child()
     line_arrow_switch = Gtk.Template.Child()
     line_type_combo = Gtk.Template.Child()
 
@@ -173,6 +176,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.freehand.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
         # self.freehand.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
+
+        self.eraser = Eraser(self.canvas)
+        self.eraser.bind_property('active', self.eraser_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.eraser.bind_property('size', self.eraser_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.rectangle = Rectangle(self.canvas)
         self.rectangle.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -294,9 +301,21 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.add_palette_to_ui(self.palettes)
 
+    def show_new_palette_window(self, chars=''):
+        win = NewPaletteWindow(palette_chars=chars)
+        win.present()
+
+        win.connect("on-add-clicked", self.on_new_palette_add_clicked)
+
+    def on_new_palette_add_clicked(self, win, palette_name, palette_chars):
+        palette = Palette(palette_name, palette_chars)
+        self.palettes.append(palette)
+
+        self.add_palette_to_ui([palette])
+
     def add_palette_to_ui(self, palettes):
         for palette in palettes:
-            flow_box = Gtk.FlowBox(selection_mode=2, margin_top=3, margin_bottom=3, margin_start=3, margin_end=3, valign=Gtk.Align.START)
+            flow_box = Gtk.FlowBox(homogeneous=True, selection_mode=0, margin_top=3, margin_bottom=3, margin_start=3, margin_end=3, valign=Gtk.Align.START)
             for char in palette.chars:
                 new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
                 new_button.connect("clicked", self.change_char, flow_box)
@@ -444,13 +463,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 lines = input_string.split('\n')
                 num_lines = len(lines)
                 max_chars = max(len(line) for line in lines)
-                if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
-                    toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
-                    self.toast_overlay.add_toast(toast)
-                self.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
-                self.add_undo_action("Open")
-                self.force_clear(self.grid)
-                self.insert_text(self.grid, 0, 0, input_string)
+                # if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
+                #     toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
+                #     self.toast_overlay.add_toast(toast)
+                self.canvas.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
+                self.canvas.add_undo_action("Open")
+                self.canvas.force_clear()
+                self.canvas.draw_text(0, 0, input_string, False, True)
                 self.file_path = path
                 file_name = os.path.basename(self.file_path)
                 self.title_widget.set_subtitle(file_name)
@@ -519,42 +538,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def show_sidebar(self, btn):
         self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
-
-    def get_canvas_content(self):
-        final_text = ""
-        text = ""
-        text_row = ""
-        row_empty = True
-        rows_empty = True
-        for y in range(self.canvas_y):
-            for x in range(self.canvas_x):
-                if self.flip:
-                    child = self.grid.get_child_at(self.canvas_x - x, y)
-                else:
-                    child = self.grid.get_child_at(x, y)
-                if child:
-                    char = child.get_text()
-                    if char == None or char == "" or char == " ":
-                        char = " "
-                        text += char
-                    else:
-                        if self.flip and char == "<":
-                            char = ">"
-                        elif self.flip and char == ">":
-                            char = "<"
-                        text += char
-                        text_row += text
-                        text = ""
-                        rows_empty = False
-            text = ""
-            if not rows_empty:
-                rows_empty = True
-                text_row += "\n"
-                final_text += text_row
-                text_row = ""
-            else:
-                text_row += "\n"
-        return final_text
 
     def copy_content(self, btn):
         text = self.get_canvas_content()
@@ -716,76 +699,18 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         print("eraser")
         self.sidebar_stack.set_visible_child_name("eraser_page")
 
-    def reset_text_entry(self):
-        self.text_entry_buffer.set_text("")
+    def new_palette_from_canvas(self):
+        content = self.canvas.get_content()
+        content = content.replace('\n', '')
+        unique_chars = set()
 
-    def on_scale_value_changed(self, scale, var):
-        var = scale.get_value()
+        for char in content:
+            if char not in unique_chars:
+                unique_chars.add(char)
 
-    def clear(self, btn=None, grid=None):
-        print("clear")
-        if grid != self.grid:
-            if len(self.changed_chars) < 100:
-                for pos in self.changed_chars:
-                    child = grid.get_child_at(pos[0], pos[1])
-                    if not child:
-                        continue
-                    child.set_text("")
-                # print(f"normal finished in {time.time() - start} to remove{len(self.changed_chars)}")
-                self.changed_chars = []
-                return
+        unique_string = ''.join(sorted(unique_chars))
 
-            threads = []
-            list_length = len(self.changed_chars)
-            divided = 5
-
-            quotient, remainder = divmod(list_length, divided)
-            parts = [quotient] * divided
-
-            for i in range(remainder):
-                parts[i] += 1
-
-            total = 0
-            # print(f"making threads at {time.time() - start}")
-            for part in parts:
-                if part == 0:
-                    return
-                thread = threading.Thread(target=self.clear_list_of_char, args=(total, total + part))
-                total += part
-                thread.start()
-                threads.append(thread)
-                # print(f"added threads at {time.time() - start}")
-
-            for thread in threads:
-                thread.join()
-                # print(f"joining at {time.time() - start}")
-            # print(f"threads finished in {time.time() - start} to remove {list_length} every one with {parts[0]}")
-            self.changed_chars = []
-
-        else:
-            self.force_clear(None)
-
-    def force_clear(self, grid=None):
-        print("force clear")
-        if grid == None:
-            self.add_undo_action("Clear Screen")
-            grid = self.grid
-        for y in range(self.canvas_y):
-            for x in range(self.canvas_x):
-                child = grid.get_child_at(x, y)
-                if not child:
-                    continue
-                if grid == self.grid:
-                    self.undo_changes[0].add_change(x, y, child.get_text())
-                child.set_text(" ")
-
-    def clear_list_of_char(self, chars_list_start, chars_list_end):
-        for index in range(chars_list_start, chars_list_end):
-            pos = self.changed_chars[index]
-            child = self.preview_grid.get_child_at(pos[0], pos[1])
-            if not child:
-                continue
-            child.set_text("")
+        self.show_new_palette_window(unique_string)
 
     def on_drag_begin(self, gesture, start_x, start_y):
         self.start_x = start_x
@@ -853,137 +778,135 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.undo_button.set_sensitive(True)
         self.undo_button.set_tooltip_text(_("Undo ") + undo_name)
 
-    def normalize_vector(self, vector):
-        magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
-        if magnitude == 0:
-            return [0, 0]  # Avoid division by zero
-        normalized = [round(vector[0] / magnitude), round(vector[1] / magnitude)]
-        return normalized
+    # def normalize_vector(self, vector):
+    #     magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
+    #     if magnitude == 0:
+    #         return [0, 0]
+    #     normalized = [round(vector[0] / magnitude), round(vector[1] / magnitude)]
+    #     return normalized
 
-    def draw_free_line(self, new_x, new_y, grid):
-        pos = [new_x, new_y]
-        if self.prev_pos == [] or pos == self.prev_pos:
-            self.prev_pos = [new_x, new_y]
-            return
-        pos = [new_x, new_y]
-        direction = [int(pos[0] - self.prev_pos[0]), int(pos[1] - self.prev_pos[1])]
-        dir2 = direction
-        direction = self.normalize_vector(direction)
-        prev_direction = [int(self.prev_pos[0] - self.prev_char_pos[0]),
-                                    int(self.prev_pos[1] - self.prev_char_pos[1])]
+    # def draw_free_line(self, new_x, new_y, grid):
+    #     pos = [new_x, new_y]
+    #     if self.prev_pos == [] or pos == self.prev_pos:
+    #         self.prev_pos = [new_x, new_y]
+    #         return
+    #     pos = [new_x, new_y]
+    #     direction = [int(pos[0] - self.prev_pos[0]), int(pos[1] - self.prev_pos[1])]
+    #     dir2 = direction
+    #     direction = self.normalize_vector(direction)
+    #     prev_direction = [int(self.prev_pos[0] - self.prev_char_pos[0]),
+    #                                 int(self.prev_pos[1] - self.prev_char_pos[1])]
 
-        if direction == [1, 0] or direction == [-1, 0]:
-            self.set_char_at(new_x, new_y, grid, self.bottom_horizontal())
-        elif direction == [0, 1] or direction == [0, -1]:
-            self.set_char_at(new_x, new_y, grid, self.right_vertical())
+    #     if direction == [1, 0] or direction == [-1, 0]:
+    #         self.set_char_at(new_x, new_y, grid, self.bottom_horizontal())
+    #     elif direction == [0, 1] or direction == [0, -1]:
+    #         self.set_char_at(new_x, new_y, grid, self.right_vertical())
 
-        # ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
+    #     if direction == [1, 0]:
+    #         if dir2 != direction:
+    #             self.horizontal_line(new_y, new_x - dir2[0], dir2[0], grid, self.bottom_horizontal())
+    #         if prev_direction == [0, -1]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_left())
+    #         elif prev_direction == [0, 1]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_left())
+    #         else:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_horizontal())
+    #     elif direction == [-1, 0]:
+    #         if prev_direction == [0, -1]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_right())
+    #         elif prev_direction == [0, 1]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_right())
+    #         else:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_horizontal())
 
-        if direction == [1, 0]:
-            if dir2 != direction:
-                self.horizontal_line(new_y, new_x - dir2[0], dir2[0], grid, self.bottom_horizontal())
-            if prev_direction == [0, -1]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_left())
-            elif prev_direction == [0, 1]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_left())
-            else:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_horizontal())
-        elif direction == [-1, 0]:
-            if prev_direction == [0, -1]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_right())
-            elif prev_direction == [0, 1]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_right())
-            else:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_horizontal())
+    #     if direction == [0, -1]:
+    #         if prev_direction == [1, 0]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_right())
+    #         elif prev_direction == [-1, 0]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_left())
+    #         else:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.right_vertical())
+    #     elif direction == [0, 1]:
+    #         if prev_direction == [1, 0]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_right())
+    #         elif prev_direction == [-1, 0]:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_left())
+    #         else:
+    #             self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.right_vertical())
+    #     self.prev_char_pos = [self.prev_pos[0], self.prev_pos[1]]
+    #     self.prev_pos = [new_x, new_y]
 
-        if direction == [0, -1]:
-            if prev_direction == [1, 0]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_right())
-            elif prev_direction == [-1, 0]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.bottom_left())
-            else:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.right_vertical())
-        elif direction == [0, 1]:
-            if prev_direction == [1, 0]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_right())
-            elif prev_direction == [-1, 0]:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.top_left())
-            else:
-                self.set_char_at(self.prev_pos[0], self.prev_pos[1], grid, self.right_vertical())
-        self.prev_char_pos = [self.prev_pos[0], self.prev_pos[1]]
-        self.prev_pos = [new_x, new_y]
-
-    def insert_text(self, grid, start_x, start_y, text):
+    # def insert_text(self, grid, start_x, start_y, text):
         # self.clear(None, self.preview_grid)
-        transparent = self.transparent_check.get_active()
+    #     transparent = self.transparent_check.get_active()
         # print(text)
-        x = start_x
-        y = start_y
-        if self.selected_font != "Normal" and self.tool == "TEXT":
-            text = pyfiglet.figlet_format(text, font=self.selected_font)
-        for char in text:
-            if x >= self.canvas_x:
-                if ord(char) == 10: # \n char
-                    y += 1
-                    x = start_x
-                continue
-            if y >= self.canvas_y:
-                break
-            if emoji.is_emoji(char):
-                continue
-            child = grid.get_child_at(x, y)
-            if not child:
-                continue
-            elif ord(char) < 32: # empty chars
-                if ord(char) == 10: # \n char
-                    y += 1
-                    x = start_x
-                    continue
-                if ord(char) == 9: # tab
-                    for i in range(4):
-                        if transparent:
-                            if self.flip:
-                                x -= 1
-                            else:
-                                x += 1
-                            continue
-                        child = grid.get_child_at(x, y)
-                        if not child:
-                            continue
-                        if grid == self.grid:
-                            self.undo_changes[0].add_change(x, y, child.get_text())
-                        child.set_text(" ")
-                        self.changed_chars.append([x, y])
-                        if self.flip:
-                            x -= 1
-                        else:
-                            x += 1
-                    continue
-            elif char == " " and transparent:
-                if self.flip:
-                    x -= 1
-                else:
-                    x += 1
-                continue
-            if grid == self.grid:
-                self.undo_changes[0].add_change(x, y, child.get_text())
-            child.set_text(char)
-            self.changed_chars.append([x, y])
-            if self.flip:
-                x -= 1
-            else:
-                x += 1
-        print(self.canvas_x, self.canvas_y)
+    #     x = start_x
+    #     y = start_y
+    #     if self.selected_font != "Normal" and self.tool == "TEXT":
+    #         text = pyfiglet.figlet_format(text, font=self.selected_font)
+    #     for char in text:
+    #         if x >= self.canvas_x:
+    #             if ord(char) == 10: # \n char
+    #                 y += 1
+    #                 x = start_x
+    #             continue
+    #         if y >= self.canvas_y:
+    #             break
+    #         if emoji.is_emoji(char):
+    #             continue
+    #         child = grid.get_child_at(x, y)
+    #         if not child:
+    #             continue
+    #         elif ord(char) < 32: # empty chars
+    #             if ord(char) == 10: # \n char
+    #                 y += 1
+    #                 x = start_x
+    #                 continue
+    #             if ord(char) == 9: # tab
+    #                 for i in range(4):
+    #                     if transparent:
+    #                         if self.flip:
+    #                             x -= 1
+    #                         else:
+    #                             x += 1
+    #                         continue
+    #                     child = grid.get_child_at(x, y)
+    #                     if not child:
+    #                         continue
+    #                     if grid == self.grid:
+    #                         self.undo_changes[0].add_change(x, y, child.get_text())
+    #                     child.set_text(" ")
+    #                     self.changed_chars.append([x, y])
+    #                     if self.flip:
+    #                         x -= 1
+    #                     else:
+    #                         x += 1
+    #                 continue
+    #         elif char == " " and transparent:
+    #             if self.flip:
+    #                 x -= 1
+    #             else:
+    #                 x += 1
+    #             continue
+    #         if grid == self.grid:
+    #             self.undo_changes[0].add_change(x, y, child.get_text())
+    #         child.set_text(char)
+    #         self.changed_chars.append([x, y])
+    #         if self.flip:
+    #             x -= 1
+    #         else:
+    #             x += 1
+    #     print(self.canvas_x, self.canvas_y)
 
-    def draw_char(self, x_coord, y_coord):
-        brush_size = self.free_scale.get_adjustment().get_value()
-        for delta in self.brush_sizes[int(brush_size - 1)]:
-            child = self.grid.get_child_at(x_coord + delta[0], y_coord + delta[1])
-            if child:
-                if child.get_text() == self.free_char:
-                    continue
-                self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_text())
-                child.set_text(self.free_char)
+    # def draw_char(self, x_coord, y_coord):
+    #     brush_size = self.free_scale.get_adjustment().get_value()
+    #     for delta in self.brush_sizes[int(brush_size - 1)]:
+    #         child = self.grid.get_child_at(x_coord + delta[0], y_coord + delta[1])
+    #         if child:
+    #             if child.get_text() == self.free_char:
+    #                 continue
+    #             self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_text())
+    #             child.set_text(self.free_char)
 
     def erase_char(self, x_coord, y_coord):
         brush_size = self.eraser_scale.get_adjustment().get_value()
@@ -995,30 +918,30 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 self.undo_changes[0].add_change(x_coord + delta[0], y_coord + delta[1], child.get_text())
                 child.set_text(" ")
 
-    def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid, char):
-        for y in range(height):
-            for x in range(width):
-                self.set_char_at(start_x_char + x, start_y_char + y, grid, char)
+    # def draw_filled_rectangle(self, start_x_char, start_y_char, width, height, grid, char):
+    #     for y in range(height):
+    #         for x in range(width):
+    #             self.set_char_at(start_x_char + x, start_y_char + y, grid, char)
 
-    def draw_rectangle(self, start_x_char, start_y_char, width, height, grid):
-        top_vertical = self.left_vertical()
-        top_horizontal = self.top_horizontal()
+    # def draw_rectangle(self, start_x_char, start_y_char, width, height, grid):
+    #     top_vertical = self.left_vertical()
+    #     top_horizontal = self.top_horizontal()
 
-        bottom_vertical = self.right_vertical()
-        bottom_horizontal = self.bottom_horizontal()
+    #     bottom_vertical = self.right_vertical()
+    #     bottom_horizontal = self.bottom_horizontal()
 
-        if width <= 1 or height <= 1:
-            return
+    #     if width <= 1 or height <= 1:
+    #         return
 
-        self.horizontal_line(start_y_char, start_x_char, width, grid, top_horizontal)
-        self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, grid, bottom_horizontal)
-        self.vertical_line(start_x_char, start_y_char + 1, height - 1, grid, top_vertical)
-        self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, bottom_vertical)
+    #     self.horizontal_line(start_y_char, start_x_char, width, grid, top_horizontal)
+    #     self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, grid, bottom_horizontal)
+    #     self.vertical_line(start_x_char, start_y_char + 1, height - 1, grid, top_vertical)
+    #     self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, bottom_vertical)
 
-        self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
-        self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.bottom_right())
-        self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
-        self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
+    #     self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
+    #     self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.bottom_right())
+    #     self.set_char_at(start_x_char, start_y_char, grid, self.top_left())
+    #     self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
 
     @Gtk.Template.Callback("on_tree_text_inserted")
     def on_tree_text_inserted(self, buffer, loc, text, length):
@@ -1050,13 +973,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         input_text = self.tree_text_entry_buffer.get_text(start, end, False)
         self.insert_tree(self.preview_grid, self.tree_x, self.tree_y, input_text)
 
-    def insert_tree_definitely(self, widget=None):
-        self.clear(None, self.preview_grid)
-        self.add_undo_action("Treeview")
-        start = self.tree_text_entry_buffer.get_start_iter()
-        end = self.tree_text_entry_buffer.get_end_iter()
-        input_text = self.tree_text_entry_buffer.get_text(start, end, False)
-        self.insert_tree(self.grid, self.tree_x, self.tree_y, input_text)
+    # def insert_tree_definitely(self, widget=None):
+    #     self.clear(None, self.preview_grid)
+    #     self.add_undo_action("Treeview")
+    #     start = self.tree_text_entry_buffer.get_start_iter()
+    #     end = self.tree_text_entry_buffer.get_end_iter()
+    #     input_text = self.tree_text_entry_buffer.get_text(start, end, False)
+    #     self.insert_tree(self.grid, self.tree_x, self.tree_y, input_text)
 
     def insert_tree(self, grid, start_x, start_y, input_text):
         lines = input_text.split("\n")
@@ -1119,223 +1042,221 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                     prev_index -= 1
             y += 1
 
-    def draw_line(self, start_x_char, start_y_char, width, height, grid):
-        arrow = self.tool == "ARROW"
+    # def draw_line(self, start_x_char, start_y_char, width, height, grid):
+    #     arrow = self.tool == "ARROW"
 
-        end_vertical = self.left_vertical()
-        start_vertical = self.right_vertical()
-        end_horizontal = self.top_horizontal()
-        start_horizontal = self.bottom_horizontal()
+    #     end_vertical = self.left_vertical()
+    #     start_vertical = self.right_vertical()
+    #     end_horizontal = self.top_horizontal()
+    #     start_horizontal = self.bottom_horizontal()
 
-        if width > 0 and height > 0:
-            if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 1, grid, start_horizontal)
-                if height > 1:
-                    self.vertical_line(start_x_char, start_y_char, height - 1, grid, end_vertical)
-                if height != 1:
-                    self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
-                if arrow:
-                    self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.right_arrow())
-            else:
-                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
-                if height > 1:
-                    self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, start_vertical)
-                if width != 1 and height != 1:
-                    self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
-                if arrow:
-                    self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.down_arrow())
-        elif width > 0 and height < 0:
-            if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height + 1, start_x_char + 1, width - 1, grid, end_horizontal)
-                if height < 1:
-                    self.vertical_line(start_x_char, start_y_char + 1, height + 1, grid, end_vertical)
-                if width != 1 and height != 1:
-                    self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_left())
-                if arrow:
-                    self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.right_arrow())
-            else:
-                self.horizontal_line(start_y_char, start_x_char, width - 1, grid, start_horizontal)
-                if height < 1:
-                    self.vertical_line(start_x_char + width - 1, start_y_char, height + 1, grid, start_vertical)
-                if width != 1 and height != 1:
-                    self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.bottom_right())
-                if arrow:
-                    self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.up_arrow())
-        elif width < 0 and height > 0:
-            if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height - 1, start_x_char, width + 1, grid, start_horizontal)
-                if height > 1:
-                    self.vertical_line(start_x_char, start_y_char, height - 1, grid, start_vertical)
-                if width != 1 and height != 1:
-                    self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_right())
-                if arrow:
-                    self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
-            else:
-                self.horizontal_line(start_y_char, start_x_char + 1, width + 1, grid, end_horizontal)
-                if height > 1:
-                    self.vertical_line(start_x_char + width + 1, start_y_char + 1, height - 1, grid, end_vertical)
-                if width != 1 and height != 1:
-                    self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.top_left())
-                if arrow:
-                    self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.down_arrow())
-        elif width < 0 and height < 0:
-            if self.line_direction == [1, 0]:
-                self.horizontal_line(start_y_char + height + 1, start_x_char, width + 1, grid, end_horizontal)
-                if height < 1:
-                    self.vertical_line(start_x_char, start_y_char + 1, height + 1, grid, start_vertical)
-                if width != 1 and height != 1:
-                    self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_right())
-                if arrow:
-                    self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.left_arrow())
-            else:
-                self.horizontal_line(start_y_char, start_x_char + 1, width + 1, grid, start_horizontal)
-                if height < 1:
-                    self.vertical_line(start_x_char + width + 1, start_y_char, height + 1, grid, end_vertical)
-                if width != 1 and height != 1:
-                    self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
-                if arrow:
-                    self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.up_arrow())
+    #     if width > 0 and height > 0:
+    #         if self.line_direction == [1, 0]:
+    #             self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 1, grid, start_horizontal)
+    #             if height > 1:
+    #                 self.vertical_line(start_x_char, start_y_char, height - 1, grid, end_vertical)
+    #             if height != 1:
+    #                 self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_left())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.right_arrow())
+    #         else:
+    #             self.horizontal_line(start_y_char, start_x_char, width - 1, grid, end_horizontal)
+    #             if height > 1:
+    #                 self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, grid, start_vertical)
+    #             if width != 1 and height != 1:
+    #                 self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.top_right())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.down_arrow())
+    #     elif width > 0 and height < 0:
+    #         if self.line_direction == [1, 0]:
+    #             self.horizontal_line(start_y_char + height + 1, start_x_char + 1, width - 1, grid, end_horizontal)
+    #             if height < 1:
+    #                 self.vertical_line(start_x_char, start_y_char + 1, height + 1, grid, end_vertical)
+    #             if width != 1 and height != 1:
+    #                 self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_left())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.right_arrow())
+    #         else:
+    #             self.horizontal_line(start_y_char, start_x_char, width - 1, grid, start_horizontal)
+    #             if height < 1:
+    #                 self.vertical_line(start_x_char + width - 1, start_y_char, height + 1, grid, start_vertical)
+    #             if width != 1 and height != 1:
+    #                 self.set_char_at(start_x_char + width - 1, start_y_char, grid, self.bottom_right())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width - 1, start_y_char + height + 1, grid, self.up_arrow())
+    #     elif width < 0 and height > 0:
+    #         if self.line_direction == [1, 0]:
+    #             self.horizontal_line(start_y_char + height - 1, start_x_char, width + 1, grid, start_horizontal)
+    #             if height > 1:
+    #                 self.vertical_line(start_x_char, start_y_char, height - 1, grid, start_vertical)
+    #             if width != 1 and height != 1:
+    #                 self.set_char_at(start_x_char, start_y_char + height - 1, grid, self.bottom_right())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
+    #         else:
+    #             self.horizontal_line(start_y_char, start_x_char + 1, width + 1, grid, end_horizontal)
+    #             if height > 1:
+    #                 self.vertical_line(start_x_char + width + 1, start_y_char + 1, height - 1, grid, end_vertical)
+    #             if width != 1 and height != 1:
+    #                 self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.top_left())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.down_arrow())
+    #     elif width < 0 and height < 0:
+    #         if self.line_direction == [1, 0]:
+    #             self.horizontal_line(start_y_char + height + 1, start_x_char, width + 1, grid, end_horizontal)
+    #             if height < 1:
+    #                 self.vertical_line(start_x_char, start_y_char + 1, height + 1, grid, start_vertical)
+    #             if width != 1 and height != 1:
+    #                 self.set_char_at(start_x_char, start_y_char + height + 1, grid, self.top_right())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.left_arrow())
+    #         else:
+    #             self.horizontal_line(start_y_char, start_x_char + 1, width + 1, grid, start_horizontal)
+    #             if height < 1:
+    #                 self.vertical_line(start_x_char + width + 1, start_y_char, height + 1, grid, end_vertical)
+    #             if width != 1 and height != 1:
+    #                 self.set_char_at(start_x_char + width + 1, start_y_char, grid, self.bottom_left())
+    #             if arrow:
+    #                 self.set_char_at(start_x_char + width + 1, start_y_char + height + 1, grid, self.up_arrow())
 
-        if width == 1 and height < 0:
-            self.set_char_at(start_x_char, start_y_char, grid, self.left_vertical())
-        elif width == 1 and height > 0:
-            self.set_char_at(start_x_char, start_y_char, grid, self.right_vertical())
-        elif height == 1:
-            self.set_char_at(start_x_char, start_y_char, grid, self.bottom_horizontal())
+    #     if width == 1 and height < 0:
+    #         self.set_char_at(start_x_char, start_y_char, grid, self.left_vertical())
+    #     elif width == 1 and height > 0:
+    #         self.set_char_at(start_x_char, start_y_char, grid, self.right_vertical())
+    #     elif height == 1:
+    #         self.set_char_at(start_x_char, start_y_char, grid, self.bottom_horizontal())
 
-        if arrow and height == 1:
-            if width < 0:
-                self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
-            else:
-                self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.right_arrow())
+    #     if arrow and height == 1:
+    #         if width < 0:
+    #             self.set_char_at(start_x_char + width + 1, start_y_char + height - 1, grid, self.left_arrow())
+    #         else:
+    #             self.set_char_at(start_x_char + width - 1, start_y_char + height - 1, grid, self.right_arrow())
 
-        self.prev_line_pos = [start_x_char + width, start_y_char + height]
+    #     self.prev_line_pos = [start_x_char + width, start_y_char + height]
 
-    def set_char_at(self, x, y, grid, char):
-        # if char == " " or char == "":
-        #     return
-        child = grid.get_child_at(x, y)
-        if child:
-            if grid == self.grid:
-                self.undo_changes[0].add_change(x, y, child.get_text())
-            child.set_text(char)
-            self.changed_chars.append([x, y])
+    # def set_char_at(self, x, y, grid, char):
+    #     child = grid.get_child_at(x, y)
+    #     if child:
+    #         if grid == self.grid:
+    #             self.undo_changes[0].add_change(x, y, child.get_text())
+    #         child.set_text(char)
+    #         self.changed_chars.append([x, y])
 
-    def vertical_line(self, x, start_y, length, grid, char):
-        if length > 0:
-            for y in range(abs(length)):
-                child = grid.get_child_at(x, start_y + y)
-                if not child:
-                    continue
-                prev_label = child.get_text()
-                if grid == self.grid:
-                    self.undo_changes[0].add_change(x, start_y + y, prev_label)
-                if prev_label == "" or prev_label == " ":
-                    child.set_text(char)
-                elif prev_label == self.top_horizontal() and self.crossing() != " ":
-                    child.set_text(self.crossing())
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([x, start_y + y])
-        else:
-            for y in range(abs(length)):
-                child = grid.get_child_at(x, start_y + y + length)
-                if not child:
-                    continue
-                if grid == self.grid:
-                    self.undo_changes[0].add_change(x, start_y + y + length, child.get_text())
-                if child.get_text() == "─": # FIXME make it work universally
-                    child.set_text("┼")
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([x, start_y + y + length])
+    # def vertical_line(self, x, start_y, length, grid, char):
+    #     if length > 0:
+    #         for y in range(abs(length)):
+    #             child = grid.get_child_at(x, start_y + y)
+    #             if not child:
+    #                 continue
+    #             prev_label = child.get_text()
+    #             if grid == self.grid:
+    #                 self.undo_changes[0].add_change(x, start_y + y, prev_label)
+    #             if prev_label == "" or prev_label == " ":
+    #                 child.set_text(char)
+    #             elif prev_label == self.top_horizontal() and self.crossing() != " ":
+    #                 child.set_text(self.crossing())
+    #             else:
+    #                 child.set_text(char)
+    #             self.changed_chars.append([x, start_y + y])
+    #     else:
+    #         for y in range(abs(length)):
+    #             child = grid.get_child_at(x, start_y + y + length)
+    #             if not child:
+    #                 continue
+    #             if grid == self.grid:
+    #                 self.undo_changes[0].add_change(x, start_y + y + length, child.get_text())
+    #             if child.get_text() == "─": # FIXME make it work universally
+    #                 child.set_text("┼")
+    #             else:
+    #                 child.set_text(char)
+    #             self.changed_chars.append([x, start_y + y + length])
 
-    def horizontal_line(self, y, start_x, width, grid, char):
-        if width > 0:
-            for x in range(abs(width)):
-                child = grid.get_child_at(start_x + x, y)
-                if not child:
-                    continue
-                prev_label = child.get_text()
-                if grid == self.grid:
-                    self.undo_changes[0].add_change(start_x + x, y, prev_label)
-                if prev_label == "" or prev_label == " ":
-                    child.set_text(char)
-                elif prev_label == self.left_vertical():
-                    child.set_text(self.crossing())
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([start_x + x, y])
-        else:
-            for x in range(abs(width)):
-                child = grid.get_child_at(start_x + x + width, y)
-                if not child:
-                    continue
-                prev_label = child.get_text()
-                if grid == self.grid:
-                    self.undo_changes[0].add_change(start_x + x + width, y, prev_label)
-                if prev_label == "" or prev_label == " ":
-                    child.set_text(char)
-                elif prev_label == self.left_vertical():
-                    child.set_text(self.crossing())
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([start_x + x + width, y])
+    # def horizontal_line(self, y, start_x, width, grid, char):
+    #     if width > 0:
+    #         for x in range(abs(width)):
+    #             child = grid.get_child_at(start_x + x, y)
+    #             if not child:
+    #                 continue
+    #             prev_label = child.get_text()
+    #             if grid == self.grid:
+    #                 self.undo_changes[0].add_change(start_x + x, y, prev_label)
+    #             if prev_label == "" or prev_label == " ":
+    #                 child.set_text(char)
+    #             elif prev_label == self.left_vertical():
+    #                 child.set_text(self.crossing())
+    #             else:
+    #                 child.set_text(char)
+    #             self.changed_chars.append([start_x + x, y])
+    #     else:
+    #         for x in range(abs(width)):
+    #             child = grid.get_child_at(start_x + x + width, y)
+    #             if not child:
+    #                 continue
+    #             prev_label = child.get_text()
+    #             if grid == self.grid:
+    #                 self.undo_changes[0].add_change(start_x + x + width, y, prev_label)
+    #             if prev_label == "" or prev_label == " ":
+    #                 child.set_text(char)
+    #             elif prev_label == self.left_vertical():
+    #                 child.set_text(self.crossing())
+    #             else:
+    #                 child.set_text(char)
+    #             self.changed_chars.append([start_x + x + width, y])
 
     @Gtk.Template.Callback("undo_first_change")
     def undo_first_change(self, btn):
         self.canvas.undo(btn)
 
-    def top_horizontal(self):
-        return self.styles[self.style - 1][0]
-    def bottom_horizontal(self):
-        return self.styles[self.style - 1][1]
-    def left_vertical(self):
-        if self.flip:
-            return self.styles[self.style - 1][3]
-        return self.styles[self.style - 1][2]
-    def right_vertical(self):
-        if self.flip:
-            return self.styles[self.style - 1][2]
-        return self.styles[self.style - 1][3]
-    def top_left(self):
-        if self.flip:
-            return self.styles[self.style - 1][5]
-        return self.styles[self.style - 1][4]
-    def top_right(self):
-        if self.flip:
-            return self.styles[self.style - 1][4]
-        return self.styles[self.style - 1][5]
-    def bottom_right(self):
-        if self.flip:
-            return self.styles[self.style - 1][7]
-        return self.styles[self.style - 1][6]
-    def bottom_left(self):
-        if self.flip:
-            return self.styles[self.style - 1][6]
-        return self.styles[self.style - 1][7]
-    def up_arrow(self):
-        return self.styles[self.style - 1][13]
-    def down_arrow(self):
-        return self.styles[self.style - 1][14]
-    def left_arrow(self):
-        return self.styles[self.style - 1][16]
-    def right_arrow(self):
-        return self.styles[self.style - 1][15]
-    def crossing(self):
-        return self.styles[self.style - 1][8]
-    def right_intersect(self):
-        if self.flip:
-            return self.styles[self.style - 1][10]
-        return self.styles[self.style - 1][9]
-    def left_intersect(self):
-        if self.flip:
-            return self.styles[self.style - 1][9]
-        return self.styles[self.style - 1][10]
-    def top_intersect(self):
-        return self.styles[self.style - 1][11]
-    def bottom_intersect(self):
-        return self.styles[self.style - 1][12]
+    # def top_horizontal(self):
+    #     return self.styles[self.style - 1][0]
+    # def bottom_horizontal(self):
+    #     return self.styles[self.style - 1][1]
+    # def left_vertical(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][3]
+    #     return self.styles[self.style - 1][2]
+    # def right_vertical(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][2]
+    #     return self.styles[self.style - 1][3]
+    # def top_left(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][5]
+    #     return self.styles[self.style - 1][4]
+    # def top_right(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][4]
+    #     return self.styles[self.style - 1][5]
+    # def bottom_right(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][7]
+    #     return self.styles[self.style - 1][6]
+    # def bottom_left(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][6]
+    #     return self.styles[self.style - 1][7]
+    # def up_arrow(self):
+    #     return self.styles[self.style - 1][13]
+    # def down_arrow(self):
+    #     return self.styles[self.style - 1][14]
+    # def left_arrow(self):
+    #     return self.styles[self.style - 1][16]
+    # def right_arrow(self):
+    #     return self.styles[self.style - 1][15]
+    # def crossing(self):
+    #     return self.styles[self.style - 1][8]
+    # def right_intersect(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][10]
+    #     return self.styles[self.style - 1][9]
+    # def left_intersect(self):
+    #     if self.flip:
+    #         return self.styles[self.style - 1][9]
+    #     return self.styles[self.style - 1][10]
+    # def top_intersect(self):
+    #     return self.styles[self.style - 1][11]
+    # def bottom_intersect(self):
+    #     return self.styles[self.style - 1][12]
 
     def select_rectangle_tool(self):
         self.rectangle_button.set_active(True)
