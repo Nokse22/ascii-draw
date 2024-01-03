@@ -50,8 +50,8 @@ class Select(GObject.GObject):
         self.dragging_delta_char_x = 0
         self.dragging_delta_char_y = 0
 
-        self.selection_start_x_char = 0
-        self.selection_start_y_char = 0
+        self.selection_start_x_char = -1
+        self.selection_start_y_char = -1
 
         self.selection_delta_char_x = 0
         self.selection_delta_char_y = 0
@@ -60,6 +60,8 @@ class Select(GObject.GObject):
         self.is_dragging = False
 
         self.moved_text: str = ''
+
+        self.click_released = False
 
     @GObject.Property(type=bool, default=False)
     def active(self):
@@ -72,8 +74,8 @@ class Select(GObject.GObject):
         if value:
             self.canvas.drawing_area.set_draw_func(self.drawing_function, None)
         else:
-            self.selection_start_x_char = 0
-            self.selection_start_y_char = 0
+            self.selection_start_x_char = -1
+            self.selection_start_y_char = -1
 
             self.selection_delta_char_x = 0
             self.selection_delta_char_y = 0
@@ -114,6 +116,10 @@ class Select(GObject.GObject):
             for y in range(1, int(height)):
                 for x in range(1, int(width)):
                     self.canvas.set_char_at(start_x_char + x, start_y_char + y, ' ', True)
+
+                start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+                self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
+                                start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
         else:
             print("new selection")
             self.selection_start_x_char = this_x // self.x_mul
@@ -139,14 +145,6 @@ class Select(GObject.GObject):
 
                 self.canvas.clear_preview()
 
-                # start_x_char = self.selection_start_x_char
-                # start_y_char = self.selection_start_y_char
-
-                # if self.selection_delta_char_x < 0:
-                #     start_x_char += self.selection_delta_char_x
-                # if self.selection_delta_char_y < 0:
-                #     start_y_char += self.selection_delta_char_y
-
                 start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
 
                 self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
@@ -171,13 +169,6 @@ class Select(GObject.GObject):
             self.is_dragging = False
 
             self.canvas.clear_preview()
-            # start_x_char = self.selection_start_x_char
-            # start_y_char = self.selection_start_y_char
-
-            # if self.selection_delta_char_x < 0:
-            #     start_x_char += self.selection_delta_char_x
-            # if self.selection_delta_char_y < 0:
-            #     start_y_char += self.selection_delta_char_y
 
             start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
 
@@ -190,10 +181,22 @@ class Select(GObject.GObject):
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
-
         print("pressed")
 
-        return
+        self.click_released = False
+
+    def on_click_released(self, click, arg, x, y):
+        if not self._active: return
+        print("released")
+
+        self.click_released = True
+
+    def on_click_stopped(self, click):
+        if not self._active: return
+        print(f"stopped {self.click_released}")
+
+        if not self.click_released:
+            return
 
         self.drag_start_x = 0
         self.drag_start_y = 0
@@ -201,8 +204,8 @@ class Select(GObject.GObject):
         self.dragging_delta_char_x = 0
         self.dragging_delta_char_y = 0
 
-        self.selection_start_x_char = 0
-        self.selection_start_y_char = 0
+        self.selection_start_x_char = -1
+        self.selection_start_y_char = -1
 
         self.selection_delta_char_x = 0
         self.selection_delta_char_y = 0
@@ -210,17 +213,9 @@ class Select(GObject.GObject):
         self.has_selection = False
         self.is_dragging = False
 
+        self.click_released = False
+
         self.canvas.drawing_area.queue_draw()
-
-        print("clicked")
-
-    def on_click_stopped(self, click):
-        if not self._active: return
-        print("stopped")
-
-    def on_click_released(self, click, arg, x, y):
-        if not self._active: return
-        print("released")
 
     def drawing_function(self, area, cr, width, height, data):
         cr.save()
@@ -229,10 +224,10 @@ class Select(GObject.GObject):
 
         start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
 
-        cr.rectangle((start_x_char + self.dragging_delta_char_x) * self.x_mul + self.x_mul/2,
-                            (start_y_char + self.dragging_delta_char_y) * self.y_mul + self.y_mul/2,
-                            (width) * self.x_mul,
-                            (height) * self.y_mul)
+        cr.rectangle((start_x_char + self.dragging_delta_char_x + 1) * self.x_mul, # + self.x_mul/2,
+                            (start_y_char + self.dragging_delta_char_y + 1) * self.y_mul, # + self.y_mul/2,
+                            (width - 1) * self.x_mul,
+                            (height - 1) * self.y_mul)
         cr.stroke()
         cr.restore()
 
