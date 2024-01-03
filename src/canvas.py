@@ -162,7 +162,10 @@ class Canvas(Adw.Bin):
         self.emit('undo_added', undo_name)
 
     def get_char_at(self, x: int, y: int):
-        return self.draw_grid.get_child_at(x, y).get_text()
+        child = self.draw_grid.get_child_at(x, y)
+        if child:
+            return child.get_text()
+        return ''
 
     def set_selected_char(self, char):
         if self._primary_selected:

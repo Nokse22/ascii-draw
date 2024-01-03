@@ -95,20 +95,8 @@ class Select(GObject.GObject):
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
 
-        width = self.selection_delta_char_x
-        height = self.selection_delta_char_y
+        start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
 
-        start_x_char = self.selection_start_x_char
-        start_y_char = self.selection_start_y_char
-
-        if width < 0:
-            width = -width
-            start_x_char -= width
-        if height < 0:
-            height = - height
-            start_y_char -= height
-
-        print(self.selection_delta_char_x, self.selection_delta_char_y)
         if (this_x_char > (start_x_char)
                 and this_x_char < (start_x_char + width)
                 and this_y_char > (start_y_char)
@@ -142,38 +130,34 @@ class Select(GObject.GObject):
             delta_x = - delta_x
 
         if self.is_dragging:
-            self.dragging_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
-            self.dragging_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
+            new_delta_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
+            new_delta_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
 
-            self.canvas.clear_preview()
+            if new_delta_x != self.dragging_delta_char_x or new_delta_y != self.dragging_delta_char_y:
+                self.dragging_delta_char_x = new_delta_x
+                self.dragging_delta_char_y = new_delta_y
 
-            start_x_char = self.selection_start_x_char
-            start_y_char = self.selection_start_y_char
+                self.canvas.clear_preview()
 
-            if self.selection_delta_char_x < 0:
-                start_x_char += self.selection_delta_char_x
-            if self.selection_delta_char_y < 0:
-                start_y_char += self.selection_delta_char_y
+                # start_x_char = self.selection_start_x_char
+                # start_y_char = self.selection_start_y_char
 
-            self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
-                            start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
+                # if self.selection_delta_char_x < 0:
+                #     start_x_char += self.selection_delta_char_x
+                # if self.selection_delta_char_y < 0:
+                #     start_y_char += self.selection_delta_char_y
+
+                start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+
+                self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
+                                start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
+
+                self.canvas.drawing_area.queue_draw()
         else:
             self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
             self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
 
-            # start_x_char = self.selection_start_x_char
-            # start_y_char = self.selection_start_y_char
-
-            # if self.selection_delta_char_x < 0:
-            #     self.selection_delta_char_x = -self.selection_delta_char_x
-            #     self.selection_start_x_char -= self.selection_delta_char_x
-            # self.selection_delta_char_x += 1
-            # if self.selection_delta_char_y < 0:
-            #     self.selection_delta_char_y = - self.selection_delta_char_y
-            #     self.selection_start_y_char -= self.selection_delta_char_y
-            # self.selection_delta_char_y += 1
-
-        self.canvas.drawing_area.queue_draw()
+            self.canvas.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -187,13 +171,15 @@ class Select(GObject.GObject):
             self.is_dragging = False
 
             self.canvas.clear_preview()
-            start_x_char = self.selection_start_x_char
-            start_y_char = self.selection_start_y_char
+            # start_x_char = self.selection_start_x_char
+            # start_y_char = self.selection_start_y_char
 
-            if self.selection_delta_char_x < 0:
-                start_x_char += self.selection_delta_char_x
-            if self.selection_delta_char_y < 0:
-                start_y_char += self.selection_delta_char_y
+            # if self.selection_delta_char_x < 0:
+            #     start_x_char += self.selection_delta_char_x
+            # if self.selection_delta_char_y < 0:
+            #     start_y_char += self.selection_delta_char_y
+
+            start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
 
             self.canvas.draw_text(start_x_char + 1, start_y_char + 1, self.moved_text, True, True)
             self.moved_text = ''
@@ -240,9 +226,25 @@ class Select(GObject.GObject):
         cr.save()
         cr.set_source_rgb(0.208, 0.518, 0.894)
         cr.set_dash([5], 0)
-        cr.rectangle(self.selection_start_x_char * self.x_mul + self.x_mul/2 + self.dragging_delta_char_x * self.x_mul,
-                            self.selection_start_y_char * self.y_mul + self.y_mul/2 + self.dragging_delta_char_y * self.y_mul,
-                            self.selection_delta_char_x * self.x_mul,
-                            self.selection_delta_char_y * self.y_mul)
+
+        start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+
+        cr.rectangle((start_x_char + self.dragging_delta_char_x) * self.x_mul + self.x_mul/2,
+                            (start_y_char + self.dragging_delta_char_y) * self.y_mul + self.y_mul/2,
+                            (width) * self.x_mul,
+                            (height) * self.y_mul)
         cr.stroke()
         cr.restore()
+
+    def translate(self, start_x, start_y, width, height):
+        if width < 0:
+            width = -width
+            start_x -= width
+        if height < 0:
+            height = - height
+            start_y -= height
+        width += 2
+        height += 2
+        start_x -= 1
+        start_y -= 1
+        return start_x, start_y, width, height
