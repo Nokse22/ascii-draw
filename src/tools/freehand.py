@@ -98,11 +98,12 @@ class Freehand(GObject.GObject):
         self.end_x = width * self.x_mul
         self.end_y = height * self.y_mul
 
-        x_coord = (self.start_x + self.end_x)/self.x_mul
-        y_coord = (self.start_y + self.end_y)/self.y_mul
+        x_coord = (self.start_x + self.end_x)//self.x_mul
+        y_coord = (self.start_y + self.end_y)//self.y_mul
         for delta in self.brush_sizes[int(self._size - 1)]:
             # self.canvas.set_char_at(x_coord + delta[0], y_coord + delta[1], self.char, True)
             self.canvas.draw_at(x_coord + delta[0], y_coord + delta[1])
+        self.canvas.update()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return

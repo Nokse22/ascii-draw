@@ -159,6 +159,8 @@ class Line(GObject.GObject):
             self.prev_char_pos = []
             self.prev_pos = []
 
+        self.canvas.update()
+
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
         pass

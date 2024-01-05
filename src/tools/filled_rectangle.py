@@ -156,3 +156,8 @@ class FilledRectangle(GObject.GObject):
         for y in range(1, height - 1):
             for x in range(1, width - 1):
                 self.canvas.draw_secondary_at(start_x_char + x, start_y_char + y, draw)
+
+        if draw:
+            self.canvas.update()
+        else:
+            self.canvas.update_preview()

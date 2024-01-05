@@ -144,3 +144,5 @@ class Text(GObject.GObject):
             text = pyfiglet.figlet_format(text, font=self.selected_font)
 
         self.canvas.draw_text(self.text_x, self.text_y, text, self._transparent, False)
+
+        self.canvas.update()

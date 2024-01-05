@@ -32,6 +32,17 @@ canvas-shadow</property>
               </object>
             </child>
             <child type="overlay">
+              <object class="GtkDrawingArea" id="draw_drawing_area">
+                <property name="css-classes">ascii-textview
+canvas-shadow</property>
+              </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkDrawingArea" id="preview_drawing_area">
+                <property name="css-classes">ascii-preview</property>
+              </object>
+            </child>
+            <child type="overlay">
               <object class="GtkDrawingArea" id="drawing_area"/>
             </child>
           </object>

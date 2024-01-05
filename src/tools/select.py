@@ -21,8 +21,6 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-import numpy as np
-
 class Select(GObject.GObject):
     def __init__(self, _canvas, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -120,6 +118,7 @@ class Select(GObject.GObject):
                 start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
                 self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
                                 start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
+            self.canvas.update()
         else:
             print("new selection")
             self.selection_start_x_char = this_x // self.x_mul
@@ -151,6 +150,7 @@ class Select(GObject.GObject):
                                 start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
 
                 self.canvas.drawing_area.queue_draw()
+                self.canvas.update()
         else:
             self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
             self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
@@ -218,7 +218,7 @@ class Select(GObject.GObject):
         self.canvas.drawing_area.queue_draw()
 
     def drawing_function(self, area, cr, width, height, data):
-        cr.save()
+        # cr.save()
         cr.set_source_rgb(0.208, 0.518, 0.894)
         cr.set_dash([5], 0)
 
@@ -228,8 +228,19 @@ class Select(GObject.GObject):
                             (start_y_char + self.dragging_delta_char_y + 1) * self.y_mul, # + self.y_mul/2,
                             (width - 1) * self.x_mul,
                             (height - 1) * self.y_mul)
+
+        # TEST
+        # cr.set_source_rgb (0.0, 0.0, 0.0)
+        # cr.select_font_face ("Monospace")
+        # cr.set_font_size (20)
+        # cr.move_to ((width - 1) * self.x_mul, (height - 1) * self.y_mul)
+        # cr.show_text("Hello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybody")
+
+        # cr.move_to (0, 50)
+        # cr.show_text("Hello nobody!")
+
         cr.stroke()
-        cr.restore()
+        # cr.restore()
 
     def translate(self, start_x, start_y, width, height):
         if width < 0:
