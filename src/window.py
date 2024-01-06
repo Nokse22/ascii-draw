@@ -201,7 +201,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.table = Table(self.canvas, self.rows_box)
         self.table.bind_property('active', self.table_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        # self.table.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.table.bind_property('table_type', self.table_types_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
         # self.table.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.piker = Picker(self.canvas)
@@ -270,15 +270,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.font_box.append(font_text_view)
 
         self.font_box.select_row(self.font_box.get_first_child())
-
-        self.table_x = 0
-        self.table_y = 0
-
-        self.rows_number = 0
-        self.columns_number = 0
-
-        self.tree_x = 0
-        self.tree_y = 0
 
         self.file_path = ""
 
@@ -396,19 +387,19 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child = prev_child.get_next_sibling()
             self.rows_box.remove(prev_child)
         self.columns_spin.set_sensitive(True)
-        self.rows_number = 0
+        self.table.rows_number = 0
 
     @Gtk.Template.Callback("on_add_row_clicked") # TABLE
     def on_add_row_clicked(self, btn):
-        self.rows_number += 1
+        self.table.rows_number += 1
         self.columns_spin.set_sensitive(False)
         values = int(self.columns_spin.get_value())
-        self.columns_number = values
+        self.table.columns_number = values
 
         rows_values_box = Gtk.Box(spacing=6, margin_start=6, margin_end=6, margin_bottom=6, margin_top=6)
         for value in range(values):
             entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
-            entry.connect("changed", self.preview_table)
+            entry.connect("changed", lambda _: self.table.preview_table())
             rows_values_box.append(entry)
         self.rows_box.append(rows_values_box)
 

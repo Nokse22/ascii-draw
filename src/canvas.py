@@ -189,10 +189,11 @@ class Canvas(Adw.Bin):
         self.undo_changes.insert(0, Change(undo_name))
         self.emit('undo_added', undo_name)
 
-    def get_char_at(self, x: int, y: int):
+    def get_char_at(self, x: int, y: int, draw=True):
         if y >= len(self.drawing) or x >= len(self.drawing[0]): return
-
-        return self.drawing[int(y)][int(x)]
+        if draw:
+            return self.drawing[int(y)][int(x)]
+        return self.preview[int(y)][int(x)]
 
     def set_selected_char(self, char):
         if self._primary_selected:

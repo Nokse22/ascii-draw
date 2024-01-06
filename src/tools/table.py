@@ -44,6 +44,11 @@ class Table(GObject.GObject):
         self.table_x = 0
         self.table_y = 0
 
+        self.rows_number = 0
+        self.columns_number = 0
+
+        self._table_type = 0
+
     @GObject.Property(type=bool, default=False)
     def active(self):
         return self._active
@@ -61,6 +66,15 @@ class Table(GObject.GObject):
     def style(self, value):
         self._style = value
         self.notify('style')
+
+    @GObject.Property(type=str, default='#')
+    def table_type(self):
+        return self._table_type
+
+    @table_type.setter
+    def table_type(self, value):
+        self._table_type = value
+        self.notify('table_type')
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
@@ -86,13 +100,17 @@ class Table(GObject.GObject):
         # table_type = self.table_types_combo.get_selected()
         self.preview_table()
 
-    def draw_table(self):
-        self.insert_table(0, True)
+    def insert_table(self):
+        self.canvas.add_undo_action("Table")
+        self.draw_table(self._table_type, True)
+        self.canvas.update()
 
     def preview_table(self):
-        self.insert_table(0, False)
+        self.draw_table(self._table_type, False)
+        self.canvas.update_preview()
 
-    def insert_table(self, table_type: int, draw: bool):
+    def draw_table(self, table_type: int, draw: bool):
+        print(table_type)
         child = self.rows_box.get_first_child()
         columns_widths = []
         table = []
@@ -130,35 +148,35 @@ class Table(GObject.GObject):
 
         for y in range(height):
             for x in range(width):
-                self.canvas.set_char_at(self.table_x + x, self.table_y + y, ' ',True)
+                self.canvas.set_char_at(self.table_x + x, self.table_y + y, ' ', draw)
 
         self.canvas.draw_rectangle(self.table_x, self.table_y, width, height, draw)
 
         x = self.table_x
         for column in range(self.columns_number - 1):
             x += columns_widths[column] + 1
-            self.vertical_line(x, self.table_y + 1, height - 2, grid, self.right_vertical())
-            self.set_char_at(x, self.table_y + height - 1, grid, self.top_intersect())
-            self.set_char_at(x, self.table_y, grid, self.bottom_intersect())
+            self.canvas.vertical_line(x, self.table_y + 1, height - 2, self.canvas.right_vertical(), draw)
+            self.canvas.set_char_at(x, self.table_y + height - 1, self.canvas.top_intersect(), draw)
+            self.canvas.set_char_at(x, self.table_y, self.canvas.bottom_intersect(), draw)
 
         y = self.table_y
         if table_type == 1: # all divided
             for row in range(self.rows_number - 1):
                 y += 2
-                self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
-                self.set_char_at(self.table_x, y, grid, self.right_intersect())
-                self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
+                self.canvas.horizontal_line(y, self.table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
+                self.canvas.set_char_at(self.table_x, y, self.canvas.right_intersect(), draw)
+                self.canvas.set_char_at(self.table_x + width - 1, y, self.canvas.left_intersect(), draw)
         elif table_type == 0: # first line divided
             y += 2
-            self.horizontal_line(y, self.table_x + 1, width - 2, grid, self.bottom_horizontal())
-            self.set_char_at(self.table_x, y, grid, self.right_intersect())
-            self.set_char_at(self.table_x + width - 1, y, grid, self.left_intersect())
+            self.canvas.horizontal_line(y, self.table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
+            self.canvas.set_char_at(self.table_x, y, self.canvas.right_intersect(), draw)
+            self.canvas.set_char_at(self.table_x + width - 1, y, self.canvas.left_intersect(), draw)
 
         y = self.table_y + 1
         x = self.table_x + 1
         for index_row, row in enumerate(table):
             for index, column in enumerate(row):
-                self.insert_text(grid, x, y, column)
+                self.canvas.draw_text(x, y, column, False, draw)
                 x += columns_widths[index] + 1
             if table_type == 1: # all divided
                 y += 2

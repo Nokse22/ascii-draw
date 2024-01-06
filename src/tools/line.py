@@ -235,9 +235,6 @@ class Line(GObject.GObject):
         end_horizontal = self.canvas.top_horizontal()
         start_horizontal = self.canvas.bottom_horizontal()
 
-        # print(width, height)
-        print(width, height, direction)
-
         if width > 0 and height > 0:
             if abs(direction[0]) == 1: # FIXED
                 self.canvas.horizontal_line(start_y_char + height, start_x_char + 1, width, start_horizontal, draw)
