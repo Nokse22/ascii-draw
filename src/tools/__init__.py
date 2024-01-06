@@ -8,3 +8,4 @@ from .select import Select
 from .freehand_line import FreehandLine
 from .picker import Picker
 from .eraser import Eraser
+from .tree import Tree

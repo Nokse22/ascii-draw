@@ -37,8 +37,6 @@ class Select(GObject.GObject):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
-        self.flip = False
-
         self.x_mul = 12
         self.y_mul = 24
 
@@ -131,8 +129,6 @@ class Select(GObject.GObject):
 
     def on_drag_follow(self, gesture, delta_x, delta_y):
         if not self._active: return
-        if self.flip:
-            delta_x = - delta_x
 
         if self.is_dragging:
             new_delta_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
@@ -160,9 +156,6 @@ class Select(GObject.GObject):
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
 
-        if self.flip:
-            delta_x = - delta_x
-
         if self.is_dragging:
             self.selection_start_x_char += self.dragging_delta_char_x
             self.selection_start_y_char += self.dragging_delta_char_y
@@ -176,6 +169,8 @@ class Select(GObject.GObject):
             self.moved_text = ''
             self.dragging_delta_char_x = 0
             self.dragging_delta_char_y = 0
+
+            self.canvas.update()
 
         self.has_selection = True
 

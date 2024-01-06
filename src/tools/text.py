@@ -39,7 +39,6 @@ class Text(GObject.GObject):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
-        self.flip = False
         self.start_x = 0
         self.start_y = 0
 
@@ -48,6 +47,9 @@ class Text(GObject.GObject):
 
         self.text_x = 0
         self.text_y = 0
+
+        self.text_drag_x = 0
+        self.text_drag_y = 0
 
         self._text = ''
 
@@ -97,18 +99,30 @@ class Text(GObject.GObject):
     def on_drag_begin(self, gesture, start_x, start_y):
         if not self._active: return
 
-    def on_drag_follow(self, gesture, end_x, end_y):
+    def on_drag_follow(self, gesture, x, y):
         if not self._active: return
+
+        x_char = int(x / self.x_mul)
+        y_char = int(y / self.y_mul)
+
+        self.text_drag_x = x_char
+        self.text_drag_y = y_char
+
+        self.canvas.clear_preview()
+        self.preview_text()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
 
+        self.text_x += self.text_drag_x
+        self.text_y += self.text_drag_y
+
+        self.text_drag_x = 0
+        self.text_drag_y = 0
+
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
-        if self.flip:
-            if self.drawing_area_width == 0:
-                self.update_area_width()
-            x = self.drawing_area_width - x
+
         x_char = int(x / self.x_mul)
         y_char = int(y / self.y_mul)
 
@@ -134,7 +148,8 @@ class Text(GObject.GObject):
         if self.selected_font != "Normal":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
 
-        self.canvas.draw_text(self.text_x, self.text_y, text, self._transparent, True)
+        self.canvas.draw_text(self.text_x + self.text_drag_x, self.text_y + self.text_drag_y, text, self._transparent, True)
+        self.canvas.update()
 
     def preview_text(self):
         self.canvas.clear_preview()
@@ -143,6 +158,6 @@ class Text(GObject.GObject):
         if self.selected_font != "Normal":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
 
-        self.canvas.draw_text(self.text_x, self.text_y, text, self._transparent, False)
+        self.canvas.draw_text(self.text_x + self.text_drag_x, self.text_y + self.text_drag_y, text, self._transparent, False)
 
-        self.canvas.update()
+        self.canvas.update_preview()

@@ -41,7 +41,6 @@ class Line(GObject.GObject):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
-        self.flip = False
         self.start_x = 0
         self.start_y = 0
 
@@ -107,8 +106,7 @@ class Line(GObject.GObject):
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return
-        if self.flip:
-            end_x = - end_x
+
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
 
@@ -120,7 +118,7 @@ class Line(GObject.GObject):
 
         self.canvas.clear_preview()
         self.line_direction = self.normalize_vector([end_x - self.prev_line_pos[0], end_y - self.prev_line_pos[1]])
-        self.line_direction = [abs(self.line_direction[0]), abs(self.line_direction[1])]
+        # self.line_direction = [abs(self.line_direction[0]), abs(self.line_direction[1])]
 
         # print(width, height)
 
@@ -138,8 +136,6 @@ class Line(GObject.GObject):
 
         self.canvas.clear_preview()
 
-        if self.flip:
-            delta_x = - delta_x
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
         width = int((delta_x + self.start_x) // self.x_mul - start_x_char)
@@ -239,101 +235,79 @@ class Line(GObject.GObject):
         end_horizontal = self.canvas.top_horizontal()
         start_horizontal = self.canvas.bottom_horizontal()
 
-        if width < 0 and height < 0:
-            width = -width
-            start_x_char -= width
-            height = - height
-            start_y_char -= height
-            direction = [direction[1], direction[0]]
-        # width += 1
-        # if height < 0:
-
-        # height += 1
-
-
         # print(width, height)
-        print(direction)
+        print(width, height, direction)
 
-        if width >= 0 and height >= 0:
-            if direction == [1, 0]: # FIXED
+        if width > 0 and height > 0:
+            if abs(direction[0]) == 1: # FIXED
                 self.canvas.horizontal_line(start_y_char + height, start_x_char + 1, width, start_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height, end_vertical, draw)
-                if height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.bottom_left(), draw)
+                self.canvas.vertical_line(start_x_char, start_y_char, height, end_vertical, draw)
+                self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.bottom_left(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.right_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char, width - 1, end_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char, self.canvas.top_right(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.right_arrow(), draw)
+            else: # FIXED
+                self.canvas.horizontal_line(start_y_char, start_x_char, width, end_horizontal, draw)
+                self.canvas.vertical_line(start_x_char + width, start_y_char + 1, height, start_vertical, draw)
+                self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.top_right(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.down_arrow(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.down_arrow(), draw)
         elif width > 0 and height < 0:
-            if direction == [1, 0]: # FIXED
+            if abs(direction[0]) == 1: # FIXED
                 self.canvas.horizontal_line(start_y_char + height, start_x_char + 1, width, end_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char + 1, height, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.top_left(), draw)
+                self.canvas.vertical_line(start_x_char, start_y_char + 1, height, end_vertical, draw)
+                self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.top_left(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.right_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char, width - 1, start_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char + width - 1, start_y_char, height + 1, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char, self.canvas.bottom_right(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.right_arrow(), draw)
+            else: # FIXED
+                self.canvas.horizontal_line(start_y_char, start_x_char, width, start_horizontal, draw)
+                self.canvas.vertical_line(start_x_char + width, start_y_char, height, start_vertical, draw)
+                self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.bottom_right(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height + 1, self.canvas.up_arrow(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.up_arrow(), draw)
         elif width < 0 and height > 0:
-            if direction == [1, 0]: # FIXED
+            if abs(direction[0]) == 1: # FIXED
                 self.canvas.horizontal_line(start_y_char + height, start_x_char, width, start_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.bottom_right(), draw)
+                self.canvas.vertical_line(start_x_char, start_y_char, height, start_vertical, draw)
+                self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.bottom_right(), draw)
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.left_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char, width, end_horizontal, draw)
-                if height > 1:
-                    self.canvas.vertical_line(start_x_char + width, start_y_char, height + 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.top_left(), draw)
+            else: # FIXED
+                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width, end_horizontal, draw)
+                self.canvas.vertical_line(start_x_char + width, start_y_char, height + 1, end_vertical, draw)
+                self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.top_left(), draw)
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.down_arrow(), draw)
         elif width < 0 and height < 0:
-            if direction == [1, 0]:
+            if abs(direction[0]) == 1: # FIXED
                 self.canvas.horizontal_line(start_y_char + height, start_x_char, width, end_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char, start_y_char, height, start_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.top_right(), draw)
+                self.canvas.vertical_line(start_x_char, start_y_char + 1, height, start_vertical, draw)
+                self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.top_right(), draw)
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.left_arrow(), draw)
-            else:
-                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width + 1, start_horizontal, draw)
-                if height < 1:
-                    self.canvas.vertical_line(start_x_char + width + 1, start_y_char, height + 1, end_vertical, draw)
-                if width != 1 and height != 1:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char, self.canvas.bottom_left(), draw)
+            else: # FIXED
+                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width, start_horizontal, draw)
+                self.canvas.vertical_line(start_x_char + width, start_y_char, height, end_vertical, draw)
+                self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.bottom_left(), draw)
                 if self._arrow:
-                    self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height + 1, self.canvas.up_arrow(), draw)
+                    self.canvas.set_char_at(start_x_char + width, start_y_char + height, self.canvas.up_arrow(), draw)
 
-        if width == 1 and height < 0:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.left_vertical(), draw)
-        elif width == 1 and height > 0:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.right_vertical(), draw)
-        elif height == 1:
-            self.canvas.set_char_at(start_x_char, start_y_char, self.canvas.bottom_horizontal(), draw)
-
-        # if width < 0 and height == 1:
-        #     self.canvas.set_char_at(start_x_char + width + 1, start_y_char + height - 1, self.canvas.left_arrow(), draw)
-        # else:
-        #     self.canvas.set_char_at(start_x_char + width - 1, start_y_char + height - 1, self.canvas.right_arrow(), draw)
+        if width == 0 and height == 0:
+            if abs(direction[0]) == 1:
+                self.canvas.set_char_at(start_x_char + width, start_y_char, end_horizontal, draw)
+            else:
+                self.canvas.set_char_at(start_x_char + width, start_y_char, end_vertical, draw)
+        elif width == 0:
+            if height < 0:
+                lenght = height - 1
+            else:
+                lenght = height + 1
+            self.canvas.vertical_line(start_x_char, start_y_char, lenght, end_vertical, draw)
+        elif height == 0:
+            if width < 0:
+                lenght = width - 1
+            else:
+                lenght = width + 1
+            self.canvas.horizontal_line(start_y_char, start_x_char, lenght, start_horizontal, draw)
 
     def normalize_vector(self, vector):
         magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
@@ -397,14 +371,10 @@ class Line(GObject.GObject):
                 self.canvas.set_char_at(prev_pos[0], prev_pos[1], self.canvas.right_vertical(), draw)
 
     def drawing_function(self, area, cr, width, height, data):
-        cr.save()
         cr.set_source_rgb(0.208, 0.518, 0.894)
         cr.move_to (self.start_x, self.start_y)
         cr.rel_line_to (self.end_x, self.end_y)
-        # cr.stroke()
 
-        # cr.move_to (self.start_x, self.start_y)
         cr.set_source_rgb(1, 0, 0)
-        cr.rel_line_to (self.line_direction[0]*30, self.line_direction[1]*30)
+        # cr.rel_line_to (self.line_direction[0]*30, self.line_direction[1]*30)
         cr.stroke()
-        cr.restore()

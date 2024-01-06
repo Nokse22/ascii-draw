@@ -64,7 +64,6 @@ class Canvas(Adw.Bin):
 
         self.primary_selected = True
 
-        self.flip = _flip
         self._style = 1
 
         self.drag_gesture = Gtk.GestureDrag()
@@ -84,22 +83,11 @@ class Canvas(Adw.Bin):
         self.canvas_width = 50
         self.canvas_height = 25
 
-        self.canvas_x = 50
-        self.canvas_y = 25
-
         self.draw_grid.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
-        # self.draw_grid.set_width_request(self.canvas_width*self.x_mul)
 
         for y in range(self.canvas_height):
             new_line = []
             for x in range(self.canvas_width):
-                # self.draw_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0,
-                #         min_chars=0, min_lines=0, css_classes=["ascii"],
-                #         width_request=self.x_mul, height_request=self.y_mul), x, y, 1, 1)
-                # self.preview_grid.attach(Gtk.Inscription(nat_chars=0,
-                #         nat_lines=0, min_chars=0, min_lines=0,
-                #         css_classes=["ascii"], width_request=self.x_mul,
-                #         height_request=self.y_mul), x, y, 1, 1)
                 new_line.append(" ")
             self.drawing.append(new_line)
             self.preview.append(new_line)
@@ -177,16 +165,19 @@ class Canvas(Adw.Bin):
         except:
             return
         for change in change_object.changes:
-            child = self.draw_grid.get_child_at(change[0], change[1])
-            if not child:
-                continue
-            child.set_text(change[2])
+            # child = self.draw_grid.get_child_at(change[0], change[1])
+            # if not child:
+            #     continue
+            # child.set_text(change[2])
+            print(change[0], change[1], change[2])
+            self.set_char_at(change[0], change[1], change[2], True)
         self.undo_changes.pop(0)
         if len(self.undo_changes) == 0:
             btn.set_sensitive(False)
             btn.set_tooltip_text("")
         else:
             btn.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
+        self.update()
 
     def draw_char(self, x_coord, y_coord, char):
         child = self.draw_grid.get_child_at(x_coord, y_coord)
@@ -199,11 +190,6 @@ class Canvas(Adw.Bin):
         self.emit('undo_added', undo_name)
 
     def get_char_at(self, x: int, y: int):
-        # child = self.draw_grid.get_child_at(x, y)
-        # if child:
-        #     return child.get_text()
-        # return ''
-
         if y >= len(self.drawing) or x >= len(self.drawing[0]): return
 
         return self.drawing[int(y)][int(x)]
@@ -231,7 +217,6 @@ class Canvas(Adw.Bin):
         rows2, cols2 = len(array2), len(array2[0])
 
         if start_x >= cols1 or start_y >= rows1:
-            print("Shift values are out of bounds. No changes made.")
             return
 
         for i in range(rows2):
@@ -243,65 +228,7 @@ class Canvas(Adw.Bin):
                         continue
                     _layer[int(new_i)][int(new_j)] = array2[i][j]
 
-        # grid = self.draw_grid if draw else self.preview_grid
-        # x = start_x
-        # y = start_y
-        # for char in text:
-        #     if x >= self.canvas_x:
-        #         if ord(char) == 10: # \n char
-        #             y += 1
-        #             x = start_x
-        #         continue
-        #     if y >= self.canvas_y:
-        #         break
-        #     if emoji.is_emoji(char):
-        #         continue
-        #     child = grid.get_child_at(x, y)
-        #     if not child:
-        #         continue
-        #     elif ord(char) < 32: # empty chars
-        #         if ord(char) == 10: # \n char
-        #             y += 1
-        #             x = start_x
-        #             continue
-        #         if ord(char) == 9: # tab
-        #             for i in range(4):
-        #                 if transparent:
-        #                     if self.flip:
-        #                         x -= 1
-        #                     else:
-        #                         x += 1
-        #                     continue
-        #                 child = grid.get_child_at(x, y)
-        #                 if not child:
-        #                     continue
-        #                 if grid == self.draw_grid:
-        #                     self.undo_changes[0].add_change(x, y, child.get_text())
-        #                 child.set_text(" ")
-        #                 self.changed_chars.append([x, y])
-        #                 if self.flip:
-        #                     x -= 1
-        #                 else:
-        #                     x += 1
-        #             continue
-        #     elif char == " " and transparent:
-        #         if self.flip:
-        #             x -= 1
-        #         else:
-        #             x += 1
-        #         continue
-        #     if grid == self.draw_grid:
-        #         self.undo_changes[0].add_change(x, y, child.get_text())
-        #     child.set_text(char)
-        #     self.changed_chars.append([x, y])
-        #     if self.flip:
-        #         x -= 1
-        #     else:
-        #         x += 1
-
     def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
-        print(width, height)
-
         if width <= 1 or height <= 1:
             return
 
@@ -315,102 +242,66 @@ class Canvas(Adw.Bin):
         self.set_char_at(start_x_char, start_y_char, self.top_left(), draw)
         self.set_char_at(start_x_char, start_y_char + height - 1, self.bottom_left(), draw)
 
-    def horizontal_line(self, y, start_x, width, char, draw):
-        grid = self.draw_grid if draw else self.preview_grid
+    def horizontal_line(self, y, start_x, length, char, draw):
+        if length < 0:
+            length = -length
+            start_x -= length
 
-        if width > 0:
-            for x in range(abs(width)):
-                child = grid.get_child_at(start_x + x, y)
-                if not child:
-                    continue
-                prev_label = child.get_text()
-                if grid == self.draw_grid:
-                    self.undo_changes[0].add_change(start_x + x, y, prev_label)
-                if prev_label == "" or prev_label == " ":
-                    child.set_text(char)
-                elif prev_label == self.left_vertical():
-                    child.set_text(self.crossing())
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([start_x + x, y])
-        else:
-            for x in range(abs(width)):
-                child = grid.get_child_at(start_x + x + width, y)
-                if not child:
-                    continue
-                prev_label = child.get_text()
-                if grid == self.draw_grid:
-                    self.undo_changes[0].add_change(start_x + x + width, y, prev_label)
-                if prev_label == "" or prev_label == " ":
-                    child.set_text(char)
-                elif prev_label == self.left_vertical():
-                    child.set_text(self.crossing())
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([start_x + x + width, y])
+        for x in range(abs(length)):
+            prev_label = self.get_char_at(start_x + x, y)
+            if (prev_label == self.left_vertical() or prev_label == self.right_vertical()) and self.crossing() != " ":
+                self.set_char_at(start_x + x, y, self.crossing(), draw)
+            else:
+                self.set_char_at(start_x + x, y, char, draw)
 
     def vertical_line(self, x, start_y, length, char, draw):
-        grid = self.draw_grid if draw else self.preview_grid
+        if length < 0:
+            length = -length
+            start_y -= length
 
-        if length > 0:
-            for y in range(abs(length)):
-                child = grid.get_child_at(x, start_y + y)
-                if not child:
-                    continue
-                prev_label = child.get_text()
-                if grid == self.draw_grid:
-                    self.undo_changes[0].add_change(x, start_y + y, prev_label)
-                if prev_label == "" or prev_label == " ":
-                    child.set_text(char)
-                elif prev_label == self.top_horizontal() and self.crossing() != " ":
-                    child.set_text(self.crossing())
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([x, start_y + y])
-        else:
-            for y in range(abs(length)):
-                child = grid.get_child_at(x, start_y + y + length)
-                if not child:
-                    continue
-                if grid == self.draw_grid:
-                    self.undo_changes[0].add_change(x, start_y + y + length, child.get_text())
-                if child.get_text() == "─": # FIXME make it work universally
-                    child.set_text("┼")
-                else:
-                    child.set_text(char)
-                self.changed_chars.append([x, start_y + y + length])
+        for y in range(abs(length)):
+            prev_label = self.get_char_at(x, start_y + y)
+            if (prev_label == self.top_horizontal() or prev_label == self.bottom_horizontal()) and self.crossing() != " ":
+                self.set_char_at(x, start_y + y, self.crossing(), draw)
+            else:
+                self.set_char_at(x, start_y + y, char, draw)
 
     def set_char_at(self, x, y, char, draw):
         _layer = self.drawing if draw else self.preview
 
-        if y >= len(_layer) or x >= len(_layer[0]):
+        if y >= len(_layer) or x >= len(_layer[0]) or x < 0 or y < 0:
             return
+        if draw:
+            prev_char = self.get_char_at(x, y)
+            self.undo_changes[0].add_change(x, y, prev_char)
         _layer[int(y)][int(x)] = char
 
     def draw_at(self, x, y):
-        if y >= len(self.drawing) or x >= len(self.drawing[0]):
+        if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
             return
+        prev_char = self.get_char_at(x, y)
+        self.undo_changes[0].add_change(x, y, prev_char)
         self.drawing[int(y)][int(x)] = self.get_selected_char()
 
     def draw_primary_at(self, x, y, draw):
         _layer = self.drawing if draw else self.preview
 
-        if y >= len(_layer) or x >= len(_layer[0]):
+        if y >= len(_layer) or x >= len(_layer[0]) or x < 0 or y < 0:
             return
+        if draw:
+            prev_char = self.get_char_at(x, y)
+            self.undo_changes[0].add_change(x, y, prev_char)
         _layer[int(y)][int(x)] = self.primary_char
 
     def draw_secondary_at(self, x, y, draw):
         _layer = self.drawing if draw else self.preview
 
-        if y >= len(_layer) or x >= len(_layer[0]):
+        if y >= len(_layer) or x >= len(_layer[0]) or x < 0 or y < 0:
             return
+        if draw:
+            prev_char = self.get_char_at(x, y)
+            self.undo_changes[0].add_change(x, y, prev_char)
         _layer[int(y)][int(x)] = self.secondary_char
-
-    def preview_char_at(self, x, y, char):
-        self.set_char_at(x, y, self.preview_grid, char)
-
-    def draw_char_at(self, x, y, char):
-        self.set_char_at(x, y, self.draw_grid, char)
 
     def clear_preview(self):
         self.preview = []
@@ -432,176 +323,50 @@ class Canvas(Adw.Bin):
 
         self.draw_drawing_area.queue_draw()
 
-    def clear(self, grid):
-        if grid != self.draw_grid:
-            if len(self.changed_chars) < 100:
-                for pos in self.changed_chars:
-                    child = grid.get_child_at(pos[0], pos[1])
-                    if not child:
-                        continue
-                    child.set_text("")
-                # print(f"normal finished in {time.time() - start} to remove{len(self.changed_chars)}")
-                self.changed_chars = []
-                return
-
-            threads = []
-            list_length = len(self.changed_chars)
-            divided = 5
-
-            quotient, remainder = divmod(list_length, divided)
-            parts = [quotient] * divided
-
-            for i in range(remainder):
-                parts[i] += 1
-
-            total = 0
-            # print(f"making threads at {time.time() - start}")
-            for part in parts:
-                if part == 0:
-                    return
-                thread = threading.Thread(target=self.clear_list_of_char, args=(total, total + part))
-                total += part
-                thread.start()
-                threads.append(thread)
-                # print(f"added threads at {time.time() - start}")
-
-            for thread in threads:
-                thread.join()
-                # print(f"joining at {time.time() - start}")
-            # print(f"threads finished in {time.time() - start} to remove {list_length} every one with {parts[0]}")
-            self.changed_chars = []
-
-        else:
-            self.force_clear(None)
-
-    def force_clear(self, grid=None):
-        print("force clear")
-        if grid == None:
-            self.add_undo_action("Clear Screen")
-            grid = self.draw_grid
-        for y in range(self.canvas_y):
-            for x in range(self.canvas_x):
-                child = grid.get_child_at(x, y)
-                if not child:
-                    continue
-                if grid == self.draw_grid:
-                    self.undo_changes[0].add_change(x, y, child.get_text())
-                child.set_text(" ")
-
-    def clear_list_of_char(self, chars_list_start, chars_list_end):
-        for index in range(chars_list_start, chars_list_end):
-            pos = self.changed_chars[index]
-            child = self.preview_grid.get_child_at(pos[0], pos[1])
-            if not child:
-                continue
-            child.set_text("")
-
     def change_canvas_size(self, final_x, final_y):
-        x_delta = final_x - self.canvas_x
-        y_delta = final_y - self.canvas_y
+        content = self.get_content()
 
-        if y_delta > 0:
-            for line in range(y_delta):
-                if self.canvas_y + 1 > self.canvas_max_y:
-                    break
-                self.canvas_y += 1
-                for x in range(self.canvas_x):
-                    self.draw_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
-                    self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), x, self.canvas_y - 1, 1, 1)
-        elif y_delta < 0:
-            for line in range(abs(y_delta)):
-                if self.canvas_y == 0:
-                    break
-                self.canvas_y -= 1
-                for x in range(self.canvas_x):
-                    self.draw_grid.remove(self.draw_grid.get_child_at(x, self.canvas_y))
-                    self.preview_grid.remove(self.preview_grid.get_child_at(x, self.canvas_y))
+        self.drawing = []
+        self.preview = []
 
-        if x_delta > 0:
-            for column in range(x_delta):
-                if self.canvas_x + 1 > self.canvas_max_x:
-                    break
-                self.canvas_x += 1
-                for y in range(self.canvas_y):
-                    self.draw_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
-                    self.preview_grid.attach(Gtk.Inscription(nat_chars=0, nat_lines=0, min_chars=0, min_lines=0, css_classes=["ascii"], width_request=self.x_mul, height_request=self.y_mul), self.canvas_x - 1, y, 1, 1)
-        elif x_delta < 0:
-            for column in range(abs(x_delta)):
-                if self.canvas_x == 0:
-                    break
-                self.canvas_x -= 1
-                for y in range(self.canvas_y):
-                    self.draw_grid.remove(self.draw_grid.get_child_at(self.canvas_x, y))
-                    self.preview_grid.remove(self.preview_grid.get_child_at(self.canvas_x, y))
+        self.canvas_width = final_x
+        self.canvas_height = final_y
 
-        self.drawing_area_width = self.drawing_area.get_allocation().width
+        for y in range(self.canvas_height):
+            new_line = []
+            for x in range(self.canvas_width):
+                new_line.append(" ")
+            self.drawing.append(new_line)
+            self.preview.append(new_line)
 
-        # self.width_spin.set_value(self.canvas_x)
-        # self.height_spin.set_value(self.canvas_y)
+        self.draw_grid.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
+
+        self.draw_text(0, 0, content, False, True)
 
     def get_content(self):
-        final_text = ""
-        text = ""
-        text_row = ""
-        row_empty = True
-        rows_empty = True
-        for y in range(self.canvas_y):
-            for x in range(self.canvas_x):
-                if self.flip:
-                    child = self.draw_grid.get_child_at(self.canvas_x - x, y)
-                else:
-                    child = self.draw_grid.get_child_at(x, y)
-                if child:
-                    char = child.get_text()
-                    if char == None or char == "" or char == " ":
-                        char = " "
-                        text += char
-                    else:
-                        if self.flip and char == "<":
-                            char = ">"
-                        elif self.flip and char == ">":
-                            char = "<"
-                        text += char
-                        text_row += text
-                        text = ""
-                        rows_empty = False
-            text = ""
-            if not rows_empty:
-                rows_empty = True
-                text_row += "\n"
-                final_text += text_row
-                text_row = ""
-            else:
-                text_row += "\n"
-        return final_text
+        content = ""
+
+        for index, line in enumerate(self.drawing):
+            line_string = ''.join(w if w != "" else " " for w in line)
+            content += line_string + "\n"
+
+        return content
 
     def top_horizontal(self):
         return self.styles[self._style - 1][0]
     def bottom_horizontal(self):
         return self.styles[self._style - 1][1]
     def left_vertical(self):
-        if self.flip:
-            return self.styles[self._style - 1][3]
         return self.styles[self._style - 1][2]
     def right_vertical(self):
-        if self.flip:
-            return self.styles[self._style - 1][2]
         return self.styles[self._style - 1][3]
     def top_left(self):
-        if self.flip:
-            return self.styles[self._style - 1][5]
         return self.styles[self._style - 1][4]
     def top_right(self):
-        if self.flip:
-            return self.styles[self._style - 1][4]
         return self.styles[self._style - 1][5]
     def bottom_right(self):
-        if self.flip:
-            return self.styles[self._style - 1][7]
         return self.styles[self._style - 1][6]
     def bottom_left(self):
-        if self.flip:
-            return self.styles[self._style - 1][6]
         return self.styles[self._style - 1][7]
     def up_arrow(self):
         return self.styles[self._style - 1][13]
@@ -614,12 +379,8 @@ class Canvas(Adw.Bin):
     def crossing(self):
         return self.styles[self._style - 1][8]
     def right_intersect(self):
-        if self.flip:
-            return self.styles[self._style - 1][10]
         return self.styles[self._style - 1][9]
     def left_intersect(self):
-        if self.flip:
-            return self.styles[self._style - 1][9]
         return self.styles[self._style - 1][10]
     def top_intersect(self):
         return self.styles[self._style - 1][11]

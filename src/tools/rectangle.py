@@ -127,6 +127,7 @@ class Rectangle(GObject.GObject):
             start_y_char -= height
         height += 1
         self.canvas.draw_rectangle(start_x_char, start_y_char, width, height, True)
+        self.canvas.update()
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return

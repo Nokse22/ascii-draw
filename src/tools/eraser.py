@@ -36,7 +36,6 @@ class Eraser(GObject.GObject):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
-        self.flip = False
         self.start_x = 0
         self.start_y = 0
 
@@ -86,8 +85,7 @@ class Eraser(GObject.GObject):
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return
-        if self.flip:
-            end_x = - end_x
+
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
 

@@ -60,7 +60,7 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
 
         self.create_action('new-palette', self.on_new_palette_action)
-        self.create_action('new-palette-from-selection', self.on_new_palette_from_selection_action)
+        self.create_action('open-palette-folder', self.on_open_palette_folder_action)
         self.create_action('new-palette-from-canvas', self.on_new_palette_from_canvas_action)
         self.create_action('import-palettes', self.on_import_palettes_action)
 
@@ -105,9 +105,6 @@ class AsciiDrawApplication(Adw.Application):
 	        margin-right:3px;
             transition: background-color 0ms linear;
         }
-        .selected-char-button{
-            border: 2px solid @accent_color;
-        }
         '''
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(css, -1)
@@ -122,7 +119,7 @@ class AsciiDrawApplication(Adw.Application):
     def on_clear_canvas_action(self, *args):
         self.win.canvas.clear_canvas()
 
-    def on_new_palette_from_selection_action(self, *args):
+    def on_open_palette_folder_action(self, *args):
         pass
 
     def on_new_palette_from_canvas_action(self, *args):
