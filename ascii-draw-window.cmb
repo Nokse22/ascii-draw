@@ -116,7 +116,6 @@
 	(1,374,"(item)",None,373,None,None,None,-1,None),
 	(1,375,"(section)",None,314,None,None,None,None,None),
 	(1,376,"(item)",None,375,None,None,None,None,None),
-	(1,377,"(item)",None,373,None,None,None,-1,None),
 	(1,378,"GtkToggleButton","secondary_char_button",37,None,None,None,6,None),
 	(1,379,"GtkToggleButton","primary_char_button",37,None,None,None,5,None),
 	(1,380,"(section)",None,310,None,None,None,None,None),
@@ -252,7 +251,6 @@
 	(1,263,"GtkWidget","margin-end","10",None,None,None,None,None,None,None,None,None),
 	(1,263,"GtkWidget","margin-start","10",None,None,None,None,None,None,None,None,None),
 	(1,263,"GtkWidget","margin-top","10",None,None,None,None,None,None,None,None,None),
-	(1,263,"GtkWidget","visible","True",None,None,None,None,None,38,"GtkToggleButton","active",None),
 	(1,264,"GtkListBox","selection-mode","none",None,None,None,None,None,None,None,None,None),
 	(1,264,"GtkWidget","css-classes","boxed-list",None,None,None,None,None,None,None,None,None),
 	(1,265,"AdwPreferencesRow","title","Colums",None,None,None,None,None,None,None,None,None),
@@ -472,11 +470,9 @@
 	(1,372,"GtkWidget","margin-start","3",None,None,None,None,None,None,None,None,None),
 	(1,372,"GtkWidget","margin-top","3",None,None,None,None,None,None,None,None,None),
 	(1,374,"(item)","action","app.new-palette",None,None,None,None,None,None,None,None,None),
-	(1,374,"(item)","label","New char palette",1,None,None,None,None,None,None,None,None),
+	(1,374,"(item)","label","New Palette",1,None,None,None,None,None,None,None,None),
 	(1,376,"(item)","action","app.save-as",None,None,None,None,None,None,None,None,None),
 	(1,376,"(item)","label","Save As",1,None,None,None,None,None,None,None,None),
-	(1,377,"(item)","action","app.new-palette-from-selection",None,None,None,None,None,None,None,None,None),
-	(1,377,"(item)","label","New Palette From Selection",1,None,None,None,None,None,None,None,None),
 	(1,378,"GtkButton","label","+",None,None,None,None,None,None,None,None,None),
 	(1,378,"GtkToggleButton","group","379",None,None,None,None,None,None,None,None,None),
 	(1,378,"GtkWidget","css-classes","circular",None,None,None,None,None,None,None,None,None),
@@ -500,7 +496,6 @@
 	(1,383,"GtkWidget","margin-end","10",None,None,None,None,None,None,None,None,None),
 	(1,383,"GtkWidget","margin-start","10",None,None,None,None,None,None,None,None,None),
 	(1,383,"GtkWidget","margin-top","10",None,None,None,None,None,None,None,None,None),
-	(1,383,"GtkWidget","visible","True",None,None,None,None,None,38,"GtkToggleButton","active",None),
 	(1,393,"GtkListBox","selection-mode","none",None,None,None,None,None,None,None,None,None),
 	(1,393,"GtkWidget","css-classes","boxed-list",None,None,None,None,None,None,None,None,None),
 	(1,394,"AdwComboRow","model",None,None,None,None,None,398,None,None,None,None),
@@ -510,7 +505,7 @@
 	(1,396,"GtkWidget","css-classes","boxed-list",None,None,None,None,None,None,None,None,None),
 	(1,397,"AdwPreferencesRow","title","Arrow",None,None,None,None,None,None,None,None,None),
 	(1,399,"(item)","action","app.new-palette-from-canvas",None,None,None,None,None,None,None,None,None),
-	(1,399,"(item)","label","New Palette From Canvas",None,None,None,None,None,None,None,None,None),
+	(1,399,"(item)","label","New Palette From Canvas",1,None,None,None,None,None,None,None,None),
 	(1,400,"(item)","action","app.copy-to-clipboard",None,None,None,None,None,None,None,None,None),
 	(1,400,"(item)","label","Copy To Clipboard",None,None,None,None,None,None,None,None,None)
   </object_property>
@@ -518,7 +513,7 @@
 	(2,1,9,"AdwSplitButton","clicked","save_button_clicked",None,None,None,None,None),
 	(14,1,10,"GtkButton","clicked","undo_first_change",None,None,None,None,None),
 	(16,1,308,"GtkTextBuffer","insert-text","on_tree_text_inserted",None,None,None,None,None),
-	(17,1,308,"GtkTextBuffer","changed","preview_tree",None,None,None,None,None),
+	(17,1,308,"GtkTextBuffer","changed","preview_tree",None,None,None,1,None),
 	(18,1,309,"GtkTextBuffer","changed","preview_text",None,None,None,1,None),
 	(19,1,259,"GtkListBox","row-selected","font_row_selected",None,None,None,None,None),
 	(20,1,261,"GtkButton","clicked","insert_text",None,None,None,None,None),
@@ -539,7 +534,8 @@
 	(38,1,341,"GtkButton","clicked","char_pages_go_back",None,None,None,None,None),
 	(39,1,342,"GtkButton","clicked","char_pages_go_next",None,None,None,None,None),
 	(40,1,275,"GtkButton","clicked","insert_table",None,None,None,None,None),
-	(43,1,394,"GObject","notify","preview_table","selected",None,None,None," Custom fragments ")
+	(43,1,394,"GObject","notify","preview_table","selected",None,None,None," Custom fragments "),
+	(44,1,304,"GtkButton","clicked","insert_tree",None,None,None,None,None)
   </object_signal>
   <object_data>
 	(1,329,"GtkStringList",1,1,None,None,None,None,None,None),

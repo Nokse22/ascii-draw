@@ -116,7 +116,6 @@
                                 <property name="margin-top">10</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">10</property>
-                                <property name="visible" bind-source="table_button" bind-property="active">True</property>
                                 <child>
                                   <object class="GtkListBox">
                                     <property name="css-classes">boxed-list</property>
@@ -236,7 +235,7 @@
                                         <property name="buffer">
                                           <object class="GtkTextBuffer" id="tree_text_entry_buffer">
                                             <signal name="insert-text" handler="on_tree_text_inserted"/>
-                                            <signal name="changed" handler="preview_tree"/>
+                                            <signal name="changed" handler="preview_tree" after="yes"/>
                                           </object>
                                         </property>
                                         <property name="css-classes">card</property>
@@ -251,6 +250,7 @@
                                   <object class="GtkButton">
                                     <property name="css-classes">suggested-action</property>
                                     <property name="label" translatable="yes">Enter</property>
+                                    <signal name="clicked" handler="insert_tree"/>
                                   </object>
                                 </child>
                               </object>
@@ -312,7 +312,6 @@
                                 <property name="margin-top">10</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">10</property>
-                                <property name="visible" bind-source="table_button" bind-property="active">True</property>
                                 <child>
                                   <object class="GtkListBox">
                                     <property name="css-classes">boxed-list</property>
@@ -824,15 +823,11 @@
         <section>
           <item>
             <attribute name="action">app.new-palette</attribute>
-            <attribute name="label" translatable="yes">New char palette</attribute>
-          </item>
-          <item>
-            <attribute name="action">app.new-palette-from-selection</attribute>
-            <attribute name="label" translatable="yes">New Palette From Selection</attribute>
+            <attribute name="label" translatable="yes">New Palette</attribute>
           </item>
           <item>
             <attribute name="action">app.new-palette-from-canvas</attribute>
-            <attribute name="label">New Palette From Canvas</attribute>
+            <attribute name="label" translatable="yes">New Palette From Canvas</attribute>
           </item>
         </section>
         <section>
