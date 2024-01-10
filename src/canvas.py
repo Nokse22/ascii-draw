@@ -165,10 +165,6 @@ class Canvas(Adw.Bin):
         except:
             return
         for change in change_object.changes:
-            # child = self.draw_grid.get_child_at(change[0], change[1])
-            # if not child:
-            #     continue
-            # child.set_text(change[2])
             print(change[0], change[1], change[2])
             self.set_char_at(change[0], change[1], change[2], True)
         self.undo_changes.pop(0)

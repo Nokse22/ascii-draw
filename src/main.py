@@ -156,6 +156,7 @@ class AsciiDrawApplication(Adw.Application):
         if not self.win:
             self.win = AsciiDrawWindow(application=self)
         self.win.present()
+        self.win.connect_after("close-request", self.on_shutdown)
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""
@@ -191,6 +192,31 @@ class AsciiDrawApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
+
+    def on_shutdown(self, *args):
+        print("help")
+        dialog = Adw.MessageDialog(
+            heading="Login",
+            body="A valid password is needed to continue",
+            close_response="cancel",
+            modal=True,
+            transient_for=self.win,
+        )
+
+        dialog.add_response("cancel", "Cancel")
+        dialog.add_response("login", "Login")
+
+        dialog.set_response_appearance("login", Adw.ResponseAppearance.SUGGESTED)
+
+        entry = Gtk.PasswordEntry(show_peek_icon=True)
+        dialog.set_extra_child(entry)
+
+        dialog.choose(None, self.on_response_selected_advanced)
+
+        dialog.show()
+
+    def on_response_selected_advanced(self, *args):
+        pass
 
     def select_rectangle_tool(self, widget, _):
         self.win.select_rectangle_tool()

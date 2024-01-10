@@ -419,26 +419,17 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.open_file_chooser()
 
     def open_file(self):
-        dialog = Gtk.FileChooserNative(
+        dialog = Gtk.FileDialog(
             title=_("Open File"),
-            transient_for=self,
-            action=Gtk.FileChooserAction.OPEN,
-            modal=True
         )
-
-        dialog.set_accept_label("Open")
-        dialog.set_cancel_label("Cancel")
-
-        response = dialog.show()
-
-        dialog.connect("response", self.on_open_file_response)
+        dialog.open(self, None, self.on_open_file_response)
 
     def on_open_file_response(self, dialog, response):
-        if response == Gtk.ResponseType.CANCEL:
-            dialog.destroy()
-            return
-        elif response == Gtk.ResponseType.ACCEPT:
-            path = dialog.get_file().get_path()
+        file = dialog.open_finish(response)
+        print(f"Selected File: {file.get_path()}")
+
+        if file:
+            path = file.get_path()
             try:
                 with open(path, 'r') as file:
                     input_string = file.read()
@@ -450,7 +441,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 #     self.toast_overlay.add_toast(toast)
                 self.canvas.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
                 self.canvas.add_undo_action("Open")
-                self.canvas.force_clear()
+                self.canvas.clear_canvas()
                 self.canvas.draw_text(0, 0, input_string, False, True)
                 self.file_path = path
                 file_name = os.path.basename(self.file_path)
@@ -458,11 +449,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             except IOError:
                 print(f"Error reading {path}.")
 
-        dialog.destroy()
-
     def new_canvas(self):
         self.add_undo_action("Clear")
-        self.force_clear(self.grid)
+        self.canvas.clear_canvas()
         self.canvas.change_size(50, 25)
         self.file_path = ""
         self.title_widget.set_subtitle("")
@@ -474,28 +463,20 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.open_file_chooser()
 
     def open_file_chooser(self):
-        dialog = Gtk.FileChooserNative(
-            title=_("Save File"),
-            transient_for=self,
-            action=Gtk.FileChooserAction.SAVE,
-            modal=True
+        dialog = Gtk.FileDialog(
+            title=_("Save File As"),
+            initial_name=_("Drawing.txt"),
         )
-
-        dialog.set_accept_label("Save")
-        dialog.set_cancel_label("Cancel")
-
-        response = dialog.show()
-
-        dialog.connect("response", self.on_save_file_response)
+        print("saving as")
+        dialog.save(self, None, self.on_save_file_response)
 
     def on_save_file_response(self, dialog, response):
-        if response == Gtk.ResponseType.CANCEL:
-            dialog.destroy()
-            return
-        elif response == Gtk.ResponseType.ACCEPT:
-            file_path = dialog.get_file().get_path()
+        file = dialog.open_finish(response)
+        print(f"Selected File: {file.get_path()}")
+
+        if file:
+            file_path = file.get_path()
             self.save_file(file_path)
-        dialog.destroy()
 
     def save_file(self, file_path):
         self.file_path = file_path
@@ -517,9 +498,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         else:
             self.secondary_char_button.set_label(btn.get_label())
             self.canvas.secondary_char = btn.get_label()
-
-    def show_sidebar(self, btn):
-        self.overlay_split_view.set_show_sidebar(not self.overlay_split_view.get_show_sidebar())
 
     def copy_to_clipboard(self):
         text = self.canvas.get_content()
