@@ -54,6 +54,7 @@ class Canvas(Adw.Bin):
 
     def __init__(self, _styles, _flip):
         super().__init__()
+        self.color = 0
 
         self.styles = _styles
         self.primary_char = '#'
@@ -138,7 +139,7 @@ class Canvas(Adw.Bin):
         self.notify('style')
 
     def drawing_function(self, area, cr, width, height, data):
-        cr.set_source_rgb (0.0, 0.0, 0.0)
+        cr.set_source_rgb (self.color, self.color, self.color)
         cr.select_font_face ("Monospace")
         cr.set_font_size (20)
         for index, line in enumerate(self.drawing):

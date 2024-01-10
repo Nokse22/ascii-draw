@@ -73,7 +73,6 @@ class AsciiDrawApplication(Adw.Application):
             opacity:0.8;
             color: @window_fg_color;
         }
-
         .ascii-preview{
             background: transparent;
             background-size: 12px 24px;
@@ -82,7 +81,7 @@ class AsciiDrawApplication(Adw.Application):
                 linear-gradient(to bottom, #aaaaaa 1px, transparent 1px);
             box-shadow:
                 inset 0px 0px 0px 1px #777777,
-                0px 0px 10px 10px #67676722;
+                0px 0px 10px 10px @headerbar_shade_color;
             opacity:0.4;
         }
         .ascii{
@@ -155,8 +154,10 @@ class AsciiDrawApplication(Adw.Application):
         self.win = self.props.active_window
         if not self.win:
             self.win = AsciiDrawWindow(application=self)
+
+        self.win.connect("close-request", self.on_shutdown)
+
         self.win.present()
-        self.win.connect_after("close-request", self.on_shutdown)
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""

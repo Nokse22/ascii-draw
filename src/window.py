@@ -292,6 +292,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.add_palette_to_ui(self.palettes)
 
+        self.style_manager = Adw.StyleManager()
+        self.style_manager.connect("notify::dark", self.change_theme)
+
+        self.change_theme()
+
+    def change_theme(self, manager=Adw.StyleManager(), *args):
+        print(manager)
+        self.canvas.color = 1 if manager.get_dark() else 0
+        self.canvas.update()
+
     def show_new_palette_window(self, chars=''):
         win = NewPaletteWindow(palette_chars=chars)
         win.present()
