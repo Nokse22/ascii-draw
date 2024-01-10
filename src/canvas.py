@@ -34,7 +34,7 @@ class Change():
         for change in self.changes:
             if change[0] == x and change[1] == y:
                 return
-        self.changes.append([x, y, prev_char])
+        self.changes.append((x, y, prev_char))
 
     def __repr__(self):
         return f"The change has {len(self.changes)} changes"
@@ -139,17 +139,17 @@ class Canvas(Adw.Bin):
         self.notify('style')
 
     def drawing_function(self, area, cr, width, height, data):
-        cr.set_source_rgb (self.color, self.color, self.color)
-        cr.select_font_face ("Monospace")
-        cr.set_font_size (20)
+        cr.set_source_rgb(self.color, self.color, self.color)
+        cr.select_font_face("Monospace")
+        cr.set_font_size(20)
         for index, line in enumerate(self.drawing):
             cr.move_to (0, (index + 1) * self.y_mul - 5)
             cr.show_text(''.join(w if w != "" else " " for w in line))
 
     def preview_drawing_function(self, area, cr, width, height, data):
-        cr.set_source_rgb (1, 0.0, 0.0)
-        cr.select_font_face ("Monospace")
-        cr.set_font_size (20)
+        cr.set_source_rgb(self.color, self.color, self.color)
+        cr.select_font_face("Monospace")
+        cr.set_font_size(20)
         for index, line in enumerate(self.preview):
             cr.move_to (0, (index + 1) * self.y_mul - 5)
             cr.show_text(''.join(w if w != "" else " " for w in line))
@@ -165,9 +165,8 @@ class Canvas(Adw.Bin):
             change_object = self.undo_changes[0]
         except:
             return
-        for change in change_object.changes:
-            print(change[0], change[1], change[2])
-            self.set_char_at(change[0], change[1], change[2], True)
+        for x, y, char in change_object.changes:
+            self.set_char_at(x, y, char, True)
         self.undo_changes.pop(0)
         if len(self.undo_changes) == 0:
             btn.set_sensitive(False)
@@ -224,6 +223,9 @@ class Canvas(Adw.Bin):
                 if 0 <= new_i < rows1 and 0 <= new_j < cols1:
                     if transparent and array2[i][j] == " ":
                         continue
+                    if draw:
+                        prev_char = self.get_char_at(new_j, new_i)
+                        self.undo_changes[0].add_change(new_j, new_i, prev_char)
                     _layer[int(new_i)][int(new_j)] = array2[i][j]
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
