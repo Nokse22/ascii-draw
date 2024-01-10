@@ -58,6 +58,8 @@ class Table(GObject.GObject):
         self._active = value
         self.notify('active')
 
+        self.canvas.clear_preview()
+
     @GObject.Property(type=str, default='#')
     def style(self):
         return self._style

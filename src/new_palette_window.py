@@ -31,9 +31,10 @@ class NewPaletteWindow(Adw.Window):
         'on-add-clicked': (GObject.SignalFlags.RUN_FIRST, None, (str,str,))
     }
 
-    def __init__(self, palette_chars=''):
+    def __init__(self, window, palette_chars=''):
         super().__init__()
 
+        self.set_transient_for(window)
         self.palette_chars = palette_chars
 
         self.palette_chars_buffer.set_text(self.palette_chars)

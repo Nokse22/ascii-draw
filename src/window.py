@@ -303,7 +303,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas.update()
 
     def show_new_palette_window(self, chars=''):
-        win = NewPaletteWindow(palette_chars=chars)
+        win = NewPaletteWindow(self, palette_chars=chars)
         win.present()
 
         win.connect("on-add-clicked", self.on_new_palette_add_clicked)
