@@ -100,9 +100,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.settings = Gio.Settings.new('io.github.nokse22.asciidraw')
 
-        self.props.width_request=420
-        self.props.height_request=400
-
         self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
 
@@ -481,7 +478,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         dialog.save(self, None, self.on_save_file_response)
 
     def on_save_file_response(self, dialog, response):
-        file = dialog.open_finish(response)
+        file = dialog.save_finish(response)
         print(f"Selected File: {file.get_path()}")
 
         if file:

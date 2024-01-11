@@ -78,6 +78,8 @@ class Table(GObject.GObject):
         self._table_type = value
         self.notify('table_type')
 
+        self.preview_table()
+
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
         pass
@@ -99,7 +101,6 @@ class Table(GObject.GObject):
         self.table_x = x_char
         self.table_y = y_char
         self.canvas.clear_preview()
-        # table_type = self.table_types_combo.get_selected()
         self.preview_table()
 
     def insert_table(self):
@@ -108,11 +109,11 @@ class Table(GObject.GObject):
         self.canvas.update()
 
     def preview_table(self):
+        self.canvas.clear_preview()
         self.draw_table(self._table_type, False)
         self.canvas.update_preview()
 
     def draw_table(self, table_type: int, draw: bool):
-        print(table_type)
         child = self.rows_box.get_first_child()
         columns_widths = []
         table = []
@@ -141,9 +142,9 @@ class Table(GObject.GObject):
         for column_width in columns_widths:
             width += column_width + 1
 
-        if table_type == 1: # all divided
+        if int(table_type) == 1: # all divided
             height = 1 + self.rows_number * 2
-        elif table_type == 0: # first line divided
+        elif int(table_type) == 0: # first line divided
             height = 3 + self.rows_number
         else: # not divided
             height = 2 + self.rows_number
@@ -162,13 +163,14 @@ class Table(GObject.GObject):
             self.canvas.set_char_at(x, self.table_y, self.canvas.bottom_intersect(), draw)
 
         y = self.table_y
-        if table_type == 1: # all divided
+
+        if int(table_type) == 1: # all divided
             for row in range(self.rows_number - 1):
                 y += 2
                 self.canvas.horizontal_line(y, self.table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
                 self.canvas.set_char_at(self.table_x, y, self.canvas.right_intersect(), draw)
                 self.canvas.set_char_at(self.table_x + width - 1, y, self.canvas.left_intersect(), draw)
-        elif table_type == 0: # first line divided
+        elif int(table_type) == 0: # first line divided
             y += 2
             self.canvas.horizontal_line(y, self.table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
             self.canvas.set_char_at(self.table_x, y, self.canvas.right_intersect(), draw)
@@ -180,9 +182,9 @@ class Table(GObject.GObject):
             for index, column in enumerate(row):
                 self.canvas.draw_text(x, y, column, False, draw)
                 x += columns_widths[index] + 1
-            if table_type == 1: # all divided
+            if int(table_type) == 1: # all divided
                 y += 2
-            elif table_type == 0 and index_row == 0: # first line divided
+            elif int(table_type) == 0 and index_row == 0: # first line divided
                 y += 2
             else:
                 y += 1

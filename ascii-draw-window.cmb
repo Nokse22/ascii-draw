@@ -130,8 +130,8 @@
 	(1,400,"(item)",None,375,None,None,None,-1,None)
   </object>
   <object_property>
-	(1,1,"GtkWidget","height-request","440",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkWidget","width-request","300",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkWidget","height-request","480",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkWidget","width-request","390",None,None,None,None,None,None,None,None,None),
 	(1,2,"AdwToolbarView","bottom-bar-style","raised",None,None,None,None,None,None,None,None,None),
 	(1,2,"AdwToolbarView","content",None,None,None,None,None,3,None,None,None,None),
 	(1,2,"AdwToolbarView","top-bar-style","raised",None,None,None,None,None,None,None,None,None),
@@ -537,7 +537,7 @@
   </object_signal>
   <object_data>
 	(1,329,"GtkStringList",1,1,None,None,None,None,None,None),
-	(1,329,"GtkStringList",2,2,"First line as header",1,None,1,None,None),
+	(1,329,"GtkStringList",2,2,"First line divided",1,None,1,None,None),
 	(1,329,"GtkStringList",2,3,"Divide each row",1,None,1,None,None),
 	(1,329,"GtkStringList",2,4,"Not divided",1,None,1,None,None),
 	(1,398,"GtkStringList",1,1,None,None,None,None,None,None),

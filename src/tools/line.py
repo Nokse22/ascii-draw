@@ -69,8 +69,8 @@ class Line(GObject.GObject):
         self._active = value
         self.notify('active')
 
-        if value:
-            self.canvas.drawing_area.set_draw_func(self.drawing_function, None)
+        # if value:
+        #     self.canvas.drawing_area.set_draw_func(self.drawing_function, None)
 
     @GObject.Property(type=bool, default=False)
     def arrow(self):
@@ -367,11 +367,9 @@ class Line(GObject.GObject):
             else:
                 self.canvas.set_char_at(prev_pos[0], prev_pos[1], self.canvas.right_vertical(), draw)
 
-    def drawing_function(self, area, cr, width, height, data):
-        cr.set_source_rgb(0.208, 0.518, 0.894)
-        cr.move_to (self.start_x, self.start_y)
-        cr.rel_line_to (self.end_x, self.end_y)
-
-        cr.set_source_rgb(1, 0, 0)
-        # cr.rel_line_to (self.line_direction[0]*30, self.line_direction[1]*30)
-        cr.stroke()
+    # def drawing_function(self, area, cr, width, height, data):
+    #     cr.set_source_rgb(0.208, 0.518, 0.894)
+    #     cr.move_to (self.start_x, self.start_y)
+    #     cr.rel_line_to (self.end_x, self.end_y)
+    #     cr.set_source_rgb(1, 0, 0)
+    #     cr.stroke()

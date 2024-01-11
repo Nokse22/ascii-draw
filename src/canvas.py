@@ -81,8 +81,8 @@ class Canvas(Adw.Bin):
         self.x_mul = 12
         self.y_mul = 24
 
-        self.canvas_width = 50
-        self.canvas_height = 25
+        self.canvas_width = 40
+        self.canvas_height = 20
 
         self.draw_grid.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
 
@@ -204,9 +204,11 @@ class Canvas(Adw.Bin):
 
     def draw_text(self, start_x, start_y, text, transparent, draw):
         if text == "": return
-
         _layer = self.drawing if draw else self.preview
 
+        self.__draw_text(start_x, start_y, text, transparent, draw, _layer)
+
+    def __draw_text(self, start_x, start_y, text, transparent, draw, _layer):
         lines = text.splitlines()
         array2 = [list(line) for line in lines]
 
@@ -248,7 +250,7 @@ class Canvas(Adw.Bin):
             start_x -= length
 
         for x in range(abs(length)):
-            prev_label = self.get_char_at(start_x + x, y)
+            prev_label = self.get_char_at(start_x + x, y, draw)
             if (prev_label == self.left_vertical() or prev_label == self.right_vertical()) and self.crossing() != " ":
                 self.set_char_at(start_x + x, y, self.crossing(), draw)
             else:
@@ -260,7 +262,7 @@ class Canvas(Adw.Bin):
             start_y -= length
 
         for y in range(abs(length)):
-            prev_label = self.get_char_at(x, start_y + y)
+            prev_label = self.get_char_at(x, start_y + y, draw)
             if (prev_label == self.top_horizontal() or prev_label == self.bottom_horizontal()) and self.crossing() != " ":
                 self.set_char_at(x, start_y + y, self.crossing(), draw)
             else:
@@ -341,7 +343,7 @@ class Canvas(Adw.Bin):
 
         self.draw_grid.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
 
-        self.draw_text(0, 0, content, False, True)
+        self.__draw_text(0, 0, content, False, False, self.drawing)
 
     def get_content(self):
         content = ""
