@@ -40,9 +40,10 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
-        self.create_action('save-as', self.on_save_as_action)
-        self.create_action('open', self.on_open_action)
-        self.create_action('new-canvas', self.on_new_canvas_action)
+        self.create_action('save-as', self.on_save_as_action, ['<control><shift>s'])
+        self.create_action('copy-to-clipboard', self.on_copy_to_clipboard_action)
+        self.create_action('open', self.on_open_action, ['<control>o'])
+        self.create_action('new-canvas', self.on_new_canvas_action, ['<control>n'])
 
         self.create_action('undo', self.on_undo_action, ['<control>z'])
 
@@ -59,26 +60,19 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
 
         self.create_action('new-palette', self.on_new_palette_action)
-        self.create_action('export-palettes', self.on_export_palettes_action)
+        self.create_action('open-palette-folder', self.on_open_palette_folder_action)
+        self.create_action('new-palette-from-canvas', self.on_new_palette_from_canvas_action)
         self.create_action('import-palettes', self.on_import_palettes_action)
 
+        self.create_action('clear-canvas', self.on_clear_canvas_action)
+
         css = '''
-        .drawing-area{
-            background-color: @window_bg_color;
-            opacity:0.15;
-            background-blend-mode: lighten;
-        }
-        .ascii-textview{
-
-        }
-
         .styles-preview{
             font-family: Monospace;
             font-size: 20px;
             opacity:0.8;
             color: @window_fg_color;
         }
-
         .ascii-preview{
             background: transparent;
             background-size: 12px 24px;
@@ -87,7 +81,7 @@ class AsciiDrawApplication(Adw.Application):
                 linear-gradient(to bottom, #aaaaaa 1px, transparent 1px);
             box-shadow:
                 inset 0px 0px 0px 1px #777777,
-                0px 0px 10px 10px #67676722;
+                0px 0px 10px 10px @headerbar_shade_color;
             opacity:0.4;
         }
         .ascii{
@@ -99,20 +93,17 @@ class AsciiDrawApplication(Adw.Application):
             font-family: Monospace;
             font-size: 20px;
             background: @window_bg_color;
-            /*background-size: 12px 24px;*/
-            /*background-image:
-                linear-gradient(to right, #aaaaaa 1px, transparent 1px),
-                linear-gradient(to bottom, #aaaaaa 1px, @window_bg_color 1px);*/
         }
         .font-preview{
             font-family: Monospace;
             font-size: 7px;
             color: @window_fg_color;
         }
-        .sidebar{
-            background-color: @window_bg_color;
+        .switcher button{
+	        margin-left:3px;
+	        margin-right:3px;
+            transition: background-color 0ms linear;
         }
-
         '''
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(css, -1)
@@ -121,28 +112,37 @@ class AsciiDrawApplication(Adw.Application):
             css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-    def on_new_palette_action(self, w, _):
+    def on_new_palette_action(self, *args):
+        self.win.show_new_palette_window()
+
+    def on_clear_canvas_action(self, *args):
+        self.win.canvas.clear_canvas()
+
+    def on_open_palette_folder_action(self, *args):
         pass
 
-    def on_export_palettes_action(self, w, _):
+    def on_new_palette_from_canvas_action(self, *args):
+        self.win.new_palette_from_canvas()
+
+    def on_import_palettes_action(self, *args):
         pass
 
-    def on_import_palettes_action(self, w, _):
-        pass
-
-    def on_new_canvas_action(self, widget, _):
+    def on_new_canvas_action(self, *args):
         self.win.new_canvas()
 
-    def on_save_as_action(self, widget, _):
+    def on_copy_to_clipboard_action(self, *args):
+        self.win.copy_to_clipboard()
+
+    def on_save_as_action(self, *args):
         self.win.save_as_action()
 
-    def on_import_action(self, widget, _):
+    def on_import_action(self, *args):
         pass
 
-    def on_open_action(self, widget, _):
+    def on_open_action(self, *args):
         self.win.open_file()
 
-    def on_undo_action(self, widget, _):
+    def on_undo_action(self, *args):
         self.win.undo_first_change()
 
     def do_activate(self):
@@ -154,6 +154,9 @@ class AsciiDrawApplication(Adw.Application):
         self.win = self.props.active_window
         if not self.win:
             self.win = AsciiDrawWindow(application=self)
+
+        self.win.connect("close-request", self.on_shutdown)
+
         self.win.present()
 
     def on_about_action(self, *args):
@@ -190,6 +193,31 @@ class AsciiDrawApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
+
+    def on_shutdown(self, *args):
+        print("help")
+        dialog = Adw.MessageDialog(
+            heading="Login",
+            body="A valid password is needed to continue",
+            close_response="cancel",
+            modal=True,
+            transient_for=self.win,
+        )
+
+        dialog.add_response("cancel", "Cancel")
+        dialog.add_response("login", "Login")
+
+        dialog.set_response_appearance("login", Adw.ResponseAppearance.SUGGESTED)
+
+        entry = Gtk.PasswordEntry(show_peek_icon=True)
+        dialog.set_extra_child(entry)
+
+        dialog.choose(None, self.on_response_selected_advanced)
+
+        dialog.show()
+
+    def on_response_selected_advanced(self, *args):
+        pass
 
     def select_rectangle_tool(self, widget, _):
         self.win.select_rectangle_tool()
