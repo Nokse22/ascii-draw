@@ -2,13 +2,6 @@ pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.proje
 moduledir = join_paths(pkgdatadir, 'ascii_draw')
 gnome = import('gnome')
 
-gnome.compile_resources('ascii-draw',
-  'ascii-draw.gresource.xml',
-  gresource_bundle: true,
-  install: true,
-  install_dir: pkgdatadir,
-)
-
 python = import('python')
 
 conf = configuration_data()
@@ -30,6 +23,11 @@ ascii_draw_sources = [
   '__init__.py',
   'main.py',
   'window.py',
+  'palette.py',
+  'tool.py',
+  'new_palette_window.py',
 ]
 
 install_data(ascii_draw_sources, install_dir: moduledir)
+
+install_subdir('.', install_dir: moduledir)

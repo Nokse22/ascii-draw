@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.17.0 -->
+<interface>
+  <!-- interface-name canvas.ui -->
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="Canvas" parent="AdwBin">
+    <child>
+      <object class="GtkScrolledWindow">
+        <child>
+          <object class="GtkOverlay">
+            <property name="child">
+              <object class="GtkGrid" id="draw_grid">
+                <property name="css-classes">ascii-textview
+canvas-shadow</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+              </object>
+            </property>
+            <property name="halign">center</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-top">12</property>
+            <property name="valign">center</property>
+            <child type="overlay">
+              <object class="GtkGrid" id="preview_grid">
+                <property name="can-focus">False</property>
+                <property name="css-classes">ascii-preview</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+              </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkDrawingArea" id="draw_drawing_area">
+                <property name="css-classes">ascii-textview
+canvas-shadow</property>
+              </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkDrawingArea" id="preview_drawing_area">
+                <property name="css-classes">ascii-preview</property>
+              </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkDrawingArea" id="drawing_area"/>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

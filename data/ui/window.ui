@@ -1,0 +1,867 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.17.0 -->
+<interface>
+  <!-- interface-name ascii-draw.ui -->
+  <requires lib="gio" version="2.0"/>
+  <requires lib="gtk" version="4.12"/>
+  <requires lib="libadwaita" version="1.4"/>
+  <template class="AsciiDrawWindow" parent="AdwApplicationWindow">
+    <property name="height-request">480</property>
+    <property name="width-request">390</property>
+    <child>
+      <object class="AdwBreakpoint">
+        <!-- Custom fragments -->
+        <condition>max-width: 530px</condition>
+        <setter object="toolbar_layout_box" property="orientation">vertical</setter>
+        <setter object="overlay_split_view" property="collapsed">true</setter>
+        <setter object="overlay_split_view" property="show-sidebar">true</setter>
+      </object>
+    </child>
+    <child>
+      <object class="AdwToolbarView" id="toolbar_view">
+        <property name="bottom-bar-style">raised</property>
+        <property name="content">
+          <object class="AdwOverlaySplitView" id="overlay_split_view">
+            <property name="content">
+              <object class="AdwToastOverlay" id="toast_overlay"/>
+            </property>
+            <property name="max-sidebar-width">350.0</property>
+            <property name="min-sidebar-width">300.0</property>
+            <property name="show-sidebar" bind-source="sidebar_show_button" bind-property="active" bind-flags="bidirectional">True</property>
+            <property name="sidebar">
+              <object class="AdwToolbarView">
+                <property name="content">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkStack" id="sidebar_stack">
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkStackPage" id="text_stack_page">
+                            <property name="child">
+                              <object class="GtkBox" id="text_sidebar">
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">4</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">10</property>
+                                <property name="visible" bind-source="text_button" bind-property="active">True</property>
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="vexpand">True</property>
+                                    <child>
+                                      <object class="GtkTextView">
+                                        <property name="buffer">
+                                          <object class="GtkTextBuffer" id="text_entry_buffer">
+                                            <signal name="changed" handler="preview_text" after="yes"/>
+                                          </object>
+                                        </property>
+                                        <property name="css-classes">card</property>
+                                        <property name="left-margin">12</property>
+                                        <property name="monospace">True</property>
+                                        <property name="top-margin">12</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="css-classes">card</property>
+                                    <property name="vexpand">True</property>
+                                    <child>
+                                      <object class="GtkListBox" id="font_box">
+                                        <property name="css-classes">navigation-sidebar</property>
+                                        <property name="margin-bottom">6</property>
+                                        <property name="margin-end">6</property>
+                                        <property name="margin-start">6</property>
+                                        <property name="margin-top">6</property>
+                                        <signal name="row-selected" handler="font_row_selected"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwSwitchRow" id="transparent_check">
+                                    <property name="css-classes">card</property>
+                                    <property name="subtitle">Spaces do not overwrite </property>
+                                    <property name="title">Transparent spaces</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="css-classes">suggested-action</property>
+                                    <property name="label" translatable="yes">Enter</property>
+                                    <signal name="clicked" handler="insert_text"/>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">text-symbolic</property>
+                            <property name="name">text_page</property>
+                            <property name="title">Text</property>
+                            <property name="visible" bind-source="text_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="table_stack_page">
+                            <property name="child">
+                              <object class="GtkBox" id="table_sidebar">
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">4</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">10</property>
+                                <child>
+                                  <object class="GtkListBox">
+                                    <property name="css-classes">boxed-list</property>
+                                    <property name="selection-mode">none</property>
+                                    <child>
+                                      <object class="AdwSpinRow" id="columns_spin">
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment">
+                                            <property name="lower">1.0</property>
+                                            <property name="step-increment">1.0</property>
+                                            <property name="upper">6.0</property>
+                                            <property name="value">1.0</property>
+                                          </object>
+                                        </property>
+                                        <property name="selectable">False</property>
+                                        <property name="title">Colums</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="AdwActionRow">
+                                        <property name="selectable">False</property>
+                                        <property name="title">Rows</property>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="halign">end</property>
+                                            <property name="spacing">6</property>
+                                            <property name="valign">center</property>
+                                            <child>
+                                              <object class="GtkButton">
+                                                <property name="icon-name">list-add-symbolic</property>
+                                                <property name="tooltip-text">Add a row</property>
+                                                <signal name="clicked" handler="on_add_row_clicked"/>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkButton" id="rows_reset_button">
+                                                <property name="css-classes">error</property>
+                                                <property name="icon-name">user-trash-symbolic</property>
+                                                <property name="tooltip-text">Delete rows</property>
+                                                <signal name="clicked" handler="on_reset_row_clicked"/>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="css-classes">card</property>
+                                    <property name="vexpand">True</property>
+                                    <child>
+                                      <object class="GtkBox" id="rows_box">
+                                        <property name="margin-bottom">6</property>
+                                        <property name="margin-end">6</property>
+                                        <property name="margin-start">6</property>
+                                        <property name="margin-top">6</property>
+                                        <property name="orientation">vertical</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBox">
+                                    <property name="css-classes">boxed-list</property>
+                                    <property name="selection-mode">none</property>
+                                    <child>
+                                      <object class="AdwComboRow" id="table_types_combo">
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item translatable="yes">First line divided</item>
+                                              <item translatable="yes">Divide each row</item>
+                                              <item translatable="yes">Not divided</item>
+                                            </items>
+                                          </object>
+                                        </property>
+                                        <property name="selected">0</property>
+                                        <property name="title">Type</property>
+                                        <!-- Custom fragments -->
+                                        <signal name="notify::selected" handler="preview_table"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="css-classes">suggested-action</property>
+                                    <property name="label" translatable="yes">Enter</property>
+                                    <signal name="clicked" handler="insert_table"/>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">table-symbolic</property>
+                            <property name="name">table_page</property>
+                            <property name="title">Table</property>
+                            <property name="visible" bind-source="table_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="tree_stack_page">
+                            <property name="child">
+                              <object class="GtkBox" id="tree_sidebar">
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">4</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">10</property>
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="vexpand">True</property>
+                                    <child>
+                                      <object class="GtkTextView" id="tree_text_entry">
+                                        <property name="buffer">
+                                          <object class="GtkTextBuffer" id="tree_text_entry_buffer">
+                                            <signal name="insert-text" handler="on_tree_text_inserted"/>
+                                            <signal name="changed" handler="preview_tree" after="yes"/>
+                                          </object>
+                                        </property>
+                                        <property name="css-classes">card</property>
+                                        <property name="left-margin">12</property>
+                                        <property name="monospace">True</property>
+                                        <property name="top-margin">12</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="css-classes">suggested-action</property>
+                                    <property name="label" translatable="yes">Enter</property>
+                                    <signal name="clicked" handler="insert_tree"/>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">tree-list-symbolic</property>
+                            <property name="name">tree_page</property>
+                            <property name="title">Tree view</property>
+                            <property name="visible" bind-source="tree_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="freehand_stack_page">
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="hexpand">True</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">4</property>
+                                <child>
+                                  <object class="AdwActionRow">
+                                    <property name="css-classes">card</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="title">Size</property>
+                                    <property name="valign">start</property>
+                                    <child>
+                                      <object class="GtkScale" id="free_scale">
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment" id="freehand_brush_adjustment">
+                                            <property name="lower">1.0</property>
+                                            <property name="step-increment">1.0</property>
+                                            <property name="upper">8.0</property>
+                                            <property name="value">1.0</property>
+                                          </object>
+                                        </property>
+                                        <property name="digits">0</property>
+                                        <property name="draw-value">True</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="value-pos">left</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">paintbrush-symbolic</property>
+                            <property name="name">freehand_page</property>
+                            <property name="title">Freehand</property>
+                            <property name="visible" bind-source="free_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="line_stack_page">
+                            <property name="child">
+                              <object class="GtkBox" id="line_sidebar">
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">4</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">10</property>
+                                <child>
+                                  <object class="GtkListBox">
+                                    <property name="css-classes">boxed-list</property>
+                                    <property name="selection-mode">none</property>
+                                    <child>
+                                      <object class="AdwComboRow" id="line_type_combo">
+                                        <property name="model">
+                                          <object class="GtkStringList">
+                                            <items>
+                                              <item translatable="yes">Cartesian</item>
+                                              <item translatable="yes">Step</item>
+                                              <item translatable="yes">Freehand</item>
+                                            </items>
+                                          </object>
+                                        </property>
+                                        <property name="selected">0</property>
+                                        <property name="title">Type</property>
+                                        <!-- Custom fragments -->
+                                        <signal name="notify::selected" handler="preview_table"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBox">
+                                    <property name="css-classes">boxed-list</property>
+                                    <property name="selection-mode">none</property>
+                                    <child>
+                                      <object class="AdwSwitchRow" id="line_arrow_switch">
+                                        <property name="title">Arrow</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">line-symbolic</property>
+                            <property name="name">line_page</property>
+                            <property name="title" translatable="yes">Line</property>
+                            <property name="visible" bind-source="line_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="eraser_stack_page">
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="hexpand">True</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-top">4</property>
+                                <child>
+                                  <object class="AdwActionRow">
+                                    <property name="css-classes">card</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="title">Size</property>
+                                    <property name="valign">start</property>
+                                    <child>
+                                      <object class="GtkScale" id="eraser_scale">
+                                        <property name="adjustment">
+                                          <object class="GtkAdjustment" id="eraser_adjustment">
+                                            <property name="lower">1.0</property>
+                                            <property name="step-increment">1.0</property>
+                                            <property name="upper">8.0</property>
+                                            <property name="value">1.0</property>
+                                          </object>
+                                        </property>
+                                        <property name="digits">0</property>
+                                        <property name="draw-value">True</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="value-pos">left</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">eraser-symbolic</property>
+                            <property name="name">eraser_page</property>
+                            <property name="title">Eraser</property>
+                            <property name="visible" bind-source="eraser_button" bind-property="active">False</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="character_stack_page">
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="margin-bottom">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkButton" id="char_carousel_go_back">
+                                        <property name="icon-name">go-previous-symbolic</property>
+                                        <property name="sensitive">False</property>
+                                        <signal name="clicked" handler="char_pages_go_back"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="char_group_label">
+                                        <property name="hexpand">True</property>
+                                        <property name="label" translatable="yes">Extended latin</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="char_carousel_go_next">
+                                        <property name="icon-name">go-next-symbolic</property>
+                                        <signal name="clicked" handler="char_pages_go_next"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwCarousel" id="chars_carousel">
+                                    <property name="allow-mouse-drag">False</property>
+                                    <property name="allow-scroll-wheel">False</property>
+                                    <property name="hexpand">True</property>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Extended latin</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Box drawing</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="box_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Block drawing</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="block_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                            <property name="valign">start</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="hexpand">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Geometric</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="geometric_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Arrows</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="arrow_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow">
+                                        <property name="has-tooltip">True</property>
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="name">Math</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkFlowBox" id="math_char_flow_box">
+                                            <property name="margin-bottom">3</property>
+                                            <property name="margin-end">3</property>
+                                            <property name="margin-start">3</property>
+                                            <property name="margin-top">3</property>
+                                            <property name="selection-mode">none</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">format-text-italic-symbolic</property>
+                            <property name="name">character_page</property>
+                            <property name="title">Character</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="style_stack_page">
+                            <property name="child">
+                              <object class="GtkScrolledWindow">
+                                <child>
+                                  <object class="GtkBox" id="lines_styles_box">
+                                    <property name="margin-bottom">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="orientation">vertical</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">line-style-symbolic</property>
+                            <property name="name">style_page</property>
+                            <property name="title">Style</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <child type="top">
+                  <object class="GtkStackSwitcher" id="sidebar_stack_switcher">
+                    <property name="css-classes">switcher</property>
+                    <property name="hexpand">True</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-end">3</property>
+                    <property name="margin-start">3</property>
+                    <property name="margin-top">6</property>
+                    <property name="stack">sidebar_stack</property>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="sidebar-position">end</property>
+            <property name="sidebar-width-fraction">0.45</property>
+            <property name="sidebar-width-unit">px</property>
+          </object>
+        </property>
+        <property name="top-bar-style">raised</property>
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <property name="title-widget">
+              <object class="AdwWindowTitle" id="title_widget">
+                <property name="title">ASCII Draw</property>
+              </object>
+            </property>
+            <child>
+              <object class="AdwSplitButton" id="save_import_button">
+                <property name="label" translatable="yes">Save</property>
+                <property name="menu-model">save_menu</property>
+                <signal name="clicked" handler="save_button_clicked"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="undo_button">
+                <property name="icon-name">edit-undo-symbolic</property>
+                <property name="sensitive">False</property>
+                <signal name="clicked" handler="undo_first_change"/>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="menu-model">primary_menu</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkToggleButton" id="sidebar_show_button">
+                <property name="active">True</property>
+                <property name="icon-name">sidebar-show-right-symbolic</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="icon-name">list-add-symbolic</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="AdwSpinRow" id="width_spin">
+                            <property name="activatable">False</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">10.0</property>
+                                <property name="step-increment">1.0</property>
+                                <property name="upper">100.0</property>
+                                <property name="value">50.0</property>
+                              </object>
+                            </property>
+                            <property name="can-focus">False</property>
+                            <property name="title">Width</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwSpinRow" id="height_spin">
+                            <property name="activatable">False</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">5.0</property>
+                                <property name="step-increment">1.0</property>
+                                <property name="upper">50.0</property>
+                                <property name="value">25.0</property>
+                              </object>
+                            </property>
+                            <property name="can-focus">False</property>
+                            <property name="title">Height</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="label" translatable="yes">Change size</property>
+                            <property name="margin-top">6</property>
+                            <signal name="clicked" handler="on_change_canvas_size_btn_clicked"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child type="bottom">
+          <object class="GtkBox" id="toolbar_layout_box">
+            <property name="margin-bottom">6</property>
+            <property name="margin-end">6</property>
+            <property name="margin-start">6</property>
+            <property name="margin-top">6</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkToggleButton" id="rectangle_button">
+                    <property name="css-classes">flat</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">rectangle-symbolic</property>
+                    <property name="tooltip-text">Rectangle Ctrl+R</property>
+                    <signal name="clicked" handler="on_choose_rectangle"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="filled_rectangle_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">filled-rectangle-symbolic</property>
+                    <property name="tooltip-text">Filled rectangle Ctrl+Shift+R</property>
+                    <signal name="clicked" handler="on_choose_filled_rectangle"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="line_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">line-symbolic</property>
+                    <property name="tooltip-text">Line Ctrl+L</property>
+                    <signal name="clicked" handler="on_choose_line"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="free_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">paintbrush-symbolic</property>
+                    <property name="tooltip-text">Freehand Ctrl+F</property>
+                    <signal name="clicked" handler="on_choose_free"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="text_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">text-symbolic</property>
+                    <property name="tooltip-text">Text Ctrl+T</property>
+                    <signal name="clicked" handler="on_choose_text"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkToggleButton" id="table_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">table-symbolic</property>
+                    <property name="tooltip-text">Table Ctrl+Shift+T</property>
+                    <signal name="clicked" handler="on_choose_table"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="tree_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">tree-list-symbolic</property>
+                    <property name="tooltip-text">Tree view Ctrl+U</property>
+                    <signal name="clicked" handler="on_choose_tree_list"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="eraser_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">eraser-symbolic</property>
+                    <property name="tooltip-text">Eraser Ctrl+E</property>
+                    <signal name="clicked" handler="on_choose_eraser"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="picker_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">color-select-symbolic</property>
+                    <property name="tooltip-text">Picker Ctrl+P</property>
+                    <signal name="clicked" handler="on_choose_picker"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="select_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">edit-select-all-symbolic</property>
+                    <signal name="clicked" handler="on_choose_select"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="primary_char_button">
+                    <property name="active">True</property>
+                    <property name="css-classes">circular</property>
+                    <property name="halign">end</property>
+                    <property name="hexpand">True</property>
+                    <property name="label">#</property>
+                    <property name="tooltip-text">Primary Character</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="secondary_char_button">
+                    <property name="css-classes">circular</property>
+                    <property name="group">primary_char_button</property>
+                    <property name="label">+</property>
+                    <property name="tooltip-text">Secondary Character</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <!-- Custom fragments -->
+      </object>
+    </child>
+    <child>
+      <menu id="primary_menu">
+        <section>
+          <item>
+            <attribute name="action">app.clear-canvas</attribute>
+            <attribute name="label" translatable="yes">Clear Canvas</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="action">app.new-palette</attribute>
+            <attribute name="label" translatable="yes">New Palette</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.new-palette-from-canvas</attribute>
+            <attribute name="label" translatable="yes">New Palette From Canvas</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="action">win.show-help-overlay</attribute>
+            <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.about</attribute>
+            <attribute name="label" translatable="yes">About ASCII Draw</attribute>
+          </item>
+        </section>
+      </menu>
+    </child>
+    <child>
+      <menu id="save_menu">
+        <section>
+          <item>
+            <attribute name="action">app.copy-to-clipboard</attribute>
+            <attribute name="label">Copy To Clipboard</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.save-as</attribute>
+            <attribute name="label" translatable="yes">Save As</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="action">app.open</attribute>
+            <attribute name="label" translatable="yes">Open</attribute>
+          </item>
+          <item>
+            <attribute name="action">app.new-canvas</attribute>
+            <attribute name="label" translatable="yes">New Canvas</attribute>
+          </item>
+        </section>
+      </menu>
+    </child>
+  </template>
+</interface>
+

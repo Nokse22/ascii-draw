@@ -7,8 +7,5 @@
     <key name="window-height" type="i">
       <default>800</default>
     </key>
-	  <key name="palettes" type="s">
-      <default>'█░▒▓'</default>
-    </key>
 	</schema>
 </schemalist>
