@@ -57,8 +57,8 @@ class Line(GObject.GObject):
         self.line_direction = [0,0]
 
         self.prev_char = ""
-        self.prev_char_pos = []
-        self.prev_pos = []
+        self.prev_prev_pos = [0,0]
+        self.prev_pos = [0,0]
 
     @GObject.Property(type=bool, default=False)
     def active(self):
@@ -103,6 +103,12 @@ class Line(GObject.GObject):
         if not self._active: return
         self.start_x = start_x
         self.start_y = start_y
+        if self._line_type == 2:
+            self.canvas.add_undo_action("Freehand Line")
+            start_x_char = start_x // self.x_mul
+            start_y_char = start_y // self.y_mul
+            self.prev_prev_pos = [start_x_char, start_y_char]
+            self.prev_pos = [start_x_char, start_y_char]
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return
@@ -124,8 +130,14 @@ class Line(GObject.GObject):
 
         if self._line_type == 0:
             self.draw_line(start_x_char, start_y_char, width, height, self.line_direction, False)
-        else:
+        elif self._line_type == 1:
             self.draw_step_line(start_x_char, start_y_char, width, height, False)
+        elif self._line_type == 2:
+            if [int(start_x_char + width), int(start_y_char + height)] != self.prev_pos:
+                self.draw_free_line(start_x_char + width, start_y_char + height, self.prev_pos[0], self.prev_pos[1], self.prev_prev_pos[0], self.prev_prev_pos[1], True)
+                self.prev_prev_pos = [self.prev_pos[0], self.prev_pos[1]]
+                self.prev_pos = [start_x_char + width, start_y_char + height]
+                self.canvas.update()
 
         self.prev_line_pos = [end_x, end_y]
 
@@ -144,16 +156,16 @@ class Line(GObject.GObject):
         self.prev_x = 0
         self.prev_y = 0
 
-        self.canvas.add_undo_action("Line")
-
         if self._line_type == 0:
+            self.canvas.add_undo_action("Cartesian Line")
             self.draw_line(start_x_char, start_y_char, width, height, self.line_direction, True)
         elif self._line_type == 1:
+            self.canvas.add_undo_action("Step Line")
             self.draw_step_line(start_x_char, start_y_char, width, height, True)
         elif self._line_type == 2:
             self.prev_char = ""
-            self.prev_char_pos = []
-            self.prev_pos = []
+            self.prev_prev_pos = [0,0]
+            self.prev_pos = [0,0]
 
         self.canvas.update()
 
@@ -295,16 +307,24 @@ class Line(GObject.GObject):
                 self.canvas.set_char_at(start_x_char + width, start_y_char, end_vertical, draw)
         elif width == 0:
             if height < 0:
-                lenght = height - 1
+                self.canvas.vertical_line(start_x_char, start_y_char + 1, height - 1, end_vertical, draw)
+                if self._arrow:
+                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.up_arrow(), draw)
             else:
-                lenght = height + 1
-            self.canvas.vertical_line(start_x_char, start_y_char, lenght, end_vertical, draw)
+                self.canvas.vertical_line(start_x_char, start_y_char, height + 1, end_vertical, draw)
+                if self._arrow:
+                    self.canvas.set_char_at(start_x_char, start_y_char + height, self.canvas.down_arrow(), draw)
+
         elif height == 0:
             if width < 0:
-                lenght = width - 1
+                self.canvas.horizontal_line(start_y_char, start_x_char + 1, width - 1, start_horizontal, draw)
+                if self._arrow:
+                    self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.left_arrow(), draw)
             else:
-                lenght = width + 1
-            self.canvas.horizontal_line(start_y_char, start_x_char, lenght, start_horizontal, draw)
+                self.canvas.horizontal_line(start_y_char, start_x_char, width + 1, start_horizontal, draw)
+                if self._arrow:
+                    self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.right_arrow(), draw)
+
 
     def normalize_vector(self, vector):
         magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
@@ -319,9 +339,7 @@ class Line(GObject.GObject):
         prev_prev_pos = [old_old_x, old_old_y]
 
         if prev_pos == [] or pos == prev_pos:
-            prev_pos = [new_x, new_y]
             return
-        pos = [new_x, new_y]
         direction = [int(pos[0] - prev_pos[0]), int(pos[1] - prev_pos[1])]
         dir2 = direction
         direction = self.normalize_vector(direction)
@@ -332,8 +350,6 @@ class Line(GObject.GObject):
             self.canvas.set_char_at(new_x, new_y, self.canvas.bottom_horizontal(), draw)
         elif direction == [0, 1] or direction == [0, -1]:
             self.canvas.set_char_at(new_x, new_y, self.canvas.right_vertical(), draw)
-
-        # ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "▲", "▼", "►", "◄"],
 
         if direction == [1, 0]:
             if dir2 != direction:
@@ -351,8 +367,7 @@ class Line(GObject.GObject):
                 self.canvas.set_char_at(prev_pos[0], prev_pos[1], self.canvas.bottom_right(), draw)
             else:
                 self.canvas.set_char_at(prev_pos[0], prev_pos[1], self.canvas.bottom_horizontal(), draw)
-
-        if direction == [0, -1]:
+        elif direction == [0, -1]:
             if prev_direction == [1, 0]:
                 self.canvas.set_char_at(prev_pos[0], prev_pos[1], self.canvas.bottom_right(), draw)
             elif prev_direction == [-1, 0]:
@@ -366,10 +381,3 @@ class Line(GObject.GObject):
                 self.canvas.set_char_at(prev_pos[0], prev_pos[1], self.canvas.top_left(), draw)
             else:
                 self.canvas.set_char_at(prev_pos[0], prev_pos[1], self.canvas.right_vertical(), draw)
-
-    # def drawing_function(self, area, cr, width, height, data):
-    #     cr.set_source_rgb(0.208, 0.518, 0.894)
-    #     cr.move_to (self.start_x, self.start_y)
-    #     cr.rel_line_to (self.end_x, self.end_y)
-    #     cr.set_source_rgb(1, 0, 0)
-    #     cr.stroke()
