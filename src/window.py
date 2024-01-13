@@ -428,13 +428,17 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             if callback:
                 callback()
             return
-        self.open_file_chooser(callback)
+        self.open_save_file_chooser(callback)
 
     def open_file(self):
+        self.save_changes_message(self.open_file_callback)
+
+    def open_file_callback(self):
         dialog = Gtk.FileDialog(
             title=_("Open File"),
         )
         dialog.open(self, None, self.on_open_file_response)
+        self.canvas.clear_preview()
 
     def on_open_file_response(self, dialog, response):
         file = dialog.open_finish(response)
@@ -445,35 +449,29 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             try:
                 with open(path, 'r') as file:
                     input_string = file.read()
-                lines = input_string.split('\n')
-                num_lines = len(lines)
-                max_chars = max(len(line) for line in lines)
-                # if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
-                #     toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
-                #     self.toast_overlay.add_toast(toast)
-                self.canvas.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
-                # self.canvas.add_undo_action("Open")
-                self.canvas.clear_canvas()
-                self.canvas.draw_text(0, 0, input_string, False, True)
+                self.canvas.set_content(input_string)
                 self.file_path = path
                 file_name = os.path.basename(self.file_path)
                 self.title_widget.set_subtitle(file_name)
             except IOError:
                 print(f"Error reading {path}.")
 
-    def on_response_selected(self, _dialog, task):
+    def on_save_changes_message_response(self, _dialog, task, callback=None):
         response = _dialog.choose_finish(task)
         print(f'Selected "{response}" response.')
-
         match response:
             case "discard":
-                self.make_new_canvas()
+                if callback:
+                    callback()
             case "save":
-                self.save(self.make_new_canvas)
+                self.save(callback)
             case "cancel":
                 pass
 
     def new_canvas(self):
+        self.save_changes_message(self.make_new_canvas)
+
+    def save_changes_message(self, callback=None):
         dialog = Adw.MessageDialog(
             heading="Save Changes?",
             body="You have unsaved changes, do you want to save them?",
@@ -489,7 +487,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
 
-        dialog.choose(None, self.on_response_selected)
+        dialog.choose(None, self.on_save_changes_message_response, callback)
 
     def make_new_canvas(self):
         self.canvas.clear_canvas()
@@ -501,18 +499,21 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.undo_button.set_tooltip_text("")
 
     def save_as_action(self):
-        self.open_file_chooser()
+        self.open_save_file_chooser()
 
-    def open_file_chooser(self, callback=None):
+    def open_save_file_chooser(self, callback=None):
         dialog = Gtk.FileDialog(
-            title=_("Save File As"),
-            initial_name=_("drawing"),
+            title=_("Save File"),
+            initial_name=_("drawing.txt"),
         )
-        print("saving as")
         dialog.save(self, None, self.on_save_file_response, callback)
 
     def on_save_file_response(self, dialog, response, callback=None):
-        file = dialog.save_finish(response)
+        try:
+            file = dialog.save_finish(response)
+        except:
+            return
+
         print(f"Selected File: {file.get_path()}")
 
         if file:

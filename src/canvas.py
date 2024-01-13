@@ -354,6 +354,17 @@ class Canvas(Adw.Bin):
 
         return content
 
+    def set_content(self, content):
+        lines = content.split('\n')
+        num_lines = len(lines)
+        max_chars = max(len(line) for line in lines)
+        # if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
+        #     toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
+        #     self.toast_overlay.add_toast(toast)
+        self.change_canvas_size(max(max_chars, 10), max(num_lines - 1, 5))
+        self.clear_canvas()
+        self.__draw_text(0, 0, content, False, False, self.drawing)
+
     def top_horizontal(self):
         return self.styles[self._style - 1][0]
     def bottom_horizontal(self):

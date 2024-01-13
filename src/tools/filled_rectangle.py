@@ -78,8 +78,9 @@ class FilledRectangle(GObject.GObject):
         self.end_x = width * self.x_mul
         self.end_y = height * self.y_mul
 
-        if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height) or math.copysign(1, self.prev_x) != math.copysign(1, width) or math.copysign(1, self.prev_y) != math.copysign(1, height):
-            self.canvas.clear_preview()
+        # if abs(self.prev_x) > abs(width) or abs(self.prev_y) > abs(height) or math.copysign(1, self.prev_x) != math.copysign(1, width) or math.copysign(1, self.prev_y) != math.copysign(1, height):
+        self.canvas.clear_preview()
+
         self.prev_x = width
         self.prev_y = height
         self.changed_chars = []
