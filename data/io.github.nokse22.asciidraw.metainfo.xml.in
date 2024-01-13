@@ -23,14 +23,17 @@ There are many stiles to choose from and multiple tools available to use:</p>
     </ul>
 	</description>
 
- 	<developer_name>Nokse</developer_name>
+ 	<developer_name translatable="no">Nokse</developer_name>
 
-	<content_rating type="oars-1.0"></content_rating>
+	<content_rating type="oars-1.1" />
 
   <launchable type="desktop-id">io.github.nokse22.asciidraw.desktop</launchable>
+  <translation type="gettext">ascii-draw</translation>
 
   <url type="homepage">https://github.com/Nokse22/ascii-draw</url>
   <url type="bugtracker">https://github.com/Nokse22/ascii-draw/issues</url>
+  <url type="vcs-browser">https://github.com/Nokse22/ascii-draw</url>
+  <url type="translate">https://github.com/Nokse22/ascii-draw/tree/master/po</url>
   <url type="donation">https://ko-fi.com/nokse22</url>
 
   <releases>
@@ -116,10 +119,6 @@ There are many stiles to choose from and multiple tools available to use:</p>
 	  </release>
   </releases>
 
-  <categories>
-    <category>Graphics;2DGraphics;</category>
-  </categories>
-
 	<screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%201.png</image>
@@ -132,7 +131,7 @@ There are many stiles to choose from and multiple tools available to use:</p>
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%205.png</image>
 	  </screenshot>
-	  
+
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%206.png</image>
 	  </screenshot>
