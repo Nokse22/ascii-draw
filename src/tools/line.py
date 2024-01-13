@@ -325,7 +325,6 @@ class Line(GObject.GObject):
                 if self._arrow:
                     self.canvas.set_char_at(start_x_char + width, start_y_char, self.canvas.right_arrow(), draw)
 
-
     def normalize_vector(self, vector):
         magnitude = math.sqrt(vector[0]**2 + vector[1]**2)
         if magnitude == 0:

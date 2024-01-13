@@ -420,10 +420,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("save_button_clicked")
     def save_button_clicked(self, btn):
+        self.save()
+
+    def save(self, callback=None):
         if self.file_path != "":
             self.save_file(self.file_path)
+            if callback:
+                callback()
             return
-        self.open_file_chooser()
+        self.open_file_chooser(callback)
 
     def open_file(self):
         dialog = Gtk.FileDialog(
@@ -447,7 +452,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 #     toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
                 #     self.toast_overlay.add_toast(toast)
                 self.canvas.change_canvas_size(max(max_chars, 10), max(num_lines, 5))
-                self.canvas.add_undo_action("Open")
+                # self.canvas.add_undo_action("Open")
                 self.canvas.clear_canvas()
                 self.canvas.draw_text(0, 0, input_string, False, True)
                 self.file_path = path
@@ -456,34 +461,66 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             except IOError:
                 print(f"Error reading {path}.")
 
+    def on_response_selected(self, _dialog, task):
+        response = _dialog.choose_finish(task)
+        print(f'Selected "{response}" response.')
+
+        match response:
+            case "discard":
+                self.make_new_canvas()
+            case "save":
+                self.save(self.make_new_canvas)
+            case "cancel":
+                pass
+
     def new_canvas(self):
-        self.add_undo_action("Clear")
+        dialog = Adw.MessageDialog(
+            heading="Save Changes?",
+            body="You have unsaved changes, do you want to save them?",
+            close_response="cancel",
+            modal=True,
+            transient_for=self,
+        )
+
+        dialog.add_response("cancel", "Cancel")
+        dialog.add_response("discard", "Discard")
+        dialog.add_response("save", "Save")
+
+        dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+
+        dialog.choose(None, self.on_response_selected)
+
+    def make_new_canvas(self):
         self.canvas.clear_canvas()
-        self.canvas.change_size(50, 25)
+        # self.canvas.change_canvas_size(50, 25)
         self.file_path = ""
         self.title_widget.set_subtitle("")
-        self.undo_changes = []
+        self.canvas.undo_changes = []
         self.undo_button.set_sensitive(False)
         self.undo_button.set_tooltip_text("")
 
     def save_as_action(self):
         self.open_file_chooser()
 
-    def open_file_chooser(self):
+    def open_file_chooser(self, callback=None):
         dialog = Gtk.FileDialog(
             title=_("Save File As"),
-            initial_name=_("Drawing.txt"),
+            initial_name=_("drawing"),
         )
         print("saving as")
-        dialog.save(self, None, self.on_save_file_response)
+        dialog.save(self, None, self.on_save_file_response, callback)
 
-    def on_save_file_response(self, dialog, response):
+    def on_save_file_response(self, dialog, response, callback=None):
         file = dialog.save_finish(response)
         print(f"Selected File: {file.get_path()}")
 
         if file:
             file_path = file.get_path()
             self.save_file(file_path)
+
+            if callback:
+                callback()
 
     def save_file(self, file_path):
         self.file_path = file_path
@@ -593,10 +630,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.show_new_palette_window(unique_string)
 
-    def add_undo_action(self, name, *args):
-        self.undo_changes.insert(0, Change(name))
-        self.undo_button.set_sensitive(True)
-        self.undo_button.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
+    # def add_undo_action(self, name, *args):
+    #     self.undo_changes.insert(0, Change(name))
+    #     self.undo_button.set_sensitive(True)
+    #     self.undo_button.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
 
     def on_undo_added(self, widget, undo_name):
         self.undo_button.set_sensitive(True)
