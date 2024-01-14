@@ -75,6 +75,11 @@ class Canvas(Adw.Bin):
         self.click_gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.drawing_area.add_controller(self.click_gesture)
 
+        self.zoom_gesture = Gtk.GestureZoom()
+        self.zoom_gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.zoom_gesture.connect("scale-changed", self.on_scale_changed)
+        self.drawing_area.add_controller(self.zoom_gesture)
+
         self.draw_drawing_area.set_draw_func(self.drawing_function, None)
         self.preview_drawing_area.set_draw_func(self.preview_drawing_function, None)
 
@@ -101,6 +106,10 @@ class Canvas(Adw.Bin):
 
         self.canvas_max_x = 100
         self.canvas_max_y = 50
+
+        self.scale_factor = 1
+
+        self.is_saved = False
 
     @GObject.Property(type=bool, default=True)
     def primary_selected(self):
@@ -138,20 +147,26 @@ class Canvas(Adw.Bin):
         self._style = value
         self.notify('style')
 
+    def on_scale_changed(self, gesture, scale):
+        # print(scale)
+        pass
+        # if scale > 2:
+        #     self.scale_factor = 2
+
     def drawing_function(self, area, cr, width, height, data):
         cr.set_source_rgb(self.color, self.color, self.color)
         cr.select_font_face("Monospace")
-        cr.set_font_size(20)
+        cr.set_font_size(20 * self.scale_factor)
         for index, line in enumerate(self.drawing):
-            cr.move_to (0, (index + 1) * self.y_mul - 5)
+            cr.move_to (0, (index + 1) * self.y_mul * self.scale_factor - 5)
             cr.show_text(''.join(w if w != "" else " " for w in line))
 
     def preview_drawing_function(self, area, cr, width, height, data):
         cr.set_source_rgb(self.color, self.color, self.color)
         cr.select_font_face("Monospace")
-        cr.set_font_size(20)
+        cr.set_font_size(20 * self.scale_factor)
         for index, line in enumerate(self.preview):
-            cr.move_to (0, (index + 1) * self.y_mul - 5)
+            cr.move_to (0, (index + 1) * self.y_mul * self.scale_factor - 5)
             cr.show_text(''.join(w if w != "" else " " for w in line))
 
     def update(self):
@@ -185,6 +200,8 @@ class Canvas(Adw.Bin):
         self.undo_changes.insert(0, Change(undo_name))
         self.emit('undo_added', undo_name)
 
+        self.is_saved = False
+
     def get_char_at(self, x: int, y: int, draw=True):
         if y >= len(self.drawing) or x >= len(self.drawing[0]): return
         if draw:
@@ -210,7 +227,9 @@ class Canvas(Adw.Bin):
 
     def __draw_text(self, start_x, start_y, text, transparent, draw, _layer):
         lines = text.splitlines()
-        array2 = [list(line) for line in lines]
+        max_line_length = max(len(line) for line in lines)
+        array2 = [list(line.ljust(max_line_length)) for line in lines]
+        # array2 = [list(line) for line in lines]
 
         rows1, cols1 = len(_layer), len(_layer[0])
         rows2, cols2 = len(array2), len(array2[0])
@@ -316,12 +335,9 @@ class Canvas(Adw.Bin):
         self.preview_drawing_area.queue_draw()
 
     def clear_canvas(self):
-        self.drawing = []
         for y in range(self.canvas_height):
-            new_line = []
             for x in range(self.canvas_width):
-                new_line.append(" ")
-            self.drawing.append(new_line)
+                self.set_char_at(x, y, "", True)
 
         self.draw_drawing_area.queue_draw()
 

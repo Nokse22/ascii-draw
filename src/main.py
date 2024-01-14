@@ -116,6 +116,7 @@ class AsciiDrawApplication(Adw.Application):
         self.win.show_new_palette_window()
 
     def on_clear_canvas_action(self, *args):
+        self.win.canvas.add_undo_action("Clear")
         self.win.canvas.clear_canvas()
 
     def on_open_palette_folder_action(self, *args):

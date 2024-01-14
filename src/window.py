@@ -165,8 +165,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 style_btn.set_group(prev_btn)
             prev_btn = style_btn
             style_btn.connect("toggled", self.change_style, self.lines_styles_box)
-
             self.lines_styles_box.append(style_btn)
+
+        self.lines_styles_box.get_first_child().set_active(True)
 
         self.freehand = Freehand(self.canvas)
         self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -431,7 +432,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.open_save_file_chooser(callback)
 
     def open_file(self):
-        self.save_changes_message(self.open_file_callback)
+        if not self.canvas.is_saved:
+            self.save_changes_message(self.open_file_callback)
+        else:
+            self.open_file_callback()
 
     def open_file_callback(self):
         dialog = Gtk.FileDialog(
@@ -469,7 +473,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 pass
 
     def new_canvas(self):
-        self.save_changes_message(self.make_new_canvas)
+        if not self.canvas.is_saved:
+            self.save_changes_message(self.make_new_canvas)
+        else:
+            self.make_new_canvas()
 
     def save_changes_message(self, callback=None):
         dialog = Adw.MessageDialog(
@@ -533,6 +540,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             print(f"Content written to {file_path} successfully.")
             toast = Adw.Toast(title=_("Saved successfully"), timeout=2)
             self.toast_overlay.add_toast(toast)
+            self.canvas.is_saved = True
         except IOError:
             print(f"Error writing to {file_path}.")
 
