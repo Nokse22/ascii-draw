@@ -252,7 +252,7 @@
 	(1,263,"GtkWidget","margin-top","4",None,None,None,None,None,None,None,None,None),
 	(1,264,"GtkListBox","selection-mode","none",None,None,None,None,None,None,None,None,None),
 	(1,264,"GtkWidget","css-classes","boxed-list",None,None,None,None,None,None,None,None,None),
-	(1,265,"AdwPreferencesRow","title","Colums",None,None,None,None,None,None,None,None,None),
+	(1,265,"AdwPreferencesRow","title","Columns",None,None,None,None,None,None,None,None,None),
 	(1,265,"AdwSpinRow","adjustment",None,None,None,None,None,266,None,None,None,None),
 	(1,265,"GtkListBoxRow","selectable","False",None,None,None,None,None,None,None,None,None),
 	(1,266,"GtkAdjustment","lower","1.0",None,None,None,None,None,None,None,None,None),
