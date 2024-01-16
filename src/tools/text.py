@@ -141,7 +141,7 @@ class Text(GObject.GObject):
         pass
 
     def insert_text(self):
-        self.canvas.add_undo_action("Text")
+        self.canvas.add_undo_action(_("Text"))
         self.canvas.clear_preview()
 
         text = self._text

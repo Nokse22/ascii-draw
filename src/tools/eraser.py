@@ -81,7 +81,7 @@ class Eraser(GObject.GObject):
         self.start_x = start_x
         self.start_y = start_y
 
-        self.canvas.add_undo_action("Ereser")
+        self.canvas.add_undo_action(_("Eraser"))
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return

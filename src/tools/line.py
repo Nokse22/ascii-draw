@@ -104,7 +104,7 @@ class Line(GObject.GObject):
         self.start_x = start_x
         self.start_y = start_y
         if self._line_type == 2:
-            self.canvas.add_undo_action("Freehand Line")
+            self.canvas.add_undo_action(_("Freehand Line"))
             start_x_char = start_x // self.x_mul
             start_y_char = start_y // self.y_mul
             self.prev_prev_pos = [start_x_char, start_y_char]
@@ -157,10 +157,10 @@ class Line(GObject.GObject):
         self.prev_y = 0
 
         if self._line_type == 0:
-            self.canvas.add_undo_action("Cartesian Line")
+            self.canvas.add_undo_action(_("Cartesian Line"))
             self.draw_line(start_x_char, start_y_char, width, height, self.line_direction, True)
         elif self._line_type == 1:
-            self.canvas.add_undo_action("Step Line")
+            self.canvas.add_undo_action(_("Step Line"))
             self.draw_step_line(start_x_char, start_y_char, width, height, True)
         elif self._line_type == 2:
             self.prev_char = ""

@@ -460,7 +460,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             except IOError:
                 print(f"Error reading {path}.")
 
-    def on_save_changes_message_response(self, _dialog, task, callback=None):
+    def on_save_changes_message_response(self, dialog, task, callback=None):
         response = _dialog.choose_finish(task)
         print(f'Selected "{response}" response.')
         match response:
@@ -480,16 +480,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def save_changes_message(self, callback=None):
         dialog = Adw.MessageDialog(
-            heading="Save Changes?",
-            body="You have unsaved changes, do you want to save them?",
+            heading=_("Save Changes?"),
+            body=_("You have unsaved changes, do you want to save them?"),
             close_response="cancel",
             modal=True,
             transient_for=self,
         )
 
-        dialog.add_response("cancel", "Cancel")
-        dialog.add_response("discard", "Discard")
-        dialog.add_response("save", "Save")
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("discard", _("Discard"))
+        dialog.add_response("save", _("Save"))
 
         dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
@@ -646,7 +646,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def on_undo_added(self, widget, undo_name):
         self.undo_button.set_sensitive(True)
-        self.undo_button.set_tooltip_text(_("Undo ") + undo_name)
+        self.undo_button.set_tooltip_text(_("Undo") + " " + undo_name)
 
     @Gtk.Template.Callback("on_tree_text_inserted")
     def on_tree_text_inserted(self, buffer, loc, text, length):

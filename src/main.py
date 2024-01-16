@@ -36,7 +36,7 @@ class AsciiDrawApplication(Adw.Application):
         super().__init__(application_id='io.github.nokse22.asciidraw',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
 
-        self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
+        # self.create_action('quit', self.on_quit, ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
@@ -116,7 +116,7 @@ class AsciiDrawApplication(Adw.Application):
         self.win.show_new_palette_window()
 
     def on_clear_canvas_action(self, *args):
-        self.win.canvas.add_undo_action("Clear")
+        self.win.canvas.add_undo_action(_("Clear"))
         self.win.canvas.clear_canvas()
 
     def on_open_palette_folder_action(self, *args):
@@ -196,29 +196,33 @@ class AsciiDrawApplication(Adw.Application):
             self.set_accels_for_action(f"app.{name}", shortcuts)
 
     def on_shutdown(self, *args):
-        print("help")
-        dialog = Adw.MessageDialog(
-            heading="Login",
-            body="A valid password is needed to continue",
-            close_response="cancel",
+        dialog = Gtk.MessageDialog(
+            # heading=_("Save Changes"),
+            # body="A valid password is needed to continue",
+            # close_response="cancel",
             modal=True,
             transient_for=self.win,
         )
 
-        dialog.add_response("cancel", "Cancel")
-        dialog.add_response("login", "Login")
+        # dialog.add_response("cancel", _("Cancel"))
+        # dialog.add_response("discard", _("Discard"))
+        # dialog.add_response("save", _("Save"))
 
-        dialog.set_response_appearance("login", Adw.ResponseAppearance.SUGGESTED)
+        # dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
+        # dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
 
-        entry = Gtk.PasswordEntry(show_peek_icon=True)
-        dialog.set_extra_child(entry)
+        # entry = Gtk.Entry()
+        # dialog.set_extra_child(entry)
 
-        dialog.choose(None, self.on_response_selected_advanced)
+        # dialog.choose(None, self.on_response_selected_advanced)
+        # dialog.choose_finish(task)
 
-        dialog.show()
+        dialog.run()
 
-    def on_response_selected_advanced(self, *args):
-        pass
+        print(quit)
+
+    def on_response_selected_advanced(self, dialog, task, *args):
+        response = dialog.choose_finish(task)
 
     def select_rectangle_tool(self, widget, _):
         self.win.select_rectangle_tool()

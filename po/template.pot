@@ -1,0 +1,224 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-16 10:50+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:3
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/main.py:166
+msgid "ASCII Draw"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.desktop.in:9
+msgid "GNOME;GTK;Draw;Graphics;Art;"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:7
+msgid "Draw using ASCII characters"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:9
+msgid ""
+"This app lets you draw diagrams, tables, treeview and more using ASCII "
+"characters. There are many stiles to choose from and multiple tools "
+"available to use:"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:12
+msgid "Freehand Brush"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13 src/tools/line.py:107
+msgid "Freehand Line"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:14
+msgid "Straight Line"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:15
+msgid "Straight Arrow"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
+#: src/tools/rectangle.py:119
+msgid "Rectangle"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
+#: src/tools/filled_rectangle.py:119
+msgid "Filled Rectangle"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18
+msgid "Text with FIGlet fonts"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19 src/tools/table.py:107
+msgid "Table"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20
+msgid "Tree View"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 src/tools/eraser.py:84
+msgid "Eraser"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+msgid "Character Picker"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:26
+msgid "Nokse"
+msgstr ""
+
+#: data/ui/window.ui:94 data/ui/window.ui:205 data/ui/window.ui:249
+msgid "Enter"
+msgstr ""
+
+#: data/ui/window.ui:188
+msgid "First line divided"
+msgstr ""
+
+#: data/ui/window.ui:189
+msgid "Divide each row"
+msgstr ""
+
+#: data/ui/window.ui:190
+msgid "Not divided"
+msgstr ""
+
+#: data/ui/window.ui:321
+msgid "Cartesian"
+msgstr ""
+
+#: data/ui/window.ui:322
+msgid "Step"
+msgstr ""
+
+#: data/ui/window.ui:323 src/tools/freehand.py:85
+msgid "Freehand"
+msgstr ""
+
+#: data/ui/window.ui:350
+msgid "Line"
+msgstr ""
+
+#: data/ui/window.ui:416
+msgid "Extended latin"
+msgstr ""
+
+#: data/ui/window.ui:596 src/window.py:492
+msgid "Save"
+msgstr ""
+
+#: data/ui/window.ui:660
+msgid "Change size"
+msgstr ""
+
+#: data/ui/window.ui:816
+msgid "Clear Canvas"
+msgstr ""
+
+#: data/ui/window.ui:822
+msgid "New Palette"
+msgstr ""
+
+#: data/ui/window.ui:826
+msgid "New Palette From Canvas"
+msgstr ""
+
+#: data/ui/window.ui:832
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: data/ui/window.ui:836
+msgid "About ASCII Draw"
+msgstr ""
+
+#: data/ui/window.ui:850
+msgid "Save As"
+msgstr ""
+
+#: data/ui/window.ui:856
+msgid "Open"
+msgstr ""
+
+#: data/ui/window.ui:860
+msgid "New Canvas"
+msgstr ""
+
+#: src/main.py:119
+msgid "Clear"
+msgstr ""
+
+#: src/main.py:176
+msgid "translator-credits"
+msgstr ""
+
+#: src/window.py:442
+msgid "Open File"
+msgstr ""
+
+#: src/window.py:483
+msgid "Save Changes?"
+msgstr ""
+
+#: src/window.py:484
+msgid "You have unsaved changes, do you want to save them?"
+msgstr ""
+
+#: src/window.py:490
+msgid "Cancel"
+msgstr ""
+
+#: src/window.py:491
+msgid "Discard"
+msgstr ""
+
+#: src/window.py:513
+msgid "Save File"
+msgstr ""
+
+#: src/window.py:514
+msgid "drawing.txt"
+msgstr ""
+
+#: src/window.py:541
+msgid "Saved successfully"
+msgstr ""
+
+#: src/window.py:649
+msgid "Undo"
+msgstr ""
+
+#: src/tools/line.py:160
+msgid "Cartesian Line"
+msgstr ""
+
+#: src/tools/line.py:163
+msgid "Step Line"
+msgstr ""
+
+#: src/tools/select.py:104
+msgid "Move"
+msgstr ""
+
+#: src/tools/text.py:144
+msgid "Text"
+msgstr ""

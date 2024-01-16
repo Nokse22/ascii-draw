@@ -82,10 +82,12 @@ class Freehand(GObject.GObject):
         self.start_x = start_x
         self.start_y = start_y
 
-        self.canvas.add_undo_action("Freehand")
+        self.canvas.add_undo_action(_("Freehand"))
 
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return
+
+        button = gesture.get_current_button()
 
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
@@ -99,8 +101,8 @@ class Freehand(GObject.GObject):
         x_coord = (self.start_x + self.end_x)//self.x_mul
         y_coord = (self.start_y + self.end_y)//self.y_mul
         for delta in self.brush_sizes[int(self._size - 1)]:
-            # self.canvas.set_char_at(x_coord + delta[0], y_coord + delta[1], self.char, True)
-            self.canvas.draw_at(x_coord + delta[0], y_coord + delta[1])
+            if button == 1: self.canvas.draw_at(x_coord + delta[0], y_coord + delta[1])
+            elif button == 3: self.canvas.draw_inverted_at(x_coord + delta[0], y_coord + delta[1])
         self.canvas.update()
 
     def on_drag_end(self, gesture, delta_x, delta_y):

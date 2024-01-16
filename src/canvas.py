@@ -69,6 +69,7 @@ class Canvas(Adw.Bin):
 
         self.drag_gesture = Gtk.GestureDrag()
         self.drag_gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.drag_gesture.set_button(0)
         self.drawing_area.add_controller(self.drag_gesture)
 
         self.click_gesture = Gtk.GestureClick()
@@ -219,6 +220,11 @@ class Canvas(Adw.Bin):
             return self.primary_char
         return self.secondary_char
 
+    def get_unselected_char(self):
+        if not self._primary_selected:
+            return self.primary_char
+        return self.secondary_char
+
     def draw_text(self, start_x, start_y, text, transparent, draw):
         if text == "": return
         _layer = self.drawing if draw else self.preview
@@ -303,6 +309,13 @@ class Canvas(Adw.Bin):
         prev_char = self.get_char_at(x, y)
         self.undo_changes[0].add_change(x, y, prev_char)
         self.drawing[int(y)][int(x)] = self.get_selected_char()
+
+    def draw_inverted_at(self, x, y):
+        if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+            return
+        prev_char = self.get_char_at(x, y)
+        self.undo_changes[0].add_change(x, y, prev_char)
+        self.drawing[int(y)][int(x)] = self.get_unselected_char()
 
     def draw_primary_at(self, x, y, draw):
         _layer = self.drawing if draw else self.preview

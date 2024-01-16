@@ -1,5 +1,15 @@
 data/io.github.nokse22.asciidraw.desktop.in
 data/io.github.nokse22.asciidraw.metainfo.xml.in
-src/gtk/help-overlay.ui
+data/ui/window.ui
 src/main.py
 src/window.py
+src/tools/eraser.py
+src/tools/filled_rectangle.py
+src/tools/freehand.py
+src/tools/line.py
+src/tools/picker.py
+src/tools/rectangle.py
+src/tools/select.py
+src/tools/table.py
+src/tools/text.py
+src/tools/tree.py

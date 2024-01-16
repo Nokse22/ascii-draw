@@ -104,7 +104,7 @@ class Table(GObject.GObject):
         self.preview_table()
 
     def insert_table(self):
-        self.canvas.add_undo_action("Table")
+        self.canvas.add_undo_action(_("Table"))
         self.draw_table(self._table_type, True)
         self.canvas.update()
 

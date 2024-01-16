@@ -69,6 +69,8 @@ class FilledRectangle(GObject.GObject):
     def on_drag_follow(self, gesture, end_x, end_y):
         if not self._active: return
 
+        button = gesture.get_current_button()
+
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
 
@@ -93,12 +95,18 @@ class FilledRectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, False)
+
+        if button == 1:
+            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, False)
+        elif button == 3:
+            self.draw_inverted_filled_rectangle(start_x_char, start_y_char, width, height, False)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
 
         self.canvas.clear_preview()
+
+        button = gesture.get_current_button()
 
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
@@ -108,7 +116,7 @@ class FilledRectangle(GObject.GObject):
         self.prev_x = 0
         self.prev_y = 0
 
-        self.canvas.add_undo_action("Filled Rectangle")
+        self.canvas.add_undo_action(_("Filled Rectangle"))
 
         if width < 0:
             width = -width
@@ -118,7 +126,11 @@ class FilledRectangle(GObject.GObject):
             height = - height
             start_y_char -= height
         height += 1
-        self.draw_filled_rectangle(start_x_char, start_y_char, width, height, True)
+
+        if button == 1:
+            self.draw_filled_rectangle(start_x_char, start_y_char, width, height, True)
+        elif button == 3:
+            self.draw_inverted_filled_rectangle(start_x_char, start_y_char, width, height, True)
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
@@ -153,6 +165,33 @@ class FilledRectangle(GObject.GObject):
         for y in range(1, height - 1):
             for x in range(1, width - 1):
                 self.canvas.draw_secondary_at(start_x_char + x, start_y_char + y, draw)
+
+        if draw:
+            self.canvas.update()
+        else:
+            self.canvas.update_preview()
+
+    def draw_inverted_filled_rectangle(self, start_x_char, start_y_char, width, height, draw):
+
+        for x in range(width):
+            self.canvas.draw_secondary_at(start_x_char + x, start_y_char, draw)
+
+        # Draw the bottom border
+        for x in range(width):
+            self.canvas.draw_secondary_at(start_x_char + x, start_y_char + height - 1, draw)
+
+        # Draw the left border (avoid filling the corners)
+        for y in range(1, height - 1):
+            self.canvas.draw_secondary_at(start_x_char, start_y_char + y, draw)
+
+        # Draw the right border (avoid filling the corners)
+        for y in range(1, height - 1):
+            self.canvas.draw_secondary_at(start_x_char + width - 1, start_y_char + y, draw)
+
+        # Fill the inside of the rectangle
+        for y in range(1, height - 1):
+            for x in range(1, width - 1):
+                self.canvas.draw_primary_at(start_x_char + x, start_y_char + y, draw)
 
         if draw:
             self.canvas.update()

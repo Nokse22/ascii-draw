@@ -101,7 +101,7 @@ class Select(GObject.GObject):
                 and this_y_char < (start_y_char + height)):
             self.is_dragging = True
 
-            self.canvas.add_undo_action("Move")
+            self.canvas.add_undo_action(_("Move"))
 
             for y in range(1, int(height)):
                 for x in range(1, int(width)):

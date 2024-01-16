@@ -116,7 +116,7 @@ class Rectangle(GObject.GObject):
         self.prev_x = 0
         self.prev_y = 0
 
-        self.canvas.add_undo_action("Rectangle")
+        self.canvas.add_undo_action(_("Rectangle"))
 
         if width < 0:
             width = -width
