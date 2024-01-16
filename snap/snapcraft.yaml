@@ -82,4 +82,5 @@ apps:
     common-id: io.github.nokse22.asciidraw
     environment:
       PYTHONPATH: $SNAP/usr/lib/python3.10/dist-packages:$PYTHONPATH
+      GDK_DEBUG: "portals"
     desktop: usr/share/applications/io.github.nokse22.asciidraw.desktop
