@@ -461,7 +461,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 print(f"Error reading {path}.")
 
     def on_save_changes_message_response(self, dialog, task, callback=None):
-        response = _dialog.choose_finish(task)
+        response = dialog.choose_finish(task)
         print(f'Selected "{response}" response.')
         match response:
             case "discard":

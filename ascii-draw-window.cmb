@@ -358,6 +358,7 @@
 	(1,300,"GtkWidget","css-classes","card",None,None,None,None,None,None,None,None,None),
 	(1,304,"GtkButton","label","Enter",1,None,None,None,None,None,None,None,None),
 	(1,304,"GtkWidget","css-classes","suggested-action",None,None,None,None,None,None,None,None,None),
+	(1,307,"GtkBox","spacing","6",None,None,None,None,None,None,None,None,None),
 	(1,307,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
 	(1,307,"GtkWidget","margin-bottom","6",None,None,None,None,None,None,None,None,None),
 	(1,307,"GtkWidget","margin-end","6",None,None,None,None,None,None,None,None,None),

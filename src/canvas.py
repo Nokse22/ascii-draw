@@ -110,7 +110,7 @@ class Canvas(Adw.Bin):
 
         self.scale_factor = 1
 
-        self.is_saved = False
+        self.is_saved = True
 
     @GObject.Property(type=bool, default=True)
     def primary_selected(self):
@@ -391,7 +391,7 @@ class Canvas(Adw.Bin):
         #     toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
         #     self.toast_overlay.add_toast(toast)
         self.change_canvas_size(max(max_chars, 10), max(num_lines - 1, 5))
-        self.clear_canvas()
+        self.clear_preview()
         self.__draw_text(0, 0, content, False, False, self.drawing)
 
     def top_horizontal(self):
