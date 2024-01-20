@@ -393,6 +393,7 @@ class Canvas(Adw.Bin):
         self.change_canvas_size(max(max_chars, 10), max(num_lines - 1, 5))
         self.clear_preview()
         self.__draw_text(0, 0, content, False, False, self.drawing)
+        self.update()
 
     def top_horizontal(self):
         return self.styles[self._style - 1][0]

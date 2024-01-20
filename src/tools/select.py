@@ -118,7 +118,6 @@ class Select(GObject.GObject):
                                 start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
             self.canvas.update()
         else:
-            print("new selection")
             self.selection_start_x_char = this_x // self.x_mul
             self.selection_start_y_char = this_y // self.y_mul
 
@@ -176,19 +175,16 @@ class Select(GObject.GObject):
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
-        print("pressed")
 
         self.click_released = False
 
     def on_click_released(self, click, arg, x, y):
         if not self._active: return
-        print("released")
 
         self.click_released = True
 
     def on_click_stopped(self, click):
         if not self._active: return
-        print(f"stopped {self.click_released}")
 
         if not self.click_released:
             return

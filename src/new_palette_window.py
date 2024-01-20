@@ -39,8 +39,6 @@ class NewPaletteWindow(Adw.Window):
 
         self.palette_chars_buffer.set_text(self.palette_chars)
 
-        print(f"chars: {self.palette_chars}")
-
     @Gtk.Template.Callback("on_add_clicked")
     def on_add_clicked(self, btn):
         palette_name = self.palette_name_entry.get_text()

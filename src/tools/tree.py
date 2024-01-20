@@ -109,7 +109,7 @@ class Tree(GObject.GObject):
         self.drag_y = y_char
 
         self.canvas.clear_preview()
-        self.preview_tree()
+        self.preview()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -130,7 +130,7 @@ class Tree(GObject.GObject):
         self.tree_y = y_char
 
         self.canvas.clear_preview()
-        self.preview_tree()
+        self.preview()
 
     def on_click_stopped(self, click):
         if not self._active: return
@@ -140,12 +140,14 @@ class Tree(GObject.GObject):
         if not self._active: return
         pass
 
-    def preview_tree(self):
+    def preview(self):
+        if not self._active: return
         self.canvas.clear_preview()
         self.draw_tree(self.tree_x + self.drag_x, self.tree_y + self.drag_y, False)
         self.canvas.update_preview()
 
-    def insert_tree(self):
+    def insert(self):
+        self.canvas.add_undo_action(_("Tree"))
         self.canvas.clear_preview()
         self.draw_tree(self.tree_x, self.tree_y, True)
         self.canvas.update()
@@ -156,9 +158,7 @@ class Tree(GObject.GObject):
         current_indent = 0
         leading_spaces = []
         indent_level = 0
-        # print("------tree------")
         for index, line in enumerate(lines):
-            # print("------line------")
             stripped_line = line.lstrip(' ')  # Remove leading underscores
             indent_space = len(line) - len(stripped_line)
             line_number = len(leading_spaces)
@@ -181,7 +181,6 @@ class Tree(GObject.GObject):
                                 indent_level -= 1
                                 previos_spaces = leading_spaces[i]
                             elif leading_spaces[i] > previos_spaces:
-                                # print(f"the indent is {processed_lines[i - line_number][0]} was {indent_level}")
                                 indent_level = processed_lines[i - line_number][0]
                                 previos_spaces = leading_spaces[i]
             current_indent = indent_level

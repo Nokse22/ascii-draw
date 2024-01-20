@@ -78,7 +78,7 @@ class Table(GObject.GObject):
         self._table_type = value
         self.notify('table_type')
 
-        self.preview_table()
+        self.preview()
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
@@ -101,14 +101,15 @@ class Table(GObject.GObject):
         self.table_x = x_char
         self.table_y = y_char
         self.canvas.clear_preview()
-        self.preview_table()
+        self.preview()
 
-    def insert_table(self):
+    def insert(self):
         self.canvas.add_undo_action(_("Table"))
         self.draw_table(self._table_type, True)
         self.canvas.update()
 
-    def preview_table(self):
+    def preview(self):
+        if not self._active: return
         self.canvas.clear_preview()
         self.draw_table(self._table_type, False)
         self.canvas.update_preview()

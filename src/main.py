@@ -196,20 +196,20 @@ class AsciiDrawApplication(Adw.Application):
             self.set_accels_for_action(f"app.{name}", shortcuts)
 
     def on_shutdown(self, *args):
-        dialog = Gtk.MessageDialog(
-            # heading=_("Save Changes"),
-            # body="A valid password is needed to continue",
-            # close_response="cancel",
+        dialog = Adw.MessageDialog(
+            heading=_("Save Changes"),
+            body="A valid password is needed to continue",
+            close_response="cancel",
             modal=True,
             transient_for=self.win,
         )
 
-        # dialog.add_response("cancel", _("Cancel"))
-        # dialog.add_response("discard", _("Discard"))
-        # dialog.add_response("save", _("Save"))
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("discard", _("Discard"))
+        dialog.add_response("save", _("Save"))
 
-        # dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
-        # dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
 
         # entry = Gtk.Entry()
         # dialog.set_extra_child(entry)
@@ -217,7 +217,7 @@ class AsciiDrawApplication(Adw.Application):
         # dialog.choose(None, self.on_response_selected_advanced)
         # dialog.choose_finish(task)
 
-        dialog.run()
+        # dialog.run()
 
         print(quit)
 

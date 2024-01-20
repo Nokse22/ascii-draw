@@ -147,28 +147,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas.connect("undo-added", self.on_undo_added)
         self.toast_overlay.set_child(self.canvas)
 
-        prev_btn = None
-
-        for style in self.styles:
-            if self.flip:
-                name = style[5] + style[1] + style[1] + style[1] + style[4] + " " + style[3] + " " + style[15] + style[1] + style[1] + style[4] + "  " + style[3] + "  "  + style[13] + "\n"
-                name += style[3] + "   " + style[2] + " " + style[3] + "    " + style[2] + "  " + style[3] + "  " + style[3] + "\n"
-                name += style[6] + style[0] + style[0] + style[0] + style[7] + " " + style[6] + style[0] + style[0] + style[16] + " " + style[2] + "  " + style[14] + "  " + style[3]
-            else:
-                name = style[4] + style[0] + style[0] + style[0] + style[5] + "  " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "  " + style[3] + "  "  + style[13] + "\n"
-                name += style[2] + "   " + style[3] + "  " + style[2] + "    " + style[3] + "  " + style[3] + "  " + style[3] + "\n"
-                name += style[7] + style[1] + style[1] + style[1] + style[6] + "  " + style[7] + style[1] + style[1] + style[15] + " " + style[3] + "  " + style[14] + "  " + style[3]
-            label = Gtk.Label(label = name)
-            style_btn = Gtk.ToggleButton(css_classes=["flat", "styles-preview"])
-            style_btn.set_child(label)
-            if prev_btn != None:
-                style_btn.set_group(prev_btn)
-            prev_btn = style_btn
-            style_btn.connect("toggled", self.change_style, self.lines_styles_box)
-            self.lines_styles_box.append(style_btn)
-
-        self.lines_styles_box.get_first_child().set_active(True)
-
         self.freehand = Freehand(self.canvas)
         self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.freehand.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
@@ -208,6 +186,28 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.tree = Tree(self.canvas)
         self.tree.bind_property('active', self.tree_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.tree.bind_property('text', self.tree_text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
+
+        prev_btn = None
+
+        for style in self.styles:
+            if self.flip:
+                name = style[5] + style[1] + style[1] + style[1] + style[4] + " " + style[3] + " " + style[15] + style[1] + style[1] + style[4] + "  " + style[3] + "  "  + style[13] + "\n"
+                name += style[3] + "   " + style[2] + " " + style[3] + "    " + style[2] + "  " + style[3] + "  " + style[3] + "\n"
+                name += style[6] + style[0] + style[0] + style[0] + style[7] + " " + style[6] + style[0] + style[0] + style[16] + " " + style[2] + "  " + style[14] + "  " + style[3]
+            else:
+                name = style[4] + style[0] + style[0] + style[0] + style[5] + "  " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "  " + style[3] + "  "  + style[13] + "\n"
+                name += style[2] + "   " + style[3] + "  " + style[2] + "    " + style[3] + "  " + style[3] + "  " + style[3] + "\n"
+                name += style[7] + style[1] + style[1] + style[1] + style[6] + "  " + style[7] + style[1] + style[1] + style[15] + " " + style[3] + "  " + style[14] + "  " + style[3]
+            label = Gtk.Label(label = name)
+            style_btn = Gtk.ToggleButton(css_classes=["flat", "styles-preview"])
+            style_btn.set_child(label)
+            if prev_btn != None:
+                style_btn.set_group(prev_btn)
+            prev_btn = style_btn
+            style_btn.connect("toggled", self.on_style_changed, self.lines_styles_box)
+            self.lines_styles_box.append(style_btn)
+
+        self.lines_styles_box.get_first_child().set_active(True)
 
         ranges_and_pages = [
             [[  range(0x0021, 0x007F),  # Basic Latin
@@ -296,7 +296,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.change_theme()
 
     def change_theme(self, manager=Adw.StyleManager(), *args):
-        print(manager)
         self.canvas.color = 1 if manager.get_dark() else 0
         self.canvas.update()
 
@@ -322,7 +321,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             scrolled_window = Gtk.ScrolledWindow(name=palette.name)
             scrolled_window.set_child(flow_box)
             self.chars_carousel.append(scrolled_window)
-            print(f"added {palette}")
 
         pos = self.chars_carousel.get_position()
         if pos != self.chars_carousel.get_n_pages() - 1:
@@ -340,7 +338,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("char_pages_go_back")
     def char_pages_go_back(self, btn):
-        print("back")
         pos = self.chars_carousel.get_position()
         if pos == 0:
             return
@@ -353,7 +350,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("char_pages_go_next")
     def char_pages_go_next(self, btn):
-        print("next")
         pos = self.chars_carousel.get_position()
         if pos == self.chars_carousel.get_n_pages() - 1:
             return
@@ -374,17 +370,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("preview_table") # TABLE
     def preview_table_callback(self, *args):
-        self.table.preview_table()
-        # self.clear(None, self.preview_grid)
-        # table_type = self.table_types_combo.get_selected()
-        # self.insert_table(table_type, self.preview_grid)
+        self.table.preview()
 
     @Gtk.Template.Callback("insert_table") # TABLE
     def insert_table_callback(self, btn):
-        self.table.insert_table()
-        # table_type = self.table_types_combo.get_selected()
-        # self.add_undo_action("Table")
-        # self.insert_table(table_type, self.grid)
+        self.table.insert()
 
     @Gtk.Template.Callback("on_reset_row_clicked") # TABLE
     def on_reset_row_clicked(self, btn):
@@ -407,7 +397,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         rows_values_box = Gtk.Box(spacing=6, margin_start=6, margin_end=6, margin_bottom=6, margin_top=6)
         for value in range(values):
             entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
-            entry.connect("changed", lambda _: self.table.preview_table())
+            entry.connect("changed", lambda _: self.table.preview())
             rows_values_box.append(entry)
         self.rows_box.append(rows_values_box)
 
@@ -565,66 +555,79 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.canvas.change_canvas_size(x, y)
 
-    def change_style(self, btn, box):
+    def on_style_changed(self, btn, box):
         child = box.get_first_child()
         index = 1
         while child != None:
             if child.get_active():
                 self.style = index
                 self.canvas.style = index
-                return
+                break
             child = child.get_next_sibling()
             index += 1
+
+        self.tree.preview()
+        self.table.preview()
 
     @Gtk.Template.Callback("on_choose_picker")
     def on_choose_picker(self, btn):
         print("picker")
         self.sidebar_stack.set_visible_child_name("character_page")
+        self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_rectangle")
     def on_choose_rectangle(self, btn):
         print("rect")
         self.sidebar_stack.set_visible_child_name("style_page")
+        self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_filled_rectangle")
     def on_choose_filled_rectangle(self, btn):
         print("f rect")
         self.sidebar_stack.set_visible_child_name("character_page")
+        self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_line")
     def on_choose_line(self, btn):
         print("line")
         self.sidebar_stack.set_visible_child_name("line_page")
+        self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_text")
     def on_choose_text(self, btn):
         print("text")
         self.sidebar_stack.set_visible_child_name("text_page")
+        self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_table")
     def on_choose_table(self, btn):
         print("table")
         self.sidebar_stack.set_visible_child_name("table_page")
+        self.table.preview()
 
     @Gtk.Template.Callback("on_choose_tree_list")
     def on_choose_tree_list(self, btn):
         print("tree")
         self.sidebar_stack.set_visible_child_name("tree_page")
+        self.tree.preview()
 
     @Gtk.Template.Callback("on_choose_select")
     def on_choose_select(self, btn):
         print("select")
         self.sidebar_stack.set_visible_child_name("character_page")
+        self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_free")
     def on_choose_free(self, btn):
         print("free")
         self.sidebar_stack.set_visible_child_name("freehand_page")
+        self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_eraser")
     def on_choose_eraser(self, btn):
         print("eraser")
         self.sidebar_stack.set_visible_child_name("eraser_page")
+        self.canvas.clear_preview()
 
     def new_palette_from_canvas(self):
         content = self.canvas.get_content()
@@ -650,6 +653,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("on_tree_text_inserted")
     def on_tree_text_inserted(self, buffer, loc, text, length):
+        # TODO change function to run after and change tabs into spaces
         spaces = 0
         if text == "\n":
             start_iter = loc.copy()
@@ -668,15 +672,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             loc.backward_chars(spaces)
             end_iter = buffer.get_end_iter()
 
-        self.tree.preview_tree()
+        self.tree.preview()
 
     @Gtk.Template.Callback("preview_tree")
     def preview_tree(self, widget=None):
-        self.tree.preview_tree()
+        self.tree.preview()
 
     @Gtk.Template.Callback("insert_tree")
     def insert_tree(self, *args):
-        self.tree.insert_tree()
+        self.tree.insert()
 
     @Gtk.Template.Callback("undo_first_change")
     def undo_first_change(self, btn=None):

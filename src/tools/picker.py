@@ -60,8 +60,6 @@ class Picker(GObject.GObject):
         char = self.canvas.get_char_at(x_char, y_char)
         self.canvas.set_selected_char(char)
 
-        print(char)
-
     def on_click_stopped(self, click):
         if not self._active: return
         pass
