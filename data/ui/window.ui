@@ -231,7 +231,7 @@
                                       <object class="GtkTextView" id="tree_text_entry">
                                         <property name="buffer">
                                           <object class="GtkTextBuffer" id="tree_text_entry_buffer">
-                                            <signal name="insert-text" handler="on_tree_text_inserted"/>
+                                            <signal name="insert-text" handler="on_tree_text_inserted" after="yes"/>
                                             <signal name="changed" handler="preview_tree" after="yes"/>
                                           </object>
                                         </property>

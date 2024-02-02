@@ -46,7 +46,7 @@
                     <property name="right-margin">12</property>
                     <property name="top-margin">12</property>
                     <property name="vexpand">True</property>
-                    <property name="wrap-mode">word-char</property>
+                    <property name="wrap-mode">char</property>
                   </object>
                 </child>
                 <child>

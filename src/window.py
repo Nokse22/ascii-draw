@@ -572,61 +572,81 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_choose_picker")
     def on_choose_picker(self, btn):
         print("picker")
-        self.sidebar_stack.set_visible_child_name("character_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("character_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_rectangle")
     def on_choose_rectangle(self, btn):
         print("rect")
-        self.sidebar_stack.set_visible_child_name("style_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("style_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_filled_rectangle")
     def on_choose_filled_rectangle(self, btn):
         print("f rect")
-        self.sidebar_stack.set_visible_child_name("character_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("character_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_line")
     def on_choose_line(self, btn):
         print("line")
-        self.sidebar_stack.set_visible_child_name("line_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("line_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_text")
     def on_choose_text(self, btn):
         print("text")
-        self.sidebar_stack.set_visible_child_name("text_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("text_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_table")
     def on_choose_table(self, btn):
         print("table")
-        self.sidebar_stack.set_visible_child_name("table_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("table_page")
         self.table.preview()
 
     @Gtk.Template.Callback("on_choose_tree_list")
     def on_choose_tree_list(self, btn):
         print("tree")
-        self.sidebar_stack.set_visible_child_name("tree_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("tree_page")
         self.tree.preview()
 
     @Gtk.Template.Callback("on_choose_select")
     def on_choose_select(self, btn):
         print("select")
-        self.sidebar_stack.set_visible_child_name("character_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("character_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_free")
     def on_choose_free(self, btn):
         print("free")
-        self.sidebar_stack.set_visible_child_name("freehand_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("freehand_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_eraser")
     def on_choose_eraser(self, btn):
         print("eraser")
-        self.sidebar_stack.set_visible_child_name("eraser_page")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("eraser_page")
         self.canvas.clear_preview()
 
     def new_palette_from_canvas(self):
@@ -642,21 +662,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.show_new_palette_window(unique_string)
 
-    # def add_undo_action(self, name, *args):
-    #     self.undo_changes.insert(0, Change(name))
-    #     self.undo_button.set_sensitive(True)
-    #     self.undo_button.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
-
     def on_undo_added(self, widget, undo_name):
         self.undo_button.set_sensitive(True)
         self.undo_button.set_tooltip_text(_("Undo") + " " + undo_name)
 
     @Gtk.Template.Callback("on_tree_text_inserted")
     def on_tree_text_inserted(self, buffer, loc, text, length):
-        # TODO change function to run after and change tabs into spaces
         spaces = 0
         if text == "\n":
             start_iter = loc.copy()
+            start_iter.backward_char()
             start_iter.set_line_offset(0)
             end_iter = start_iter.copy()
             start_iter.backward_char()
@@ -669,8 +684,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 spaces += 1
             indentation = " " * spaces
             buffer.insert(loc, f"{indentation}")
-            loc.backward_chars(spaces)
-            end_iter = buffer.get_end_iter()
+        elif text == "\t":
+            start_iter = loc.copy()
+            start_iter.backward_char()
+            buffer.delete(start_iter ,loc)
+            buffer.insert(start_iter, " ")
 
         self.tree.preview()
 
