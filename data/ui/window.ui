@@ -128,7 +128,7 @@
                                           </object>
                                         </property>
                                         <property name="selectable">False</property>
-                                        <property name="title" translatable="yes">Colums</property>
+                                        <property name="title" translatable="yes">Columns</property>
                                       </object>
                                     </child>
                                     <child>
