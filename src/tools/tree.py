@@ -99,14 +99,14 @@ class Tree(GObject.GObject):
     def on_drag_begin(self, gesture, start_x, start_y):
         if not self._active: return
 
+        self.drag_start_x = start_x
+        self.drag_start_y = start_y
+
     def on_drag_follow(self, gesture, x, y):
         if not self._active: return
 
-        x_char = int(x / self.x_mul)
-        y_char = int(y / self.y_mul)
-
-        self.drag_x = x_char
-        self.drag_y = y_char
+        self.drag_x = int((x + self.drag_start_x) // self.x_mul - self.drag_start_x// self.x_mul)
+        self.drag_y = int((y + self.drag_start_y) // self.y_mul - self.drag_start_y// self.y_mul)
 
         self.canvas.clear_preview()
         self.preview()
@@ -152,7 +152,7 @@ class Tree(GObject.GObject):
         self.draw_tree(self.tree_x, self.tree_y, True)
         self.canvas.update()
 
-    def draw_tree(self, start_x, start_y, draw):
+    def draw_tree(self, tree_x, tree_y, draw):
         lines = self._text.split("\n")
         processed_lines = []
         current_indent = 0
@@ -189,9 +189,9 @@ class Tree(GObject.GObject):
 
         tree_structure = ""
 
-        y = self.tree_y
+        y = tree_y
         for index, (indent, text) in enumerate(processed_lines):
-            x = self.tree_x + (indent) * 4
+            x = tree_x + (indent) * 4
             self.canvas.draw_text(x, y, text, False, draw)
             if indent != 0:
                 self.canvas.set_char_at(x - 1, y, " ", draw)
