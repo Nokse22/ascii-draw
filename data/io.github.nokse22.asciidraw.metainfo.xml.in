@@ -37,6 +37,16 @@ There are many stiles to choose from and multiple tools available to use:</p>
   <url type="donation">https://ko-fi.com/nokse22</url>
 
   <releases>
+    <release version="0.3.0" date="2024-03-10">
+		  <description translatable="no">
+		    <p>Improved design</p>
+		    <p>Greatly improved performance (bigger canvas allowed)</p>
+		    <p>Added new line tool</p>
+		    <p>Added select/move tool</p>
+		    <p>Added palettes</p>
+		    <p>Improved selected char with a primary and secondary</p>
+		  </description>
+	  </release>
     <release version="0.2.0" date="2023-09-26">
 		  <description translatable="no">
 		    <p>Improved sidebar for better usability</p>
