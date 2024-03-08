@@ -61,7 +61,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     rectangle_button = Gtk.Template.Child()
     filled_rectangle_button = Gtk.Template.Child()
     line_button = Gtk.Template.Child()
-    select_button = Gtk.Template.Child()
+    move_button = Gtk.Template.Child()
     text_button = Gtk.Template.Child()
     tree_button = Gtk.Template.Child()
     table_button = Gtk.Template.Child()
@@ -147,45 +147,45 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas.connect("undo-added", self.on_undo_added)
         self.toast_overlay.set_child(self.canvas)
 
-        self.freehand = Freehand(self.canvas)
-        self.freehand.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.freehand.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
-        # self.freehand.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
+        self.freehand_tool = Freehand(self.canvas)
+        self.freehand_tool.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.freehand_tool.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.freehand_tool.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.eraser = Eraser(self.canvas)
-        self.eraser.bind_property('active', self.eraser_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.eraser.bind_property('size', self.eraser_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+        self.eraser_tool = Eraser(self.canvas)
+        self.eraser_tool.bind_property('active', self.eraser_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.eraser_tool.bind_property('size', self.eraser_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.rectangle = Rectangle(self.canvas)
-        self.rectangle.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.rectangle_tool = Rectangle(self.canvas)
+        self.rectangle_tool.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.filled_rectangle = FilledRectangle(self.canvas)
-        self.filled_rectangle.bind_property('active', self.filled_rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.filled_rectangle_tool = FilledRectangle(self.canvas)
+        self.filled_rectangle_tool.bind_property('active', self.filled_rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.line = Line(self.canvas)
-        self.line.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.line.bind_property('arrow', self.line_arrow_switch, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.line.bind_property('line_type', self.line_type_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
+        self.line_tool = Line(self.canvas)
+        self.line_tool.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.line_tool.bind_property('arrow', self.line_arrow_switch, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.line_tool.bind_property('line_type', self.line_type_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.select = Select(self.canvas)
-        self.select.bind_property('active', self.select_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.move_tool = Select(self.canvas)
+        self.move_tool.bind_property('active', self.move_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.text = Text(self.canvas)
-        self.text.bind_property('active', self.text_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.text.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.text.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
+        self.text_tool = Text(self.canvas)
+        self.text_tool.bind_property('active', self.text_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.text_tool.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.text_tool.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.table = Table(self.canvas, self.rows_box)
-        self.table.bind_property('active', self.table_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.table.bind_property('table_type', self.table_types_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
-        # self.table.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
+        self.table_tool = Table(self.canvas, self.rows_box)
+        self.table_tool.bind_property('active', self.table_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.table_tool.bind_property('table_type', self.table_types_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.table_tool.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.piker = Picker(self.canvas)
-        self.piker.bind_property('active', self.picker_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.picker_tool = Picker(self.canvas)
+        self.picker_tool.bind_property('active', self.picker_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.tree = Tree(self.canvas)
-        self.tree.bind_property('active', self.tree_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.tree.bind_property('text', self.tree_text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
+        self.tree_tool = Tree(self.canvas)
+        self.tree_tool.bind_property('active', self.tree_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.tree_tool.bind_property('text', self.tree_text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
         prev_btn = None
 
@@ -275,20 +275,18 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.palettes = []
 
-        directory_path = "palettes"
+        directory_path = "/var/data/palettes"
         os.makedirs(directory_path, exist_ok=True)
-        files = os.listdir(directory_path)
 
         for filename in os.listdir(directory_path):
             filepath = os.path.join(directory_path, filename)
             if os.path.isfile(filepath):
                 with open(filepath, 'r') as file:
-                    chars = file.read()
+                    chars = file.read().replace("\t", "").replace("\n", "")
                 palette_name = os.path.splitext(filename)[0]
                 palette = Palette(palette_name, chars)
                 self.palettes.append(palette)
-
-        self.add_palette_to_ui(self.palettes)
+                self.add_palette_to_ui(palette)
 
         self.style_manager = Adw.StyleManager()
         self.style_manager.connect("notify::dark", self.change_theme)
@@ -304,39 +302,31 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def show_new_palette_window(self, chars=''):
         win = NewPaletteWindow(self, palette_chars=chars)
         win.present()
-
         win.connect("on-add-clicked", self.on_new_palette_add_clicked)
 
     def on_new_palette_add_clicked(self, win, palette_name, palette_chars):
         palette = Palette(palette_name, palette_chars)
+        self.save_new_palette(palette)
         self.palettes.append(palette)
+        self.add_palette_to_ui(palette)
 
-        self.add_palette_to_ui([palette])
-
-    def add_palette_to_ui(self, palettes):
-        for palette in palettes:
-            flow_box = Gtk.FlowBox(homogeneous=True, selection_mode=0, margin_top=3, margin_bottom=3, margin_start=3, margin_end=3, valign=Gtk.Align.START)
-            for char in palette.chars:
-                new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
-                new_button.connect("clicked", self.change_char, flow_box)
-                flow_box.append(new_button)
-            scrolled_window = Gtk.ScrolledWindow(name=palette.name)
-            scrolled_window.set_child(flow_box)
-            self.chars_carousel.append(scrolled_window)
+    def add_palette_to_ui(self, palette):
+        flow_box = Gtk.FlowBox(homogeneous=True, selection_mode=0, margin_top=3, margin_bottom=3, margin_start=3, margin_end=3, valign=Gtk.Align.START)
+        for char in palette.chars:
+            new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
+            new_button.connect("clicked", self.change_char, flow_box)
+            flow_box.append(new_button)
+        scrolled_window = Gtk.ScrolledWindow(name=palette.name)
+        scrolled_window.set_child(flow_box)
+        self.chars_carousel.append(scrolled_window)
 
         pos = self.chars_carousel.get_position()
         if pos != self.chars_carousel.get_n_pages() - 1:
             self.char_carousel_go_next.set_sensitive(True)
 
-    def add_new_palette(self, palette_name, palette_chars):
-        os.makedirs("/palettes", exist_ok=True)
-
-        with open(f"palettes/{palette_name}", 'w') as file:
-            file.write(palette_chars)
-
-        palette = Palette(palette_name ,palette_chars)
-
-        self.add_palette_to_ui([palette])
+    def save_new_palette(self, palette):
+        with open(f"/var/data/palettes/{palette.name}.txt", 'w') as file:
+            file.write(palette.chars)
 
     @Gtk.Template.Callback("char_pages_go_back")
     def char_pages_go_back(self, btn):
@@ -364,19 +354,19 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback("insert_text")
     def insert_text_callback(self, *args):
-        self.text.insert_text()
+        self.text_tool.insert_text()
 
     @Gtk.Template.Callback("preview_text")
     def preview_text_callback(self,  *args):
-        self.text.preview_text()
+        self.text_tool.preview_text()
 
     @Gtk.Template.Callback("preview_table") # TABLE
     def preview_table_callback(self, *args):
-        self.table.preview()
+        self.table_tool.preview()
 
     @Gtk.Template.Callback("insert_table") # TABLE
     def insert_table_callback(self, btn):
-        self.table.insert()
+        self.table_tool.insert()
 
     @Gtk.Template.Callback("on_reset_row_clicked") # TABLE
     def on_reset_row_clicked(self, btn):
@@ -387,29 +377,33 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child = prev_child.get_next_sibling()
             self.rows_box.remove(prev_child)
         self.columns_spin.set_sensitive(True)
-        self.table.rows_number = 0
+        self.table_tool.rows_number = 0
+
+        self.table_tool.preview()
 
     @Gtk.Template.Callback("on_add_row_clicked") # TABLE
     def on_add_row_clicked(self, btn):
-        self.table.rows_number += 1
+        self.table_tool.rows_number += 1
         self.columns_spin.set_sensitive(False)
         values = int(self.columns_spin.get_value())
-        self.table.columns_number = values
+        self.table_tool.columns_number = values
 
         rows_values_box = Gtk.Box(spacing=6, margin_start=6, margin_end=6, margin_bottom=6, margin_top=6)
         for value in range(values):
             entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
-            entry.connect("changed", lambda _: self.table.preview())
+            entry.connect("changed", lambda _: self.table_tool.preview())
             rows_values_box.append(entry)
         self.rows_box.append(rows_values_box)
+
+        self.table_tool.preview()
 
     def is_renderable(self, character):
         return unicodedata.category(character) != "Cn"
 
     @Gtk.Template.Callback("font_row_selected")
     def font_row_selected(self, list_box, row):
-        self.text.set_selected_font(list_box.get_selected_row().get_child().get_name())
-        self.text.preview_text()
+        self.text_tool.set_selected_font(list_box.get_selected_row().get_child().get_name())
+        self.text_tool.preview_text()
 
     @Gtk.Template.Callback("save_button_clicked")
     def save_button_clicked(self, btn):
@@ -452,18 +446,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             except IOError:
                 print(f"Error reading {path}.")
 
-    def on_save_changes_message_response(self, dialog, task, callback=None):
-        response = dialog.choose_finish(task)
-        print(f'Selected "{response}" response.')
-        match response:
-            case "discard":
-                if callback:
-                    callback()
-            case "save":
-                self.save(callback)
-            case "cancel":
-                pass
-
     def new_canvas(self):
         if not self.canvas.is_saved:
             self.save_changes_message(self.make_new_canvas)
@@ -473,7 +455,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def save_changes_message(self, callback=None):
         dialog = Adw.MessageDialog(
             heading=_("Save Changes?"),
-            body=_("You have unsaved changes, do you want to save them?"),
+            body=_("The opened file contains unsaved changes. Changes which are not saved will be permanently lost."),
             close_response="cancel",
             modal=True,
             transient_for=self,
@@ -488,14 +470,30 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         dialog.choose(None, self.on_save_changes_message_response, callback)
 
+    def on_save_changes_message_response(self, dialog, task, callback=None):
+        response = dialog.choose_finish(task)
+        print(f'Selected "{response}" response.')
+        match response:
+            case "discard":
+                if callback:
+                    callback()
+            case "save":
+                self.save(callback)
+            case "cancel":
+                pass
+
     def make_new_canvas(self):
-        self.canvas.clear_canvas()
-        # self.canvas.change_canvas_size(50, 25)
+        self.canvas.wipe_canvas()
+        self.canvas.clear_preview()
+        self.canvas.change_canvas_size(40, 20)
         self.file_path = ""
         self.title_widget.set_subtitle("")
         self.canvas.undo_changes = []
         self.undo_button.set_sensitive(False)
         self.undo_button.set_tooltip_text("")
+        self.canvas.is_saved = True
+        toast = Adw.Toast(title=_("New Canvas"), timeout=2)
+        self.toast_overlay.add_toast(toast)
 
     def save_as_action(self):
         self.open_save_file_chooser()
@@ -568,12 +566,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             child = child.get_next_sibling()
             index += 1
 
-        self.tree.preview()
-        self.table.preview()
+        self.tree_tool.preview()
+        self.table_tool.preview()
 
     @Gtk.Template.Callback("on_increase_size_activated")
     def update_canvas_size_spins(self, *args):
-        print("hello")
         width, height = self.canvas.get_canvas_size()
         self.width_spin.set_value(width)
         self.height_spin.set_value(height)
@@ -617,6 +614,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if current_sidebar != "character_page" and current_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("text_page")
         self.canvas.clear_preview()
+        self.text_tool.preview_text()
 
     @Gtk.Template.Callback("on_choose_table")
     def on_choose_table(self, btn):
@@ -624,7 +622,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         current_sidebar = self.sidebar_stack.get_visible_child_name()
         if current_sidebar != "character_page" and current_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("table_page")
-        self.table.preview()
+        self.table_tool.preview()
 
     @Gtk.Template.Callback("on_choose_tree_list")
     def on_choose_tree_list(self, btn):
@@ -632,11 +630,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         current_sidebar = self.sidebar_stack.get_visible_child_name()
         if current_sidebar != "character_page" and current_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("tree_page")
-        self.tree.preview()
+        self.tree_tool.preview()
 
     @Gtk.Template.Callback("on_choose_select")
     def on_choose_select(self, btn):
-        print("select")
+        print("move")
         current_sidebar = self.sidebar_stack.get_visible_child_name()
         if current_sidebar != "character_page" and current_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("character_page")
@@ -699,15 +697,15 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             buffer.delete(start_iter ,loc)
             buffer.insert(start_iter, " ")
 
-        self.tree.preview()
+        self.tree_tool.preview()
 
     @Gtk.Template.Callback("preview_tree")
     def preview_tree(self, widget=None):
-        self.tree.preview()
+        self.tree_tool.preview()
 
     @Gtk.Template.Callback("insert_tree")
     def insert_tree(self, *args):
-        self.tree.insert()
+        self.tree_tool.insert()
 
     @Gtk.Template.Callback("undo_first_change")
     def undo_first_change(self, btn=None):
@@ -745,3 +743,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def select_picker_tool(self):
         self.picker_button.set_active(True)
+
+    def select_move_tool(self):
+        self.move_button.set_active(True)
