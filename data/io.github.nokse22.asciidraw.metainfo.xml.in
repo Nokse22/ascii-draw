@@ -36,6 +36,11 @@ There are many stiles to choose from and multiple tools available to use:</p>
   <url type="translate">https://github.com/Nokse22/ascii-draw/tree/master/po</url>
   <url type="donation">https://ko-fi.com/nokse22</url>
 
+  <branding>
+    <color type="primary" scheme_preference="light">#F29FA3</color>
+    <color type="primary" scheme_preference="dark">#B44C51</color>
+  </branding>
+
   <releases>
     <release version="0.3.0" date="2024-03-10">
 		  <description translatable="no">
