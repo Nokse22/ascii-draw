@@ -30,9 +30,11 @@ class Table(GObject.GObject):
         self._active = False
         self._style = 0
 
+        self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
+        self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
+        self.canvas.drag_gesture.connect("drag-end", self.on_drag_end)
+
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
-        self.canvas.click_gesture.connect("released", self.on_click_released)
-        self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
         self.flip = False
         self.start_x = 0
@@ -43,6 +45,9 @@ class Table(GObject.GObject):
 
         self.table_x = 0
         self.table_y = 0
+
+        self.drag_x = 0
+        self.drag_y = 0
 
         self.rows_number = 0
         self.columns_number = 0
@@ -80,41 +85,52 @@ class Table(GObject.GObject):
 
         self.preview()
 
+    def on_drag_begin(self, gesture, start_x, start_y):
+        if not self._active: return
+
+        self.drag_start_x = start_x
+        self.drag_start_y = start_y
+
+    def on_drag_follow(self, gesture, x, y):
+        if not self._active: return
+
+        self.drag_x = int((x + self.drag_start_x) // self.x_mul - self.drag_start_x// self.x_mul)
+        self.drag_y = int((y + self.drag_start_y) // self.y_mul - self.drag_start_y// self.y_mul)
+
+        self.canvas.clear_preview()
+        self.preview()
+
+        print(self.table_x + self.drag_x)
+
+    def on_drag_end(self, gesture, delta_x, delta_y):
+        if not self._active: return
+
+        self.table_x += self.drag_x
+        self.table_y += self.drag_y
+
+        self.drag_x = 0
+        self.drag_y = 0
+
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
-        pass
 
-    def on_click_stopped(self, click):
-        if not self._active: return
-        pass
-
-    def on_click_released(self, click, arg, x, y):
-        if not self._active: return
-
-        if self.flip:
-            if self.drawing_area_width == 0:
-                self.update_area_width()
-            x = self.drawing_area_width - x
-        x_char = int(x / self.x_mul)
-        y_char = int(y / self.y_mul)
-
-        self.table_x = x_char
-        self.table_y = y_char
+        self.table_x = int(x / self.x_mul)
+        self.table_y = int(y / self.y_mul)
         self.canvas.clear_preview()
         self.preview()
 
     def insert(self):
         self.canvas.add_undo_action(_("Table"))
-        self.draw_table(self._table_type, True)
+        self.draw_table(self.table_x + self.drag_x, self.table_y + self.drag_y, self._table_type, True)
         self.canvas.update()
 
     def preview(self):
         if not self._active: return
         self.canvas.clear_preview()
-        self.draw_table(self._table_type, False)
+        self.draw_table(self.table_x + self.drag_x, self.table_y + self.drag_y, self._table_type, False)
         self.canvas.update_preview()
 
-    def draw_table(self, table_type: int, draw: bool):
+    def draw_table(self, table_x, table_y, table_type: int, draw: bool):
         child = self.rows_box.get_first_child()
         columns_widths = []
         table = []
@@ -145,40 +161,40 @@ class Table(GObject.GObject):
 
         if int(table_type) == 1: # all divided
             height = 1 + self.rows_number * 2
-        elif int(table_type) == 0: # first line divided
+        elif int(table_type) == 0 and len(table) > 1: # first line divided
             height = 3 + self.rows_number
         else: # not divided
             height = 2 + self.rows_number
 
         for y in range(height):
             for x in range(width):
-                self.canvas.set_char_at(self.table_x + x, self.table_y + y, ' ', draw)
+                self.canvas.set_char_at(table_x + x, table_y + y, ' ', draw)
 
-        self.canvas.draw_rectangle(self.table_x, self.table_y, width, height, draw)
+        self.canvas.draw_rectangle(table_x, table_y, width, height, draw)
 
-        x = self.table_x
+        x = table_x
         for column in range(self.columns_number - 1):
             x += columns_widths[column] + 1
-            self.canvas.vertical_line(x, self.table_y + 1, height - 2, self.canvas.right_vertical(), draw)
-            self.canvas.set_char_at(x, self.table_y + height - 1, self.canvas.top_intersect(), draw)
-            self.canvas.set_char_at(x, self.table_y, self.canvas.bottom_intersect(), draw)
+            self.canvas.vertical_line(x, table_y + 1, height - 2, self.canvas.right_vertical(), draw)
+            self.canvas.set_char_at(x, table_y + height - 1, self.canvas.top_intersect(), draw)
+            self.canvas.set_char_at(x, table_y, self.canvas.bottom_intersect(), draw)
 
-        y = self.table_y
+        y = table_y
 
         if int(table_type) == 1: # all divided
             for row in range(self.rows_number - 1):
                 y += 2
-                self.canvas.horizontal_line(y, self.table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
-                self.canvas.set_char_at(self.table_x, y, self.canvas.right_intersect(), draw)
-                self.canvas.set_char_at(self.table_x + width - 1, y, self.canvas.left_intersect(), draw)
-        elif int(table_type) == 0: # first line divided
+                self.canvas.horizontal_line(y, table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
+                self.canvas.set_char_at(table_x, y, self.canvas.right_intersect(), draw)
+                self.canvas.set_char_at(table_x + width - 1, y, self.canvas.left_intersect(), draw)
+        elif int(table_type) == 0 and len(table) > 1: # first line divided
             y += 2
-            self.canvas.horizontal_line(y, self.table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
-            self.canvas.set_char_at(self.table_x, y, self.canvas.right_intersect(), draw)
-            self.canvas.set_char_at(self.table_x + width - 1, y, self.canvas.left_intersect(), draw)
+            self.canvas.horizontal_line(y, table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
+            self.canvas.set_char_at(table_x, y, self.canvas.right_intersect(), draw)
+            self.canvas.set_char_at(table_x + width - 1, y, self.canvas.left_intersect(), draw)
 
-        y = self.table_y + 1
-        x = self.table_x + 1
+        y = table_y + 1
+        x = table_x + 1
         for index_row, row in enumerate(table):
             for index, column in enumerate(row):
                 self.canvas.draw_text(x, y, column, False, draw)
@@ -189,4 +205,4 @@ class Table(GObject.GObject):
                 y += 2
             else:
                 y += 1
-            x = self.table_x + 1
+            x = table_x + 1
