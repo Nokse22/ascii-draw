@@ -113,10 +113,9 @@ class Select(GObject.GObject):
                 for x in range(1, int(width)):
                     self.canvas.set_char_at(start_x_char + x, start_y_char + y, ' ', True)
 
-                start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
-                self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
-                                start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
-            self.canvas.update()
+            # start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+            # self.canvas.draw_text(start_x_char + 1, start_y_char + 1, self.moved_text, True, False)
+            # self.canvas.update()
         else:
             self.selection_start_x_char = this_x // self.x_mul
             self.selection_start_y_char = this_y // self.y_mul

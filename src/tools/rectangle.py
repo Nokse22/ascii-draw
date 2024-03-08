@@ -32,10 +32,6 @@ class Rectangle(GObject.GObject):
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
         self.canvas.drag_gesture.connect("drag-end", self.on_drag_end)
 
-        self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
-        self.canvas.click_gesture.connect("released", self.on_click_released)
-        self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
-
         self.flip = False
         self.start_x = 0
         self.start_y = 0
@@ -128,15 +124,3 @@ class Rectangle(GObject.GObject):
         height += 1
         self.canvas.draw_rectangle(start_x_char, start_y_char, width, height, True)
         self.canvas.update()
-
-    def on_click_pressed(self, click, arg, x, y):
-        if not self._active: return
-        pass
-
-    def on_click_stopped(self, click):
-        if not self._active: return
-        pass
-
-    def on_click_released(self, click, arg, x, y):
-        if not self._active: return
-        pass
