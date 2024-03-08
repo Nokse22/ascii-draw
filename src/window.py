@@ -295,6 +295,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.change_theme()
 
+        self.update_canvas_size_spins()
+
     def change_theme(self, manager=Adw.StyleManager(), *args):
         self.canvas.color = 1 if manager.get_dark() else 0
         self.canvas.update()
@@ -568,6 +570,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.tree.preview()
         self.table.preview()
+
+    @Gtk.Template.Callback("on_increase_size_activated")
+    def update_canvas_size_spins(self, *args):
+        print("hello")
+        width, height = self.canvas.get_canvas_size()
+        self.width_spin.set_value(width)
+        self.height_spin.set_value(height)
 
     @Gtk.Template.Callback("on_choose_picker")
     def on_choose_picker(self, btn):
