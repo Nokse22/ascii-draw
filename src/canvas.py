@@ -43,8 +43,6 @@ class Change():
 class Canvas(Adw.Bin):
     __gtype_name__ = 'Canvas'
     drawing_area = Gtk.Template.Child()
-    draw_grid = Gtk.Template.Child()
-    preview_grid = Gtk.Template.Child()
     draw_drawing_area = Gtk.Template.Child()
     preview_drawing_area = Gtk.Template.Child()
 
@@ -90,7 +88,7 @@ class Canvas(Adw.Bin):
         self.canvas_width = 40
         self.canvas_height = 20
 
-        self.draw_grid.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
+        self.draw_drawing_area.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
 
         for y in range(self.canvas_height):
             new_line = []
@@ -193,12 +191,6 @@ class Canvas(Adw.Bin):
         else:
             btn.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
         self.update()
-
-    def draw_char(self, x_coord, y_coord, char):
-        child = self.draw_grid.get_child_at(x_coord, y_coord)
-        if child:
-            self.undo_changes[0].add_change(x_coord, y_coord, child.get_text())
-            child.set_text(char)
 
     def add_undo_action(self, undo_name):
         self.undo_changes.insert(0, Change(undo_name))
@@ -357,6 +349,15 @@ class Canvas(Adw.Bin):
 
         self.draw_drawing_area.queue_draw()
 
+    def wipe_canvas(self):
+        for y in range(self.canvas_height):
+            for x in range(self.canvas_width):
+                if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+                    return
+                self.drawing[int(y)][int(x)] = ""
+
+        self.draw_drawing_area.queue_draw()
+
     def change_canvas_size(self, final_x, final_y):
         content = self.get_content()
 
@@ -373,7 +374,7 @@ class Canvas(Adw.Bin):
             self.drawing.append(new_line)
             self.preview.append(new_line)
 
-        self.draw_grid.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
+        self.draw_drawing_area.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
 
         self.__draw_text(0, 0, content, False, False, self.drawing)
 
@@ -387,6 +388,7 @@ class Canvas(Adw.Bin):
         return content
 
     def set_content(self, content):
+        self.wipe_canvas()
         lines = content.split('\n')
         num_lines = len(lines)
         max_chars = max(len(line) for line in lines)
