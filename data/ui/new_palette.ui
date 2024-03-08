@@ -56,7 +56,7 @@ pill</property>
                     <property name="halign">center</property>
                     <property name="label" translatable="yes">Save</property>
                     <property name="valign">center</property>
-                    <property name="vexpand">True</property>
+                    <property name="vexpand">False</property>
                     <signal name="clicked" handler="on_add_clicked"/>
                   </object>
                 </child>
