@@ -36,8 +36,6 @@ class Text(GObject.GObject):
         self.canvas.drag_gesture.connect("drag-end", self.on_drag_end)
 
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
-        self.canvas.click_gesture.connect("released", self.on_click_released)
-        self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
         self.start_x = 0
         self.start_y = 0
@@ -48,8 +46,11 @@ class Text(GObject.GObject):
         self.text_x = 0
         self.text_y = 0
 
-        self.text_drag_x = 0
-        self.text_drag_y = 0
+        self.drag_x = 0
+        self.drag_y = 0
+
+        self.drag_start_x = 0
+        self.drag_start_y = 0
 
         self._text = ''
 
@@ -99,14 +100,14 @@ class Text(GObject.GObject):
     def on_drag_begin(self, gesture, start_x, start_y):
         if not self._active: return
 
+        self.drag_start_x = start_x
+        self.drag_start_y = start_y
+
     def on_drag_follow(self, gesture, x, y):
         if not self._active: return
 
-        x_char = int(x / self.x_mul)
-        y_char = int(y / self.y_mul)
-
-        self.text_drag_x = x_char
-        self.text_drag_y = y_char
+        self.drag_x = int((x + self.drag_start_x) // self.x_mul - self.drag_start_x// self.x_mul)
+        self.drag_y = int((y + self.drag_start_y) // self.y_mul - self.drag_start_y// self.y_mul)
 
         self.canvas.clear_preview()
         self.preview_text()
@@ -114,31 +115,20 @@ class Text(GObject.GObject):
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
 
-        self.text_x += self.text_drag_x
-        self.text_y += self.text_drag_y
+        self.text_x += self.drag_x
+        self.text_y += self.drag_y
 
-        self.text_drag_x = 0
-        self.text_drag_y = 0
+        self.drag_x = 0
+        self.drag_y = 0
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return
 
-        x_char = int(x / self.x_mul)
-        y_char = int(y / self.y_mul)
-
-        self.text_x = x_char
-        self.text_y = y_char
+        self.text_x = int(x / self.x_mul)
+        self.text_y = int(y / self.y_mul)
 
         self.canvas.clear_preview()
         self.preview_text()
-
-    def on_click_stopped(self, click):
-        if not self._active: return
-        pass
-
-    def on_click_released(self, click, arg, x, y):
-        if not self._active: return
-        pass
 
     def insert_text(self):
         self.canvas.add_undo_action(_("Text"))
@@ -148,7 +138,7 @@ class Text(GObject.GObject):
         if self.selected_font != "Normal":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
 
-        self.canvas.draw_text(self.text_x + self.text_drag_x, self.text_y + self.text_drag_y, text, self._transparent, True)
+        self.canvas.draw_text(self.text_x + self.drag_x, self.text_y + self.drag_y, text, self._transparent, True)
         self.canvas.update()
 
     def preview_text(self):
@@ -158,6 +148,6 @@ class Text(GObject.GObject):
         if self.selected_font != "Normal":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
 
-        self.canvas.draw_text(self.text_x + self.text_drag_x, self.text_y + self.text_drag_y, text, self._transparent, False)
+        self.canvas.draw_text(self.text_x + self.drag_x, self.text_y + self.drag_y, text, self._transparent, False)
 
         self.canvas.update_preview()
