@@ -112,6 +112,9 @@ class Canvas(Adw.Bin):
 
         self.is_saved = True
 
+    def get_canvas_size(self):
+        return self.canvas_width, self.canvas_height
+
     @GObject.Property(type=bool, default=True)
     def primary_selected(self):
         return self._primary_selected
