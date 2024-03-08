@@ -777,11 +777,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkToggleButton" id="select_button">
+                  <object class="GtkToggleButton" id="move_button">
                     <property name="css-classes">flat</property>
                     <property name="group">rectangle_button</property>
                     <property name="halign">center</property>
                     <property name="icon-name">edit-select-all-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Move Ctrl+M</property>
                     <signal name="clicked" handler="on_choose_select"/>
                   </object>
                 </child>
