@@ -166,7 +166,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.2.0',
+                                version='0.3.0',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
@@ -196,33 +196,64 @@ class AsciiDrawApplication(Adw.Application):
             self.set_accels_for_action(f"app.{name}", shortcuts)
 
     def on_shutdown(self, *args):
-        dialog = Adw.MessageDialog(
-            heading=_("Save Changes"),
-            body="A valid password is needed to continue",
-            close_response="cancel",
-            modal=True,
-            transient_for=self.win,
-        )
 
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("discard", _("Discard"))
-        dialog.add_response("save", _("Save"))
+        if not self.win.canvas.is_saved and self.win.file_path == "":
+            dialog = Adw.MessageDialog(
+                heading=_("Save this file?"),
+                body=_("You have never saved this file."),
+                close_response="cancel",
+                modal=True,
+                transient_for=self.win,
+            )
 
-        dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("discard", _("Discard"))
+            dialog.add_response("save", _("Save"))
 
-        # entry = Gtk.Entry()
-        # dialog.set_extra_child(entry)
+            dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
 
-        # dialog.choose(None, self.on_response_selected_advanced)
-        # dialog.choose_finish(task)
+            # entry = Adw.EntryRow(title="Filename")
+            # list_box = Gtk.ListBox(css_classes=["boxed-list"], width_request=340)
+            # list_box.append(entry)
 
-        # dialog.run()
+            # dialog.set_extra_child(list_box)
 
-        print(quit)
+            dialog.choose(None, self.on_save_file_with_name_response)
+            return True
 
-    def on_response_selected_advanced(self, dialog, task, *args):
+        if not self.win.canvas.is_saved and self.win.file_path != "":
+            dialog = Adw.MessageDialog(
+                heading=_("Save changes?"),
+                body=_("Not saving will result in losing all changes"),
+                close_response="cancel",
+                modal=True,
+                transient_for=self.win,
+            )
+
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("discard", _("Discard"))
+            dialog.add_response("save", _("Save"))
+
+            dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+
+            dialog.choose(None, self.on_save_file_with_name_response)
+            return True
+
+    def on_save_file_with_name_response(self, dialog, task, *args):
         response = dialog.choose_finish(task)
+        if response == "save":
+            self.win.save(self.quit)
+        elif response == "discard":
+            self.quit()
+
+    def on_save_changes(self, dialog, task, *args):
+        response = dialog.choose_finish(task)
+        if response == "save":
+            self.win.save()
+        elif response == "discard":
+            self.quit()
 
     def select_rectangle_tool(self, widget, _):
         self.win.select_rectangle_tool()
