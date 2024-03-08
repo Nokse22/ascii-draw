@@ -46,18 +46,6 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Arrow</property>
-                <property name="action-name">app.arrow-tool</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Freehand Line</property>
-                <property name="action-name">app.free-line-tool</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Freehand Brush</property>
                 <property name="action-name">app.free-tool</property>
               </object>
@@ -84,6 +72,12 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Eraser</property>
                 <property name="action-name">app.eraser-tool</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Picker</property>
+                <property name="action-name">app.picker-tool</property>
               </object>
             </child>
             <child>
