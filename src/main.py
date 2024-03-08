@@ -55,9 +55,8 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('tree-tool', self.select_tree_tool, ['<control>U'])
         self.create_action('free-tool', self.select_free_tool, ['<control>f'])
         self.create_action('eraser-tool', self.select_eraser_tool, ['<control>e'])
-        self.create_action('arrow-tool', self.select_arrow_tool, ['<control>w'])
-        self.create_action('free-line-tool', self.select_free_line_tool, ['<control>g'])
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
+        self.create_action('move-tool', self.select_move_tool, ['<control>m'])
 
         self.create_action('new-palette', self.on_new_palette_action)
         self.create_action('open-palette-folder', self.on_open_palette_folder_action)
@@ -199,8 +198,8 @@ class AsciiDrawApplication(Adw.Application):
 
         if not self.win.canvas.is_saved and self.win.file_path == "":
             dialog = Adw.MessageDialog(
-                heading=_("Save this file?"),
-                body=_("You have never saved this file."),
+                heading=_("Save File?"),
+                body=_("You have never saved this file. Changes which are not saved will be permanently lost."),
                 close_response="cancel",
                 modal=True,
                 transient_for=self.win,
@@ -213,19 +212,13 @@ class AsciiDrawApplication(Adw.Application):
             dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
             dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
 
-            # entry = Adw.EntryRow(title="Filename")
-            # list_box = Gtk.ListBox(css_classes=["boxed-list"], width_request=340)
-            # list_box.append(entry)
-
-            # dialog.set_extra_child(list_box)
-
             dialog.choose(None, self.on_save_file_with_name_response)
             return True
 
         if not self.win.canvas.is_saved and self.win.file_path != "":
             dialog = Adw.MessageDialog(
                 heading=_("Save changes?"),
-                body=_("Not saving will result in losing all changes"),
+                body=_("The opened file contains unsaved changes. Changes which are not saved will be permanently lost."),
                 close_response="cancel",
                 modal=True,
                 transient_for=self.win,
@@ -287,6 +280,9 @@ class AsciiDrawApplication(Adw.Application):
 
     def select_picker_tool(self, widget, _):
         self.win.select_picker_tool()
+
+    def select_move_tool(self, widget, _):
+        self.win.select_move_tool()
 
 def main(version):
     """The application's entry point."""
