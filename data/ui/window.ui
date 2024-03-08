@@ -623,6 +623,7 @@
                 <property name="icon-name">list-add-symbolic</property>
                 <property name="popover">
                   <object class="GtkPopover">
+                    <signal name="closed" handler="on_increase_size_activated"/>
                     <child>
                       <object class="GtkBox">
                         <property name="orientation">vertical</property>
@@ -633,8 +634,8 @@
                               <object class="GtkAdjustment">
                                 <property name="lower">10.0</property>
                                 <property name="step-increment">1.0</property>
-                                <property name="upper">100.0</property>
-                                <property name="value">50.0</property>
+                                <property name="upper">120.0</property>
+                                <property name="value">40.0</property>
                               </object>
                             </property>
                             <property name="can-focus">False</property>
@@ -648,8 +649,8 @@
                               <object class="GtkAdjustment">
                                 <property name="lower">5.0</property>
                                 <property name="step-increment">1.0</property>
-                                <property name="upper">50.0</property>
-                                <property name="value">25.0</property>
+                                <property name="upper">60.0</property>
+                                <property name="value">20.0</property>
                               </object>
                             </property>
                             <property name="can-focus">False</property>
