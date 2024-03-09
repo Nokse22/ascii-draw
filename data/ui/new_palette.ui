@@ -7,6 +7,8 @@
   <template class="NewPaletteWindow" parent="AdwWindow">
     <property name="default-height">360</property>
     <property name="default-width">360</property>
+    <property name="width-request">360</property>
+    <property name="height-request">360</property>
     <property name="modal">True</property>
     <property name="title" translatable="yes">New palette</property>
     <child>
@@ -33,30 +35,45 @@
                   <object class="AdwEntryRow" id="palette_name_entry">
                     <property name="css-classes">card</property>
                     <property name="title" translatable="yes">Palette name</property>
+                    <signal name="changed" handler="on_palette_name_text_inserted"/>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkTextView">
-                    <property name="bottom-margin">12</property>
-                    <property name="buffer">
-                      <object class="GtkTextBuffer" id="palette_chars_buffer"/>
-                    </property>
-                    <property name="css-classes">card</property>
-                    <property name="left-margin">12</property>
-                    <property name="right-margin">12</property>
-                    <property name="top-margin">12</property>
-                    <property name="vexpand">True</property>
-                    <property name="wrap-mode">char</property>
+                  <object class="GtkScrolledWindow">
+                    <child>
+                      <object class="GtkTextView">
+                        <property name="bottom-margin">12</property>
+                        <property name="buffer">
+                          <object class="GtkTextBuffer" id="palette_chars_buffer"/>
+                        </property>
+                        <property name="css-classes">card</property>
+                        <property name="left-margin">12</property>
+                        <property name="right-margin">12</property>
+                        <property name="top-margin">12</property>
+                        <property name="vexpand">True</property>
+                        <property name="wrap-mode">char</property>
+                        <property name="monospace">true</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="add_button">
+                  <object class="GtkLabel">
+                    <property name="label">Naming a palette the same as another one will overwrite it.</property>
+                    <property name="css-classes">dim-label</property>
+                    <property name="wrap">true</property>
+                    <property name="xalign">0.0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="save_button">
                     <property name="css-classes">suggested-action
 pill</property>
                     <property name="halign">center</property>
                     <property name="label" translatable="yes">Save</property>
                     <property name="valign">center</property>
                     <property name="vexpand">False</property>
+                    <property name="sensitive">False</property>
                     <signal name="clicked" handler="on_add_clicked"/>
                   </object>
                 </child>
