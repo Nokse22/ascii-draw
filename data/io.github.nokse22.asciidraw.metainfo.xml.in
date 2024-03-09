@@ -4,26 +4,28 @@
 	<id>io.github.nokse22.asciidraw.desktop</id>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0-or-later</project_license>
-  <summary>Draw using ASCII characters</summary>
+  <summary>Sketch anything using characters</summary>
+
 	<description>
-	  <p>This app lets you draw diagrams, tables, treeview and more using ASCII characters.
-There are many stiles to choose from and multiple tools available to use:</p>
+	  <p>This app lets you draw diagrams, tables, tree view, art and more using only characters.
+There are many stiles to choose from and multiple tools available to use such as:</p>
 	  <ul>
-      <li>Freehand Brush</li>
-      <li>Freehand Line</li>
-      <li>Straight Line</li>
-      <li>Straight Arrow</li>
 	    <li>Rectangle</li>
 	    <li>Filled Rectangle</li>
+	    <li>Cartesian, freehand and stepped line</li>
+	    <li>Freehand Brush</li>
 	    <li>Text with FIGlet fonts</li>
 	    <li>Table</li>
 	    <li>Tree View</li>
 	    <li>Eraser</li>
 	    <li>Character Picker</li>
+	    <li>Select and move</li>
     </ul>
 	</description>
 
- 	<developer_name translatable="no">Nokse</developer_name>
+  <developer id="io.github.nokse22">
+    <name translatable="no">Nokse</name>
+  </developer>
 
 	<content_rating type="oars-1.1" />
 
