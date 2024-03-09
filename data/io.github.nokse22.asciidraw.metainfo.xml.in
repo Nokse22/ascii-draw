@@ -46,7 +46,7 @@ There are many stiles to choose from and multiple tools available to use:</p>
 		  <description translatable="no">
 		    <p>Improved design and usability</p>
 		    <p>Greatly improved performance (bigger canvas allowed)</p>
-		    <p>Added new line tool</p>
+		    <p>Added new stepped line tool</p>
 		    <p>Added move tool</p>
 		    <p>Added custom palettes</p>
 		    <p>Divided available characters into palettes</p>
