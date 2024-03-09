@@ -157,15 +157,20 @@ class Canvas(Adw.Bin):
 
     def drawing_function(self, area, cr, width, height, data):
         cr.set_source_rgb(self.color, self.color, self.color)
-        cr.select_font_face("Monospace")
+        cr.select_font_face("monospace")
         cr.set_font_size(20 * self.scale_factor)
         for index, line in enumerate(self.drawing):
             cr.move_to (0, (index + 1) * self.y_mul * self.scale_factor - 5)
             cr.show_text(''.join(w if w != "" else " " for w in line))
 
+        # for y, line in enumerate(self.drawing):
+        #     for x, char in enumerate(line):
+        #         cr.move_to(x * self.x_mul, (y + 1) * self.y_mul * self.scale_factor - 5)
+        #         cr.show_text(char)
+
     def preview_drawing_function(self, area, cr, width, height, data):
         cr.set_source_rgb(self.color, self.color, self.color)
-        cr.select_font_face("Monospace")
+        cr.select_font_face("monospace")
         cr.set_font_size(20 * self.scale_factor)
         for index, line in enumerate(self.preview):
             cr.move_to (0, (index + 1) * self.y_mul * self.scale_factor - 5)
