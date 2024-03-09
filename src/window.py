@@ -39,12 +39,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'AsciiDrawWindow'
 
     toast_overlay = Gtk.Template.Child()
-    char_flow_box = Gtk.Template.Child()
-    box_char_flow_box = Gtk.Template.Child()
-    block_char_flow_box = Gtk.Template.Child()
-    geometric_char_flow_box = Gtk.Template.Child()
-    math_char_flow_box = Gtk.Template.Child()
-    arrow_char_flow_box = Gtk.Template.Child()
     chars_carousel = Gtk.Template.Child()
     char_group_label = Gtk.Template.Child()
     char_carousel_go_back = Gtk.Template.Child()
@@ -209,35 +203,29 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.lines_styles_box.get_first_child().set_active(True)
 
-        ranges_and_pages = [
-            [[  range(0x0021, 0x007F),  # Basic Latin
-                range(0x00A0, 0x0100),  # Latin-1 Supplement
-                range(0x0100, 0x0180),  # Latin Extended-A
-                ], self.char_flow_box],
-            [[  range(0x2500, 0x2580),  # Box Drawing
-                ], self.box_char_flow_box],
-            [[  range(0x2580, 0x25A0),  # Block Elements
-                ], self.block_char_flow_box],
-            [[  range(0x25A0, 0x25FC),  # Geometric Shapes
-                range(0x25FF, 0x2600),
-                ], self.geometric_char_flow_box],
-            [[  range(0x2190, 0x2200),
-                ], self.arrow_char_flow_box],
-            [[  range(0x2200, 0x22C7),  # Mathematical Operators
-                range(0x22CB, 0x2300),
-                ], self.math_char_flow_box]
+        default_palettes_ranges = [
+            {"name" : "Extended Latin", "ranges" : [(0x0021, 0x007F), (0x00A0, 0x0100), (0x0100, 0x0180)]},
+            {"name" : "Box Drawing", "ranges" : [(0x2500, 0x2580)]},
+            {"name" : "Block Elements", "ranges" : [(0x2580, 0x25A0)]},
+            {"name" : "Geometric Shapes", "ranges" : [(0x25A0, 0x25FC), (0x25FF, 0x2600)]},
+            {"name" : "Arrows", "ranges" : [(0x2190, 0x21FF)]},
+            # {"name" : "Braille Patterns", "ranges" : [(0x2800, 0x28FF)]},
+            {"name" : "Mathematical", "ranges" : [(0x2200, 0x22C7), (0x22CB, 0x22EA)]},
+            # {"name" : "Greek and Coptic", "ranges" : [(0x0370,0x03FF)]},
+            # {"name" : "Cyrillic", "ranges" : [(0x0400,0x04FF)]},
+            # {"name" : "Hebrew", "ranges" : [(0x0590,0x05FF)]},
+            # {"name" : "Hiragana", "ranges" : [(0x3040,0x309F)]},
+            # {"name" : "Katakana", "ranges" : [(0x30A0,0x30FF)]},
         ]
 
-        for chars_group in ranges_and_pages:
-            unicode_ranges = chars_group[0]
-            flow_box = chars_group[1]
+        for raw_palette in default_palettes_ranges:
+            palette_chars = ""
+            for code_range in raw_palette["ranges"]:
+                for code_point in range(code_range[0], code_range[1]):
+                    palette_chars += chr(code_point)
 
-            for code_range in unicode_ranges:
-                for code_point in code_range:
-                    char = chr(code_point)
-                    new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
-                    new_button.connect("clicked", self.change_char, flow_box)
-                    flow_box.append(new_button)
+            new_palette = Palette(raw_palette["name"], palette_chars)
+            self.add_palette_to_ui(new_palette)
 
         self.drawing_area_width = 0
 
@@ -316,7 +304,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
             new_button.connect("clicked", self.change_char, flow_box)
             flow_box.append(new_button)
-        scrolled_window = Gtk.ScrolledWindow(name=palette.name)
+        scrolled_window = Gtk.ScrolledWindow(name=palette.name, hexpand=True, vexpand=True)
         scrolled_window.set_child(flow_box)
         self.chars_carousel.append(scrolled_window)
 
