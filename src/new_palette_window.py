@@ -26,6 +26,7 @@ class NewPaletteWindow(Adw.Window):
 
     palette_name_entry = Gtk.Template.Child()
     palette_chars_buffer = Gtk.Template.Child()
+    save_button = Gtk.Template.Child()
 
     __gsignals__ = {
         'on-add-clicked': (GObject.SignalFlags.RUN_FIRST, None, (str,str,))
@@ -46,3 +47,10 @@ class NewPaletteWindow(Adw.Window):
         self.emit('on-add-clicked', palette_name, palette_chars)
 
         self.destroy()
+
+    @Gtk.Template.Callback("on_palette_name_text_inserted")
+    def on_palette_name_text_inserted(self, entry):
+        if entry.get_text() != "":
+            self.save_button.set_sensitive(True)
+        else:
+            self.save_button.set_sensitive(False)
