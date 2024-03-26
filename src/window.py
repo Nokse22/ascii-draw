@@ -22,7 +22,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
 from .palette import Palette
-from .new_palette_window import NewPaletteWindow
+from .new_palette_window import NewPaletteDialog
 
 from .tools import *
 from .canvas import Canvas
@@ -50,6 +50,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     transparent_check = Gtk.Template.Child()
     text_entry_buffer = Gtk.Template.Child()
     undo_button = Gtk.Template.Child()
+    redo_button = Gtk.Template.Child()
 
     free_button = Gtk.Template.Child()
     rectangle_button = Gtk.Template.Child()
@@ -139,6 +140,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas.bind_property('primary_char', self.primary_char_button, 'label', GObject.BindingFlags.BIDIRECTIONAL)
         self.canvas.bind_property('secondary_char', self.secondary_char_button, 'label', GObject.BindingFlags.BIDIRECTIONAL)
         self.canvas.connect("undo-added", self.on_undo_added)
+        self.canvas.connect("undo-removed", self.on_undo_removed)
+        self.canvas.connect("redo-removed", self.on_redo_removed)
         self.toast_overlay.set_child(self.canvas)
 
         self.freehand_tool = Freehand(self.canvas)
@@ -288,8 +291,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.canvas.update()
 
     def show_new_palette_window(self, chars=''):
-        win = NewPaletteWindow(self, palette_chars=chars)
-        win.present()
+        win = NewPaletteDialog(self, palette_chars=chars)
+        win.present(self)
         win.connect("on-add-clicked", self.on_new_palette_add_clicked)
 
     def on_new_palette_add_clicked(self, win, palette_name, palette_chars):
@@ -661,6 +664,23 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.undo_button.set_sensitive(True)
         self.undo_button.set_tooltip_text(_("Undo") + " " + undo_name)
 
+    def on_undo_removed(self, widget):
+        if len(self.canvas.undo_changes) == 0:
+            self.undo_button.set_sensitive(False)
+            self.undo_button.set_tooltip_text("")
+        else:
+            self.undo_button.set_tooltip_text(_("Undo ") + self.canvas.undo_changes[-1].name)
+
+        self.redo_button.set_sensitive(True)
+        self.redo_button.set_tooltip_text(_("Redo ") + self.canvas.redo_changes[-1].name)
+
+    def on_redo_removed(self, widget):
+        if len(self.canvas.redo_changes) == 0:
+            self.redo_button.set_sensitive(False)
+            self.redo_button.set_tooltip_text("")
+        else:
+            self.redo_button.set_tooltip_text(_("Redo ") + self.canvas.redo_changes[-1].name)
+
     @Gtk.Template.Callback("on_tree_text_inserted")
     def on_tree_text_inserted(self, buffer, loc, text, length):
         spaces = 0
@@ -696,8 +716,12 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.tree_tool.insert()
 
     @Gtk.Template.Callback("undo_first_change")
-    def undo_first_change(self, btn=None):
-        self.canvas.undo(btn or self.undo_button)
+    def undo_first_change(self, btn):
+        self.canvas.undo()
+
+    @Gtk.Template.Callback("redo_last_change")
+    def redo_last_change(self, btn):
+        self.canvas.redo()
 
     def select_rectangle_tool(self):
         self.rectangle_button.set_active(True)

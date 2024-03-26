@@ -39,8 +39,8 @@ There are many stiles to choose from and multiple tools available to use such as
   <url type="donation">https://ko-fi.com/nokse22</url>
 
   <branding>
-    <color type="primary" scheme_preference="light">#F29FA3</color>
-    <color type="primary" scheme_preference="dark">#B44C51</color>
+    <color type="primary" scheme_preference="light">#9DCCEA</color>
+    <color type="primary" scheme_preference="dark">#2E6282</color>
   </branding>
 
   <releases>

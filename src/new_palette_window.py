@@ -21,8 +21,8 @@ from gi.repository import Adw
 from gi.repository import Gtk, GObject
 
 @Gtk.Template(resource_path="/io/github/nokse22/asciidraw/ui/new_palette.ui")
-class NewPaletteWindow(Adw.Window):
-    __gtype_name__ = 'NewPaletteWindow'
+class NewPaletteDialog(Adw.Dialog):
+    __gtype_name__ = 'NewPaletteDialog'
 
     palette_name_entry = Gtk.Template.Child()
     palette_chars_buffer = Gtk.Template.Child()
@@ -35,10 +35,9 @@ class NewPaletteWindow(Adw.Window):
     def __init__(self, window, palette_chars=''):
         super().__init__()
 
-        self.set_transient_for(window)
         self.palette_chars = palette_chars
 
-        self.palette_chars_buffer.set_text(self.palette_chars)
+        # self.palette_chars_buffer.set_text(self.palette_chars)
 
     @Gtk.Template.Callback("on_add_clicked")
     def on_add_clicked(self, btn):

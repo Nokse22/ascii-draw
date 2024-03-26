@@ -30,14 +30,14 @@ class Change():
         self.changes = []
         self.name = _name
 
-    def add_change(self, x, y, prev_char):
+    def add_change(self, x, y, prev_char, new_char):
         for change in self.changes:
             if change[0] == x and change[1] == y:
                 return
-        self.changes.append((x, y, prev_char))
+        self.changes.append((x, y, prev_char, new_char))
 
     def __repr__(self):
-        return f"The change has {len(self.changes)} changes"
+        return f"The change named {self.name} has {len(self.changes)} changes"
 
 @Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/canvas.ui')
 class Canvas(Adw.Bin):
@@ -47,7 +47,9 @@ class Canvas(Adw.Bin):
     preview_drawing_area = Gtk.Template.Child()
 
     __gsignals__ = {
-        'undo_added': (GObject.SignalFlags.RUN_FIRST, None, (str,))
+        'undo-added': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'undo-removed': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'redo-removed': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
     def __init__(self, _styles, _flip):
@@ -102,6 +104,8 @@ class Canvas(Adw.Bin):
 
         self.undo_changes = []
         self.changed_chars = []
+
+        self.redo_changes = []
 
         self.canvas_max_x = 100
         self.canvas_max_y = 50
@@ -182,24 +186,39 @@ class Canvas(Adw.Bin):
     def update_preview(self):
         self.preview_drawing_area.queue_draw()
 
-    def undo(self, btn):
+    def undo(self):
         try:
-            change_object = self.undo_changes[0]
+            change_object = self.undo_changes[-1]
         except:
             return
-        for x, y, char in change_object.changes:
-            self.set_char_at(x, y, char, True)
-        self.undo_changes.pop(0)
-        if len(self.undo_changes) == 0:
-            btn.set_sensitive(False)
-            btn.set_tooltip_text("")
-        else:
-            btn.set_tooltip_text(_("Undo ") + self.undo_changes[0].name)
+        for x, y, prev_char, new_char in change_object.changes:
+            if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+                return
+            self.drawing[int(y)][int(x)] = prev_char
+
+        self.redo_changes.append(change_object)
+        self.undo_changes.pop(-1)
+        self.emit("undo-removed")
+        self.update()
+
+    def redo(self):
+        try:
+            change_object = self.redo_changes[-1]
+        except:
+            return
+        self.add_undo_action(change_object.name)
+        for x, y, prev_char, new_char in change_object.changes:
+            if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+                return
+            self.undo_changes[-1].add_change(x, y, prev_char, new_char)
+            self.drawing[int(y)][int(x)] = new_char
+        self.redo_changes.pop(-1)
+        self.emit("redo-removed")
         self.update()
 
     def add_undo_action(self, undo_name):
-        self.undo_changes.insert(0, Change(undo_name))
-        self.emit('undo_added', undo_name)
+        self.undo_changes.append(Change(undo_name))
+        self.emit('undo-added', undo_name)
 
         self.is_saved = False
 
@@ -252,7 +271,7 @@ class Canvas(Adw.Bin):
                         continue
                     if draw:
                         prev_char = self.get_char_at(new_j, new_i)
-                        self.undo_changes[0].add_change(new_j, new_i, prev_char)
+                        self.undo_changes[-1].add_change(new_j, new_i, prev_char, array2[i][j])
                     _layer[int(new_i)][int(new_j)] = array2[i][j]
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
@@ -300,21 +319,21 @@ class Canvas(Adw.Bin):
             return
         if draw:
             prev_char = self.get_char_at(x, y)
-            self.undo_changes[0].add_change(x, y, prev_char)
+            self.undo_changes[-1].add_change(x, y, prev_char, char)
         _layer[int(y)][int(x)] = char
 
     def draw_at(self, x, y):
         if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
             return
         prev_char = self.get_char_at(x, y)
-        self.undo_changes[0].add_change(x, y, prev_char)
+        self.undo_changes[-1].add_change(x, y, prev_char, self.get_selected_char())
         self.drawing[int(y)][int(x)] = self.get_selected_char()
 
     def draw_inverted_at(self, x, y):
         if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
             return
         prev_char = self.get_char_at(x, y)
-        self.undo_changes[0].add_change(x, y, prev_char)
+        self.undo_changes[-1].add_change(x, y, prev_char, self.get_unselected_char())
         self.drawing[int(y)][int(x)] = self.get_unselected_char()
 
     def draw_primary_at(self, x, y, draw):
@@ -324,7 +343,7 @@ class Canvas(Adw.Bin):
             return
         if draw:
             prev_char = self.get_char_at(x, y)
-            self.undo_changes[0].add_change(x, y, prev_char)
+            self.undo_changes[-1].add_change(x, y, prev_char, self.primary_char)
         _layer[int(y)][int(x)] = self.primary_char
 
     def draw_secondary_at(self, x, y, draw):
@@ -334,7 +353,7 @@ class Canvas(Adw.Bin):
             return
         if draw:
             prev_char = self.get_char_at(x, y)
-            self.undo_changes[0].add_change(x, y, prev_char)
+            self.undo_changes[-1].add_change(x, y, prev_char, self.secondary_char)
         _layer[int(y)][int(x)] = self.secondary_char
 
     def clear_preview(self):

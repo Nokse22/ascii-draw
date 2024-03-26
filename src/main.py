@@ -161,26 +161,21 @@ class AsciiDrawApplication(Adw.Application):
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""
-        about = Adw.AboutWindow(transient_for=self.props.active_window,
+        about = Adw.AboutDialog(
                                 application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.3.0',
+                                version='0.3.1',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
                                 copyright='© 2023 Nokse',
-                                release_notes='''<p>Improved design and usability</p>
-		    <p>Greatly improved performance (bigger canvas allowed)</p>
-		    <p>Added new stepped line tool</p>
-		    <p>Added move tool</p>
-		    <p>Added custom palettes</p>
-		    <p>Divided available characters into palettes</p>
-		    <p>Improved selected characters with a primary and secondary</p>''')
+                                release_notes='''<p>Used latest Libadwaita widgets</p>
+                                <p>Added redo</p>''')
         # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
         # One name per line, please do not remove previous names.
         about.set_translator_credits(_("translator-credits"))        
-        about.present()
+        about.present(self.props.active_window)
 
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""

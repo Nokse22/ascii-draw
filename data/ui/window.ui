@@ -504,6 +504,13 @@
                 <signal name="clicked" handler="undo_first_change"/>
               </object>
             </child>
+            <child>
+              <object class="GtkButton" id="redo_button">
+                <property name="icon-name">edit-redo-symbolic</property>
+                <property name="sensitive">False</property>
+                <signal name="clicked" handler="redo_last_change"/>
+              </object>
+            </child>
             <child type="end">
               <object class="GtkMenuButton">
                 <property name="icon-name">open-menu-symbolic</property>
