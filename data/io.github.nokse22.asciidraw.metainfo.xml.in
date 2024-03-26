@@ -39,8 +39,8 @@ There are many stiles to choose from and multiple tools available to use such as
   <url type="donation">https://ko-fi.com/nokse22</url>
 
   <branding>
-    <color type="primary" scheme_preference="light">#9DCCEA</color>
-    <color type="primary" scheme_preference="dark">#2E6282</color>
+    <color type="primary" scheme_preference="light">#86c7ff</color>
+    <color type="primary" scheme_preference="dark">#014085</color>
   </branding>
 
   <releases>
@@ -147,26 +147,32 @@ There are many stiles to choose from and multiple tools available to use such as
 	<screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2001.png</image>
+      <caption>ASCII Art of an old television</caption>
     </screenshot>
 
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2002.png</image>
+	    <caption>CPU simplified structure</caption>
 	  </screenshot>
 
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2003.png</image>
+	    <caption>Table of countries, capitals and population</caption>
 	  </screenshot>
 
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2004.png</image>
+	    <caption>A flowchart to fix a lamp</caption>
 	  </screenshot>
 
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2005.png</image>
+	    <caption>An example of a treeview</caption>
 	  </screenshot>
 
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2006.png</image>
+	    <caption>Cartesian, stepped and freehand lines</caption>
 	  </screenshot>
   </screenshots>
 
