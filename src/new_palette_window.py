@@ -37,7 +37,7 @@ class NewPaletteDialog(Adw.Dialog):
 
         self.palette_chars = palette_chars
 
-        # self.palette_chars_buffer.set_text(self.palette_chars)
+        self.palette_chars_buffer.set_text(self.palette_chars)
 
     @Gtk.Template.Callback("on_add_clicked")
     def on_add_clicked(self, btn):
