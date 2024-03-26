@@ -444,7 +444,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.make_new_canvas()
 
     def save_changes_message(self, callback=None):
-        dialog = Adw.MessageDialog(
+        dialog = Adw.AlertDialog(
             heading=_("Save Changes?"),
             body=_("The opened file contains unsaved changes. Changes which are not saved will be permanently lost."),
             close_response="cancel",

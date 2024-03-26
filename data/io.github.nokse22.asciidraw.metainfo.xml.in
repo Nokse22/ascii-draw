@@ -44,6 +44,13 @@ There are many stiles to choose from and multiple tools available to use such as
   </branding>
 
   <releases>
+    <release version="0.3.1" date="2024-03-26">
+		  <description translatable="no">
+		    <p>Used latest Libadwaita widgets</p>
+        <p>Added redo</p>
+        <p>Fixed bugs</p>
+		  </description>
+	  </release>
     <release version="0.3.0" date="2024-03-10">
 		  <description translatable="no">
 		    <p>Improved design and usability</p>

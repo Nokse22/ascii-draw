@@ -171,7 +171,8 @@ class AsciiDrawApplication(Adw.Application):
                                 developers=['Nokse'],
                                 copyright='© 2023 Nokse',
                                 release_notes='''<p>Used latest Libadwaita widgets</p>
-                                <p>Added redo</p>''')
+                                <p>Added redo</p>
+                                <p>Fixed bugs</p>''')
         # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
         # One name per line, please do not remove previous names.
         about.set_translator_credits(_("translator-credits"))        
