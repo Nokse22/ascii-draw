@@ -30,11 +30,11 @@ class Change():
         self.changes = []
         self.name = _name
 
-    def add_change(self, x, y, prev_char, new_char):
+    def add_change(self, x, y, prev_char):
         for change in self.changes:
             if change[0] == x and change[1] == y:
                 return
-        self.changes.append((x, y, prev_char, new_char))
+        self.changes.append((x, y, prev_char))
 
     def __repr__(self):
         return f"The change named {self.name} has {len(self.changes)} changes"
@@ -191,12 +191,14 @@ class Canvas(Adw.Bin):
             change_object = self.undo_changes[-1]
         except:
             return
-        for x, y, prev_char, new_char in change_object.changes:
+        redo_object = Change(change_object.name)
+        for x, y, char in change_object.changes:
             if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
                 return
-            self.drawing[int(y)][int(x)] = prev_char
+            redo_object.add_change(x, y, self.get_char_at(x,y))
+            self.drawing[int(y)][int(x)] = char
 
-        self.redo_changes.append(change_object)
+        self.redo_changes.append(redo_object)
         self.undo_changes.pop(-1)
         self.emit("undo-removed")
         self.update()
@@ -207,11 +209,11 @@ class Canvas(Adw.Bin):
         except:
             return
         self.add_undo_action(change_object.name)
-        for x, y, prev_char, new_char in change_object.changes:
+        for x, y, char in change_object.changes:
             if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
                 return
-            self.undo_changes[-1].add_change(x, y, prev_char, new_char)
-            self.drawing[int(y)][int(x)] = new_char
+            self.undo_changes[-1].add_change(x, y, self.get_char_at(x,y))
+            self.drawing[int(y)][int(x)] = char
         self.redo_changes.pop(-1)
         self.emit("redo-removed")
         self.update()
@@ -271,7 +273,7 @@ class Canvas(Adw.Bin):
                         continue
                     if draw:
                         prev_char = self.get_char_at(new_j, new_i)
-                        self.undo_changes[-1].add_change(new_j, new_i, prev_char, array2[i][j])
+                        self.undo_changes[-1].add_change(new_j, new_i, prev_char)
                     _layer[int(new_i)][int(new_j)] = array2[i][j]
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
@@ -319,21 +321,21 @@ class Canvas(Adw.Bin):
             return
         if draw:
             prev_char = self.get_char_at(x, y)
-            self.undo_changes[-1].add_change(x, y, prev_char, char)
+            self.undo_changes[-1].add_change(x, y, prev_char)
         _layer[int(y)][int(x)] = char
 
     def draw_at(self, x, y):
         if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
             return
         prev_char = self.get_char_at(x, y)
-        self.undo_changes[-1].add_change(x, y, prev_char, self.get_selected_char())
+        self.undo_changes[-1].add_change(x, y, prev_char)
         self.drawing[int(y)][int(x)] = self.get_selected_char()
 
     def draw_inverted_at(self, x, y):
         if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
             return
         prev_char = self.get_char_at(x, y)
-        self.undo_changes[-1].add_change(x, y, prev_char, self.get_unselected_char())
+        self.undo_changes[-1].add_change(x, y, prev_char)
         self.drawing[int(y)][int(x)] = self.get_unselected_char()
 
     def draw_primary_at(self, x, y, draw):
@@ -343,7 +345,7 @@ class Canvas(Adw.Bin):
             return
         if draw:
             prev_char = self.get_char_at(x, y)
-            self.undo_changes[-1].add_change(x, y, prev_char, self.primary_char)
+            self.undo_changes[-1].add_change(x, y, prev_char)
         _layer[int(y)][int(x)] = self.primary_char
 
     def draw_secondary_at(self, x, y, draw):
@@ -353,7 +355,7 @@ class Canvas(Adw.Bin):
             return
         if draw:
             prev_char = self.get_char_at(x, y)
-            self.undo_changes[-1].add_change(x, y, prev_char, self.secondary_char)
+            self.undo_changes[-1].add_change(x, y, prev_char)
         _layer[int(y)][int(x)] = self.secondary_char
 
     def clear_preview(self):
