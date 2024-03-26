@@ -448,8 +448,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             heading=_("Save Changes?"),
             body=_("The opened file contains unsaved changes. Changes which are not saved will be permanently lost."),
             close_response="cancel",
-            modal=True,
-            transient_for=self,
         )
 
         dialog.add_response("cancel", _("Cancel"))
@@ -459,7 +457,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
 
-        dialog.choose(None, self.on_save_changes_message_response, callback)
+        dialog.choose(self, None, self.on_save_changes_message_response, callback)
 
     def on_save_changes_message_response(self, dialog, task, callback=None):
         response = dialog.choose_finish(task)
