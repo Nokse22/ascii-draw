@@ -24,7 +24,7 @@ There are many stiles to choose from and multiple tools available to use such as
 	</description>
 
   <developer id="io.github.nokse22">
-    <name translatable="no">Nokse</name>
+    <name translate="no">Nokse</name>
   </developer>
 
 	<content_rating type="oars-1.1" />
@@ -45,14 +45,14 @@ There are many stiles to choose from and multiple tools available to use such as
 
   <releases>
     <release version="0.3.1" date="2024-03-26">
-		  <description translatable="no">
+		  <description translate="no">
 		    <p>Used latest Libadwaita widgets</p>
         <p>Added redo</p>
         <p>Fixed bugs</p>
 		  </description>
 	  </release>
     <release version="0.3.0" date="2024-03-10">
-		  <description translatable="no">
+		  <description translate="no">
 		    <p>Improved design and usability</p>
 		    <p>Greatly improved performance (bigger canvas allowed)</p>
 		    <p>Added new stepped line tool</p>
@@ -63,14 +63,14 @@ There are many stiles to choose from and multiple tools available to use such as
 		  </description>
 	  </release>
     <release version="0.2.0" date="2023-09-26">
-		  <description translatable="no">
+		  <description translate="no">
 		    <p>Improved sidebar for better usability</p>
 		    <p>Fixed typo</p>
 		    <p>Updated runtime to 45</p>
 		  </description>
 	  </release>
     <release version="0.1.9" date="2023-09-06">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Improved saving</p>
 		    <p>Improved changing canvas size function</p>
 		    <p>Added opening files</p>
@@ -78,13 +78,13 @@ There are many stiles to choose from and multiple tools available to use such as
 		  </description>
 	  </release>
     <release version="0.1.8" date="2023-08-28">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Added tree view tool</p>
 		    <p>Fixed bugs with sidebar show button</p>
 		  </description>
 	  </release>
     <release version="0.1.7" date="2023-08-27">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Added tables</p>
 		    <p>Improved sidebar</p>
 		    <p>Improved text tool</p>
@@ -92,7 +92,7 @@ There are many stiles to choose from and multiple tools available to use such as
 		  </description>
 	  </release>
     <release version="0.1.6" date="2023-08-26">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Remove unusable fonts</p>
 		    <p>Added brush and eraser sizes</p>
 		    <p>Added transparent mode to text tool</p>
@@ -106,13 +106,13 @@ There are many stiles to choose from and multiple tools available to use such as
 		  </description>
 	  </release>
     <release version="0.1.5" date="2023-08-25">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Added big text with a lot of fonts using pyfiglet</p>
 		    <p>Fixed some contrast problems</p>
 		  </description>
 	  </release>
     <release version="0.1.4" date="2023-08-23">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>New icon</p>
 		    <p>Fixed bugs when increasing canvas size</p>
 		    <p>Updated screenshots</p>
@@ -120,25 +120,25 @@ There are many stiles to choose from and multiple tools available to use such as
 		  </description>
 	  </release>
     <release version="0.1.3" date="2023-08-23">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Undo functionality (Ctrl+Z)</p>
 		    <p>Performance improvements</p>
 		    <p>Improved text insertion with preview</p>
 		  </description>
 	  </release>
     <release version="0.1.2" date="2023-08-22">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Fixed some bugs</p>
 		    <p>Added new tool: Filled Rectangle</p>
 		  </description>
 	  </release>
     <release version="0.1.1" date="2023-08-21">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>Fixed many bugs with right to left text direction</p>
 		  </description>
 	  </release>
     <release version="0.1.0" date="2023-08-20">
-		  <description translatable="no">
+		  <description translate="no">
 			  <p>First release!</p>
 		  </description>
 	  </release>
