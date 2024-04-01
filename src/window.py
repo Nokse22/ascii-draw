@@ -266,10 +266,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.data_dir = ""
 
+        xdg_data_home = os.environ.get('XDG_DATA_HOME')
         if 'FLATPAK_ID' in os.environ:
-            self.data_dir = '/var/data'
+            self.data_dir = xdg_data_home
         else:
-            xdg_data_home = os.environ.get('XDG_DATA_HOME')
             if xdg_data_home and xdg_data_home.strip():
                 data_dir = os.path.join(xdg_data_home, 'ascii-draw', 'data')
             else:
