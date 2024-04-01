@@ -170,14 +170,11 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.3.1',
+                                version='0.3.2',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
-                                copyright='© 2023 Nokse',
-                                release_notes='''<p>Used latest Libadwaita widgets</p>
-                                <p>Added redo</p>
-                                <p>Fixed bugs</p>''')
+                                copyright='© 2023 Nokse')
         # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
         # One name per line, please do not remove previous names.
         about.set_translator_credits(_("translator-credits"))        
