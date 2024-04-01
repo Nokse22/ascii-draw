@@ -264,9 +264,24 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.sidebar_stack.set_visible_child_name("character_page")
 
+        self.data_dir = ""
+
+        if 'FLATPAK_ID' in os.environ:
+            self.data_dir = '/var/data'
+        elif 'SNAP' in os.environ:
+            self.data_dir = '/var/data'
+        else:
+            xdg_data_home = os.environ.get('XDG_DATA_HOME')
+            if xdg_data_home and xdg_data_home.strip():
+                data_dir = os.path.join(xdg_data_home, 'ascii-draw', 'data')
+            else:
+                home = os.path.expanduser("~")
+                data_dir = os.path.join(home, '.local', 'share', 'ascii-draw', 'data')
+            self.data_dir = data_dir
+
         self.palettes = []
 
-        directory_path = f"{self.get_data_dir()}/palettes"
+        directory_path = f"{self.data_dir}/palettes"
         os.makedirs(directory_path, exist_ok=True)
 
         for filename in os.listdir(directory_path):
@@ -285,8 +300,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.change_theme()
 
         self.update_canvas_size_spins()
-
-        print(self.get_data_dir())
 
     def change_theme(self, manager=Adw.StyleManager(), *args):
         self.canvas.color = 1 if manager.get_dark() else 0
@@ -317,20 +330,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         if pos != self.chars_carousel.get_n_pages() - 1:
             self.char_carousel_go_next.set_sensitive(True)
 
-    def get_data_dir(self):
-        if 'FLATPAK_ID' in os.environ:
-            return '/var/data'
-
-        xdg_data_home = os.environ.get('XDG_DATA_HOME')
-        if xdg_data_home and xdg_data_home.strip():
-            data_dir = os.path.join(xdg_data_home, 'ascii-draw', 'data')
-        else:
-            home = os.path.expanduser("~")
-            data_dir = os.path.join(home, '.local', 'share', 'ascii-draw', 'data')
-        return data_dir
-
     def save_new_palette(self, palette):
-        with open(f"{self.get_data_dir()}/palettes/{palette.name}.txt", 'w') as file:
+        with open(f"{self.data_dir}/palettes/{palette.name}.txt", 'w') as file:
             file.write(palette.chars)
 
     @Gtk.Template.Callback("char_pages_go_back")
