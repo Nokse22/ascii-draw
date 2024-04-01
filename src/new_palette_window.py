@@ -45,7 +45,7 @@ class NewPaletteDialog(Adw.Dialog):
         palette_chars = self.palette_chars_buffer.get_text(self.palette_chars_buffer.get_start_iter(), self.palette_chars_buffer.get_end_iter(), False)
         self.emit('on-add-clicked', palette_name, palette_chars)
 
-        self.destroy()
+        self.close()
 
     @Gtk.Template.Callback("on_palette_name_text_inserted")
     def on_palette_name_text_inserted(self, entry):
