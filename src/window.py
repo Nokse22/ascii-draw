@@ -268,8 +268,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         if 'FLATPAK_ID' in os.environ:
             self.data_dir = '/var/data'
-        elif 'SNAP' in os.environ:
-            self.data_dir = '/var/data'
         else:
             xdg_data_home = os.environ.get('XDG_DATA_HOME')
             if xdg_data_home and xdg_data_home.strip():
