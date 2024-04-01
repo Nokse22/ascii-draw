@@ -40,12 +40,14 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
+        self.create_action('save', self.on_save_as_action, ['<control>s'])
         self.create_action('save-as', self.on_save_as_action, ['<control><shift>s'])
         self.create_action('copy-to-clipboard', self.on_copy_to_clipboard_action)
         self.create_action('open', self.on_open_action, ['<control>o'])
         self.create_action('new-canvas', self.on_new_canvas_action, ['<control>n'])
 
         self.create_action('undo', self.on_undo_action, ['<control>z'])
+        self.create_action('redo', self.on_redo_action, ['<control><shift>z', '<control>y'])
 
         self.create_action('rectangle-tool', self.select_rectangle_tool, ['<control>r'])
         self.create_action('filled-rectangle-tool', self.select_filled_rectangle_tool, ['<control><shift>r'])
@@ -144,6 +146,9 @@ class AsciiDrawApplication(Adw.Application):
 
     def on_undo_action(self, *args):
         self.win.undo_first_change()
+
+    def on_redo_action(self, *args):
+        self.win.redo_last_change()
 
     def do_activate(self):
         """Called when the application is activated.

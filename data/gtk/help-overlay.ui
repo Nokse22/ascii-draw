@@ -15,10 +15,46 @@
                 <property name="action-name">win.show-help-overlay</property>
               </object>
             </child>
+            <!-- <child> -->
+            <!--   <object class="GtkShortcutsShortcut"> -->
+            <!--     <property name="title" translatable="yes" context="shortcut window">Quit</property> -->
+            <!--     <property name="action-name">app.quit</property> -->
+            <!--   </object> -->
+            <!-- </child> -->
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Quit</property>
-                <property name="action-name">app.quit</property>
+                <property name="title" translatable="yes" context="shortcut window">Save</property>
+                <property name="action-name">app.save</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Save As</property>
+                <property name="action-name">app.save-as</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Open</property>
+                <property name="action-name">app.open</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">New Canvas</property>
+                <property name="action-name">app.new-canvas</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Undo</property>
+                <property name="action-name">app.undo</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Redo</property>
+                <property name="action-name">app.redo</property>
               </object>
             </child>
           </object>
@@ -82,8 +118,8 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Picker</property>
-                <property name="action-name">app.picker-tool</property>
+                <property name="title" translatable="yes" context="shortcut window">Move</property>
+                <property name="action-name">app.move-tool</property>
               </object>
             </child>
           </object>
