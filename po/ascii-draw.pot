@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-01 15:41+0300\n"
+"POT-Creation-Date: 2024-05-10 19:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,72 +18,92 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:3
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:592
-#: src/main.py:166
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:490
+#: src/main.py:170
 msgid "ASCII Draw"
 msgstr ""
 
 #: data/io.github.nokse22.asciidraw.desktop.in:9
-msgid "GNOME;GTK;Draw;Graphics;Art;"
+msgid "GNOME;GTK;Graphics;Art;"
 msgstr ""
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:7
-msgid "Draw using ASCII characters"
+msgid "Sketch anything using characters"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:9
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:10
 msgid ""
-"This app lets you draw diagrams, tables, treeview and more using ASCII "
+"This app lets you draw diagrams, tables, tree view, art and more using only "
 "characters. There are many stiles to choose from and multiple tools "
-"available to use:"
+"available to use such as:"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:12
-msgid "Freehand Brush"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13 src/tools/line.py:107
-msgid "Freehand Line"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:14
-msgid "Straight Line"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:15
-msgid "Straight Arrow"
-msgstr ""
-
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
-#: src/tools/rectangle.py:119
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13
+#: src/tools/rectangle.py:115
 msgid "Rectangle"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
-#: src/tools/filled_rectangle.py:119
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:14
+#: src/tools/filled_rectangle.py:115
 msgid "Filled Rectangle"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:15
+msgid "Cartesian, freehand and stepped line"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
+msgid "Freehand Brush"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
 msgid "Text with FIGlet fonts"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19 data/ui/window.ui:213
-#: src/tools/table.py:107
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18 data/ui/window.ui:214
+#: src/tools/table.py:123
 msgid "Table"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19
 msgid "Tree View"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 data/ui/window.ui:391
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 data/ui/window.ui:392
 #: src/tools/eraser.py:84
 msgid "Eraser"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21
 msgid "Character Picker"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+msgid "Select and move"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:157
+msgid "ASCII Art of an old television"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:162
+msgid "CPU simplified structure"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:167
+msgid "Table of countries, capitals and population"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:172
+msgid "A flowchart to fix a lamp"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:177
+msgid "An example of a treeview"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:182
+msgid "Cartesian, stepped and freehand lines"
 msgstr ""
 
 #: data/gtk/help-overlay.ui:11
@@ -96,291 +116,333 @@ msgctxt "shortcut window"
 msgid "Show Shortcuts"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:20
+#: data/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
-msgid "Quit"
+msgid "Save"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:28
+#: data/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Save As"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Open"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "New Canvas"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Undo"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:56
+msgctxt "shortcut window"
+msgid "Redo"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:64
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:31
+#: data/gtk/help-overlay.ui:67
 msgctxt "shortcut window"
 msgid "Rectangle"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:37
+#: data/gtk/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Filled Rectangle"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:43
-msgctxt "shortcut window"
-msgid "Line"
-msgstr ""
-
-#: data/gtk/help-overlay.ui:49
-msgctxt "shortcut window"
-msgid "Arrow"
-msgstr ""
-
-#: data/gtk/help-overlay.ui:55
-msgctxt "shortcut window"
-msgid "Freehand Line"
-msgstr ""
-
-#: data/gtk/help-overlay.ui:61
-msgctxt "shortcut window"
-msgid "Freehand Brush"
-msgstr ""
-
-#: data/gtk/help-overlay.ui:67
-msgctxt "shortcut window"
-msgid "Text"
-msgstr ""
-
-#: data/gtk/help-overlay.ui:73
-msgctxt "shortcut window"
-msgid "Table"
-msgstr ""
-
 #: data/gtk/help-overlay.ui:79
 msgctxt "shortcut window"
-msgid "Tree View"
+msgid "Line"
 msgstr ""
 
 #: data/gtk/help-overlay.ui:85
 msgctxt "shortcut window"
-msgid "Eraser"
+msgid "Freehand Brush"
 msgstr ""
 
 #: data/gtk/help-overlay.ui:91
 msgctxt "shortcut window"
-msgid "Picker"
-msgstr ""
-
-#: data/ui/new_palette.ui:11
-msgid "New palette"
-msgstr ""
-
-#: data/ui/new_palette.ui:35
-msgid "Palette name"
-msgstr ""
-
-#: data/ui/new_palette.ui:57 data/ui/window.ui:597 src/main.py:209
-#: src/window.py:482
-msgid "Save"
-msgstr ""
-
-#: data/ui/window.ui:87
-msgid "Spaces do not overwrite "
-msgstr ""
-
-#: data/ui/window.ui:88
-msgid "Transparent spaces"
-msgstr ""
-
-#: data/ui/window.ui:94 data/ui/window.ui:205 data/ui/window.ui:249
-msgid "Enter"
-msgstr ""
-
-#: data/ui/window.ui:102 src/tools/text.py:144
 msgid "Text"
 msgstr ""
 
-#: data/ui/window.ui:131
-msgid "Colums"
+#: data/gtk/help-overlay.ui:97
+msgctxt "shortcut window"
+msgid "Table"
 msgstr ""
 
-#: data/ui/window.ui:137
+#: data/gtk/help-overlay.ui:103
+msgctxt "shortcut window"
+msgid "Tree View"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:109
+msgctxt "shortcut window"
+msgid "Eraser"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:115
+msgctxt "shortcut window"
+msgid "Picker"
+msgstr ""
+
+#: data/gtk/help-overlay.ui:121
+msgctxt "shortcut window"
+msgid "Move"
+msgstr ""
+
+#: data/ui/new_palette.ui:10
+msgid "New palette"
+msgstr ""
+
+#: data/ui/new_palette.ui:38
+msgid "Palette name"
+msgstr ""
+
+#: data/ui/new_palette.ui:70 data/ui/window.ui:495 src/main.py:215
+#: src/main.py:234 src/window.py:469
+msgid "Save"
+msgstr ""
+
+#: data/ui/window.ui:88
+msgid "Spaces do not overwrite "
+msgstr ""
+
+#: data/ui/window.ui:89
+msgid "Transparent spaces"
+msgstr ""
+
+#: data/ui/window.ui:95 data/ui/window.ui:206 data/ui/window.ui:250
+msgid "Enter"
+msgstr ""
+
+#: data/ui/window.ui:103 src/tools/text.py:134
+msgid "Text"
+msgstr ""
+
+#: data/ui/window.ui:132
+msgid "Columns"
+msgstr ""
+
+#: data/ui/window.ui:138
 msgid "Rows"
 msgstr ""
 
-#: data/ui/window.ui:146
+#: data/ui/window.ui:147
 msgid "Add a row"
 msgstr ""
 
-#: data/ui/window.ui:154
+#: data/ui/window.ui:155
 msgid "Delete rows"
 msgstr ""
 
-#: data/ui/window.ui:188
+#: data/ui/window.ui:189
 msgid "First line divided"
 msgstr ""
 
-#: data/ui/window.ui:189
+#: data/ui/window.ui:190
 msgid "Divide each row"
 msgstr ""
 
-#: data/ui/window.ui:190
+#: data/ui/window.ui:191
 msgid "Not divided"
 msgstr ""
 
-#: data/ui/window.ui:195 data/ui/window.ui:328
+#: data/ui/window.ui:196 data/ui/window.ui:329
 msgid "Type"
 msgstr ""
 
-#: data/ui/window.ui:257
+#: data/ui/window.ui:258
 msgid "Tree view"
 msgstr ""
 
-#: data/ui/window.ui:274 data/ui/window.ui:367
+#: data/ui/window.ui:275 data/ui/window.ui:368
 msgid "Size"
 msgstr ""
 
-#: data/ui/window.ui:298 data/ui/window.ui:323 src/tools/freehand.py:85
+#: data/ui/window.ui:299 data/ui/window.ui:324 src/tools/freehand.py:80
 msgid "Freehand"
 msgstr ""
 
-#: data/ui/window.ui:321
+#: data/ui/window.ui:322
 msgid "Cartesian"
 msgstr ""
 
-#: data/ui/window.ui:322
+#: data/ui/window.ui:323
 msgid "Step"
 msgstr ""
 
-#: data/ui/window.ui:341
+#: data/ui/window.ui:342
 msgid "Arrow"
 msgstr ""
 
-#: data/ui/window.ui:350
+#: data/ui/window.ui:351
 msgid "Line"
 msgstr ""
 
-#: data/ui/window.ui:416
-msgid "Extended latin"
+#: data/ui/window.ui:417
+msgid "ASCII"
 msgstr ""
 
-#: data/ui/window.ui:541
+#: data/ui/window.ui:439
 msgid "Character"
 msgstr ""
 
-#: data/ui/window.ui:562
+#: data/ui/window.ui:460
 msgid "Style"
 msgstr ""
 
-#: data/ui/window.ui:641
+#: data/ui/window.ui:547
 msgid "Width"
 msgstr ""
 
-#: data/ui/window.ui:656
+#: data/ui/window.ui:562
 msgid "Height"
 msgstr ""
 
-#: data/ui/window.ui:661
+#: data/ui/window.ui:567
 msgid "Change size"
 msgstr ""
 
-#: data/ui/window.ui:689
+#: data/ui/window.ui:595
 msgid "Rectangle Ctrl+R"
 msgstr ""
 
-#: data/ui/window.ui:699
+#: data/ui/window.ui:605
 msgid "Filled rectangle Ctrl+Shift+R"
 msgstr ""
 
-#: data/ui/window.ui:709
+#: data/ui/window.ui:615
 msgid "Line Ctrl+L"
 msgstr ""
 
-#: data/ui/window.ui:719
+#: data/ui/window.ui:625
 msgid "Freehand Ctrl+F"
 msgstr ""
 
-#: data/ui/window.ui:729
+#: data/ui/window.ui:635
 msgid "Text Ctrl+T"
 msgstr ""
 
-#: data/ui/window.ui:744
+#: data/ui/window.ui:650
 msgid "Table Ctrl+Shift+T"
 msgstr ""
 
-#: data/ui/window.ui:754
+#: data/ui/window.ui:660
 msgid "Tree view Ctrl+U"
 msgstr ""
 
-#: data/ui/window.ui:764
+#: data/ui/window.ui:670
 msgid "Eraser Ctrl+E"
 msgstr ""
 
-#: data/ui/window.ui:774
+#: data/ui/window.ui:680
 msgid "Picker Ctrl+P"
 msgstr ""
 
-#: data/ui/window.ui:794
+#: data/ui/window.ui:690
+msgid "Move Ctrl+M"
+msgstr ""
+
+#: data/ui/window.ui:702
 msgid "Primary Character"
 msgstr ""
 
-#: data/ui/window.ui:802
+#: data/ui/window.ui:711
 msgid "Secondary Character"
 msgstr ""
 
-#: data/ui/window.ui:817
+#: data/ui/window.ui:726
 msgid "Clear Canvas"
 msgstr ""
 
-#: data/ui/window.ui:823
+#: data/ui/window.ui:732
 msgid "New Palette"
 msgstr ""
 
-#: data/ui/window.ui:827
+#: data/ui/window.ui:736
 msgid "New Palette From Canvas"
 msgstr ""
 
-#: data/ui/window.ui:833
+#: data/ui/window.ui:742
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: data/ui/window.ui:837
+#: data/ui/window.ui:746
 msgid "About ASCII Draw"
 msgstr ""
 
-#: data/ui/window.ui:847
+#: data/ui/window.ui:756
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: data/ui/window.ui:851
+#: data/ui/window.ui:760
 msgid "Save As"
 msgstr ""
 
-#: data/ui/window.ui:857
+#: data/ui/window.ui:766
 msgid "Open"
 msgstr ""
 
-#: data/ui/window.ui:861
+#: data/ui/window.ui:770 src/window.py:498
 msgid "New Canvas"
 msgstr ""
 
-#: src/main.py:119
+#: src/main.py:120
 msgid "Clear"
 msgstr ""
 
-#. Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
-#. One name per line, please do not remove previous names.
-#: src/main.py:176
+#: src/main.py:180
 msgid "translator-credits"
 msgstr ""
 
-#: src/main.py:200
-msgid "Save Changes"
+#: src/main.py:206
+msgid "Save File?"
 msgstr ""
 
-#: src/main.py:207 src/window.py:480
+#: src/main.py:207
+msgid ""
+"You have never saved this file. Changes which are not saved will be "
+"permanently lost."
+msgstr ""
+
+#: src/main.py:213 src/main.py:232 src/window.py:467
 msgid "Cancel"
 msgstr ""
 
-#: src/main.py:208 src/window.py:481
+#: src/main.py:214 src/main.py:233 src/window.py:468
 msgid "Discard"
 msgstr ""
 
-#: src/tools/line.py:160
+#: src/main.py:225
+msgid "Save changes?"
+msgstr ""
+
+#: src/main.py:226 src/window.py:463
+msgid ""
+"The opened file contains unsaved changes. Changes which are not saved will "
+"be permanently lost."
+msgstr ""
+
+#: src/tools/line.py:103
+msgid "Freehand Line"
+msgstr ""
+
+#: src/tools/line.py:156
 msgid "Cartesian Line"
 msgstr ""
 
-#: src/tools/line.py:163
+#: src/tools/line.py:159
 msgid "Step Line"
 msgstr ""
 
@@ -392,34 +454,34 @@ msgstr ""
 msgid "Tree"
 msgstr ""
 
-#: src/window.py:432
+#: src/window.py:433
 msgid "Open File"
 msgstr ""
 
-#: src/window.py:473
+#: src/window.py:462
 msgid "Save Changes?"
 msgstr ""
 
-#: src/window.py:474
-msgid "You have unsaved changes, do you want to save them?"
-msgstr ""
-
-#: src/window.py:503
+#: src/window.py:506
 msgid "Save File"
 msgstr ""
 
-#: src/window.py:504
+#: src/window.py:507
 msgid "drawing.txt"
 msgstr ""
 
-#: src/window.py:531
+#: src/window.py:534
 msgid "Saved successfully"
 msgstr ""
 
-#: src/window.py:652
+#: src/window.py:677
 msgid "Undo"
 msgstr ""
 
-#: src/canvas.py:191
+#: src/window.py:684
 msgid "Undo "
+msgstr ""
+
+#: src/window.py:687 src/window.py:694
+msgid "Redo "
 msgstr ""
