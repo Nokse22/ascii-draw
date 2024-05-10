@@ -44,6 +44,12 @@ There are many stiles to choose from and multiple tools available to use such as
   </branding>
 
   <releases>
+    <release version="0.3.3" date="2024-05-10">
+		  <description translate="no">
+		    <p>Split Extended Latin palette in ASCII and Extended ASCII</p>
+		    <p>Added Hindi translation (Scrambled777)</p>
+		  </description>
+	  </release>
     <release version="0.3.2" date="2024-03-26">
 		  <description translate="no">
 		    <p>Fixed bug when running outside sandbox</p>
