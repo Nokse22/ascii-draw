@@ -1,0 +1,429 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Scrambled777 <weblate.scrambled777@simplelogin.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ascii-draw\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-01 15:41+0300\n"
+"PO-Revision-Date: 2024-04-04 01:04+0530\n"
+"Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
+"Language-Team: Hindi\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 46.0\n"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:3
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:592
+#: src/main.py:166
+msgid "ASCII Draw"
+msgstr "ASCII Draw"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:9
+msgid "GNOME;GTK;Draw;Graphics;Art;"
+msgstr "GNOME;GTK; ड्रा; ग्राफिक्स; कला;"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:7
+msgid "Draw using ASCII characters"
+msgstr "ASCII वर्णों का उपयोग करके चित्र बनाएं"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:9
+msgid ""
+"This app lets you draw diagrams, tables, treeview and more using ASCII "
+"characters. There are many stiles to choose from and multiple tools "
+"available to use:"
+msgstr ""
+"यह ऐप आपको ASCII वर्णों का उपयोग करके आरेख, तालिकाएँ, वृक्षदृश्य और बहुत कुछ बनाने देता "
+"है। चुनने के लिए कई शैलियाँ हैं और उपयोग के लिए कई उपकरण उपलब्ध हैं:"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:12
+msgid "Freehand Brush"
+msgstr "मुक्तहस्त ब्रश"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13 src/tools/line.py:107
+msgid "Freehand Line"
+msgstr "मुक्तहस्त रेखा"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:14
+msgid "Straight Line"
+msgstr "सीधी रेखा"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:15
+msgid "Straight Arrow"
+msgstr "सीधा तीर"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
+#: src/tools/rectangle.py:119
+msgid "Rectangle"
+msgstr "आयत"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
+#: src/tools/filled_rectangle.py:119
+msgid "Filled Rectangle"
+msgstr "भरा हुआ आयत"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18
+msgid "Text with FIGlet fonts"
+msgstr "FIGlet फॉन्ट के साथ टेक्स्ट"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19 data/ui/window.ui:213
+#: src/tools/table.py:107
+msgid "Table"
+msgstr "तालिका"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20
+msgid "Tree View"
+msgstr "वृक्ष दृश्य"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 data/ui/window.ui:391
+#: src/tools/eraser.py:84
+msgid "Eraser"
+msgstr "इरेज़र"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+msgid "Character Picker"
+msgstr "वर्ण चयनकर्ता"
+
+#: data/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "जनरल"
+
+#: data/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "शॉर्टकट दिखाएँ"
+
+#: data/gtk/help-overlay.ui:20
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "छोड़ें"
+
+#: data/gtk/help-overlay.ui:28
+msgctxt "shortcut window"
+msgid "Tools"
+msgstr "औजार"
+
+#: data/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Rectangle"
+msgstr "आयत"
+
+#: data/gtk/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Filled Rectangle"
+msgstr "भरा हुआ आयत"
+
+#: data/gtk/help-overlay.ui:43
+msgctxt "shortcut window"
+msgid "Line"
+msgstr "रेखा"
+
+#: data/gtk/help-overlay.ui:49
+msgctxt "shortcut window"
+msgid "Arrow"
+msgstr "तीर"
+
+#: data/gtk/help-overlay.ui:55
+msgctxt "shortcut window"
+msgid "Freehand Line"
+msgstr "मुक्तहस्त रेखा"
+
+#: data/gtk/help-overlay.ui:61
+msgctxt "shortcut window"
+msgid "Freehand Brush"
+msgstr "मुक्तहस्त ब्रश"
+
+#: data/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Text"
+msgstr "टेक्स्ट"
+
+#: data/gtk/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Table"
+msgstr "तालिका"
+
+#: data/gtk/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Tree View"
+msgstr "वृक्ष दृश्य"
+
+#: data/gtk/help-overlay.ui:85
+msgctxt "shortcut window"
+msgid "Eraser"
+msgstr "इरेज़र"
+
+#: data/gtk/help-overlay.ui:91
+msgctxt "shortcut window"
+msgid "Picker"
+msgstr "चयनकर्ता"
+
+#: data/ui/new_palette.ui:11
+msgid "New palette"
+msgstr "नया पैलेट"
+
+#: data/ui/new_palette.ui:35
+msgid "Palette name"
+msgstr "पैलेट का नाम"
+
+#: data/ui/new_palette.ui:57 data/ui/window.ui:597 src/main.py:209
+#: src/window.py:482
+msgid "Save"
+msgstr "सहेजें"
+
+#: data/ui/window.ui:87
+msgid "Spaces do not overwrite "
+msgstr "रिक्त स्थान अधिलेखित नहीं होते"
+
+#: data/ui/window.ui:88
+msgid "Transparent spaces"
+msgstr "पारदर्शी स्थान"
+
+#: data/ui/window.ui:94 data/ui/window.ui:205 data/ui/window.ui:249
+msgid "Enter"
+msgstr "प्रवेश"
+
+#: data/ui/window.ui:102 src/tools/text.py:144
+msgid "Text"
+msgstr "टेक्स्ट"
+
+#: data/ui/window.ui:131
+msgid "Colums"
+msgstr "कॉलम"
+
+#: data/ui/window.ui:137
+msgid "Rows"
+msgstr "पंक्तियाँ"
+
+#: data/ui/window.ui:146
+msgid "Add a row"
+msgstr "पंक्ति जोड़ें"
+
+#: data/ui/window.ui:154
+msgid "Delete rows"
+msgstr "पंक्तियाँ मिटाएँ"
+
+#: data/ui/window.ui:188
+msgid "First line divided"
+msgstr "पहली पंक्ति विभाजित"
+
+#: data/ui/window.ui:189
+msgid "Divide each row"
+msgstr "हर पंक्ति को विभाजित करें"
+
+#: data/ui/window.ui:190
+msgid "Not divided"
+msgstr "विभाजित नहीं"
+
+#: data/ui/window.ui:195 data/ui/window.ui:328
+msgid "Type"
+msgstr "प्रकार"
+
+#: data/ui/window.ui:257
+msgid "Tree view"
+msgstr "वृक्ष दृश्य"
+
+#: data/ui/window.ui:274 data/ui/window.ui:367
+msgid "Size"
+msgstr "आकार"
+
+#: data/ui/window.ui:298 data/ui/window.ui:323 src/tools/freehand.py:85
+msgid "Freehand"
+msgstr "मुक्तहस्त"
+
+#: data/ui/window.ui:321
+msgid "Cartesian"
+msgstr "कार्तीय"
+
+#: data/ui/window.ui:322
+msgid "Step"
+msgstr "चरण"
+
+#: data/ui/window.ui:341
+msgid "Arrow"
+msgstr "तीर"
+
+#: data/ui/window.ui:350
+msgid "Line"
+msgstr "रेखा"
+
+#: data/ui/window.ui:416
+msgid "Extended latin"
+msgstr "विस्तारित लैटिन"
+
+#: data/ui/window.ui:541
+msgid "Character"
+msgstr "वर्ण"
+
+#: data/ui/window.ui:562
+msgid "Style"
+msgstr "शैली"
+
+#: data/ui/window.ui:641
+msgid "Width"
+msgstr "चौड़ाई"
+
+#: data/ui/window.ui:656
+msgid "Height"
+msgstr "ऊंचाई"
+
+#: data/ui/window.ui:661
+msgid "Change size"
+msgstr "आकार बदलें"
+
+#: data/ui/window.ui:689
+msgid "Rectangle Ctrl+R"
+msgstr "आयत Ctrl+R"
+
+#: data/ui/window.ui:699
+msgid "Filled rectangle Ctrl+Shift+R"
+msgstr "भरा हुआ आयत Ctrl+Shift+R"
+
+#: data/ui/window.ui:709
+msgid "Line Ctrl+L"
+msgstr "रेखा Ctrl+L"
+
+#: data/ui/window.ui:719
+msgid "Freehand Ctrl+F"
+msgstr "मुक्तहस्त Ctrl+F"
+
+#: data/ui/window.ui:729
+msgid "Text Ctrl+T"
+msgstr "टेक्स्ट Ctrl+T"
+
+#: data/ui/window.ui:744
+msgid "Table Ctrl+Shift+T"
+msgstr "तालिका Ctrl+Shift+T"
+
+#: data/ui/window.ui:754
+msgid "Tree view Ctrl+U"
+msgstr "वृक्ष दृश्य Ctrl+U"
+
+#: data/ui/window.ui:764
+msgid "Eraser Ctrl+E"
+msgstr "इरेज़र Ctrl+E"
+
+#: data/ui/window.ui:774
+msgid "Picker Ctrl+P"
+msgstr "चयनकर्ता Ctrl+P"
+
+#: data/ui/window.ui:794
+msgid "Primary Character"
+msgstr "प्राथमिक वर्ण"
+
+#: data/ui/window.ui:802
+msgid "Secondary Character"
+msgstr "द्वितीयक वर्ण"
+
+#: data/ui/window.ui:817
+msgid "Clear Canvas"
+msgstr "कैनवास साफ़ करें"
+
+#: data/ui/window.ui:823
+msgid "New Palette"
+msgstr "नया पैलेट"
+
+#: data/ui/window.ui:827
+msgid "New Palette From Canvas"
+msgstr "कैनवास से नया पैलेट"
+
+#: data/ui/window.ui:833
+msgid "Keyboard Shortcuts"
+msgstr "कीबोर्ड शॉर्टकट"
+
+#: data/ui/window.ui:837
+msgid "About ASCII Draw"
+msgstr "ASCII Draw के बारे में"
+
+#: data/ui/window.ui:847
+msgid "Copy To Clipboard"
+msgstr "क्लिपबोर्ड पर कॉपी करें"
+
+#: data/ui/window.ui:851
+msgid "Save As"
+msgstr "ऐसे सहेजें"
+
+#: data/ui/window.ui:857
+msgid "Open"
+msgstr "खोलें"
+
+#: data/ui/window.ui:861
+msgid "New Canvas"
+msgstr "नया कैनवास"
+
+#: src/main.py:119
+msgid "Clear"
+msgstr "साफ़"
+
+#. Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
+#. One name per line, please do not remove previous names.
+#: src/main.py:176
+msgid "translator-credits"
+msgstr "Scrambled777 <weblate.scrambled777@simplelogin.com>"
+
+#: src/main.py:200
+msgid "Save Changes"
+msgstr "परिवर्तन सहेजें"
+
+#: src/main.py:207 src/window.py:480
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: src/main.py:208 src/window.py:481
+msgid "Discard"
+msgstr "खारिज करें"
+
+#: src/tools/line.py:160
+msgid "Cartesian Line"
+msgstr "कार्तीय रेखा"
+
+#: src/tools/line.py:163
+msgid "Step Line"
+msgstr "चरण रेखा"
+
+#: src/tools/select.py:104
+msgid "Move"
+msgstr "स्थानान्तर"
+
+#: src/tools/tree.py:150
+msgid "Tree"
+msgstr "वृक्ष"
+
+#: src/window.py:432
+msgid "Open File"
+msgstr "फाइल खोलें"
+
+#: src/window.py:473
+msgid "Save Changes?"
+msgstr "परिवर्तन सहेजें?"
+
+#: src/window.py:474
+msgid "You have unsaved changes, do you want to save them?"
+msgstr "आपके परिवर्तन सहेजे नहीं गए हैं, क्या आप उन्हें सहेजना चाहते हैं?"
+
+#: src/window.py:503
+msgid "Save File"
+msgstr "फाइल सहेजें"
+
+#: src/window.py:504
+msgid "drawing.txt"
+msgstr "चित्रकला.txt"
+
+#: src/window.py:531
+msgid "Saved successfully"
+msgstr "सफलतापूर्वक सहेजा गया"
+
+#: src/window.py:652
+msgid "Undo"
+msgstr "पूर्ववत करें"
+
+#: src/canvas.py:191
+msgid "Undo "
+msgstr "पूर्ववत करें"
