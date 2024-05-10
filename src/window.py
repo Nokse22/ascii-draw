@@ -207,7 +207,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.lines_styles_box.get_first_child().set_active(True)
 
         default_palettes_ranges = [
-            {"name" : "Extended Latin", "ranges" : [(0x0021, 0x007F), (0x00A0, 0x0100), (0x0100, 0x0180)]},
+            {"name" : "ASCII", "ranges" : [(0x0020, 0x007E)]},
+            {"name" : "Extended ASCII", "ranges" : [(0x00A1, 0x0100), (0x0100, 0x0180)]},
             {"name" : "Box Drawing", "ranges" : [(0x2500, 0x2580)]},
             {"name" : "Block Elements", "ranges" : [(0x2580, 0x25A0)]},
             {"name" : "Geometric Shapes", "ranges" : [(0x25A0, 0x25FC), (0x25FF, 0x2600)]},

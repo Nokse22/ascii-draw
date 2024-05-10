@@ -414,7 +414,7 @@
                                     <child>
                                       <object class="GtkLabel" id="char_group_label">
                                         <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">Extended latin</property>
+                                        <property name="label" translatable="yes">ASCII</property>
                                       </object>
                                     </child>
                                     <child>
