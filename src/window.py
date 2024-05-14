@@ -342,7 +342,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         char_name_label = builder.get_object("char_name_label")
 
         char_label.set_label(_char)
-        unicode_label.set_label(f"U+{hex(ord(_char))[2:].upper()}")
+        unicode_label.set_label(f"U+{hex(ord(_char))[2:].upper().rjust(4, '0')}")
         char_name_label.set_label(unicodedata.name(_char).title())
 
         tooltip.set_custom(main_box)
