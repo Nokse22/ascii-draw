@@ -33,6 +33,7 @@ import pyfiglet
 import unicodedata
 import emoji
 import os
+import unicodedata
 
 @Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/window.ui')
 class AsciiDrawWindow(Adw.ApplicationWindow):
@@ -320,6 +321,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         for char in palette.chars:
             new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
             new_button.connect("clicked", self.change_char, flow_box)
+            # new_button.set_tooltip_text(f"{char} : {unicodedata.name(char).title()}")
+            new_button.set_has_tooltip(True)
+            new_button.connect("query-tooltip", self.on_show_char_tooltip, char)
             flow_box.append(new_button)
         scrolled_window = Gtk.ScrolledWindow(name=palette.name, hexpand=True, vexpand=True)
         scrolled_window.set_child(flow_box)
@@ -328,6 +332,22 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         pos = self.chars_carousel.get_position()
         if pos != self.chars_carousel.get_n_pages() - 1:
             self.char_carousel_go_next.set_sensitive(True)
+
+    def on_show_char_tooltip(self, btn, x, y, keyboard, tooltip, _char):
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/unicode_tooltip.ui")
+
+        main_box = builder.get_object("main_box")
+        char_label = builder.get_object("char_label")
+        unicode_label = builder.get_object("unicode_label")
+        char_name_label = builder.get_object("char_name_label")
+
+        char_label.set_label(_char)
+        unicode_label.set_label(f"U+{hex(ord(_char))[2:].upper()}")
+        char_name_label.set_label(unicodedata.name(_char).title())
+
+        tooltip.set_custom(main_box)
+
+        return True
 
     def save_new_palette(self, palette):
         with open(f"{self.data_dir}/palettes/{palette.name}.txt", 'w') as file:

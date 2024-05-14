@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.90.2 -->
+<interface>
+  <!-- interface-name tooltip.ui -->
+  <requires lib="gtk" version="4.12"/>
+  <object class="GtkBox" id="main_box">
+    <property name="halign">start</property>
+    <property name="orientation">vertical</property>
+    <property name="valign">start</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">12</property>
+        <child>
+          <object class="GtkLabel" id="char_label">
+            <property name="css-classes">title-4</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">0.0</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="unicode_label">
+            <property name="css-classes">title-4</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">1.0</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="char_name_label">
+        <property name="lines">1</property>
+        <property name="max-width-chars">20</property>
+        <property name="wrap">True</property>
+        <property name="xalign">0.0</property>
+      </object>
+    </child>
+  </object>
+</interface>

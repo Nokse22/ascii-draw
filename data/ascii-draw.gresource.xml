@@ -5,6 +5,7 @@
     <file preprocess="xml-stripblanks">ui/window.ui</file>
     <file preprocess="xml-stripblanks">ui/new_palette.ui</file>
     <file preprocess="xml-stripblanks">ui/canvas.ui</file>
+    <file preprocess="xml-stripblanks">ui/unicode_tooltip.ui</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/eraser-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/paintbrush-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/text-symbolic.svg</file>
