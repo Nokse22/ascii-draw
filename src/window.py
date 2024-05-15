@@ -63,6 +63,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     table_button = Gtk.Template.Child()
     picker_button = Gtk.Template.Child()
     eraser_button = Gtk.Template.Child()
+    fill_button = Gtk.Template.Child()
 
     eraser_adjustment = Gtk.Template.Child()
     line_arrow_switch = Gtk.Template.Child()
@@ -184,6 +185,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.tree_tool = Tree(self.canvas)
         self.tree_tool.bind_property('active', self.tree_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.tree_tool.bind_property('text', self.tree_text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
+
+        self.fill_tool = Fill(self.canvas)
+        self.fill_tool.bind_property('active', self.fill_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
         prev_btn = None
 
@@ -679,6 +683,14 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.sidebar_stack.set_visible_child_name("eraser_page")
         self.canvas.clear_preview()
 
+    @Gtk.Template.Callback("on_choose_fill")
+    def on_choose_fill(self, btn):
+        print("fill")
+        current_sidebar = self.sidebar_stack.get_visible_child_name()
+        if current_sidebar != "character_page" and current_sidebar != "style_page":
+            self.sidebar_stack.set_visible_child_name("character_page")
+        self.canvas.clear_preview()
+
     def new_palette_from_canvas(self):
         content = self.canvas.get_content()
         content = content.replace('\n', '')
@@ -790,3 +802,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
     def select_move_tool(self):
         self.move_button.set_active(True)
+
+    def select_fill_tool(self):
+        self.fill_button.set_active(True)

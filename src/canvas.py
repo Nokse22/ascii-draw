@@ -74,6 +74,7 @@ class Canvas(Adw.Bin):
 
         self.click_gesture = Gtk.GestureClick()
         self.click_gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.click_gesture.set_button(0)
         self.drawing_area.add_controller(self.click_gesture)
 
         self.zoom_gesture = Gtk.GestureZoom()
