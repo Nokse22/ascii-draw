@@ -1,7 +1,6 @@
 on:
   push:
-  pull_request:
-  workflow_dispatch:
+    branches: ["none"]
 name: Snap
 permissions:
   id-token: write
