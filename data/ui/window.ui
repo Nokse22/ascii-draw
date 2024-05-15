@@ -56,6 +56,7 @@
                                         <property name="buffer">
                                           <object class="GtkTextBuffer" id="text_entry_buffer">
                                             <signal name="changed" handler="preview_text" after="yes"/>
+                                            <signal name="insert-text" handler="on_text_text_inserted" after="yes"/>
                                           </object>
                                         </property>
                                         <property name="css-classes">card</property>

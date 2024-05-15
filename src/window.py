@@ -725,8 +725,23 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         else:
             self.redo_button.set_tooltip_text(_("Redo ") + self.canvas.redo_changes[-1].name)
 
+    @Gtk.Template.Callback("on_text_text_inserted")
+    def on_text_text_inserted(self, buffer, loc, text, length):
+        if emoji.is_emoji(text):
+            start_iter = loc.copy()
+            start_iter.backward_char()
+            buffer.delete(start_iter ,loc)
+            buffer.insert(start_iter, "X")
+            return
+
     @Gtk.Template.Callback("on_tree_text_inserted")
     def on_tree_text_inserted(self, buffer, loc, text, length):
+        if emoji.is_emoji(text):
+            start_iter = loc.copy()
+            start_iter.backward_char()
+            buffer.delete(start_iter ,loc)
+            buffer.insert(start_iter, "X")
+            return
         spaces = 0
         if text == "\n":
             start_iter = loc.copy()
