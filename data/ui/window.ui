@@ -692,6 +692,16 @@
                   </object>
                 </child>
                 <child>
+                  <object class="GtkToggleButton" id="fill_button">
+                    <property name="css-classes">flat</property>
+                    <property name="group">rectangle_button</property>
+                    <property name="halign">center</property>
+                    <property name="icon-name">fill-tool-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Fill Ctrl+Shift+F</property>
+                    <signal name="clicked" handler="on_choose_fill"/>
+                  </object>
+                </child>
+                <child>
                   <object class="GtkToggleButton" id="primary_char_button">
                     <property name="active">True</property>
                     <property name="css-classes">circular
