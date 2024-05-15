@@ -7,20 +7,22 @@
   <summary>Sketch anything using characters</summary>
 
 	<description>
-	  <p>This app lets you draw diagrams, tables, tree view, art and more using only characters.
-There are many stiles to choose from and multiple tools available to use such as:</p>
+	  <p>Draw diagrams, tables, tree view, art and more using only characters.
+There are many tools and features available such as:</p>
 	  <ul>
-	    <li>Rectangle</li>
-	    <li>Filled Rectangle</li>
-	    <li>Cartesian, freehand and stepped line</li>
+	    <li>Rectangle using multiple line styles</li>
+	    <li>Filled Rectangle using border and fill characters</li>
+	    <li>Cartesian, Freehand and Stepped line, also with arrows</li>
 	    <li>Freehand Brush</li>
 	    <li>Text with FIGlet fonts</li>
 	    <li>Table</li>
 	    <li>Tree View</li>
 	    <li>Eraser</li>
 	    <li>Character Picker</li>
-	    <li>Select and move</li>
+	    <li>Select and Move</li>
+	    <li>Flood Fill</li>
     </ul>
+	  You can also organize characters into custom palettes.
 	</description>
 
   <developer id="io.github.nokse22">
@@ -44,6 +46,13 @@ There are many stiles to choose from and multiple tools available to use such as
   </branding>
 
   <releases>
+    <release version="0.3.4" date="2024-05-15">
+		  <description translate="no">
+		    <p>Added a tooltip to know the name and code of a character</p>
+		    <p>Added Flood fill tool</p>
+		    <p>Removed soft hyphen character</p>
+		  </description>
+	  </release>
     <release version="0.3.3" date="2024-05-10">
 		  <description translate="no">
 		    <p>Split Extended Latin palette in ASCII and Extended ASCII</p>
