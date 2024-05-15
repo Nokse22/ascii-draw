@@ -122,6 +122,12 @@
                 <property name="action-name">app.move-tool</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Fill</property>
+                <property name="action-name">app.fill-tool</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>

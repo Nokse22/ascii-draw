@@ -8,3 +8,4 @@ from .select import Select
 from .picker import Picker
 from .eraser import Eraser
 from .tree import Tree
+from .flood_fill import Fill

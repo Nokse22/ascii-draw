@@ -59,6 +59,7 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('eraser-tool', self.select_eraser_tool, ['<control>e'])
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
         self.create_action('move-tool', self.select_move_tool, ['<control>m'])
+        self.create_action('fill-tool', self.select_fill_tool, ['<control><shift>f'])
 
         self.create_action('new-palette', self.on_new_palette_action)
         self.create_action('open-palette-folder', self.on_open_palette_folder_action)
@@ -170,7 +171,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.3.3',
+                                version='0.3.4',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
@@ -180,7 +181,7 @@ class AsciiDrawApplication(Adw.Application):
         about.set_translator_credits(_("translator-credits"))        
         about.present(self.props.active_window)
 
-    def on_preferences_action(self, widget, _):
+    def on_preferences_action(self, *args):
         """Callback for the app.preferences action."""
         print('app.preferences action activated')
 
@@ -253,41 +254,44 @@ class AsciiDrawApplication(Adw.Application):
         elif response == "discard":
             self.quit()
 
-    def select_rectangle_tool(self, widget, _):
+    def select_rectangle_tool(self, *args):
         self.win.select_rectangle_tool()
 
-    def select_filled_rectangle_tool(self, widget, _):
+    def select_filled_rectangle_tool(self, *args):
         self.win.select_filled_rectangle_tool()
 
-    def select_line_tool(self, widget, _):
+    def select_line_tool(self, *args):
         self.win.select_line_tool()
 
-    def select_text_tool(self, widget, _):
+    def select_text_tool(self, *args):
         self.win.select_text_tool()
 
-    def select_table_tool(self, widget, _):
+    def select_table_tool(self, *args):
         self.win.select_table_tool()
 
-    def select_tree_tool(self, widget, _):
+    def select_tree_tool(self, *args):
         self.win.select_tree_tool()
 
-    def select_free_tool(self, widget, _):
+    def select_free_tool(self, *args):
         self.win.select_free_tool()
 
-    def select_eraser_tool(self, widget, _):
+    def select_eraser_tool(self, *args):
         self.win.select_eraser_tool()
 
-    def select_arrow_tool(self, widget, _):
+    def select_arrow_tool(self, *args):
         self.win.select_arrow_tool()
 
-    def select_free_line_tool(self, widget, _):
+    def select_free_line_tool(self, *args):
         self.win.select_free_line_tool()
 
-    def select_picker_tool(self, widget, _):
+    def select_picker_tool(self, *args):
         self.win.select_picker_tool()
 
-    def select_move_tool(self, widget, _):
+    def select_move_tool(self, *args):
         self.win.select_move_tool()
+
+    def select_fill_tool(self, *args):
+        self.win.select_fill_tool()
 
 def main(version):
     """The application's entry point."""
