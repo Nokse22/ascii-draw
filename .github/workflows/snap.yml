@@ -1,4 +1,6 @@
-
+on:
+  push:
+    branches: ["none"]
 name: Snap
 permissions:
   id-token: write
