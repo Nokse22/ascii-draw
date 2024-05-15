@@ -1,7 +1,4 @@
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+
 name: Snap
 permissions:
   id-token: write
