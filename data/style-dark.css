@@ -1,0 +1,15 @@
+/*
+ * style-dark.css
+ */
+
+.ascii-preview {
+    background: transparent;
+    background-size: 12px 24px;
+    background-image:
+        linear-gradient(to right, #333333 1px, transparent 1px),
+        linear-gradient(to bottom, #333333 1px, transparent 1px);
+    box-shadow:
+        inset 0px 0px 0px 1px #555555,
+        0px 0px 10px 10px @headerbar_shade_color;
+    opacity:0.4;
+}
