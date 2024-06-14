@@ -68,52 +68,6 @@ class AsciiDrawApplication(Adw.Application):
 
         self.create_action('clear-canvas', self.on_clear_canvas_action)
 
-        css = '''
-        .styles-preview{
-            font-family: Monospace;
-            font-size: 20px;
-            opacity:0.8;
-            color: @window_fg_color;
-        }
-        .ascii-preview{
-            background: transparent;
-            background-size: 12px 24px;
-            background-image:
-                linear-gradient(to right, #aaaaaa 1px, transparent 1px),
-                linear-gradient(to bottom, #aaaaaa 1px, transparent 1px);
-            box-shadow:
-                inset 0px 0px 0px 1px #777777,
-                0px 0px 10px 10px @headerbar_shade_color;
-            opacity:0.4;
-        }
-        .ascii{
-            font-family: Monospace;
-            font-size: 20px;
-            color: @window_fg_color;
-        }
-        .mono-entry{
-            font-family: Monospace;
-            font-size: 20px;
-            background: @window_bg_color;
-        }
-        .font-preview{
-            font-family: Monospace;
-            font-size: 7px;
-            color: @window_fg_color;
-        }
-        .switcher button{
-	        margin-left:3px;
-	        margin-right:3px;
-            transition: background-color 0ms linear;
-        }
-        '''
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(css, -1)
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-
     def on_new_palette_action(self, *args):
         self.win.show_new_palette_window()
 
