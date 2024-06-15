@@ -746,6 +746,10 @@ ascii</property>
             <attribute name="action">app.new-palette-from-canvas</attribute>
             <attribute name="label" translatable="yes">New Palette From Canvas</attribute>
           </item>
+          <item>
+            <attribute name="action">app.open-palettes-folder</attribute>
+            <attribute name="label" translatable="yes">Open Palettes Folder</attribute>
+          </item>
         </section>
         <section>
           <item>

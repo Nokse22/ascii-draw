@@ -40,6 +40,8 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
 
+        self.create_action('open-palettes-folder', self.on_open_palettes_folder_action)
+
         self.create_action('save', self.on_save_as_action, ['<control>s'])
         self.create_action('save-as', self.on_save_as_action, ['<control><shift>s'])
         self.create_action('copy-to-clipboard', self.on_copy_to_clipboard_action)
@@ -67,6 +69,9 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('import-palettes', self.on_import_palettes_action)
 
         self.create_action('clear-canvas', self.on_clear_canvas_action)
+
+    def on_open_palettes_folder_action(self, *args):
+        self.win.open_palettes_dir()
 
     def on_new_palette_action(self, *args):
         self.win.show_new_palette_window()
@@ -125,7 +130,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.3.4',
+                                version='0.3.5',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],

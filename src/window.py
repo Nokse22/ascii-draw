@@ -19,7 +19,7 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import Gdk, Gio, GObject, GLib
 
 from .palette import Palette
 from .new_palette_window import NewPaletteDialog
@@ -34,6 +34,7 @@ import unicodedata
 import emoji
 import os
 import unicodedata
+import webbrowser
 
 @Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/window.ui')
 class AsciiDrawWindow(Adw.ApplicationWindow):
@@ -304,6 +305,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.change_theme()
 
         self.update_canvas_size_spins()
+
+    def open_palettes_dir(self):
+        webbrowser.open(f"{self.data_dir}/palettes/")
 
     def change_theme(self, manager=Adw.StyleManager(), *args):
         self.canvas.color = 1 if manager.get_dark() else 0
