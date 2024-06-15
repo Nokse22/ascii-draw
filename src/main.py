@@ -175,6 +175,7 @@ class AsciiDrawApplication(Adw.Application):
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
+                                license_type="GTK_LICENSE_GPL_3_0",
                                 copyright='© 2023 Nokse')
         # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
         # One name per line, please do not remove previous names.
