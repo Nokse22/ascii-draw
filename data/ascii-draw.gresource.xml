@@ -22,5 +22,9 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/line-style-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/edit-undo-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/fill-tool-symbolic.svg</file>
+
+    <!-- css -->
+    <file compressed="true">style.css</file>
+    <file compressed="true">style-dark.css</file>
    </gresource>
 </gresources>
