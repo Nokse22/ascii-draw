@@ -10,7 +10,7 @@
 	</p>
 
   <div align="center">
-  <img src="data/resources/screenshot 01.png" height="500"/>
+  <img src="data/resources/screenshot 01.png" max-height="500"/>
   </div>
   <details>
 <summary>Click for more screenshots</summary>
