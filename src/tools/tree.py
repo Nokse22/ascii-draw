@@ -22,14 +22,13 @@ from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
 import pyfiglet
+import emoji
 
-class Tree(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
+from .tool import Tool
+
+class Tree(Tool):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.canvas = _canvas
-
-        self._active = False
-        self._style = 0
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
@@ -38,6 +37,11 @@ class Tree(GObject.GObject):
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
+
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/tree_sidebar.ui")
+        self._sidebar = builder.get_object("tree_stack_page")
+        self.text_entry_buffer = builder.get_object("text_entry_buffer")
+        self.enter_button = builder.get_object("enter_button")
 
         self.start_x = 0
         self.start_y = 0
@@ -57,26 +61,13 @@ class Tree(GObject.GObject):
 
         self._transparent = False
 
+        self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
+        self.text_entry_buffer.connect("changed", self.preview)
+        self.enter_button.connect("clicked", self.insert)
+        self.text_entry_buffer.bind_property("text", self, "text")
+
     def set_selected_font(self, value):
         self.selected_font = value
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
-
-    @GObject.Property(type=str, default='#')
-    def style(self):
-        return self._style
-
-    @style.setter
-    def style(self, value):
-        self._style = value
-        self.notify('style')
 
     @GObject.Property(type=str, default="")
     def text(self):
@@ -140,13 +131,13 @@ class Tree(GObject.GObject):
         if not self._active: return
         pass
 
-    def preview(self):
+    def preview(self, *args):
         if not self._active: return
         self.canvas.clear_preview()
         self.draw_tree(self.tree_x + self.drag_x, self.tree_y + self.drag_y, False)
         self.canvas.update_preview()
 
-    def insert(self):
+    def insert(self, *args):
         self.canvas.add_undo_action(_("Tree"))
         self.canvas.clear_preview()
         self.draw_tree(self.tree_x, self.tree_y, True)
@@ -209,3 +200,34 @@ class Tree(GObject.GObject):
                         self.canvas.set_char_at(x - 4, y - (index - prev_index), self.canvas.left_vertical(), draw)
                     prev_index -= 1
             y += 1
+
+    def on_text_inserted(self, buffer, loc, text, length):
+        if emoji.is_emoji(text):
+            start_iter = loc.copy()
+            start_iter.backward_char()
+            buffer.delete(start_iter ,loc)
+            buffer.insert(start_iter, "X")
+            return
+        spaces = 0
+        if text == "\n":
+            start_iter = loc.copy()
+            start_iter.backward_char()
+            start_iter.set_line_offset(0)
+            end_iter = start_iter.copy()
+            start_iter.backward_char()
+            while not end_iter.ends_line():
+                start_iter.forward_char()
+                end_iter.forward_char()
+                char = buffer.get_text(start_iter, end_iter, False)
+                if char != " ":
+                    break
+                spaces += 1
+            indentation = " " * spaces
+            buffer.insert(loc, f"{indentation}")
+        elif text == "\t":
+            start_iter = loc.copy()
+            start_iter.backward_char()
+            buffer.delete(start_iter ,loc)
+            buffer.insert(start_iter, " ")
+
+        self.preview()

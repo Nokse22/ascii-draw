@@ -21,14 +21,13 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
+from .tool import Tool
+
 import pyfiglet
 
-class Picker(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
+class Picker(Tool):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.canvas = _canvas
-
-        self._active = False
 
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
         self.canvas.click_gesture.connect("released", self.on_click_released)
@@ -38,15 +37,6 @@ class Picker(GObject.GObject):
 
         self.x_mul = 12
         self.y_mul = 24
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
 
     def on_click_pressed(self, click, arg, x, y):
         if not self._active: return

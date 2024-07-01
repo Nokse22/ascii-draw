@@ -23,12 +23,12 @@ from gi.repository import Gdk, Gio, GObject
 
 import math
 
-class Line(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.canvas = _canvas
+from .tool import Tool
 
-        self._active = False
+class Line(Tool):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self._style = 0
         self._arrow = False
         self._line_type = 0
@@ -36,6 +36,10 @@ class Line(GObject.GObject):
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
         self.canvas.drag_gesture.connect("drag-end", self.on_drag_end)
+
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/line_sidebar.ui")
+        self._sidebar = builder.get_object("line_stack_page")
+        self.line_type_combo  = builder.get_object("line_type_combo")
 
         self.start_x = 0
         self.start_y = 0
@@ -55,6 +59,8 @@ class Line(GObject.GObject):
         self.prev_char = ""
         self.prev_prev_pos = [0,0]
         self.prev_pos = [0,0]
+
+        self.line_type_combo.bind_property("selected", self, "line_type")
 
     @GObject.Property(type=bool, default=False)
     def active(self):

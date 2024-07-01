@@ -21,12 +21,11 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-class Select(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.canvas = _canvas
+from .tool import Tool
 
-        self._active = False
+class Select(Tool):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._style = 0
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
