@@ -6,8 +6,8 @@
     background: transparent;
     background-size: 12px 24px;
     background-image:
-        linear-gradient(to right, #333333 1px, transparent 1px),
-        linear-gradient(to bottom, #333333 1px, transparent 1px);
+        linear-gradient(to right, #444444 1px, transparent 1px),
+        linear-gradient(to bottom, #444444 1px, transparent 1px);
     box-shadow:
         inset 0px 0px 0px 1px #555555,
         0px 0px 6px 6px @headerbar_shade_color;

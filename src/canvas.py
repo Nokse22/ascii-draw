@@ -42,9 +42,9 @@ class Change():
 @Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/canvas.ui')
 class Canvas(Adw.Bin):
     __gtype_name__ = 'Canvas'
-    drawing_area = Gtk.Template.Child()
     draw_drawing_area = Gtk.Template.Child()
     preview_drawing_area = Gtk.Template.Child()
+    fixed = Gtk.Template.Child()
 
     __gsignals__ = {
         'undo-added': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
@@ -70,17 +70,17 @@ class Canvas(Adw.Bin):
         self.drag_gesture = Gtk.GestureDrag()
         self.drag_gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.drag_gesture.set_button(0)
-        self.drawing_area.add_controller(self.drag_gesture)
+        self.fixed.add_controller(self.drag_gesture)
 
         self.click_gesture = Gtk.GestureClick()
         self.click_gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.click_gesture.set_button(0)
-        self.drawing_area.add_controller(self.click_gesture)
+        self.fixed.add_controller(self.click_gesture)
 
         self.zoom_gesture = Gtk.GestureZoom()
         self.zoom_gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.zoom_gesture.connect("scale-changed", self.on_scale_changed)
-        self.drawing_area.add_controller(self.zoom_gesture)
+        self.fixed.add_controller(self.zoom_gesture)
 
         self.draw_drawing_area.set_draw_func(self.drawing_function, None)
         self.preview_drawing_area.set_draw_func(self.preview_drawing_function, None)
@@ -225,7 +225,7 @@ class Canvas(Adw.Bin):
         self.is_saved = False
 
     def get_char_at(self, x: int, y: int, draw=True):
-        if y >= len(self.drawing) or x >= len(self.drawing[0]): return
+        if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0: return
         if draw:
             return self.drawing[int(y)][int(x)]
         return self.preview[int(y)][int(x)]

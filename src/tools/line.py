@@ -71,9 +71,6 @@ class Line(Tool):
         self._active = value
         self.notify('active')
 
-        # if value:
-        #     self.canvas.drawing_area.set_draw_func(self.drawing_function, None)
-
     @GObject.Property(type=bool, default=False)
     def arrow(self):
         return self._arrow
@@ -142,8 +139,6 @@ class Line(Tool):
                 self.canvas.update()
 
         self.prev_line_pos = [end_x, end_y]
-
-        self.canvas.drawing_area.queue_draw()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return

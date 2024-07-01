@@ -46,12 +46,12 @@
     </child>
     <child>
       <object class="AdwOverlaySplitView" id="overlay_split_view">
-        <property name="max-sidebar-width">360.0</property>
+        <property name="max-sidebar-width">440.0</property>
         <property name="min-sidebar-width">300.0</property>
         <property name="show-sidebar" bind-source="sidebar_show_button" bind-property="active" bind-flags="bidirectional">True</property>
         <property name="sidebar-position">end</property>
         <property name="sidebar-width-fraction">0.45</property>
-        <property name="sidebar-width-unit">px</property>
+        <!-- <property name="sidebar-width-unit">px</property> -->
         <property name="content">
               <object class="AdwToolbarView" id="toolbar_view">
                 <property name="content">

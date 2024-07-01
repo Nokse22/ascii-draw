@@ -52,6 +52,8 @@ class Tool(GObject.GObject):
             self._stack_page.set_visible(value)
         self.notify('active')
 
+        self.on_active_changed(value)
+
     @GObject.Property(type=str, default='#')
     def style(self):
         return self._style
@@ -60,6 +62,9 @@ class Tool(GObject.GObject):
     def style(self, value):
         self._style = value
         self.notify('style')
+
+    def on_active_changed(self, value):
+        pass
 
     def add_sidebar_to(self, stack):
         if self._sidebar is None:

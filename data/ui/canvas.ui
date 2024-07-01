@@ -31,7 +31,9 @@ canvas-shadow</property>
               </object>
             </child>
             <child type="overlay">
-              <object class="GtkDrawingArea" id="drawing_area"/>
+              <object class="GtkFixed" id="fixed">
+                <property name="overflow">visible</property>
+              </object>
             </child>
           </object>
         </child>

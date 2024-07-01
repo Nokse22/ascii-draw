@@ -36,6 +36,11 @@ class Select(Tool):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
+        self.selection = Adw.Bin(
+            css_classes=["selection"],
+            cursor=Gdk.Cursor.new_from_name("move")
+        )
+
         self.x_mul = 12
         self.y_mul = 24
 
@@ -58,25 +63,6 @@ class Select(Tool):
 
         self.click_released = False
 
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
-        if value:
-            self.canvas.drawing_area.set_draw_func(self.drawing_function, None)
-        else:
-            self.selection_start_x_char = -1
-            self.selection_start_y_char = -1
-
-            self.selection_delta_char_x = 0
-            self.selection_delta_char_y = 0
-
-            self.canvas.drawing_area.queue_draw()
-
     @GObject.Property(type=str, default='#')
     def style(self):
         return self._style
@@ -85,6 +71,9 @@ class Select(Tool):
     def style(self, value):
         self._style = value
         self.notify('style')
+
+    def on_active_changed(self, value):
+        self.selection.set_visible(value)
 
     def on_drag_begin(self, gesture, this_x, this_y):
         if not self._active: return
@@ -111,10 +100,6 @@ class Select(Tool):
             for y in range(1, int(height)):
                 for x in range(1, int(width)):
                     self.canvas.set_char_at(start_x_char + x, start_y_char + y, ' ', True)
-
-            # start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
-            # self.canvas.draw_text(start_x_char + 1, start_y_char + 1, self.moved_text, True, False)
-            # self.canvas.update()
         else:
             self.selection_start_x_char = this_x // self.x_mul
             self.selection_start_y_char = this_y // self.y_mul
@@ -126,6 +111,8 @@ class Select(Tool):
 
     def on_drag_follow(self, gesture, delta_x, delta_y):
         if not self._active: return
+
+        self.selection.set_visible(True)
 
         if self.is_dragging:
             new_delta_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
@@ -142,13 +129,13 @@ class Select(Tool):
                 self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
                                 start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
 
-                self.canvas.drawing_area.queue_draw()
+                self.update_selection()
                 self.canvas.update()
         else:
             self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
             self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
 
-            self.canvas.drawing_area.queue_draw()
+            self.update_selection()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -204,32 +191,24 @@ class Select(Tool):
 
         self.click_released = False
 
-        self.canvas.drawing_area.queue_draw()
+        self.selection.set_visible(False)
 
-    def drawing_function(self, area, cr, width, height, data):
-        # cr.save()
-        cr.set_source_rgb(0.208, 0.518, 0.894)
-        cr.set_dash([5], 0)
+    def update_selection(self):
+        if self.selection.get_parent() is None:
+            self.canvas.fixed.put(self.selection, 0, 0)
 
         start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
 
-        cr.rectangle((start_x_char + self.dragging_delta_char_x + 1) * self.x_mul, # + self.x_mul/2,
-                            (start_y_char + self.dragging_delta_char_y + 1) * self.y_mul, # + self.y_mul/2,
-                            (width - 1) * self.x_mul,
-                            (height - 1) * self.y_mul)
+        self.canvas.fixed.move(
+            self.selection,
+            (start_x_char + self.dragging_delta_char_x + 1) * self.x_mul,
+            (start_y_char + self.dragging_delta_char_y + 1) * self.y_mul
+        )
 
-        # TEST
-        # cr.set_source_rgb (0.0, 0.0, 0.0)
-        # cr.select_font_face ("Monospace")
-        # cr.set_font_size (20)
-        # cr.move_to ((width - 1) * self.x_mul, (height - 1) * self.y_mul)
-        # cr.show_text("Hello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybodyHello everybody")
-
-        # cr.move_to (0, 50)
-        # cr.show_text("Hello nobody!")
-
-        cr.stroke()
-        # cr.restore()
+        self.selection.set_size_request(
+            (width - 1) * self.x_mul,
+            (height - 1) * self.y_mul
+        )
 
     def translate(self, start_x, start_y, width, height):
         if width < 0:
