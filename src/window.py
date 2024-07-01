@@ -39,15 +39,17 @@ import webbrowser
 class AsciiDrawWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'AsciiDrawWindow'
 
-    toast_overlay = Gtk.Template.Child()
-    chars_carousel = Gtk.Template.Child()
-    char_group_label = Gtk.Template.Child()
-    char_carousel_go_back = Gtk.Template.Child()
-    char_carousel_go_next = Gtk.Template.Child()
+    overlay_split_view = Gtk.Template.Child()
 
+    toast_overlay = Gtk.Template.Child()
+
+    # Headerbar
     undo_button = Gtk.Template.Child()
     redo_button = Gtk.Template.Child()
+    save_import_button = Gtk.Template.Child()
+    title_widget = Gtk.Template.Child()
 
+    # Tools
     free_button = Gtk.Template.Child()
     rectangle_button = Gtk.Template.Child()
     filled_rectangle_button = Gtk.Template.Child()
@@ -63,15 +65,16 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     primary_char_button = Gtk.Template.Child()
     secondary_char_button = Gtk.Template.Child()
 
-    save_import_button = Gtk.Template.Child()
+    # Sidebar
+    sidebar_stack = Gtk.Template.Child()
+    sidebar_stack_switcher = Gtk.Template.Child()
+    chars_carousel = Gtk.Template.Child()
+    char_group_label = Gtk.Template.Child()
+    char_carousel_go_back = Gtk.Template.Child()
+    char_carousel_go_next = Gtk.Template.Child()
     lines_styles_box = Gtk.Template.Child()
 
-    sidebar_stack = Gtk.Template.Child()
-
-    sidebar_stack_switcher = Gtk.Template.Child()
-
-    title_widget = Gtk.Template.Child()
-
+    # Canvas side popover
     width_spin = Gtk.Template.Child()
     height_spin = Gtk.Template.Child()
 
@@ -622,6 +625,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("redo_last_change")
     def redo_last_change(self, *args):
         self.canvas.redo()
+
+    @Gtk.Template.Callback("close_sidebar")
+    def close_sidebar(self, *args):
+        self.overlay_split_view.set_show_sidebar(False)
 
     def select_rectangle_tool(self):
         self.rectangle_button.set_active(True)

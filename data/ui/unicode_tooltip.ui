@@ -13,7 +13,6 @@
         <property name="spacing">12</property>
         <child>
           <object class="GtkLabel" id="char_label">
-            <!-- <property name="css-classes">title-4</property> -->
             <property name="hexpand">True</property>
             <property name="xalign">0.0</property>
           </object>

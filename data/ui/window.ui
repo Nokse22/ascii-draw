@@ -8,128 +8,56 @@
   <template class="AsciiDrawWindow" parent="AdwApplicationWindow">
     <property name="height-request">480</property>
     <property name="width-request">360</property>
+    <property name="title">ASCII Draw</property>
     <child>
       <object class="AdwBreakpoint">
-        <!-- Custom fragments -->
-        <condition>max-width: 530px</condition>
+        <condition>max-width: 850px</condition>
         <setter object="toolbar_layout_box" property="orientation">vertical</setter>
-        <setter object="overlay_split_view" property="collapsed">true</setter>
-        <setter object="overlay_split_view" property="show-sidebar">true</setter>
-        <setter object="title_widget" property="visible">false</setter>
+        <!-- <setter object="title_widget" property="visible">false</setter> -->
       </object>
     </child>
     <child>
-      <object class="AdwToolbarView" id="toolbar_view">
-        <property name="bottom-bar-style">raised</property>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 650px</condition>
+        <setter object="toolbar_layout_box" property="orientation">horizontal</setter>
+        <setter object="overlay_split_view" property="collapsed">true</setter>
+        <!-- <setter object="overlay_split_view" property="show-sidebar">true</setter> -->
+        <!-- <setter object="title_widget" property="visible">false</setter> -->
+      </object>
+    </child>
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 550px</condition>
+        <setter object="toolbar_layout_box" property="orientation">vertical</setter>
+        <setter object="overlay_split_view" property="collapsed">true</setter>
+        <!-- <setter object="overlay_split_view" property="show-sidebar">true</setter> -->
+        <!-- <setter object="title_widget" property="visible">false</setter> -->
+      </object>
+    </child>
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 400px</condition>
+        <setter object="toolbar_layout_box" property="orientation">vertical</setter>
+        <setter object="overlay_split_view" property="collapsed">true</setter>
+        <!-- <setter object="overlay_split_view" property="show-sidebar">true</setter> -->
+        <!-- <setter object="title_widget" property="visible">false</setter> -->
+        <setter object="close_sidebar_button" property="visible">true</setter>
+      </object>
+    </child>
+    <child>
+      <object class="AdwOverlaySplitView" id="overlay_split_view">
+        <property name="max-sidebar-width">360.0</property>
+        <property name="min-sidebar-width">300.0</property>
+        <property name="show-sidebar" bind-source="sidebar_show_button" bind-property="active" bind-flags="bidirectional">True</property>
+        <property name="sidebar-position">end</property>
+        <property name="sidebar-width-fraction">0.45</property>
+        <property name="sidebar-width-unit">px</property>
         <property name="content">
-          <object class="AdwOverlaySplitView" id="overlay_split_view">
-            <property name="content">
-              <object class="AdwToastOverlay" id="toast_overlay"/>
-            </property>
-            <property name="max-sidebar-width">360.0</property>
-            <property name="min-sidebar-width">300.0</property>
-            <property name="show-sidebar" bind-source="sidebar_show_button" bind-property="active" bind-flags="bidirectional">True</property>
-            <property name="sidebar">
-              <object class="AdwToolbarView">
+              <object class="AdwToolbarView" id="toolbar_view">
                 <property name="content">
-                  <object class="GtkBox">
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkStack" id="sidebar_stack">
-                        <property name="vexpand">True</property>
-                        <child>
-                          <object class="GtkStackPage" id="character_stack_page">
-                            <property name="child">
-                              <object class="GtkBox">
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="margin-bottom">6</property>
-                                    <property name="margin-end">6</property>
-                                    <property name="margin-start">6</property>
-                                    <property name="spacing">6</property>
-                                    <child>
-                                      <object class="GtkButton" id="char_carousel_go_back">
-                                        <property name="icon-name">go-previous-symbolic</property>
-                                        <property name="sensitive">False</property>
-                                        <signal name="clicked" handler="char_pages_go_back"/>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="char_group_label">
-                                        <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">ASCII</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="char_carousel_go_next">
-                                        <property name="icon-name">go-next-symbolic</property>
-                                        <signal name="clicked" handler="char_pages_go_next"/>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="AdwCarousel" id="chars_carousel">
-                                    <property name="allow-mouse-drag">False</property>
-                                    <property name="allow-scroll-wheel">False</property>
-                                    <property name="hexpand">True</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </property>
-                            <property name="icon-name">format-text-italic-symbolic</property>
-                            <property name="name">character_page</property>
-                            <property name="title" translatable="yes">Character</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkStackPage" id="style_stack_page">
-                            <property name="child">
-                              <object class="GtkScrolledWindow">
-                                <property name="hscrollbar-policy">never</property>
-                                <property name="overflow">hidden</property>
-                                <child>
-                                  <object class="GtkBox" id="lines_styles_box">
-                                    <property name="margin-bottom">6</property>
-                                    <property name="margin-end">6</property>
-                                    <property name="margin-start">6</property>
-                                    <property name="margin-top">6</property>
-                                    <property name="orientation">vertical</property>
-                                    <property name="spacing">6</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </property>
-                            <property name="icon-name">line-style-symbolic</property>
-                            <property name="name">style_page</property>
-                            <property name="title" translatable="yes">Style</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
+                  <object class="AdwToastOverlay" id="toast_overlay"/>
                 </property>
                 <child type="top">
-                  <object class="GtkStackSwitcher" id="sidebar_stack_switcher">
-                    <property name="css-classes">switcher</property>
-                    <property name="hexpand">True</property>
-                    <property name="margin-bottom">6</property>
-                    <property name="margin-end">3</property>
-                    <property name="margin-start">3</property>
-                    <property name="margin-top">6</property>
-                    <property name="stack">sidebar_stack</property>
-                  </object>
-                </child>
-              </object>
-            </property>
-            <property name="sidebar-position">end</property>
-            <property name="sidebar-width-fraction">0.45</property>
-            <property name="sidebar-width-unit">px</property>
-          </object>
-        </property>
-        <property name="top-bar-style">raised</property>
-        <child type="top">
           <object class="AdwHeaderBar">
             <property name="title-widget">
               <object class="AdwWindowTitle" id="title_widget">
@@ -157,74 +85,17 @@
                 <signal name="clicked" handler="redo_last_change"/>
               </object>
             </child>
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="menu-model">primary_menu</property>
-              </object>
-            </child>
+
             <child type="end">
               <object class="GtkToggleButton" id="sidebar_show_button">
                 <property name="active">True</property>
                 <property name="icon-name">sidebar-show-right-symbolic</property>
               </object>
             </child>
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="icon-name">list-add-symbolic</property>
-                <property name="popover">
-                  <object class="GtkPopover">
-                    <signal name="closed" handler="on_increase_size_activated"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="AdwSpinRow" id="width_spin">
-                            <property name="activatable">False</property>
-                            <property name="adjustment">
-                              <object class="GtkAdjustment">
-                                <property name="lower">10.0</property>
-                                <property name="step-increment">1.0</property>
-                                <property name="upper">120.0</property>
-                                <property name="value">40.0</property>
-                              </object>
-                            </property>
-                            <property name="can-focus">False</property>
-                            <property name="title" translatable="yes">Width</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="AdwSpinRow" id="height_spin">
-                            <property name="activatable">False</property>
-                            <property name="adjustment">
-                              <object class="GtkAdjustment">
-                                <property name="lower">5.0</property>
-                                <property name="step-increment">1.0</property>
-                                <property name="upper">60.0</property>
-                                <property name="value">20.0</property>
-                              </object>
-                            </property>
-                            <property name="can-focus">False</property>
-                            <property name="title" translatable="yes">Height</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkButton">
-                            <property name="label" translatable="yes">Change size</property>
-                            <property name="margin-top">6</property>
-                            <signal name="clicked" handler="on_change_canvas_size_btn_clicked"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </property>
-              </object>
-            </child>
           </object>
-        </child>
-        <child type="bottom">
-          <object class="GtkBox" id="toolbar_layout_box">
+                </child>
+                <child type="bottom">
+<object class="GtkBox" id="toolbar_layout_box">
             <property name="margin-bottom">6</property>
             <property name="margin-end">6</property>
             <property name="margin-start">6</property>
@@ -370,8 +241,176 @@ ascii</property>
               </object>
             </child>
           </object>
-        </child>
-        <!-- Custom fragments -->
+          </child>
+              </object>
+            </property>
+        <property name="sidebar">
+          <object class="AdwToolbarView">
+            <child type="top">
+              <object class="AdwHeaderBar">
+                <child type="start">
+                <object class="GtkButton" id="close_sidebar_button">
+                  <property name="visible">false</property>
+                  <property name="icon-name">right-large-symbolic</property>
+                  <signal name="clicked" handler="close_sidebar"/>
+                </object>
+              </child>
+              <child type="end">
+                <object class="GtkMenuButton">
+                  <property name="icon-name">open-menu-symbolic</property>
+                  <property name="menu-model">primary_menu</property>
+                </object>
+              </child>
+                <child type="end">
+              <object class="GtkMenuButton">
+                <property name="icon-name">list-add-symbolic</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <signal name="closed" handler="on_increase_size_activated"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="AdwSpinRow" id="width_spin">
+                            <property name="activatable">False</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">10.0</property>
+                                <property name="step-increment">1.0</property>
+                                <property name="upper">120.0</property>
+                                <property name="value">40.0</property>
+                              </object>
+                            </property>
+                            <property name="can-focus">False</property>
+                            <property name="title" translatable="yes">Width</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwSpinRow" id="height_spin">
+                            <property name="activatable">False</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">5.0</property>
+                                <property name="step-increment">1.0</property>
+                                <property name="upper">60.0</property>
+                                <property name="value">20.0</property>
+                              </object>
+                            </property>
+                            <property name="can-focus">False</property>
+                            <property name="title" translatable="yes">Height</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="label" translatable="yes">Change size</property>
+                            <property name="margin-top">6</property>
+                            <signal name="clicked" handler="on_change_canvas_size_btn_clicked"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+              </object>
+            </child>
+            <property name="content">
+              <object class="AdwToolbarView">
+                <property name="content">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkStack" id="sidebar_stack">
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkStackPage" id="character_stack_page">
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="margin-bottom">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkButton" id="char_carousel_go_back">
+                                        <property name="icon-name">go-previous-symbolic</property>
+                                        <property name="sensitive">False</property>
+                                        <signal name="clicked" handler="char_pages_go_back"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="char_group_label">
+                                        <property name="hexpand">True</property>
+                                        <property name="label" translatable="yes">ASCII</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="char_carousel_go_next">
+                                        <property name="icon-name">go-next-symbolic</property>
+                                        <signal name="clicked" handler="char_pages_go_next"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwCarousel" id="chars_carousel">
+                                    <property name="allow-mouse-drag">False</property>
+                                    <property name="allow-scroll-wheel">False</property>
+                                    <property name="hexpand">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">format-text-italic-symbolic</property>
+                            <property name="name">character_page</property>
+                            <property name="title" translatable="yes">Character</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkStackPage" id="style_stack_page">
+                            <property name="child">
+                              <object class="GtkScrolledWindow">
+                                <property name="hscrollbar-policy">never</property>
+                                <property name="overflow">hidden</property>
+                                <child>
+                                  <object class="GtkBox" id="lines_styles_box">
+                                    <property name="margin-bottom">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="icon-name">line-style-symbolic</property>
+                            <property name="name">style_page</property>
+                            <property name="title" translatable="yes">Style</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <child type="top">
+                  <object class="GtkStackSwitcher" id="sidebar_stack_switcher">
+                    <property name="css-classes">switcher</property>
+                    <property name="hexpand">True</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-end">3</property>
+                    <property name="margin-start">3</property>
+                    <property name="margin-top">6</property>
+                    <property name="stack">sidebar_stack</property>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </property>
       </object>
     </child>
     <child>

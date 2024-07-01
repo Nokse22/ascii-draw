@@ -16,7 +16,7 @@
         linear-gradient(to bottom, #aaaaaa 1px, transparent 1px);
     box-shadow:
         inset 0px 0px 0px 1px #777777,
-        0px 0px 10px 10px @headerbar_shade_color;
+        0px 0px 6px 6px @headerbar_shade_color;
     opacity:0.4;
 }
 .ascii {
