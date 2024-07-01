@@ -38,6 +38,5 @@
     <property name="icon-name">eraser-symbolic</property>
     <property name="name">eraser_page</property>
     <property name="title" translatable="yes">Eraser</property>
-    <!-- <property name="visible" bind-source="eraser_button" bind-property="active">False</property> -->
   </object>
 </interface>

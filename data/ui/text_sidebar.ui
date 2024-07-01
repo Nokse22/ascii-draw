@@ -10,7 +10,6 @@
         <property name="margin-top">4</property>
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
-        <!-- <property name="visible" bind-source="text_button" bind-property="active">True</property> -->
         <child>
           <object class="GtkScrolledWindow">
             <property name="vexpand">True</property>
@@ -20,8 +19,6 @@
               <object class="GtkTextView">
                 <property name="buffer">
                   <object class="GtkTextBuffer" id="text_entry_buffer">
-                    <!-- <signal name="changed" handler="preview_text" after="yes"/> -->
-                    <!-- <signal name="insert-text" handler="on_text_text_inserted" after="yes"/> -->
                   </object>
                 </property>
                 <property name="left-margin">12</property>
@@ -44,7 +41,6 @@
                 <property name="margin-end">6</property>
                 <property name="margin-start">6</property>
                 <property name="margin-top">6</property>
-                <!-- <signal name="row-selected" handler="font_row_selected"/> -->
               </object>
             </child>
           </object>
@@ -60,7 +56,6 @@
           <object class="GtkButton" id="enter_button">
             <property name="css-classes">suggested-action</property>
             <property name="label" translatable="yes">Enter</property>
-            <!-- <signal name="clicked" handler="insert_text"/> -->
           </object>
         </child>
       </object>

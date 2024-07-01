@@ -41,7 +41,6 @@
                       <object class="GtkButton" id="add_row_button">
                         <property name="icon-name">list-add-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Add a row</property>
-                        <!-- <signal name="clicked" handler="on_add_row_clicked"/> -->
                       </object>
                     </child>
                     <child>
@@ -49,7 +48,6 @@
                         <property name="css-classes">error</property>
                         <property name="icon-name">user-trash-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Delete rows</property>
-                        <!-- <signal name="clicked" handler="on_reset_row_clicked"/> -->
                       </object>
                     </child>
                   </object>
@@ -91,8 +89,6 @@
                 </property>
                 <property name="selected">0</property>
                 <property name="title" translatable="yes">Type</property>
-                <!-- Custom fragments -->
-                <!-- <signal name="notify::selected" handler="preview_table"/> -->
               </object>
             </child>
           </object>
@@ -101,7 +97,6 @@
           <object class="GtkButton" id="enter_button">
             <property name="css-classes">suggested-action</property>
             <property name="label" translatable="yes">Enter</property>
-            <!-- <signal name="clicked" handler="insert_table"/> -->
           </object>
         </child>
       </object>
@@ -109,6 +104,5 @@
     <property name="icon-name">table-symbolic</property>
     <property name="name">table_page</property>
     <property name="title" translatable="yes">Table</property>
-    <!-- <property name="visible" bind-source="table_button" bind-property="active">False</property> -->
   </object>
 </interface>

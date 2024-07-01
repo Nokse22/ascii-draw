@@ -38,6 +38,5 @@
     <property name="icon-name">paintbrush-symbolic</property>
     <property name="name">freehand_page</property>
     <property name="title" translatable="yes">Freehand</property>
-    <property name="visible" bind-source="free_button" bind-property="active">False</property>
   </object>
 </interface>

@@ -21,17 +21,18 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-class Freehand(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.canvas = _canvas
+from .tool import Tool
 
-        self._active = False
+class Freehand(Tool):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
 
-        # self.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/freehand_sidebar.ui")
+        self._sidebar = builder.get_object("freehand_stack_page")
+        self.freehand_brush_adjustment  = builder.get_object("freehand_brush_adjustment")
 
         self.start_x = 0
         self.start_y = 0
@@ -45,25 +46,7 @@ class Freehand(GObject.GObject):
         self._size = 1
         self._char = '#'
 
-        self.brush_sizes = [
-                [[0,0] ],
-                [[0,0],[-1,0],[1,0] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0],[1,2],[1,-2],[-1,-2],[-1,2], ],
-                ]
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
+        self.freehand_brush_adjustment.bind_property("value", self, "size")
 
     @GObject.Property(type=int, default=1)
     def size(self):

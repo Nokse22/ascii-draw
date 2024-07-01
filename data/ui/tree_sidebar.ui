@@ -20,8 +20,6 @@
               <object class="GtkTextView" id="tree_text_entry">
                 <property name="buffer">
                   <object class="GtkTextBuffer" id="text_entry_buffer">
-                    <!-- <signal name="insert-text" handler="on_tree_text_inserted" after="yes"/> -->
-                    <!-- <signal name="changed" handler="preview_tree" after="yes"/> -->
                   </object>
                 </property>
                 <property name="left-margin">12</property>
@@ -35,7 +33,6 @@
           <object class="GtkButton" id="enter_button">
             <property name="css-classes">suggested-action</property>
             <property name="label" translatable="yes">Enter</property>
-            <!-- <signal name="clicked" handler="insert_tree"/> -->
           </object>
         </child>
       </object>
@@ -43,6 +40,5 @@
     <property name="icon-name">tree-list-symbolic</property>
     <property name="name">tree_page</property>
     <property name="title" translatable="yes">Tree view</property>
-    <!-- <property name="visible" bind-source="tree_button" bind-property="active">False</property> -->
   </object>
 </interface>

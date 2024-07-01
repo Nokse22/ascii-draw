@@ -131,6 +131,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.freehand_tool = Freehand(self.canvas)
         self.freehand_tool.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.freehand_tool.add_sidebar_to(self.sidebar_stack)
 
         self.eraser_tool = Eraser(self.canvas)
         self.eraser_tool.bind_property('active', self.eraser_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
