@@ -21,12 +21,11 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-class Eraser(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.canvas = _canvas
+from .tool import Tool
 
-        self._active = False
+class Eraser(Tool):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
@@ -35,6 +34,9 @@ class Eraser(GObject.GObject):
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
+
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/unicode_tooltip.ui")
+        self._sidebar = builder.get_object("eraser_stack_page")
 
         self.start_x = 0
         self.start_y = 0

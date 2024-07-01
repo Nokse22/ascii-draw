@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <object class="GtkStackPage" id="tree_stack_page">
+    <property name="child">
+      <object class="GtkBox" id="tree_sidebar">
+        <property name="margin-bottom">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-start">10</property>
+        <property name="margin-top">4</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="vexpand">True</property>
+            <property name="hscrollbar-policy">never</property>
+            <property name="overflow">hidden</property>
+            <property name="css-classes">card</property>
+            <child>
+              <object class="GtkTextView" id="tree_text_entry">
+                <property name="buffer">
+                  <object class="GtkTextBuffer" id="text_entry_buffer">
+                    <!-- <signal name="insert-text" handler="on_tree_text_inserted" after="yes"/> -->
+                    <!-- <signal name="changed" handler="preview_tree" after="yes"/> -->
+                  </object>
+                </property>
+                <property name="left-margin">12</property>
+                <property name="monospace">True</property>
+                <property name="top-margin">12</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="css-classes">suggested-action</property>
+            <property name="label" translatable="yes">Enter</property>
+            <!-- <signal name="clicked" handler="insert_tree"/> -->
+          </object>
+        </child>
+      </object>
+    </property>
+    <property name="icon-name">tree-list-symbolic</property>
+    <property name="name">tree_page</property>
+    <property name="title" translatable="yes">Tree view</property>
+    <!-- <property name="visible" bind-source="tree_button" bind-property="active">False</property> -->
+  </object>
+</interface>

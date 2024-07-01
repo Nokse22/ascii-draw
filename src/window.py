@@ -31,7 +31,6 @@ import threading
 import math
 import pyfiglet
 import unicodedata
-import emoji
 import os
 import unicodedata
 import webbrowser
@@ -46,11 +45,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     char_carousel_go_back = Gtk.Template.Child()
     char_carousel_go_next = Gtk.Template.Child()
 
-    font_box = Gtk.Template.Child()
-    tree_text_entry = Gtk.Template.Child()
-    tree_text_entry_buffer = Gtk.Template.Child()
-    transparent_check = Gtk.Template.Child()
-    text_entry_buffer = Gtk.Template.Child()
     undo_button = Gtk.Template.Child()
     redo_button = Gtk.Template.Child()
 
@@ -66,12 +60,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     eraser_button = Gtk.Template.Child()
     fill_button = Gtk.Template.Child()
 
-    eraser_adjustment = Gtk.Template.Child()
-    line_arrow_switch = Gtk.Template.Child()
-    line_type_combo = Gtk.Template.Child()
-
-    freehand_brush_adjustment = Gtk.Template.Child()
-
     primary_char_button = Gtk.Template.Child()
     secondary_char_button = Gtk.Template.Child()
 
@@ -79,12 +67,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     lines_styles_box = Gtk.Template.Child()
 
     sidebar_stack = Gtk.Template.Child()
-
-    free_scale = Gtk.Template.Child()
-    eraser_scale = Gtk.Template.Child()
-    columns_spin = Gtk.Template.Child()
-    rows_box = Gtk.Template.Child()
-    table_types_combo = Gtk.Template.Child()
 
     sidebar_stack_switcher = Gtk.Template.Child()
 
@@ -149,12 +131,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.freehand_tool = Freehand(self.canvas)
         self.freehand_tool.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.freehand_tool.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+
         # self.freehand_tool.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.eraser_tool = Eraser(self.canvas)
         self.eraser_tool.bind_property('active', self.eraser_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.eraser_tool.bind_property('size', self.eraser_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+        self.eraser_tool.add_sidebar_to(self.sidebar_stack)
+        # self.eraser_tool.bind_property('size', self.eraser_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.rectangle_tool = Rectangle(self.canvas)
         self.rectangle_tool.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -164,20 +147,23 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.line_tool = Line(self.canvas)
         self.line_tool.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.line_tool.bind_property('arrow', self.line_arrow_switch, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.line_tool.bind_property('line_type', self.line_type_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
+        self.line_tool.add_sidebar_to(self.sidebar_stack)
+        # self.line_tool.bind_property('arrow', self.line_arrow_switch, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.line_tool.bind_property('line_type', self.line_type_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.move_tool = Select(self.canvas)
         self.move_tool.bind_property('active', self.move_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.text_tool = Text(self.canvas)
         self.text_tool.bind_property('active', self.text_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.text_tool.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.text_tool.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
+        self.text_tool.add_sidebar_to(self.sidebar_stack)
+        # self.text_tool.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        # self.text_tool.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
-        self.table_tool = Table(self.canvas, self.rows_box)
+        self.table_tool = Table(self.canvas)
         self.table_tool.bind_property('active', self.table_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.table_tool.bind_property('table_type', self.table_types_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
+        self.table_tool.add_sidebar_to(self.sidebar_stack)
+        # self.table_tool.bind_property('table_type', self.table_types_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
         # self.table_tool.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.picker_tool = Picker(self.canvas)
@@ -185,7 +171,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.tree_tool = Tree(self.canvas)
         self.tree_tool.bind_property('active', self.tree_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.tree_tool.bind_property('text', self.tree_text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
+        self.tree_tool.add_sidebar_to(self.sidebar_stack)
+        # self.tree_tool.bind_property('text', self.tree_text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.fill_tool = Fill(self.canvas)
         self.fill_tool.bind_property('active', self.fill_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -238,34 +225,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.add_palette_to_ui(new_palette)
 
         self.drawing_area_width = 0
-
-        self.font_list = ["Normal","3x5","avatar","big","bell","briteb",
-                "bubble","bulbhead","chunky","contessa","computer","crawford",
-                "cricket","cursive","cyberlarge","cybermedium","cybersmall",
-                "digital","doom","double","drpepper","eftifont",
-                "eftirobot","eftitalic","eftiwall","eftiwater","fourtops","fuzzy",
-                "gothic","graceful","graffiti","invita","italic","lcd",
-                "letters","linux","lockergnome","madrid","maxfour","mike","mini",
-                "morse","ogre","puffy","rectangles","rowancap","script","serifcap",
-                "shadow","shimrod","short","slant","slide","slscript","small",
-                "smisome1","smkeyboard","smscript","smshadow","smslant",
-                "speed","stacey","stampatello","standard","stop","straight",
-                "thin","threepoint","times","tombstone","tinker-toy","twopoint",
-                "wavy","weird"]
-
-        self.selected_font = "Normal"
-
-        for font in self.font_list:
-            if font == "Normal":
-                text = "font 123"
-            else:
-                text = pyfiglet.figlet_format("font 123", font=font)
-            font_text_view = Gtk.Label(css_classes=["font-preview"], name=font)
-
-            font_text_view.set_label(text)
-            self.font_box.append(font_text_view)
-
-        self.font_box.select_row(self.font_box.get_first_child())
 
         self.file_path = ""
 
@@ -384,59 +343,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.char_carousel_go_back.set_sensitive(True)
         if pos + 1 == self.chars_carousel.get_n_pages() - 1:
             btn.set_sensitive(False)
-
-    @Gtk.Template.Callback("insert_text")
-    def insert_text_callback(self, *args):
-        self.text_tool.insert_text()
-
-    @Gtk.Template.Callback("preview_text")
-    def preview_text_callback(self,  *args):
-        self.text_tool.preview_text()
-
-    @Gtk.Template.Callback("preview_table") # TABLE
-    def preview_table_callback(self, *args):
-        self.table_tool.preview()
-
-    @Gtk.Template.Callback("insert_table") # TABLE
-    def insert_table_callback(self, btn):
-        self.table_tool.insert()
-
-    @Gtk.Template.Callback("on_reset_row_clicked") # TABLE
-    def on_reset_row_clicked(self, btn):
-        child = self.rows_box.get_first_child()
-        prev_child = None
-        while child != None:
-            prev_child = child
-            child = prev_child.get_next_sibling()
-            self.rows_box.remove(prev_child)
-        self.columns_spin.set_sensitive(True)
-        self.table_tool.rows_number = 0
-
-        self.table_tool.preview()
-
-    @Gtk.Template.Callback("on_add_row_clicked") # TABLE
-    def on_add_row_clicked(self, btn):
-        self.table_tool.rows_number += 1
-        self.columns_spin.set_sensitive(False)
-        values = int(self.columns_spin.get_value())
-        self.table_tool.columns_number = values
-
-        rows_values_box = Gtk.Box(spacing=6, margin_start=6, margin_end=6, margin_bottom=6, margin_top=6)
-        for value in range(values):
-            entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
-            entry.connect("changed", lambda _: self.table_tool.preview())
-            rows_values_box.append(entry)
-        self.rows_box.append(rows_values_box)
-
-        self.table_tool.preview()
-
-    def is_renderable(self, character):
-        return unicodedata.category(character) != "Cn"
-
-    @Gtk.Template.Callback("font_row_selected")
-    def font_row_selected(self, list_box, row):
-        self.text_tool.set_selected_font(list_box.get_selected_row().get_child().get_name())
-        self.text_tool.preview_text()
 
     @Gtk.Template.Callback("save_button_clicked")
     def save_button_clicked(self, btn):
@@ -728,55 +634,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.redo_button.set_tooltip_text("")
         else:
             self.redo_button.set_tooltip_text(_("Redo ") + self.canvas.redo_changes[-1].name)
-
-    @Gtk.Template.Callback("on_text_text_inserted")
-    def on_text_text_inserted(self, buffer, loc, text, length):
-        if emoji.is_emoji(text):
-            start_iter = loc.copy()
-            start_iter.backward_char()
-            buffer.delete(start_iter ,loc)
-            buffer.insert(start_iter, "X")
-            return
-
-    @Gtk.Template.Callback("on_tree_text_inserted")
-    def on_tree_text_inserted(self, buffer, loc, text, length):
-        if emoji.is_emoji(text):
-            start_iter = loc.copy()
-            start_iter.backward_char()
-            buffer.delete(start_iter ,loc)
-            buffer.insert(start_iter, "X")
-            return
-        spaces = 0
-        if text == "\n":
-            start_iter = loc.copy()
-            start_iter.backward_char()
-            start_iter.set_line_offset(0)
-            end_iter = start_iter.copy()
-            start_iter.backward_char()
-            while not end_iter.ends_line():
-                start_iter.forward_char()
-                end_iter.forward_char()
-                char = buffer.get_text(start_iter, end_iter, False)
-                if char != " ":
-                    break
-                spaces += 1
-            indentation = " " * spaces
-            buffer.insert(loc, f"{indentation}")
-        elif text == "\t":
-            start_iter = loc.copy()
-            start_iter.backward_char()
-            buffer.delete(start_iter ,loc)
-            buffer.insert(start_iter, " ")
-
-        self.tree_tool.preview()
-
-    @Gtk.Template.Callback("preview_tree")
-    def preview_tree(self, *args):
-        self.tree_tool.preview()
-
-    @Gtk.Template.Callback("insert_tree")
-    def insert_tree(self, *args):
-        self.tree_tool.insert()
 
     @Gtk.Template.Callback("undo_first_change")
     def undo_first_change(self, *args):

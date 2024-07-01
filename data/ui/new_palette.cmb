@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!DOCTYPE cambalache-project SYSTEM "cambalache-project.dtd">
+<cambalache-project version="0.13.1" target_tk="gtk-4.0">
+  <ui>
+	(1,1,"ascii-draw-new-palette.ui","new_palette.ui",None,None,None,None,None,None,None)
+  </ui>
+  <ui_library>
+	(1,"gtk","4.12",None),
+	(1,"libadwaita","1.2",None)
+  </ui_library>
+  <object>
+	(1,1,"AdwApplicationWindow","NewPaletteDialog",None,None,None,None,None,None),
+	(1,2,"GtkBox",None,1,None,None,None,None,None),
+	(1,3,"AdwHeaderBar",None,2,None,None,None,None,None),
+	(1,4,"GtkBox",None,2,None,None,None,1,None),
+	(1,5,"GtkBox",None,4,None,None,None,None,None),
+	(1,6,"AdwEntryRow","palette_name_entry",5,None,None,None,None,None),
+	(1,7,"GtkTextView",None,5,None,None,None,1,None),
+	(1,8,"GtkTextBuffer","palette_chars_buffer",7,None,None,None,None,None),
+	(1,9,"GtkButton","add_button",5,None,None,None,2,None)
+  </object>
+  <object_property>
+	(1,1,"GtkWindow","default-height","360",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkWindow","default-width","360",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkWindow","title","New palette",1,None,None,None,None,None,None,None,None),
+	(1,2,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(1,3,"GtkWidget","css-classes","flat",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkBox","spacing","12",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkWidget","hexpand","True",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkWidget","margin-bottom","12",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkWidget","margin-end","12",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkWidget","margin-start","12",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkWidget","margin-top","12",None,None,None,None,None,None,None,None,None),
+	(1,5,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
+	(1,6,"AdwPreferencesRow","title","Palette name",1,None,None,None,None,None,None,None,None),
+	(1,6,"GtkWidget","css-classes","card",None,None,None,None,None,None,None,None,None),
+	(1,7,"GtkTextView","bottom-margin","12",None,None,None,None,None,None,None,None,None),
+	(1,7,"GtkTextView","buffer",None,None,None,None,None,8,None,None,None,None),
+	(1,7,"GtkTextView","left-margin","12",None,None,None,None,None,None,None,None,None),
+	(1,7,"GtkTextView","right-margin","12",None,None,None,None,None,None,None,None,None),
+	(1,7,"GtkTextView","top-margin","12",None,None,None,None,None,None,None,None,None),
+	(1,7,"GtkTextView","wrap-mode","char",None,None,None,None,None,None,None,None,None),
+	(1,7,"GtkWidget","css-classes","card",None,None,None,None,None,None,None,None,None),
+	(1,7,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
+	(1,9,"GtkButton","label","Save",1,None,None,None,None,None,None,None,None),
+	(1,9,"GtkWidget","css-classes","suggested-action\npill",None,None,None,None,None,None,None,None,None),
+	(1,9,"GtkWidget","halign","center",None,None,None,None,None,None,None,None,None),
+	(1,9,"GtkWidget","valign","center",None,None,None,None,None,None,None,None,None),
+	(1,9,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None)
+  </object_property>
+  <object_signal>
+	(1,1,9,"GtkButton","clicked","on_add_clicked",None,None,None,None,None)
+  </object_signal>
+</cambalache-project>

@@ -31,6 +31,8 @@ class Freehand(GObject.GObject):
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
 
+        # self.bind_property('size', self.freehand_brush_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
+
         self.start_x = 0
         self.start_y = 0
 
