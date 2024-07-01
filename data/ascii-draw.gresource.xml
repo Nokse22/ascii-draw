@@ -23,6 +23,13 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/edit-undo-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/fill-tool-symbolic.svg</file>
 
+    <file preprocess="xml-stripblanks">ui/eraser_sidebar.ui</file>
+    <file preprocess="xml-stripblanks">ui/freehand_sidebar.ui</file>
+    <file preprocess="xml-stripblanks">ui/line_sidebar.ui</file>
+    <file preprocess="xml-stripblanks">ui/table_sidebar.ui</file>
+    <file preprocess="xml-stripblanks">ui/text_sidebar.ui</file>
+    <file preprocess="xml-stripblanks">ui/tree_sidebar.ui</file>
+
     <!-- css -->
     <file compressed="true">style.css</file>
     <file compressed="true">style-dark.css</file>

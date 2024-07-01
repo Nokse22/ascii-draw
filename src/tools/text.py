@@ -22,13 +22,13 @@ from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
 import pyfiglet
+import emoji
 
-class Text(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
+from .tool import Tool
+
+class Text(Tool):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.canvas = _canvas
-
-        self._active = False
         self._style = 0
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
@@ -36,6 +36,41 @@ class Text(GObject.GObject):
         self.canvas.drag_gesture.connect("drag-end", self.on_drag_end)
 
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
+
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/text_sidebar.ui")
+        self._sidebar = builder.get_object("text_stack_page")
+        self.font_box = builder.get_object("font_box")
+        self.text_entry_buffer = builder.get_object("text_entry_buffer")
+        self.enter_button = builder.get_object("enter_button")
+        self.transparent_check = builder.get_object("transparent_check")
+
+        self.font_list = ["Normal","3x5","avatar","big","bell","briteb",
+                "bubble","bulbhead","chunky","contessa","computer","crawford",
+                "cricket","cursive","cyberlarge","cybermedium","cybersmall",
+                "digital","doom","double","drpepper","eftifont",
+                "eftirobot","eftitalic","eftiwall","eftiwater","fourtops","fuzzy",
+                "gothic","graceful","graffiti","invita","italic","lcd",
+                "letters","linux","lockergnome","madrid","maxfour","mike","mini",
+                "morse","ogre","puffy","rectangles","rowancap","script","serifcap",
+                "shadow","shimrod","short","slant","slide","slscript","small",
+                "smisome1","smkeyboard","smscript","smshadow","smslant",
+                "speed","stacey","stampatello","standard","stop","straight",
+                "thin","threepoint","times","tombstone","tinker-toy","twopoint",
+                "wavy","weird"]
+
+        self.selected_font = "Normal"
+
+        for font in self.font_list:
+            if font == "Normal":
+                text = "font 123"
+            else:
+                text = pyfiglet.figlet_format("font 123", font=font)
+            font_text_view = Gtk.Label(css_classes=["font-preview"], name=font)
+
+            font_text_view.set_label(text)
+            self.font_box.append(font_text_view)
+
+        self.font_box.select_row(self.font_box.get_first_child())
 
         self.start_x = 0
         self.start_y = 0
@@ -58,17 +93,20 @@ class Text(GObject.GObject):
 
         self._transparent = False
 
+        self.text_entry_buffer.connect_after("changed", self.preview_text)
+        self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
+        self.font_box.connect("row-selected", self.font_row_selected)
+        self.enter_button.connect("clicked", self.insert_text)
+        self.text_entry_buffer.bind_property("text", self, "text")
+        self.transparent_check.bind_property("active", self, "transparent")
+
+        self._sidebar.bind_property("visible", self, "active")
+
     def set_selected_font(self, value):
         self.selected_font = value
 
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
+    def get_sidebar(self):
+        return self.sidebar
 
     @GObject.Property(type=str, default='#')
     def style(self):
@@ -130,7 +168,7 @@ class Text(GObject.GObject):
         self.canvas.clear_preview()
         self.preview_text()
 
-    def insert_text(self):
+    def insert_text(self, *args):
         self.canvas.add_undo_action(_("Text"))
         self.canvas.clear_preview()
 
@@ -141,7 +179,7 @@ class Text(GObject.GObject):
         self.canvas.draw_text(self.text_x + self.drag_x, self.text_y + self.drag_y, text, self._transparent, True)
         self.canvas.update()
 
-    def preview_text(self):
+    def preview_text(self, *args):
         self.canvas.clear_preview()
 
         text = self._text
@@ -151,3 +189,15 @@ class Text(GObject.GObject):
         self.canvas.draw_text(self.text_x + self.drag_x, self.text_y + self.drag_y, text, self._transparent, False)
 
         self.canvas.update_preview()
+
+    def font_row_selected(self, list_box, row):
+        self.set_selected_font(list_box.get_selected_row().get_child().get_name())
+        self.preview_text()
+
+    def on_text_inserted(self, buffer, loc, text, length):
+        if emoji.is_emoji(text):
+            start_iter = loc.copy()
+            start_iter.backward_char()
+            buffer.delete(start_iter ,loc)
+            buffer.insert(start_iter, "X")
+            return

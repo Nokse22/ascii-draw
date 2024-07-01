@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <object class="GtkStackPage" id="eraser_stack_page">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="hexpand">True</property>
+        <property name="margin-bottom">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-start">10</property>
+        <property name="margin-top">4</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="css-classes">card</property>
+            <property name="hexpand">True</property>
+            <property name="title" translatable="yes">Size</property>
+            <property name="valign">start</property>
+            <child>
+              <object class="GtkScale" id="eraser_scale">
+                <property name="adjustment">
+                  <object class="GtkAdjustment" id="eraser_adjustment">
+                    <property name="lower">1.0</property>
+                    <property name="step-increment">1.0</property>
+                    <property name="upper">8.0</property>
+                    <property name="value">1.0</property>
+                  </object>
+                </property>
+                <property name="digits">0</property>
+                <property name="draw-value">True</property>
+                <property name="hexpand">True</property>
+                <property name="value-pos">left</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+    <property name="icon-name">eraser-symbolic</property>
+    <property name="name">eraser_page</property>
+    <property name="title" translatable="yes">Eraser</property>
+  </object>
+</interface>

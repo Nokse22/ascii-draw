@@ -21,13 +21,11 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-class Table(GObject.GObject):
-    def __init__(self, _canvas, _rows_box, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.canvas = _canvas
-        self.rows_box = _rows_box
+from .tool import Tool
 
-        self._active = False
+class Table(Tool):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._style = 0
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
@@ -35,6 +33,15 @@ class Table(GObject.GObject):
         self.canvas.drag_gesture.connect("drag-end", self.on_drag_end)
 
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
+
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/table_sidebar.ui")
+        self._sidebar = builder.get_object("table_stack_page")
+        self.rows_box = builder.get_object("rows_box")
+        self.add_row_button = builder.get_object("add_row_button")
+        self.rows_reset_button = builder.get_object("rows_reset_button")
+        self.table_types_combo = builder.get_object("table_types_combo")
+        self.enter_button = builder.get_object("enter_button")
+        self.columns_spin = builder.get_object("columns_spin")
 
         self.flip = False
         self.start_x = 0
@@ -52,18 +59,10 @@ class Table(GObject.GObject):
         self.rows_number = 0
         self.columns_number = 0
 
-        self._table_type = 0
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
-
-        self.canvas.clear_preview()
+        self.enter_button.connect("clicked", self.insert)
+        self.rows_reset_button.connect("clicked", self.on_reset_row_clicked)
+        self.add_row_button.connect("clicked", self.on_add_row_clicked)
+        self.table_types_combo.connect("notify::selected", self.preview)
 
     @GObject.Property(type=str, default='#')
     def style(self):
@@ -73,17 +72,6 @@ class Table(GObject.GObject):
     def style(self, value):
         self._style = value
         self.notify('style')
-
-    @GObject.Property(type=str, default='#')
-    def table_type(self):
-        return self._table_type
-
-    @table_type.setter
-    def table_type(self, value):
-        self._table_type = value
-        self.notify('table_type')
-
-        self.preview()
 
     def on_drag_begin(self, gesture, start_x, start_y):
         if not self._active: return
@@ -99,8 +87,6 @@ class Table(GObject.GObject):
 
         self.canvas.clear_preview()
         self.preview()
-
-        print(self.table_x + self.drag_x)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
         if not self._active: return
@@ -119,19 +105,20 @@ class Table(GObject.GObject):
         self.canvas.clear_preview()
         self.preview()
 
-    def insert(self):
+    def insert(self, *args):
         self.canvas.add_undo_action(_("Table"))
-        self.draw_table(self.table_x + self.drag_x, self.table_y + self.drag_y, self._table_type, True)
+        self.draw_table(self.table_x + self.drag_x, self.table_y + self.drag_y, True)
         self.canvas.update()
 
-    def preview(self):
+    def preview(self, *args):
         if not self._active: return
         self.canvas.clear_preview()
-        self.draw_table(self.table_x + self.drag_x, self.table_y + self.drag_y, self._table_type, False)
+        self.draw_table(self.table_x + self.drag_x, self.table_y + self.drag_y, False)
         self.canvas.update_preview()
 
-    def draw_table(self, table_x, table_y, table_type: int, draw: bool):
+    def draw_table(self, table_x, table_y, draw: bool):
         child = self.rows_box.get_first_child()
+        table_type = self.table_types_combo.get_selected()
         columns_widths = []
         table = []
         column = 0
@@ -206,3 +193,30 @@ class Table(GObject.GObject):
             else:
                 y += 1
             x = table_x + 1
+
+    def on_reset_row_clicked(self, btn):
+        child = self.rows_box.get_first_child()
+        prev_child = None
+        while child != None:
+            prev_child = child
+            child = prev_child.get_next_sibling()
+            self.rows_box.remove(prev_child)
+        self.columns_spin.set_sensitive(True)
+        self.rows_number = 0
+
+        self.preview()
+
+    def on_add_row_clicked(self, btn):
+        self.rows_number += 1
+        self.columns_spin.set_sensitive(False)
+        values = int(self.columns_spin.get_value())
+        self.columns_number = values
+
+        rows_values_box = Gtk.Box(spacing=6, margin_start=6, margin_end=6, margin_bottom=6, margin_top=6)
+        for value in range(values):
+            entry = Gtk.Entry(valign=Gtk.Align.CENTER, halign=Gtk.Align.START)
+            entry.connect("changed", lambda _: self.preview())
+            rows_values_box.append(entry)
+        self.rows_box.append(rows_values_box)
+
+        self.preview()

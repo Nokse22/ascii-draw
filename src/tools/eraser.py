@@ -21,12 +21,11 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-class Eraser(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.canvas = _canvas
+from .tool import Tool
 
-        self._active = False
+class Eraser(Tool):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
@@ -35,6 +34,10 @@ class Eraser(GObject.GObject):
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
+
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/eraser_sidebar.ui")
+        self._sidebar = builder.get_object("eraser_stack_page")
+        self.eraser_adjustment = builder.get_object("eraser_adjustment")
 
         self.start_x = 0
         self.start_y = 0
@@ -47,25 +50,7 @@ class Eraser(GObject.GObject):
 
         self._size = 1
 
-        self.brush_sizes = [
-                [[0,0] ],
-                [[0,0],[-1,0],[1,0] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0] ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0], ],
-                [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0],[1,2],[1,-2],[-1,-2],[-1,2], ],
-                ]
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
+        self.eraser_adjustment.bind_property("value", self, "size")
 
     @GObject.Property(type=int, default=1)
     def size(self):
@@ -98,7 +83,7 @@ class Eraser(GObject.GObject):
         x_coord = (self.start_x + self.end_x)/self.x_mul
         y_coord = (self.start_y + self.end_y)/self.y_mul
         for delta in self.brush_sizes[int(self._size - 1)]:
-            self.canvas.set_char_at(x_coord + delta[0], y_coord + delta[1], "", True)
+            self.canvas.set_char_at(x_coord + delta[0], y_coord + delta[1], " ", True)
         self.canvas.update()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
