@@ -10,16 +10,16 @@
 	</p>
 
   <div align="center">
-  <img src="data/resources/screenshot 01.png" height="500"/>
+  <img src="data/resources/screenshot 01.png" max-height="500"/>
   </div>
   <details>
 <summary>Click for more screenshots</summary>
 <div align="center">
-<img src="data/resources/screenshot 02.png" height="500"/>
-<img src="data/resources/screenshot 03.png" height="500"/>
-<img src="data/resources/screenshot 04.png" height="500"/>
-<img src="data/resources/screenshot 05.png" height="500"/>
-<img src="data/resources/screenshot 06.png" height="500"/>
+<img src="data/resources/screenshot 02.png" max-height="500"/>
+<img src="data/resources/screenshot 03.png" max-height="500"/>
+<img src="data/resources/screenshot 04.png" max-height="500"/>
+<img src="data/resources/screenshot 05.png" max-height="500"/>
+<img src="data/resources/screenshot 06.png" max-height="500"/>
 </div>
 </details>
 
