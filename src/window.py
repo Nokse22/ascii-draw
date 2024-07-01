@@ -132,12 +132,9 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.freehand_tool = Freehand(self.canvas)
         self.freehand_tool.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
 
-        # self.freehand_tool.bind_property('char', self.canvas, 'char', GObject.BindingFlags.BIDIRECTIONAL)
-
         self.eraser_tool = Eraser(self.canvas)
         self.eraser_tool.bind_property('active', self.eraser_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.eraser_tool.add_sidebar_to(self.sidebar_stack)
-        # self.eraser_tool.bind_property('size', self.eraser_adjustment, 'value', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.rectangle_tool = Rectangle(self.canvas)
         self.rectangle_tool.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -148,8 +145,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.line_tool = Line(self.canvas)
         self.line_tool.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.line_tool.add_sidebar_to(self.sidebar_stack)
-        # self.line_tool.bind_property('arrow', self.line_arrow_switch, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        # self.line_tool.bind_property('line_type', self.line_type_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.move_tool = Select(self.canvas)
         self.move_tool.bind_property('active', self.move_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -157,14 +152,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.text_tool = Text(self.canvas)
         self.text_tool.bind_property('active', self.text_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.text_tool.add_sidebar_to(self.sidebar_stack)
-        # self.text_tool.bind_property('transparent', self.transparent_check, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        # self.text_tool.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.table_tool = Table(self.canvas)
         self.table_tool.bind_property('active', self.table_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.table_tool.add_sidebar_to(self.sidebar_stack)
-        # self.table_tool.bind_property('table_type', self.table_types_combo, 'selected', GObject.BindingFlags.BIDIRECTIONAL)
-        # self.table_tool.bind_property('text', self.text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.picker_tool = Picker(self.canvas)
         self.picker_tool.bind_property('active', self.picker_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -172,7 +163,6 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.tree_tool = Tree(self.canvas)
         self.tree_tool.bind_property('active', self.tree_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
         self.tree_tool.add_sidebar_to(self.sidebar_stack)
-        # self.tree_tool.bind_property('text', self.tree_text_entry_buffer, 'text', GObject.BindingFlags.BIDIRECTIONAL)
 
         self.fill_tool = Fill(self.canvas)
         self.fill_tool.bind_property('active', self.fill_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)

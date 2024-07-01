@@ -32,7 +32,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="enter_button">
             <property name="css-classes">suggested-action</property>
             <property name="label" translatable="yes">Enter</property>
             <!-- <signal name="clicked" handler="insert_tree"/> -->

@@ -22,6 +22,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
 import pyfiglet
+import emoji
 
 from .tool import Tool
 
@@ -40,6 +41,7 @@ class Tree(Tool):
         builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/tree_sidebar.ui")
         self._sidebar = builder.get_object("tree_stack_page")
         self.text_entry_buffer = builder.get_object("text_entry_buffer")
+        self.enter_button = builder.get_object("enter_button")
 
         self.start_x = 0
         self.start_y = 0
@@ -59,17 +61,13 @@ class Tree(Tool):
 
         self._transparent = False
 
+        self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
+        self.text_entry_buffer.connect("changed", self.preview)
+        self.enter_button.connect("clicked", self.insert)
+        self.text_entry_buffer.bind_property("text", self, "text")
+
     def set_selected_font(self, value):
         self.selected_font = value
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
 
     @GObject.Property(type=str, default="")
     def text(self):
@@ -133,13 +131,13 @@ class Tree(Tool):
         if not self._active: return
         pass
 
-    def preview(self):
+    def preview(self, *args):
         if not self._active: return
         self.canvas.clear_preview()
         self.draw_tree(self.tree_x + self.drag_x, self.tree_y + self.drag_y, False)
         self.canvas.update_preview()
 
-    def insert(self):
+    def insert(self, *args):
         self.canvas.add_undo_action(_("Tree"))
         self.canvas.clear_preview()
         self.draw_tree(self.tree_x, self.tree_y, True)
@@ -203,16 +201,7 @@ class Tree(Tool):
                     prev_index -= 1
             y += 1
 
-    # @Gtk.Template.Callback("preview_tree")
-    def preview_tree(self, *args):
-        self.tree_tool.preview()
-
-    # @Gtk.Template.Callback("insert_tree")
-    def insert_tree(self, *args):
-        self.tree_tool.insert()
-
-    # @Gtk.Template.Callback("on_tree_text_inserted")
-    def on_tree_text_inserted(self, buffer, loc, text, length):
+    def on_text_inserted(self, buffer, loc, text, length):
         if emoji.is_emoji(text):
             start_iter = loc.copy()
             start_iter.backward_char()
@@ -241,4 +230,4 @@ class Tree(Tool):
             buffer.delete(start_iter ,loc)
             buffer.insert(start_iter, " ")
 
-        self.tree_tool.preview()
+        self.preview()

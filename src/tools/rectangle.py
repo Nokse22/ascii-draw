@@ -21,12 +21,11 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import Gdk, Gio, GObject
 
-class Rectangle(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.canvas = _canvas
+from .tool import Tool
 
-        self._active = False
+class Rectangle(Tool):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
@@ -46,15 +45,6 @@ class Rectangle(GObject.GObject):
 
         self.prev_x = 0
         self.prev_y = 0
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
 
     @GObject.Property(type=str, default='#')
     def style(self):

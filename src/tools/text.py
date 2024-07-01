@@ -42,6 +42,7 @@ class Text(Tool):
         self.font_box = builder.get_object("font_box")
         self.text_entry_buffer = builder.get_object("text_entry_buffer")
         self.enter_button = builder.get_object("enter_button")
+        self.transparent_check = builder.get_object("transparent_check")
 
         self.font_list = ["Normal","3x5","avatar","big","bell","briteb",
                 "bubble","bulbhead","chunky","contessa","computer","crawford",
@@ -96,6 +97,8 @@ class Text(Tool):
         self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
         self.font_box.connect("row-selected", self.font_row_selected)
         self.enter_button.connect("clicked", self.insert_text)
+        self.text_entry_buffer.bind_property("text", self, "text")
+        self.transparent_check.bind_property("active", self, "transparent")
 
         self._sidebar.bind_property("visible", self, "active")
 

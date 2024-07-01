@@ -28,6 +28,18 @@ class Tool(GObject.GObject):
         self._active = False
         self._style = 0
         self._sidebar = None
+        self._stack_page = None
+
+        self.brush_sizes = [
+            [[0,0] ],
+            [[0,0],[-1,0],[1,0] ],
+            [[0,0],[-1,0],[1,0],[0,1],[0,-1] ],
+            [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0] ],
+            [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1], ],
+            [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1], ],
+            [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0], ],
+            [[0,0],[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[1,1],[-1,-1],[-1,1],[1,-1],[-2,1],[2,1],[-2,-1],[2,-1],[0,2],[0,-2],[-3,0],[3,0],[1,2],[1,-2],[-1,-2],[-1,2], ],
+        ]
 
     @GObject.Property(type=bool, default=False)
     def active(self):
@@ -36,6 +48,8 @@ class Tool(GObject.GObject):
     @active.setter
     def active(self, value):
         self._active = value
+        if self._stack_page:
+            self._stack_page.set_visible(value)
         self.notify('active')
 
     @GObject.Property(type=str, default='#')
@@ -54,4 +68,6 @@ class Tool(GObject.GObject):
         stack_page.set_name(self._sidebar.get_name())
         stack_page.set_title(self._sidebar.get_title())
         stack_page.set_icon_name(self._sidebar.get_icon_name())
-        # stack_page.set_visible(False)
+        stack_page.set_visible(False)
+
+        self._stack_page = stack_page
