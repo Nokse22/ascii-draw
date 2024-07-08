@@ -409,8 +409,11 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.file_path = ""
         self.title_widget.set_subtitle("")
         self.canvas.undo_changes = []
+        self.canvas.redo_changes = []
         self.undo_button.set_sensitive(False)
         self.undo_button.set_tooltip_text("")
+        self.redo_button.set_sensitive(False)
+        self.redo_button.set_tooltip_text("")
         self.canvas.is_saved = True
         toast = Adw.Toast(title=_("New Canvas"), timeout=2)
         self.toast_overlay.add_toast(toast)

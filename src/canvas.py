@@ -317,6 +317,9 @@ class Canvas(Adw.Bin):
     def set_char_at(self, x, y, char, draw):
         _layer = self.drawing if draw else self.preview
 
+        if char == "":
+            char = " "
+
         if y >= len(_layer) or x >= len(_layer[0]) or x < 0 or y < 0:
             return
         if draw:

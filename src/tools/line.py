@@ -40,6 +40,7 @@ class Line(Tool):
         builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/line_sidebar.ui")
         self._sidebar = builder.get_object("line_stack_page")
         self.line_type_combo  = builder.get_object("line_type_combo")
+        self.arrow_switch  = builder.get_object("line_arrow_switch")
 
         self.start_x = 0
         self.start_y = 0
@@ -61,15 +62,7 @@ class Line(Tool):
         self.prev_pos = [0,0]
 
         self.line_type_combo.bind_property("selected", self, "line_type")
-
-    @GObject.Property(type=bool, default=False)
-    def active(self):
-        return self._active
-
-    @active.setter
-    def active(self, value):
-        self._active = value
-        self.notify('active')
+        self.arrow_switch.bind_property("active", self, "arrow")
 
     @GObject.Property(type=bool, default=False)
     def arrow(self):
