@@ -1,0 +1,513 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FULL NAME <EMAIL@ADDRESS>, 2024.
+# Крапивин Макар <mackarkrapivin505@gmail.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: unnamed project\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-10 19:43+0200\n"
+"PO-Revision-Date: 2024-05-31 20:39+0300\n"
+"Last-Translator: Крапивин Макар <mackarkrapivin505@gmail.com>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Gtranslator 46.1\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-DL-Lang: English\n"
+"X-DL-Module: \n"
+"X-DL-Branch: \n"
+"X-DL-Domain: \n"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:3
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:490
+#: src/main.py:170
+msgid "ASCII Draw"
+msgstr "Рисование ASCII"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:9
+msgid "GNOME;GTK;Graphics;Art;"
+msgstr "GNOME;GTK;Графика;Рисование;"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:7
+msgid "Sketch anything using characters"
+msgstr "Нарисуйте что-нибудь используя символы"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:10
+msgid ""
+"This app lets you draw diagrams, tables, tree view, art and more using only "
+"characters. There are many stiles to choose from and multiple tools "
+"available to use such as:"
+msgstr ""
+"Это приложение позволяет рисовать диаграммы, таблицы, древовидные рисунки, "
+"искусство и многое другое, используя только символы. Есть много стилей на "
+"выбор и несколько инструментов, доступных для использования, таких как:"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13
+#: src/tools/rectangle.py:115
+msgid "Rectangle"
+msgstr "Прямоугольник"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:14
+#: src/tools/filled_rectangle.py:115
+msgid "Filled Rectangle"
+msgstr "Заполненный прямоугольник"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:15
+#, fuzzy
+msgid "Cartesian, freehand and stepped line"
+msgstr "Картезианская, отдача и ступенчатая линия"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
+msgid "Freehand Brush"
+msgstr "Свободное рисование"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
+msgid "Text with FIGlet fonts"
+msgstr "Текст с FIGlet шрифтами"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18 data/ui/window.ui:214
+#: src/tools/table.py:123
+msgid "Table"
+msgstr "Таблица"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19
+msgid "Tree View"
+msgstr "Древовидный рисунок"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 data/ui/window.ui:392
+#: src/tools/eraser.py:84
+msgid "Eraser"
+msgstr "Ластик"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21
+#, fuzzy
+msgid "Character Picker"
+msgstr "Пипетка"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+msgid "Select and move"
+msgstr "Выделить и переместить"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:157
+msgid "ASCII Art of an old television"
+msgstr "Изображение ASCII как на старом телевизоре"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:162
+msgid "CPU simplified structure"
+msgstr "Упрощённая структура CPU (ЦП)"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:167
+msgid "Table of countries, capitals and population"
+msgstr "Таблица стран, столиц и населения"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:172
+msgid "A flowchart to fix a lamp"
+msgstr "Блок-схема «Как починить лампу»"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:177
+msgid "An example of a treeview"
+msgstr "Пример вида дерева"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:182
+#, fuzzy
+msgid "Cartesian, stepped and freehand lines"
+msgstr "Картезианские, ступенчатые и линии от руки"
+
+#: data/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Главное"
+
+#: data/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Показать ярлыки"
+
+#: data/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Save"
+msgstr "Сохранить"
+
+#: data/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Save As"
+msgstr "Сохранить как"
+
+#: data/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Open"
+msgstr "Открыть"
+
+#: data/gtk/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "New Canvas"
+msgstr "Новый лист"
+
+#: data/gtk/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Undo"
+msgstr "Отменить"
+
+#: data/gtk/help-overlay.ui:56
+msgctxt "shortcut window"
+msgid "Redo"
+msgstr "Вернуть"
+
+#: data/gtk/help-overlay.ui:64
+msgctxt "shortcut window"
+msgid "Tools"
+msgstr "Инструменты"
+
+#: data/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Rectangle"
+msgstr "Прямоугольник"
+
+#: data/gtk/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Filled Rectangle"
+msgstr "Заполненный прямоугольник"
+
+#: data/gtk/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Line"
+msgstr "Линия"
+
+#: data/gtk/help-overlay.ui:85
+msgctxt "shortcut window"
+msgid "Freehand Brush"
+msgstr "Свободное рисование"
+
+#: data/gtk/help-overlay.ui:91
+msgctxt "shortcut window"
+msgid "Text"
+msgstr "Текст"
+
+#: data/gtk/help-overlay.ui:97
+msgctxt "shortcut window"
+msgid "Table"
+msgstr "Таблица"
+
+#: data/gtk/help-overlay.ui:103
+msgctxt "shortcut window"
+msgid "Tree View"
+msgstr "Древовидный рисунок"
+
+#: data/gtk/help-overlay.ui:109
+msgctxt "shortcut window"
+msgid "Eraser"
+msgstr "Ластик"
+
+#: data/gtk/help-overlay.ui:115
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Picker"
+msgstr "Пипетка"
+
+#: data/gtk/help-overlay.ui:121
+msgctxt "shortcut window"
+msgid "Move"
+msgstr "Переместить"
+
+#: data/ui/new_palette.ui:10
+msgid "New palette"
+msgstr "Новая палитра"
+
+#: data/ui/new_palette.ui:38
+msgid "Palette name"
+msgstr "Имя палитры"
+
+#: data/ui/new_palette.ui:70 data/ui/window.ui:495 src/main.py:215
+#: src/main.py:234 src/window.py:469
+msgid "Save"
+msgstr "Сохранить"
+
+#: data/ui/window.ui:88
+msgid "Spaces do not overwrite "
+msgstr "Пространства только для чтения"
+
+#: data/ui/window.ui:89
+msgid "Transparent spaces"
+msgstr "Невидимые пространства"
+
+#: data/ui/window.ui:95 data/ui/window.ui:206 data/ui/window.ui:250
+msgid "Enter"
+msgstr "Ввод"
+
+#: data/ui/window.ui:103 src/tools/text.py:134
+msgid "Text"
+msgstr "Текст"
+
+#: data/ui/window.ui:132
+msgid "Columns"
+msgstr "Столбцы"
+
+#: data/ui/window.ui:138
+msgid "Rows"
+msgstr "Строки"
+
+#: data/ui/window.ui:147
+msgid "Add a row"
+msgstr "Добавить строку"
+
+#: data/ui/window.ui:155
+msgid "Delete rows"
+msgstr "Удалить строку"
+
+#: data/ui/window.ui:189
+msgid "First line divided"
+msgstr ""
+
+#: data/ui/window.ui:190
+msgid "Divide each row"
+msgstr ""
+
+#: data/ui/window.ui:191
+msgid "Not divided"
+msgstr "Не разделено"
+
+#: data/ui/window.ui:196 data/ui/window.ui:329
+msgid "Type"
+msgstr "Тип"
+
+#: data/ui/window.ui:258
+msgid "Tree view"
+msgstr "Древовидный рисунок"
+
+#: data/ui/window.ui:275 data/ui/window.ui:368
+msgid "Size"
+msgstr "Размер"
+
+#: data/ui/window.ui:299 data/ui/window.ui:324 src/tools/freehand.py:80
+#, fuzzy
+msgid "Freehand"
+msgstr "Отдача"
+
+#: data/ui/window.ui:322
+msgid "Cartesian"
+msgstr "Картезианский"
+
+#: data/ui/window.ui:323
+#, fuzzy
+msgid "Step"
+msgstr "Шаг"
+
+#: data/ui/window.ui:342
+msgid "Arrow"
+msgstr "Стрелка"
+
+#: data/ui/window.ui:351
+msgid "Line"
+msgstr "Линия"
+
+#: data/ui/window.ui:417
+msgid "ASCII"
+msgstr "ASCII"
+
+#: data/ui/window.ui:439
+#, fuzzy
+msgid "Character"
+msgstr "Характер"
+
+#: data/ui/window.ui:460
+msgid "Style"
+msgstr "Стиль"
+
+#: data/ui/window.ui:547
+msgid "Width"
+msgstr "Ширина"
+
+#: data/ui/window.ui:562
+msgid "Height"
+msgstr "Длина"
+
+#: data/ui/window.ui:567
+msgid "Change size"
+msgstr "Выбрать размер"
+
+#: data/ui/window.ui:595
+msgid "Rectangle Ctrl+R"
+msgstr "Прямоугольник (Ctrl+R)"
+
+#: data/ui/window.ui:605
+msgid "Filled rectangle Ctrl+Shift+R"
+msgstr "Заполненный прямоугольник (Ctrl+Shift+R)"
+
+#: data/ui/window.ui:615
+msgid "Line Ctrl+L"
+msgstr "Линия (Ctrl+L)"
+
+#: data/ui/window.ui:625
+msgid "Freehand Ctrl+F"
+msgstr "Свободное рисование (Ctrl+F)"
+
+#: data/ui/window.ui:635
+msgid "Text Ctrl+T"
+msgstr "Текст (Ctrl+T)"
+
+#: data/ui/window.ui:650
+msgid "Table Ctrl+Shift+T"
+msgstr "Таблица (Ctrl+Shift+T)"
+
+#: data/ui/window.ui:660
+msgid "Tree view Ctrl+U"
+msgstr "Древовидный рисунок (Ctrl+U)"
+
+#: data/ui/window.ui:670
+msgid "Eraser Ctrl+E"
+msgstr "Ластик (Ctrl+E)"
+
+#: data/ui/window.ui:680
+#, fuzzy
+msgid "Picker Ctrl+P"
+msgstr "Пипетка (Ctrl+P)"
+
+#: data/ui/window.ui:690
+msgid "Move Ctrl+M"
+msgstr "Перемещение (Ctrl+M)"
+
+#: data/ui/window.ui:702
+#, fuzzy
+msgid "Primary Character"
+msgstr "Основной слой"
+
+#: data/ui/window.ui:711
+msgid "Secondary Character"
+msgstr "Второстепенный слой"
+
+#: data/ui/window.ui:726
+msgid "Clear Canvas"
+msgstr "Очистить доску"
+
+#: data/ui/window.ui:732
+msgid "New Palette"
+msgstr "Новая палитра"
+
+#: data/ui/window.ui:736
+msgid "New Palette From Canvas"
+msgstr "Новая палитра с доски"
+
+#: data/ui/window.ui:742
+msgid "Keyboard Shortcuts"
+msgstr "Горячие клавиши"
+
+#: data/ui/window.ui:746
+msgid "About ASCII Draw"
+msgstr "Об ASCII Draw"
+
+#: data/ui/window.ui:756
+msgid "Copy To Clipboard"
+msgstr "Копировать в буфер обмена"
+
+#: data/ui/window.ui:760
+msgid "Save As"
+msgstr "Сохранить как"
+
+#: data/ui/window.ui:766
+msgid "Open"
+msgstr "Открыть"
+
+#: data/ui/window.ui:770 src/window.py:498
+msgid "New Canvas"
+msgstr "Новая доска"
+
+#: src/main.py:120
+msgid "Clear"
+msgstr "Очистить"
+
+#: src/main.py:180
+msgid "translator-credits"
+msgstr "переводчики"
+
+#: src/main.py:206
+msgid "Save File?"
+msgstr "Сохранить файл?"
+
+#: src/main.py:207
+msgid ""
+"You have never saved this file. Changes which are not saved will be "
+"permanently lost."
+msgstr ""
+"Вы никогда не сохраняли этот файл. Несохранённые изменения будут навсегда "
+"потеряны."
+
+#: src/main.py:213 src/main.py:232 src/window.py:467
+msgid "Cancel"
+msgstr "Закрыть"
+
+#: src/main.py:214 src/main.py:233 src/window.py:468
+msgid "Discard"
+msgstr "Нет"
+
+#: src/main.py:225
+msgid "Save changes?"
+msgstr "Сохранить изменения?"
+
+#: src/main.py:226 src/window.py:463
+msgid ""
+"The opened file contains unsaved changes. Changes which are not saved will "
+"be permanently lost."
+msgstr ""
+"Открытый файл содержит несохранённые изменения. Несохранённые изменения "
+"будут навсегда потеряны."
+
+#: src/tools/line.py:103
+msgid "Freehand Line"
+msgstr "Свободная линия"
+
+#: src/tools/line.py:156
+#, fuzzy
+msgid "Cartesian Line"
+msgstr "Декартовая линия"
+
+#: src/tools/line.py:159
+#, fuzzy
+msgid "Step Line"
+msgstr "Шаговая линия"
+
+#: src/tools/select.py:104
+msgid "Move"
+msgstr "Переместить"
+
+#: src/tools/tree.py:150
+msgid "Tree"
+msgstr "Дерево"
+
+#: src/window.py:433
+msgid "Open File"
+msgstr "Открыть файл"
+
+#: src/window.py:462
+msgid "Save Changes?"
+msgstr "Сохранить изменения?"
+
+#: src/window.py:506
+msgid "Save File"
+msgstr "Сохранить файл"
+
+#: src/window.py:507
+msgid "drawing.txt"
+msgstr "рисование.txt"
+
+#: src/window.py:534
+msgid "Saved successfully"
+msgstr "Успешно сохранено"
+
+#: src/window.py:677
+msgid "Undo"
+msgstr "Отменить"
+
+#: src/window.py:684
+msgid "Undo "
+msgstr "Отменить"
+
+#: src/window.py:687 src/window.py:694
+msgid "Redo "
+msgstr "Вернуть"
