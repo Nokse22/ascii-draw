@@ -130,7 +130,7 @@ class AsciiDrawApplication(Adw.Application):
                                 application_name=_("ASCII Draw"),
                                 application_icon='io.github.nokse22.asciidraw',
                                 developer_name='Nokse',
-                                version='0.3.5',
+                                version='0.4.0',
                                 website='https://github.com/Nokse22/ascii-draw',
                                 issue_url='https://github.com/Nokse22/ascii-draw/issues',
                                 developers=['Nokse'],
@@ -138,7 +138,7 @@ class AsciiDrawApplication(Adw.Application):
                                 copyright='© 2023 Nokse')
         # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
         # One name per line, please do not remove previous names.
-        about.set_translator_credits(_("translator-credits"))        
+        about.set_translator_credits(_("translator-credits"))
         about.present(self.props.active_window)
 
     def on_preferences_action(self, *args):

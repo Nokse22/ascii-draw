@@ -49,8 +49,11 @@ There are many tools and features available such as:</p>
   </branding>
 
   <releases>
-    <release version="0.3.5" date="2024-06-15">
+    <release version="0.4.0" date="2024-07-08">
 		  <description translate="no">
+		    <p>Improved app design</p>
+		    <p>Fixed bug when monospace font is not present</p>
+		    <p>Added a menu entry to open the directory where custom palettes are stored</p>
 		    <p>Added Bulgarian translation (twlvnn)</p>
 		    <p>Improved dark mode style (Tanmay Patil)</p>
 		  </description>
