@@ -35,7 +35,7 @@
 						<property name="width-request">350</property>
 						<child>
 							<object class="AdwBreakpoint">
-								<condition>max-width: 540px</condition>
+								<condition>max-width: 530px</condition>
 								<setter object="toolbar_layout_box" property="orientation">vertical</setter>
 							</object>
 						</child>
