@@ -12,10 +12,10 @@
     background: transparent;
     background-size: 12px 24px;
     background-image:
-        linear-gradient(to right, #aaaaaa 1px, transparent 1px),
-        linear-gradient(to bottom, #aaaaaa 1px, transparent 1px);
+        linear-gradient(to right, #cccccc 1px, transparent 1px),
+        linear-gradient(to bottom, #cccccc 1px, transparent 1px);
     box-shadow:
-        inset 0px 0px 0px 1px #777777,
+        inset 0px 0px 0px 1px #878787,
         0px 0px 6px 6px @headerbar_shade_color;
     opacity:0.4;
 }
