@@ -1,0 +1,494 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-10 19:43+0200\n"
+"PO-Revision-Date: 2024-07-11 22:47+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:3
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:490
+#: src/main.py:170
+msgid "ASCII Draw"
+msgstr "ASCII Draw"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:9
+msgid "GNOME;GTK;Graphics;Art;"
+msgstr "GNOME;GTK;Grafikk;Kunst;Tekst;Tegning;Unicode;"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:7
+msgid "Sketch anything using characters"
+msgstr "Lag tegninger med tekst"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:10
+msgid ""
+"This app lets you draw diagrams, tables, tree view, art and more using only "
+"characters. There are many stiles to choose from and multiple tools "
+"available to use such as:"
+msgstr ""
+"ASCII Draw lar deg tegne diagrammer, tabeller og kunst med kun tekst. Velg "
+"mellom flere stiler og verktøy, som:"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13
+#: src/tools/rectangle.py:115
+msgid "Rectangle"
+msgstr "Rektangel"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:14
+#: src/tools/filled_rectangle.py:115
+msgid "Filled Rectangle"
+msgstr "Fylt rektangel"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:15
+msgid "Cartesian, freehand and stepped line"
+msgstr "Linjer"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
+msgid "Freehand Brush"
+msgstr "Pensel"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
+msgid "Text with FIGlet fonts"
+msgstr "Bannertekst"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18 data/ui/window.ui:214
+#: src/tools/table.py:123
+msgid "Table"
+msgstr "Tabell"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19
+msgid "Tree View"
+msgstr "Flytskjema"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 data/ui/window.ui:392
+#: src/tools/eraser.py:84
+msgid "Eraser"
+msgstr "Viskelær"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21
+msgid "Character Picker"
+msgstr "Tegnvelger"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+msgid "Select and move"
+msgstr "Markering og flytting"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:157
+msgid "ASCII Art of an old television"
+msgstr "Tegning av et gammelt fjernsynsapparat"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:162
+msgid "CPU simplified structure"
+msgstr "Forenklet prosessorstruktur"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:167
+msgid "Table of countries, capitals and population"
+msgstr "Tabell med land, hovedstader og befolkning"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:172
+msgid "A flowchart to fix a lamp"
+msgstr "Et flytskjema som illustrerer fiksing av en lampe"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:177
+msgid "An example of a treeview"
+msgstr "En trestruktur"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:182
+msgid "Cartesian, stepped and freehand lines"
+msgstr "Forskjellige linjer"
+
+#: data/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generelt"
+
+#: data/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Vis tastatursnarveier"
+
+#: data/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Save"
+msgstr "Lagre"
+
+#: data/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Save As"
+msgstr "Lagre som"
+
+#: data/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Open"
+msgstr "Åpne"
+
+#: data/gtk/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "New Canvas"
+msgstr "Nytt lerret"
+
+#: data/gtk/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Undo"
+msgstr "Angre"
+
+#: data/gtk/help-overlay.ui:56
+msgctxt "shortcut window"
+msgid "Redo"
+msgstr "Gjør om"
+
+#: data/gtk/help-overlay.ui:64
+msgctxt "shortcut window"
+msgid "Tools"
+msgstr "Verktøy"
+
+#: data/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Rectangle"
+msgstr "Rektangel"
+
+#: data/gtk/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Filled Rectangle"
+msgstr "Fylt rektangel"
+
+#: data/gtk/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Line"
+msgstr "Linje"
+
+#: data/gtk/help-overlay.ui:85
+msgctxt "shortcut window"
+msgid "Freehand Brush"
+msgstr "Frihåndspensel"
+
+#: data/gtk/help-overlay.ui:91
+msgctxt "shortcut window"
+msgid "Text"
+msgstr "Tekst"
+
+#: data/gtk/help-overlay.ui:97
+msgctxt "shortcut window"
+msgid "Table"
+msgstr "Tabell"
+
+#: data/gtk/help-overlay.ui:103
+msgctxt "shortcut window"
+msgid "Tree View"
+msgstr "Trestruktur"
+
+#: data/gtk/help-overlay.ui:109
+msgctxt "shortcut window"
+msgid "Eraser"
+msgstr "Viskelær"
+
+#: data/gtk/help-overlay.ui:115
+msgctxt "shortcut window"
+msgid "Picker"
+msgstr "Markering"
+
+#: data/gtk/help-overlay.ui:121
+msgctxt "shortcut window"
+msgid "Move"
+msgstr "Flytting"
+
+#: data/ui/new_palette.ui:10
+msgid "New palette"
+msgstr "Ny palett"
+
+#: data/ui/new_palette.ui:38
+msgid "Palette name"
+msgstr "Navn"
+
+#: data/ui/new_palette.ui:70 data/ui/window.ui:495 src/main.py:215
+#: src/main.py:234 src/window.py:469
+msgid "Save"
+msgstr "Lagre"
+
+#: data/ui/window.ui:88
+msgid "Spaces do not overwrite "
+msgstr "Hindre mellomrom i å overskrive eksisterende tegn "
+
+#: data/ui/window.ui:89
+msgid "Transparent spaces"
+msgstr "Gjennomsiktige mellomrom"
+
+#: data/ui/window.ui:95 data/ui/window.ui:206 data/ui/window.ui:250
+msgid "Enter"
+msgstr "Enter"
+
+#: data/ui/window.ui:103 src/tools/text.py:134
+msgid "Text"
+msgstr "Tekst"
+
+#: data/ui/window.ui:132
+msgid "Columns"
+msgstr "Kolonner"
+
+#: data/ui/window.ui:138
+msgid "Rows"
+msgstr "Rader"
+
+#: data/ui/window.ui:147
+msgid "Add a row"
+msgstr "Legg til rad"
+
+#: data/ui/window.ui:155
+msgid "Delete rows"
+msgstr "Sett rader"
+
+#: data/ui/window.ui:189
+msgid "First line divided"
+msgstr "Første rad"
+
+#: data/ui/window.ui:190
+msgid "Divide each row"
+msgstr "Alle rader"
+
+#: data/ui/window.ui:191
+msgid "Not divided"
+msgstr "Ingen"
+
+#: data/ui/window.ui:196 data/ui/window.ui:329
+msgid "Type"
+msgstr "Separering"
+
+#: data/ui/window.ui:258
+msgid "Tree view"
+msgstr "Trestruktur"
+
+#: data/ui/window.ui:275 data/ui/window.ui:368
+msgid "Size"
+msgstr "Størrelse"
+
+#: data/ui/window.ui:299 data/ui/window.ui:324 src/tools/freehand.py:80
+msgid "Freehand"
+msgstr "Frihånd"
+
+#: data/ui/window.ui:322
+msgid "Cartesian"
+msgstr "Hjørne"
+
+#: data/ui/window.ui:323
+msgid "Step"
+msgstr "Trapp"
+
+#: data/ui/window.ui:342
+msgid "Arrow"
+msgstr "Pil"
+
+#: data/ui/window.ui:351
+msgid "Line"
+msgstr "Linje"
+
+#: data/ui/window.ui:417
+msgid "ASCII"
+msgstr "ASCII"
+
+#: data/ui/window.ui:439
+msgid "Character"
+msgstr "Tegn"
+
+#: data/ui/window.ui:460
+msgid "Style"
+msgstr "Stil"
+
+#: data/ui/window.ui:547
+msgid "Width"
+msgstr "Bredde"
+
+#: data/ui/window.ui:562
+msgid "Height"
+msgstr "Høyde"
+
+#: data/ui/window.ui:567
+msgid "Change size"
+msgstr "Endre størrelse"
+
+#: data/ui/window.ui:595
+msgid "Rectangle Ctrl+R"
+msgstr "Rektangel (Ctrl+R)"
+
+#: data/ui/window.ui:605
+msgid "Filled rectangle Ctrl+Shift+R"
+msgstr "Fylt rektangel (Ctrl+Shift+R)"
+
+#: data/ui/window.ui:615
+msgid "Line Ctrl+L"
+msgstr "Linje (Ctrl+R)"
+
+#: data/ui/window.ui:625
+msgid "Freehand Ctrl+F"
+msgstr "Frihånd (Ctrl+F)"
+
+#: data/ui/window.ui:635
+msgid "Text Ctrl+T"
+msgstr "Tekst (Ctrl+T)"
+
+#: data/ui/window.ui:650
+msgid "Table Ctrl+Shift+T"
+msgstr "Tabell (Ctrl+Shift+T)"
+
+#: data/ui/window.ui:660
+msgid "Tree view Ctrl+U"
+msgstr "Trestruktur (Ctrl+U)"
+
+#: data/ui/window.ui:670
+msgid "Eraser Ctrl+E"
+msgstr "Viskelær (Ctrl+E)"
+
+#: data/ui/window.ui:680
+msgid "Picker Ctrl+P"
+msgstr "Markering (Ctrl+P)"
+
+#: data/ui/window.ui:690
+msgid "Move Ctrl+M"
+msgstr "Flytting (Ctrl+M)"
+
+#: data/ui/window.ui:702
+msgid "Primary Character"
+msgstr "Primærtegn"
+
+#: data/ui/window.ui:711
+msgid "Secondary Character"
+msgstr "Sekundærtegn"
+
+#: data/ui/window.ui:726
+msgid "Clear Canvas"
+msgstr "Tøm lerret"
+
+#: data/ui/window.ui:732
+msgid "New Palette"
+msgstr "Ny palett"
+
+#: data/ui/window.ui:736
+msgid "New Palette From Canvas"
+msgstr "Ny palett fra lerret"
+
+#: data/ui/window.ui:742
+msgid "Keyboard Shortcuts"
+msgstr "Tastatursnarveier"
+
+#: data/ui/window.ui:746
+msgid "About ASCII Draw"
+msgstr "Om ASCII Draw"
+
+#: data/ui/window.ui:756
+msgid "Copy To Clipboard"
+msgstr "Kopier"
+
+#: data/ui/window.ui:760
+msgid "Save As"
+msgstr "Lagre som"
+
+#: data/ui/window.ui:766
+msgid "Open"
+msgstr "Åpne"
+
+#: data/ui/window.ui:770 src/window.py:498
+msgid "New Canvas"
+msgstr "Nytt lerret"
+
+#: src/main.py:120
+msgid "Clear"
+msgstr "Tøm"
+
+#: src/main.py:180
+msgid "translator-credits"
+msgstr "Brage Fuglseth https://bragefuglseth.dev"
+
+#: src/main.py:206
+msgid "Save File?"
+msgstr "Lagre fil?"
+
+#: src/main.py:207
+msgid ""
+"You have never saved this file. Changes which are not saved will be "
+"permanently lost."
+msgstr ""
+"Filen har ikke blitt lagret. Endringer som ikke blir lagret, vil slettes "
+"for alltid."
+
+#: src/main.py:213 src/main.py:232 src/window.py:467
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: src/main.py:214 src/main.py:233 src/window.py:468
+msgid "Discard"
+msgstr "Forkast"
+
+#: src/main.py:225
+msgid "Save changes?"
+msgstr "Lagre endringer?"
+
+#: src/main.py:226 src/window.py:463
+msgid ""
+"The opened file contains unsaved changes. Changes which are not saved will "
+"be permanently lost."
+msgstr ""
+"Filen har ulagrede endringer. Endringer som ikke blir lagret, vil slettes "
+"for alltid."
+
+#: src/tools/line.py:103
+msgid "Freehand Line"
+msgstr "Frihåndslinje"
+
+#: src/tools/line.py:156
+msgid "Cartesian Line"
+msgstr "Hjørnelinje"
+
+#: src/tools/line.py:159
+msgid "Step Line"
+msgstr "Trappelinje"
+
+#: src/tools/select.py:104
+msgid "Move"
+msgstr "Flytt"
+
+#: src/tools/tree.py:150
+msgid "Tree"
+msgstr "Trestruktur"
+
+#: src/window.py:433
+msgid "Open File"
+msgstr "Åpne fil"
+
+#: src/window.py:462
+msgid "Save Changes?"
+msgstr "Lagre endringer?"
+
+#: src/window.py:506
+msgid "Save File"
+msgstr "Lagre fil"
+
+#: src/window.py:507
+msgid "drawing.txt"
+msgstr "tegning.txt"
+
+#: src/window.py:534
+msgid "Saved successfully"
+msgstr "Fil lagret"
+
+#: src/window.py:677
+msgid "Undo"
+msgstr "Angre"
+
+#: src/window.py:684
+msgid "Undo "
+msgstr "Angre "
+
+#: src/window.py:687 src/window.py:694
+msgid "Redo "
+msgstr "Gjør om "
