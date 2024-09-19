@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-10 19:43+0200\n"
-"PO-Revision-Date: 2024-05-31 20:39+0300\n"
-"Last-Translator: Крапивин Макар <mackarkrapivin505@gmail.com>\n"
+"PO-Revision-Date: 2024-09-20 07:24+1000\n"
+"Last-Translator: Ser82-png <asvmail.as@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Gtranslator 46.1\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-DL-Lang: English\n"
 "X-DL-Module: \n"
 "X-DL-Branch: \n"
@@ -45,8 +45,8 @@ msgid ""
 "characters. There are many stiles to choose from and multiple tools "
 "available to use such as:"
 msgstr ""
-"Это приложение позволяет рисовать диаграммы, таблицы, древовидные рисунки, "
-"искусство и многое другое, используя только символы. Есть много стилей на "
+"Это приложение позволяет рисовать диаграммы, таблицы, древовидные структуры, "
+"картинки и многое другое, используя только символы. Есть много стилей на "
 "выбор и несколько инструментов, доступных для использования, таких как:"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:13
@@ -60,13 +60,12 @@ msgid "Filled Rectangle"
 msgstr "Заполненный прямоугольник"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:15
-#, fuzzy
 msgid "Cartesian, freehand and stepped line"
-msgstr "Картезианская, отдача и ступенчатая линия"
+msgstr "Декартовая, свободно нарисованная и ступенчатая линии"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
 msgid "Freehand Brush"
-msgstr "Свободное рисование"
+msgstr "Кисть для свободного рисования"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
 msgid "Text with FIGlet fonts"
@@ -79,7 +78,7 @@ msgstr "Таблица"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:19
 msgid "Tree View"
-msgstr "Древовидный рисунок"
+msgstr "Древовидная структура"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 data/ui/window.ui:392
 #: src/tools/eraser.py:84
@@ -87,13 +86,12 @@ msgid "Eraser"
 msgstr "Ластик"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:21
-#, fuzzy
 msgid "Character Picker"
-msgstr "Пипетка"
+msgstr "Средство выбора символа"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
 msgid "Select and move"
-msgstr "Выделить и переместить"
+msgstr "Выделение и перемещение"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:157
 msgid "ASCII Art of an old television"
@@ -101,7 +99,7 @@ msgstr "Изображение ASCII как на старом телевизор
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:162
 msgid "CPU simplified structure"
-msgstr "Упрощённая структура CPU (ЦП)"
+msgstr "Упрощённая структура ЦП"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:167
 msgid "Table of countries, capitals and population"
@@ -113,22 +111,21 @@ msgstr "Блок-схема «Как починить лампу»"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:177
 msgid "An example of a treeview"
-msgstr "Пример вида дерева"
+msgstr "Пример древовидной структуры"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:182
-#, fuzzy
 msgid "Cartesian, stepped and freehand lines"
-msgstr "Картезианские, ступенчатые и линии от руки"
+msgstr "Декартовая, ступенчатая и свободно нарисованная линии"
 
 #: data/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Главное"
+msgstr "Общие"
 
 #: data/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr "Показать ярлыки"
+msgstr "Показать комбинации клавиш"
 
 #: data/gtk/help-overlay.ui:26
 msgctxt "shortcut window"
@@ -148,7 +145,7 @@ msgstr "Открыть"
 #: data/gtk/help-overlay.ui:44
 msgctxt "shortcut window"
 msgid "New Canvas"
-msgstr "Новый лист"
+msgstr "Новый холст"
 
 #: data/gtk/help-overlay.ui:50
 msgctxt "shortcut window"
@@ -198,7 +195,7 @@ msgstr "Таблица"
 #: data/gtk/help-overlay.ui:103
 msgctxt "shortcut window"
 msgid "Tree View"
-msgstr "Древовидный рисунок"
+msgstr "Древовидная структура"
 
 #: data/gtk/help-overlay.ui:109
 msgctxt "shortcut window"
@@ -206,7 +203,6 @@ msgid "Eraser"
 msgstr "Ластик"
 
 #: data/gtk/help-overlay.ui:115
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Picker"
 msgstr "Пипетка"
@@ -222,7 +218,7 @@ msgstr "Новая палитра"
 
 #: data/ui/new_palette.ui:38
 msgid "Palette name"
-msgstr "Имя палитры"
+msgstr "Название палитры"
 
 #: data/ui/new_palette.ui:70 data/ui/window.ui:495 src/main.py:215
 #: src/main.py:234 src/window.py:469
@@ -231,7 +227,7 @@ msgstr "Сохранить"
 
 #: data/ui/window.ui:88
 msgid "Spaces do not overwrite "
-msgstr "Пространства только для чтения"
+msgstr "Пространства только для чтения "
 
 #: data/ui/window.ui:89
 msgid "Transparent spaces"
@@ -263,15 +259,15 @@ msgstr "Удалить строку"
 
 #: data/ui/window.ui:189
 msgid "First line divided"
-msgstr ""
+msgstr "Отделять первую строку"
 
 #: data/ui/window.ui:190
 msgid "Divide each row"
-msgstr ""
+msgstr "Отделять каждую строку"
 
 #: data/ui/window.ui:191
 msgid "Not divided"
-msgstr "Не разделено"
+msgstr "Без разделения"
 
 #: data/ui/window.ui:196 data/ui/window.ui:329
 msgid "Type"
@@ -279,25 +275,23 @@ msgstr "Тип"
 
 #: data/ui/window.ui:258
 msgid "Tree view"
-msgstr "Древовидный рисунок"
+msgstr "Древовидная структура"
 
 #: data/ui/window.ui:275 data/ui/window.ui:368
 msgid "Size"
 msgstr "Размер"
 
 #: data/ui/window.ui:299 data/ui/window.ui:324 src/tools/freehand.py:80
-#, fuzzy
 msgid "Freehand"
-msgstr "Отдача"
+msgstr "Свободное рисование"
 
 #: data/ui/window.ui:322
 msgid "Cartesian"
-msgstr "Картезианский"
+msgstr "Декартовая"
 
 #: data/ui/window.ui:323
-#, fuzzy
 msgid "Step"
-msgstr "Шаг"
+msgstr "Ступенчатая"
 
 #: data/ui/window.ui:342
 msgid "Arrow"
@@ -312,9 +306,8 @@ msgid "ASCII"
 msgstr "ASCII"
 
 #: data/ui/window.ui:439
-#, fuzzy
 msgid "Character"
-msgstr "Характер"
+msgstr "Символ"
 
 #: data/ui/window.ui:460
 msgid "Style"
@@ -326,7 +319,7 @@ msgstr "Ширина"
 
 #: data/ui/window.ui:562
 msgid "Height"
-msgstr "Длина"
+msgstr "Высота"
 
 #: data/ui/window.ui:567
 msgid "Change size"
@@ -358,14 +351,13 @@ msgstr "Таблица (Ctrl+Shift+T)"
 
 #: data/ui/window.ui:660
 msgid "Tree view Ctrl+U"
-msgstr "Древовидный рисунок (Ctrl+U)"
+msgstr "Древовидная структура (Ctrl+U)"
 
 #: data/ui/window.ui:670
 msgid "Eraser Ctrl+E"
 msgstr "Ластик (Ctrl+E)"
 
 #: data/ui/window.ui:680
-#, fuzzy
 msgid "Picker Ctrl+P"
 msgstr "Пипетка (Ctrl+P)"
 
@@ -374,17 +366,16 @@ msgid "Move Ctrl+M"
 msgstr "Перемещение (Ctrl+M)"
 
 #: data/ui/window.ui:702
-#, fuzzy
 msgid "Primary Character"
-msgstr "Основной слой"
+msgstr "Основной символ"
 
 #: data/ui/window.ui:711
 msgid "Secondary Character"
-msgstr "Второстепенный слой"
+msgstr "Дополнительный символ"
 
 #: data/ui/window.ui:726
 msgid "Clear Canvas"
-msgstr "Очистить доску"
+msgstr "Очистить холст"
 
 #: data/ui/window.ui:732
 msgid "New Palette"
@@ -392,11 +383,11 @@ msgstr "Новая палитра"
 
 #: data/ui/window.ui:736
 msgid "New Palette From Canvas"
-msgstr "Новая палитра с доски"
+msgstr "Новая палитра с холста"
 
 #: data/ui/window.ui:742
 msgid "Keyboard Shortcuts"
-msgstr "Горячие клавиши"
+msgstr "Комбинации клавиш"
 
 #: data/ui/window.ui:746
 msgid "About ASCII Draw"
@@ -416,7 +407,7 @@ msgstr "Открыть"
 
 #: data/ui/window.ui:770 src/window.py:498
 msgid "New Canvas"
-msgstr "Новая доска"
+msgstr "Новый холст"
 
 #: src/main.py:120
 msgid "Clear"
@@ -424,7 +415,7 @@ msgstr "Очистить"
 
 #: src/main.py:180
 msgid "translator-credits"
-msgstr "переводчики"
+msgstr "Крапивин Макар <mackarkrapivin505@gmail.com>"
 
 #: src/main.py:206
 msgid "Save File?"
@@ -435,16 +426,16 @@ msgid ""
 "You have never saved this file. Changes which are not saved will be "
 "permanently lost."
 msgstr ""
-"Вы никогда не сохраняли этот файл. Несохранённые изменения будут навсегда "
+"Вы ни разу не сохраняли этот файл. Несохранённые изменения будут навсегда "
 "потеряны."
 
 #: src/main.py:213 src/main.py:232 src/window.py:467
 msgid "Cancel"
-msgstr "Закрыть"
+msgstr "Отменить"
 
 #: src/main.py:214 src/main.py:233 src/window.py:468
 msgid "Discard"
-msgstr "Нет"
+msgstr "Не сохранять"
 
 #: src/main.py:225
 msgid "Save changes?"
@@ -460,17 +451,15 @@ msgstr ""
 
 #: src/tools/line.py:103
 msgid "Freehand Line"
-msgstr "Свободная линия"
+msgstr "Свободно нарисованная линия"
 
 #: src/tools/line.py:156
-#, fuzzy
 msgid "Cartesian Line"
 msgstr "Декартовая линия"
 
 #: src/tools/line.py:159
-#, fuzzy
 msgid "Step Line"
-msgstr "Шаговая линия"
+msgstr "Ступенчатая линия"
 
 #: src/tools/select.py:104
 msgid "Move"
@@ -478,7 +467,7 @@ msgstr "Переместить"
 
 #: src/tools/tree.py:150
 msgid "Tree"
-msgstr "Дерево"
+msgstr "Древовидная структура"
 
 #: src/window.py:433
 msgid "Open File"
@@ -494,7 +483,7 @@ msgstr "Сохранить файл"
 
 #: src/window.py:507
 msgid "drawing.txt"
-msgstr "рисование.txt"
+msgstr "drawing.txt"
 
 #: src/window.py:534
 msgid "Saved successfully"
@@ -506,8 +495,8 @@ msgstr "Отменить"
 
 #: src/window.py:684
 msgid "Undo "
-msgstr "Отменить"
+msgstr "Отменить "
 
 #: src/window.py:687 src/window.py:694
 msgid "Redo "
-msgstr "Вернуть"
+msgstr "Вернуть "
