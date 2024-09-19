@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-10 19:43+0200\n"
-"PO-Revision-Date: 2024-09-20 07:20+1000\n"
+"PO-Revision-Date: 2024-09-20 07:24+1000\n"
 "Last-Translator: Ser82-png <asvmail.as@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -263,7 +263,7 @@ msgstr "Отделять первую строку"
 
 #: data/ui/window.ui:190
 msgid "Divide each row"
-msgstr "Отделять каждую строка"
+msgstr "Отделять каждую строку"
 
 #: data/ui/window.ui:191
 msgid "Not divided"
