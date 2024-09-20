@@ -49,6 +49,14 @@ There are many tools and features available such as:</p>
   </branding>
 
   <releases>
+    <release version="1.0.0" date="2024-09-21">
+		  <description translate="no">
+		    <p>Added selection rotation</p>
+		    <p>Added selection deletion</p>
+		    <p>Added Italian translation (albano battistella)</p>
+		    <p>Added Norwegian Bokmaal translation (Brage Fuglseth)</p>
+		  </description>
+	  </release>
     <release version="0.4.0" date="2024-07-08">
 		  <description translate="no">
 		    <p>Improved app design</p>
