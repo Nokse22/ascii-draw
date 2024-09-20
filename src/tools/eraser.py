@@ -17,11 +17,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
 from .tool import Tool
+
 
 class Eraser(Tool):
     def __init__(self, *args, **kwargs):

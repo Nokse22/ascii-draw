@@ -7,8 +7,6 @@
   <template class="Canvas" parent="AdwBin">
     <child>
       <object class="GtkScrolledWindow">
-        <!-- <property name="hscrollbar-policy">external</property> -->
-        <!-- <property name="vscrollbar-policy">external</property> -->
         <child>
           <object class="GtkOverlay">
             <property name="child">

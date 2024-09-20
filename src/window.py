@@ -19,7 +19,7 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject, GLib
+from gi.repository import Gdk, Gio, GObject
 
 from .palette import Palette
 from .new_palette_window import NewPaletteDialog
@@ -27,13 +27,10 @@ from .new_palette_window import NewPaletteDialog
 from .tools import *
 from .canvas import Canvas
 
-import threading
-import math
-import pyfiglet
 import unicodedata
 import os
-import unicodedata
 import webbrowser
+
 
 @Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/window.ui')
 class AsciiDrawWindow(Adw.ApplicationWindow):
@@ -141,6 +138,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.move_tool = Select(self.canvas)
         self.move_tool.bind_property('active', self.move_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.move_tool.add_sidebar_to(self.sidebar_stack)
 
         self.text_tool = Text(self.canvas)
         self.text_tool.bind_property('active', self.text_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
@@ -560,7 +558,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         print("move")
         current_sidebar = self.sidebar_stack.get_visible_child_name()
         if current_sidebar != "character_page" and current_sidebar != "style_page":
-            self.sidebar_stack.set_visible_child_name("character_page")
+            self.sidebar_stack.set_visible_child_name("move_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_free")
