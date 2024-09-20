@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <object class="GtkStackPage" id="move_stack_page">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="hexpand">True</property>
+        <property name="margin-bottom">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-start">10</property>
+        <property name="margin-top">4</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="css-classes">card</property>
+            <property name="hexpand">True</property>
+            <property name="title" translatable="yes">Rotate</property>
+            <property name="valign">start</property>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkButton" id="counterclockwise_button">
+                    <property name="icon-name">rotate-left-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="clockwise_button">
+                    <property name="icon-name">rotate-right-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="css-classes">card</property>
+            <property name="hexpand">True</property>
+            <property name="title" translatable="yes">Delete Selection</property>
+            <property name="valign">start</property>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkButton" id="delete_button">
+                    <property name="icon-name">user-trash-symbolic</property>
+                    <property name="css-classes">destructive-action</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+    <property name="icon-name">edit-select-all-symbolic</property>
+    <property name="name">move_page</property>
+    <property name="title" translatable="yes">Move</property>
+  </object>
+</interface>

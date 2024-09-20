@@ -23,6 +23,7 @@ from gi.repository import Gdk, Gio, GObject
 
 from .tool import Tool
 
+
 class Select(Tool):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,6 +36,12 @@ class Select(Tool):
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
+
+        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/move_sidebar.ui")
+        self._sidebar = builder.get_object("move_stack_page")
+        self.counterclockwise_button = builder.get_object("counterclockwise_button")
+        self.clockwise_button = builder.get_object("clockwise_button")
+        self.delete_button = builder.get_object("delete_button")
 
         self.selection = Adw.Bin(
             css_classes=["selection"],
@@ -59,9 +66,18 @@ class Select(Tool):
         self.has_selection = False
         self.is_dragging = False
 
-        self.moved_text: str = ''
+        self.moved_text = []
 
         self.click_released = False
+
+        self.counterclockwise_button.connect(
+            "clicked", lambda *args: self.rotate(-90))
+
+        self.clockwise_button.connect(
+            "clicked", lambda *args: self.rotate(90))
+
+        self.delete_button.connect(
+            "clicked", self.delete_selection)
 
     @GObject.Property(type=str, default='#')
     def style(self):
@@ -73,7 +89,16 @@ class Select(Tool):
         self.notify('style')
 
     def on_active_changed(self, value):
-        self.selection.set_visible(value)
+
+        self.selection.set_visible(False)
+
+        self.selection_start_x_char = -1
+        self.selection_start_y_char = -1
+
+        self.selection_delta_char_x = 0
+        self.selection_delta_char_y = 0
+
+        self.update_selection()
 
     def on_drag_begin(self, gesture, this_x, this_y):
         if not self._active: return
@@ -81,7 +106,12 @@ class Select(Tool):
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
 
-        start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+        start_x_char, start_y_char, width, height = self.translate(
+            self.selection_start_x_char,
+            self.selection_start_y_char,
+            self.selection_delta_char_x,
+            self.selection_delta_char_y
+        )
 
         if (this_x_char > (start_x_char)
                 and this_x_char < (start_x_char + width)
@@ -92,31 +122,35 @@ class Select(Tool):
             self.canvas.add_undo_action(_("Move"))
 
             for y in range(1, int(height)):
+                line = []
                 for x in range(1, int(width)):
-                    self.moved_text += self.canvas.get_char_at(start_x_char + x, start_y_char + y) or " "
-                self.moved_text += '\n'
+                    line.append(
+                        self.canvas.get_char_at(
+                            start_x_char + x, start_y_char + y) or " ")
+                self.moved_text.append(line)
 
-            # Delete selection
-            for y in range(1, int(height)):
-                for x in range(1, int(width)):
-                    self.canvas.set_char_at(start_x_char + x, start_y_char + y, ' ', True)
+            self.delete_selection()
+
         else:
             self.selection_start_x_char = this_x // self.x_mul
             self.selection_start_y_char = this_y // self.y_mul
 
-            self.drag_start_x = this_x # used to fix drag alignment
-            self.drag_start_y = this_y # used to fix drag alignment
+            self.drag_start_x = this_x  # used to fix drag alignment
+            self.drag_start_y = this_y  # used to fix drag alignment
 
             self.is_dragging = False
 
     def on_drag_follow(self, gesture, delta_x, delta_y):
-        if not self._active: return
-
-        self.selection.set_visible(True)
+        if not self._active:
+            return
 
         if self.is_dragging:
-            new_delta_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
-            new_delta_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
+            new_delta_x = (
+                (self.drag_start_x + delta_x)
+                // self.x_mul - self.drag_start_x // self.x_mul)
+            new_delta_y = (
+                (self.drag_start_y + delta_y)
+                // self.y_mul - self.drag_start_y // self.y_mul)
 
             if new_delta_x != self.dragging_delta_char_x or new_delta_y != self.dragging_delta_char_y:
                 self.dragging_delta_char_x = new_delta_x
@@ -124,21 +158,38 @@ class Select(Tool):
 
                 self.canvas.clear_preview()
 
-                start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+                start_x_char, start_y_char, width, height = self.translate(
+                    self.selection_start_x_char,
+                    self.selection_start_y_char,
+                    self.selection_delta_char_x,
+                    self.selection_delta_char_y
+                )
 
-                self.canvas.draw_text(start_x_char + self.dragging_delta_char_x + 1,
-                                start_y_char + self.dragging_delta_char_y + 1, self.moved_text, True, False)
+                self.canvas.draw_text(
+                    start_x_char + self.dragging_delta_char_x + 1,
+                    start_y_char + self.dragging_delta_char_y + 1,
+                    self.get_moved_string(),
+                    True, False
+                )
 
                 self.update_selection()
+
                 self.canvas.update()
         else:
-            self.selection_delta_char_x = (self.drag_start_x + delta_x) // self.x_mul - self.drag_start_x // self.x_mul
-            self.selection_delta_char_y = (self.drag_start_y + delta_y) // self.y_mul - self.drag_start_y // self.y_mul
+            self.selection_delta_char_x = (
+                (self.drag_start_x + delta_x)
+                // self.x_mul - self.drag_start_x // self.x_mul)
+            self.selection_delta_char_y = (
+                (self.drag_start_y + delta_y)
+                // self.y_mul - self.drag_start_y // self.y_mul)
 
             self.update_selection()
 
+        self.selection.set_visible(True)
+
     def on_drag_end(self, gesture, delta_x, delta_y):
-        if not self._active: return
+        if not self._active:
+            return
 
         if self.is_dragging:
             self.selection_start_x_char += self.dragging_delta_char_x
@@ -147,10 +198,20 @@ class Select(Tool):
 
             self.canvas.clear_preview()
 
-            start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+            start_x_char, start_y_char, width, height = self.translate(
+                self.selection_start_x_char,
+                self.selection_start_y_char,
+                self.selection_delta_char_x,
+                self.selection_delta_char_y
+            )
 
-            self.canvas.draw_text(start_x_char + 1, start_y_char + 1, self.moved_text, True, True)
-            self.moved_text = ''
+            self.canvas.draw_text(
+                start_x_char + 1, start_y_char + 1,
+                self.get_moved_string(),
+                True, True
+            )
+
+            self.moved_text = []
             self.dragging_delta_char_x = 0
             self.dragging_delta_char_y = 0
 
@@ -159,17 +220,20 @@ class Select(Tool):
         self.has_selection = True
 
     def on_click_pressed(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
 
         self.click_released = False
 
     def on_click_released(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
 
         self.click_released = True
 
     def on_click_stopped(self, click):
-        if not self._active: return
+        if not self._active:
+            return
 
         if not self.click_released:
             return
@@ -197,7 +261,12 @@ class Select(Tool):
         if self.selection.get_parent() is None:
             self.canvas.fixed.put(self.selection, 0, 0)
 
-        start_x_char, start_y_char, width, height = self.translate(self.selection_start_x_char, self.selection_start_y_char, self.selection_delta_char_x, self.selection_delta_char_y)
+        start_x_char, start_y_char, width, height = self.translate(
+                self.selection_start_x_char,
+                self.selection_start_y_char,
+                self.selection_delta_char_x,
+                self.selection_delta_char_y
+        )
 
         self.canvas.fixed.move(
             self.selection,
@@ -209,6 +278,110 @@ class Select(Tool):
             (width - 1) * self.x_mul,
             (height - 1) * self.y_mul
         )
+
+    def rotate(self, angle):
+        print("rotate")
+        if angle not in [90, -90]:
+            raise ValueError("Angle must be 90 or -90 degrees")
+
+        self.canvas.add_undo_action(_("Rotate"))
+
+        start_x_char, start_y_char, width, height = self.translate(
+                self.selection_start_x_char,
+                self.selection_start_y_char,
+                self.selection_delta_char_x,
+                self.selection_delta_char_y
+        )
+
+        for y in range(1, int(height)):
+            line = []
+            for x in range(1, int(width)):
+                line.append(
+                    self.canvas.get_char_at(
+                        start_x_char + x,
+                        start_y_char + y
+                    ) or " ")
+            self.moved_text.append(line)
+
+        self.delete_selection()
+
+        prev_x = self.selection_delta_char_x
+        prev_y = self.selection_delta_char_y
+
+        if angle == 90:
+            self.moved_text = [
+                list(reversed(col)) for col in zip(*self.moved_text)]
+
+            if prev_x > 0 and prev_y > 0:
+                self.selection_delta_char_x = -prev_y
+                self.selection_delta_char_y = prev_x
+            elif prev_x < 0 and prev_y > 0:
+                self.selection_delta_char_x = -prev_y
+                self.selection_delta_char_y = prev_x
+            elif prev_x < 0 and prev_y < 0:
+                self.selection_delta_char_x = -prev_y
+                self.selection_delta_char_y = prev_x
+            elif prev_x > 0 and prev_y < 0:
+                self.selection_delta_char_x = -prev_y
+                self.selection_delta_char_y = prev_x
+
+        elif angle == -90:
+            self.moved_text = [
+                list(col) for col in zip(*self.moved_text[::-1])]
+
+            if prev_x > 0 and prev_y > 0:
+                self.selection_delta_char_x = prev_y
+                self.selection_delta_char_y = -prev_x
+            elif prev_x < 0 and prev_y > 0:
+                self.selection_delta_char_x = prev_y
+                self.selection_delta_char_y = -prev_x
+            elif prev_x < 0 and prev_y < 0:
+                self.selection_delta_char_x = prev_y
+                self.selection_delta_char_y = -prev_x
+            elif prev_x > 0 and prev_y < 0:
+                self.selection_delta_char_x = prev_y
+                self.selection_delta_char_y = -prev_x
+
+        start_x_char, start_y_char, width, height = self.translate(
+                self.selection_start_x_char,
+                self.selection_start_y_char,
+                self.selection_delta_char_x,
+                self.selection_delta_char_y
+        )
+
+        self.delete_selection()
+
+        self.canvas.draw_text(
+            start_x_char + 1,
+            start_y_char + 1,
+            self.get_moved_string(),
+            True, True
+        )
+
+        self.update_selection()
+
+        self.canvas.update()
+
+        self.moved_text = []
+
+    def delete_selection(self, *args):
+        start_x_char, start_y_char, width, height = self.translate(
+                self.selection_start_x_char,
+                self.selection_start_y_char,
+                self.selection_delta_char_x,
+                self.selection_delta_char_y
+        )
+
+        for y in range(1, int(height)):
+            for x in range(1, int(width)):
+                self.canvas.set_char_at(
+                    start_x_char + x,
+                    start_y_char + y,
+                    ' ',
+                    True
+                )
+
+        self.canvas.update()
 
     def translate(self, start_x, start_y, width, height):
         if width < 0:
@@ -222,3 +395,12 @@ class Select(Tool):
         start_x -= 1
         start_y -= 1
         return start_x, start_y, width, height
+
+    def get_moved_string(self):
+        text = ""
+        for line in self.moved_text:
+            for char in line:
+                text += char
+            text += '\n'
+
+        return text
