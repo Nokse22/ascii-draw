@@ -3,15 +3,16 @@
   <requires lib="gtk" version="4.12"/>
   <object class="GtkStackPage" id="eraser_stack_page">
     <property name="child">
-      <object class="GtkBox">
-        <property name="hexpand">True</property>
-        <property name="margin-bottom">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">4</property>
+      <object class="GtkListBox">
+        <property name="valign">start</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-top">6</property>
+        <property name="css-classes">boxed-list</property>
+        <property name="selection-mode">none</property>
         <child>
           <object class="AdwActionRow">
-            <property name="css-classes">card</property>
             <property name="hexpand">True</property>
             <property name="title" translatable="yes">Size</property>
             <property name="valign">start</property>

@@ -63,7 +63,7 @@ class Tree(Tool):
 
         self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
         self.text_entry_buffer.connect("changed", self.preview)
-        self.enter_button.connect("clicked", self.insert)
+        self.enter_button.connect("activated", self.insert)
         self.text_entry_buffer.bind_property("text", self, "text")
 
     def set_selected_font(self, value):

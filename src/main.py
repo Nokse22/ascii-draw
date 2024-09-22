@@ -18,16 +18,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
-import gi
 
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
-
-from gi.repository import Gtk, Gio, Adw, Gdk, GLib
+from gi.repository import Gio, Adw
 from .window import AsciiDrawWindow
 
-theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-theme.add_resource_path("/data/resources/icons/")
 
 class AsciiDrawApplication(Adw.Application):
     """The main application singleton class."""
@@ -62,6 +56,8 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
         self.create_action('move-tool', self.select_move_tool, ['<control>m'])
         self.create_action('fill-tool', self.select_fill_tool, ['<control><shift>f'])
+
+        self.create_action('delete-selection', self.on_delete_clicked, ['Delete'])
 
         self.create_action('new-palette', self.on_new_palette_action)
         self.create_action('open-palette-folder', self.on_open_palette_folder_action)
@@ -110,6 +106,9 @@ class AsciiDrawApplication(Adw.Application):
     def on_redo_action(self, *args):
         self.win.redo_last_change()
 
+    def on_delete_clicked(self, *args):
+        self.win.on_delete_clicked()
+
     def do_activate(self):
         """Called when the application is activated.
 
@@ -127,15 +126,15 @@ class AsciiDrawApplication(Adw.Application):
     def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(
-                                application_name=_("ASCII Draw"),
-                                application_icon='io.github.nokse22.asciidraw',
-                                developer_name='Nokse',
-                                version='0.4.0',
-                                website='https://github.com/Nokse22/ascii-draw',
-                                issue_url='https://github.com/Nokse22/ascii-draw/issues',
-                                developers=['Nokse'],
-                                license_type="GTK_LICENSE_GPL_3_0",
-                                copyright='© 2023 Nokse')
+            application_name=_("ASCII Draw"),
+            application_icon='io.github.nokse22.asciidraw',
+            developer_name='Nokse',
+            version='1.0.0',
+            website='https://github.com/Nokse22/ascii-draw',
+            issue_url='https://github.com/Nokse22/ascii-draw/issues',
+            developers=['Nokse'],
+            license_type="GTK_LICENSE_GPL_3_0",
+            copyright='© 2023 Nokse')
         # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
         # One name per line, please do not remove previous names.
         about.set_translator_credits(_("translator-credits"))
@@ -175,8 +174,10 @@ class AsciiDrawApplication(Adw.Application):
             dialog.add_response("discard", _("Discard"))
             dialog.add_response("save", _("Save"))
 
-            dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
-            dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+            dialog.set_response_appearance(
+                "discard", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.set_response_appearance(
+                "save", Adw.ResponseAppearance.SUGGESTED)
 
             dialog.choose(None, self.on_save_file_with_name_response)
             return True
@@ -194,8 +195,10 @@ class AsciiDrawApplication(Adw.Application):
             dialog.add_response("discard", _("Discard"))
             dialog.add_response("save", _("Save"))
 
-            dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
-            dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+            dialog.set_response_appearance(
+                "discard", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.set_response_appearance(
+                "save", Adw.ResponseAppearance.SUGGESTED)
 
             dialog.choose(None, self.on_save_file_with_name_response)
             return True
@@ -252,6 +255,7 @@ class AsciiDrawApplication(Adw.Application):
 
     def select_fill_tool(self, *args):
         self.win.select_fill_tool()
+
 
 def main(version):
     """The application's entry point."""

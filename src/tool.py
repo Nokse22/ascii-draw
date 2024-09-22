@@ -17,16 +17,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
-from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
-import threading
-import math
-import pyfiglet
-import unicodedata
-import emoji
-import os
 
 class Tool():
     def __init__(self, _drawing_area, _drag_gesture, _click_gesture):

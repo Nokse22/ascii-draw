@@ -3,14 +3,13 @@
   <requires lib="gtk" version="4.12"/>
   <object class="GtkStackPage" id="move_stack_page">
     <property name="child">
-      <object class="GtkBox">
-        <property name="hexpand">True</property>
-        <property name="margin-bottom">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">4</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
+      <object class="GtkListBox">
+        <property name="valign">start</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-top">6</property>
+        <property name="css-classes">boxed-list-separate</property>
         <child>
           <object class="AdwActionRow">
             <property name="css-classes">card</property>

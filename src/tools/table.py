@@ -59,7 +59,7 @@ class Table(Tool):
         self.rows_number = 0
         self.columns_number = 0
 
-        self.enter_button.connect("clicked", self.insert)
+        self.enter_button.connect("activated", self.insert)
         self.rows_reset_button.connect("clicked", self.on_reset_row_clicked)
         self.add_row_button.connect("clicked", self.on_add_row_clicked)
         self.table_types_combo.connect("notify::selected", self.preview)

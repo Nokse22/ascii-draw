@@ -3,59 +3,134 @@
   <requires lib="gtk" version="4.12"/>
   <object class="GtkStackPage" id="text_stack_page">
     <property name="child">
-      <object class="GtkBox" id="text_sidebar">
-        <property name="margin-bottom">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">4</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+      <object class="AdwViewStack" id="text_sidebar_stack">
         <child>
-          <object class="GtkScrolledWindow">
-            <property name="vexpand">True</property>
-            <property name="overflow">hidden</property>
-            <property name="css-classes">card</property>
-            <child>
-              <object class="GtkTextView">
-                <property name="buffer">
-                  <object class="GtkTextBuffer" id="text_entry_buffer">
+          <object class="AdwViewStackPage" id="main_stack_page">
+            <property name="name">main_sidebar</property>
+            <property name="title">Text Sidebar</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-end">12</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="vexpand">True</property>
+                    <property name="overflow">hidden</property>
+                    <property name="css-classes">card</property>
+                    <child>
+                      <object class="GtkTextView">
+                        <property name="buffer">
+                          <object class="GtkTextBuffer" id="text_entry_buffer">
+                          </object>
+                        </property>
+                        <property name="monospace">True</property>
+                        <property name="css-classes">flat</property>
+                        <property name="left-margin">12</property>
+                        <property name="top-margin">12</property>
+                        <property name="bottom-margin">12</property>
+                        <property name="right-margin">12</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBox">
+                    <property name="css-classes">boxed-list</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="AdwActionRow">
+                        <property name="title" translatable="yes">Choose Font</property>
+                        <child type="suffix">
+                          <object class="GtkButton" id="font_button">
+                            <property name="icon-name">font-x-generic-symbolic</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSwitchRow" id="vertical_check">
+                        <property name="title" translatable="yes">Vertical Text</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSwitchRow" id="transparent_check">
+                        <property name="subtitle" translatable="yes">Spaces do not overwrite</property>
+                        <property name="title" translatable="yes">Transparent spaces</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBox">
+                    <property name="css-classes">boxed-list</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="AdwButtonRow" id="enter_button">
+                        <property name="title" translatable="yes">Enter</property>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStackPage" id="font_stack_page">
+            <property name="name">font_chooser</property>
+            <property name="title">Font Chooser</property>
+            <property name="child">
+              <object class="AdwToolbarView">
+                <property name="content">
+                  <object class="GtkScrolledWindow">
+                    <property name="vexpand">True</property>
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="overflow">hidden</property>
+                    <child>
+                      <object class="GtkListBox" id="font_box">
+                        <property name="css-classes">navigation-sidebar</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="margin-end">6</property>
+                        <property name="margin-start">6</property>
+                        <property name="margin-top">6</property>
+                      </object>
+                    </child>
                   </object>
                 </property>
-                <property name="left-margin">12</property>
-                <property name="monospace">True</property>
-                <property name="top-margin">12</property>
+                <child type="bottom">
+                  <object class="GtkBox">
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkButton" id="font_cancel_button">
+                        <property name="hexpand">true</property>
+                        <property name="label" translatable="yes">Cancel</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="font_select_button">
+                        <property name="hexpand">true</property>
+                        <property name="label" translatable="yes">Select</property>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow">
-            <property name="css-classes">card</property>
-            <property name="vexpand">True</property>
-            <property name="hscrollbar-policy">never</property>
-            <property name="overflow">hidden</property>
-            <child>
-              <object class="GtkListBox" id="font_box">
-                <property name="css-classes">navigation-sidebar</property>
-                <property name="margin-bottom">6</property>
-                <property name="margin-end">6</property>
-                <property name="margin-start">6</property>
-                <property name="margin-top">6</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwSwitchRow" id="transparent_check">
-            <property name="css-classes">card</property>
-            <property name="subtitle" translatable="yes">Spaces do not overwrite </property>
-            <property name="title" translatable="yes">Transparent spaces</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="enter_button">
-            <property name="css-classes">suggested-action</property>
-            <property name="label" translatable="yes">Enter</property>
+            </property>
           </object>
         </child>
       </object>

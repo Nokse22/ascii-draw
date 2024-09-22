@@ -17,14 +17,14 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
 import pyfiglet
 import emoji
 
 from .tool import Tool
+
 
 class Text(Tool):
     def __init__(self, *args, **kwargs):
@@ -39,24 +39,32 @@ class Text(Tool):
 
         builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/text_sidebar.ui")
         self._sidebar = builder.get_object("text_stack_page")
-        self.font_box = builder.get_object("font_box")
         self.text_entry_buffer = builder.get_object("text_entry_buffer")
         self.enter_button = builder.get_object("enter_button")
         self.transparent_check = builder.get_object("transparent_check")
+        self.vertical_check = builder.get_object("vertical_check")
+        self.text_sidebar_stack = builder.get_object("text_sidebar_stack")
 
-        self.font_list = ["Normal","3x5","avatar","big","bell","briteb",
-                "bubble","bulbhead","chunky","contessa","computer","crawford",
-                "cricket","cursive","cyberlarge","cybermedium","cybersmall",
-                "digital","doom","double","drpepper","eftifont",
-                "eftirobot","eftitalic","eftiwall","eftiwater","fourtops","fuzzy",
-                "gothic","graceful","graffiti","invita","italic","lcd",
-                "letters","linux","lockergnome","madrid","maxfour","mike","mini",
-                "morse","ogre","puffy","rectangles","rowancap","script","serifcap",
-                "shadow","shimrod","short","slant","slide","slscript","small",
-                "smisome1","smkeyboard","smscript","smshadow","smslant",
-                "speed","stacey","stampatello","standard","stop","straight",
-                "thin","threepoint","times","tombstone","tinker-toy","twopoint",
-                "wavy","weird"]
+        self.font_button = builder.get_object("font_button")
+        self.font_box = builder.get_object("font_box")
+        self.font_cancel_button = builder.get_object("font_cancel_button")
+        self.font_select_button = builder.get_object("font_select_button")
+
+        self.font_list = [
+            "Normal", "3x5", "avatar", "big", "bell", "briteb",
+            "bubble", "bulbhead", "chunky", "contessa", "computer",
+            "crawford", "cricket", "cursive", "cyberlarge", "cybermedium",
+            "cybersmall", "digital", "doom", "double", "drpepper",
+            "eftifont", "eftirobot", "eftitalic", "eftiwall", "eftiwater",
+            "fourtops", "fuzzy", "gothic", "graceful", "graffiti", "invita",
+            "italic", "lcd", "letters", "linux", "lockergnome", "madrid",
+            "maxfour", "mike", "mini", "morse", "ogre", "puffy", "rectangles",
+            "rowancap", "script", "serifcap", "shadow", "shimrod", "short",
+            "slant", "slide", "slscript", "small", "smisome1", "smkeyboard",
+            "smscript", "smshadow", "smslant", "speed", "stacey", "weird",
+            "stampatello", "standard", "stop", "straight", "thin", "wavy",
+            "threepoint", "times", "tombstone", "tinker-toy", "twopoint"
+        ]
 
         self.selected_font = "Normal"
 
@@ -69,8 +77,6 @@ class Text(Tool):
 
             font_text_view.set_label(text)
             self.font_box.append(font_text_view)
-
-        self.font_box.select_row(self.font_box.get_first_child())
 
         self.start_x = 0
         self.start_y = 0
@@ -93,12 +99,21 @@ class Text(Tool):
 
         self._transparent = False
 
+        self.previous_font = self.font_box.get_first_child()
+
+        self.font_box.select_row(self.previous_font)
+
         self.text_entry_buffer.connect_after("changed", self.preview_text)
         self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
-        self.font_box.connect("row-selected", self.font_row_selected)
-        self.enter_button.connect("clicked", self.insert_text)
+        self.enter_button.connect("activated", self.insert_text)
         self.text_entry_buffer.bind_property("text", self, "text")
         self.transparent_check.bind_property("active", self, "transparent")
+        self.vertical_check.connect("notify::active", self.preview_text)
+
+        self.font_button.connect("clicked", self.show_font_selection)
+        self.font_box.connect("row-selected", self.font_row_selected)
+        self.font_cancel_button.connect("clicked", self.cancel_font_selection)
+        self.font_select_button.connect("clicked", self.select_font_selection)
 
         self._sidebar.bind_property("visible", self, "active")
 
@@ -173,6 +188,8 @@ class Text(Tool):
         self.canvas.clear_preview()
 
         text = self._text
+        if self.vertical_check.get_active():
+            text = "\n".join(text)
         if self.selected_font != "Normal":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
 
@@ -183,6 +200,8 @@ class Text(Tool):
         self.canvas.clear_preview()
 
         text = self._text
+        if self.vertical_check.get_active():
+            text = "\n".join(text)
         if self.selected_font != "Normal":
             text = pyfiglet.figlet_format(text, font=self.selected_font)
 
@@ -201,3 +220,16 @@ class Text(Tool):
             buffer.delete(start_iter ,loc)
             buffer.insert(start_iter, "X")
             return
+
+    def show_font_selection(self, *args):
+        self.text_sidebar_stack.set_visible_child_name("font_chooser")
+
+        self.previous_font = self.font_box.get_selected_row()
+
+    def cancel_font_selection(self, *args):
+        self.text_sidebar_stack.set_visible_child_name("main_sidebar")
+
+        self.font_box.select_row(self.previous_font)
+
+    def select_font_selection(self, *args):
+        self.text_sidebar_stack.set_visible_child_name("main_sidebar")

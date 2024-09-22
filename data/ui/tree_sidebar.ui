@@ -3,19 +3,17 @@
   <requires lib="gtk" version="4.12"/>
   <object class="GtkStackPage" id="tree_stack_page">
     <property name="child">
-      <object class="GtkBox" id="tree_sidebar">
-        <property name="margin-bottom">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">4</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+      <object class="GtkListBox">
+        <property name="margin-bottom">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-top">6</property>
+        <property name="css-classes">boxed-list-separate</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="vexpand">True</property>
             <property name="hscrollbar-policy">never</property>
             <property name="overflow">hidden</property>
-            <property name="css-classes">card</property>
             <child>
               <object class="GtkTextView" id="tree_text_entry">
                 <property name="buffer">
@@ -30,9 +28,11 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="enter_button">
-            <property name="css-classes">suggested-action</property>
-            <property name="label" translatable="yes">Enter</property>
+          <object class="AdwButtonRow" id="enter_button">
+            <property name="title" translatable="yes">Enter</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
           </object>
         </child>
       </object>

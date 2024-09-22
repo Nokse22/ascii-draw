@@ -24,6 +24,7 @@
     <file preprocess="xml-stripblanks">icons/16x16/actions/fill-tool-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/right-large-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/edit-redo-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/16x16/actions/font-x-generic-symbolic.svg</file>
 
     <file preprocess="xml-stripblanks">icons/16x16/actions/rotate-right-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/16x16/actions/rotate-left-symbolic.svg</file>

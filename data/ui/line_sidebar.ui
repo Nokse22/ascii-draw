@@ -3,43 +3,32 @@
   <requires lib="gtk" version="4.12"/>
   <object class="GtkStackPage" id="line_stack_page">
     <property name="child">
-      <object class="GtkBox" id="line_sidebar">
-        <property name="margin-bottom">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">4</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+      <object class="GtkListBox">
+        <property name="valign">start</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-top">6</property>
+        <property name="css-classes">boxed-list-separate</property>
+        <property name="selection-mode">none</property>
         <child>
-          <object class="GtkListBox">
-            <property name="css-classes">boxed-list</property>
-            <property name="selection-mode">none</property>
-            <child>
-              <object class="AdwComboRow" id="line_type_combo">
-                <property name="model">
-                  <object class="GtkStringList">
-                    <items>
-                      <item translatable="yes">Cartesian</item>
-                      <item translatable="yes">Step</item>
-                      <item translatable="yes">Freehand</item>
-                    </items>
-                  </object>
-                </property>
-                <property name="selected">0</property>
-                <property name="title" translatable="yes">Type</property>
+          <object class="AdwComboRow" id="line_type_combo">
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item translatable="yes">Cartesian</item>
+                  <item translatable="yes">Step</item>
+                  <item translatable="yes">Freehand</item>
+                </items>
               </object>
-            </child>
+            </property>
+            <property name="selected">0</property>
+            <property name="title" translatable="yes">Type</property>
           </object>
         </child>
         <child>
-          <object class="GtkListBox">
-            <property name="css-classes">boxed-list</property>
-            <property name="selection-mode">none</property>
-            <child>
-              <object class="AdwSwitchRow" id="line_arrow_switch">
-                <property name="title" translatable="yes">Arrow</property>
-              </object>
-            </child>
+          <object class="AdwSwitchRow" id="line_arrow_switch">
+            <property name="title" translatable="yes">Arrow</property>
           </object>
         </child>
       </object>

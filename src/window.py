@@ -585,6 +585,10 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.sidebar_stack.set_visible_child_name("character_page")
         self.canvas.clear_preview()
 
+    def on_delete_clicked(self):
+        if self.move_tool.active:
+            self.move_tool.delete_selection()
+
     def new_palette_from_canvas(self):
         content = self.canvas.get_content()
         content = content.replace('\n', '')

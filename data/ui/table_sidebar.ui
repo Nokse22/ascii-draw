@@ -3,13 +3,13 @@
   <requires lib="gtk" version="4.12"/>
   <object class="GtkStackPage" id="table_stack_page">
     <property name="child">
-      <object class="GtkBox" id="table_sidebar">
-        <property name="margin-bottom">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">4</property>
+      <object class="GtkBox">
+        <property name="margin-bottom">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-top">6</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkListBox">
             <property name="css-classes">boxed-list</property>
@@ -57,17 +57,22 @@
           </object>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
-            <property name="css-classes">card</property>
-            <property name="vexpand">True</property>
-            <property name="overflow">hidden</property>
+          <object class="GtkListBox">
+            <property name="css-classes">boxed-list-separate</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkBox" id="rows_box">
-                <property name="margin-bottom">6</property>
-                <property name="margin-end">6</property>
-                <property name="margin-start">6</property>
-                <property name="margin-top">6</property>
-                <property name="orientation">vertical</property>
+              <object class="GtkScrolledWindow">
+                <property name="vexpand">True</property>
+                <property name="overflow">hidden</property>
+                <child>
+                  <object class="GtkBox" id="rows_box">
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -94,9 +99,17 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="enter_button">
-            <property name="css-classes">suggested-action</property>
-            <property name="label" translatable="yes">Enter</property>
+          <object class="GtkListBox">
+            <property name="css-classes">boxed-list</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="AdwButtonRow" id="enter_button">
+                <property name="title" translatable="yes">Enter</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
       </object>

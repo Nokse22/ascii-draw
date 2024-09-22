@@ -19,7 +19,7 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import Gdk, GObject
 
 from .tool import Tool
 
@@ -101,7 +101,8 @@ class Select(Tool):
         self.update_selection()
 
     def on_drag_begin(self, gesture, this_x, this_y):
-        if not self._active: return
+        if not self._active:
+            return
 
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
@@ -152,7 +153,8 @@ class Select(Tool):
                 (self.drag_start_y + delta_y)
                 // self.y_mul - self.drag_start_y // self.y_mul)
 
-            if new_delta_x != self.dragging_delta_char_x or new_delta_y != self.dragging_delta_char_y:
+            if (new_delta_x != self.dragging_delta_char_x or
+                    new_delta_y != self.dragging_delta_char_y):
                 self.dragging_delta_char_x = new_delta_x
                 self.dragging_delta_char_y = new_delta_y
 
@@ -305,42 +307,20 @@ class Select(Tool):
 
         self.delete_selection()
 
-        prev_x = self.selection_delta_char_x
-        prev_y = self.selection_delta_char_y
-
         if angle == 90:
-            self.moved_text = [
-                list(reversed(col)) for col in zip(*self.moved_text)]
-
-            if prev_x > 0 and prev_y > 0:
-                self.selection_delta_char_x = -prev_y
-                self.selection_delta_char_y = prev_x
-            elif prev_x < 0 and prev_y > 0:
-                self.selection_delta_char_x = -prev_y
-                self.selection_delta_char_y = prev_x
-            elif prev_x < 0 and prev_y < 0:
-                self.selection_delta_char_x = -prev_y
-                self.selection_delta_char_y = prev_x
-            elif prev_x > 0 and prev_y < 0:
-                self.selection_delta_char_x = -prev_y
-                self.selection_delta_char_y = prev_x
-
+            self.moved_text = list(zip(*self.moved_text[::-1]))
         elif angle == -90:
-            self.moved_text = [
-                list(col) for col in zip(*self.moved_text[::-1])]
+            self.moved_text = list(reversed(list(zip(*self.moved_text))))
 
-            if prev_x > 0 and prev_y > 0:
-                self.selection_delta_char_x = prev_y
-                self.selection_delta_char_y = -prev_x
-            elif prev_x < 0 and prev_y > 0:
-                self.selection_delta_char_x = prev_y
-                self.selection_delta_char_y = -prev_x
-            elif prev_x < 0 and prev_y < 0:
-                self.selection_delta_char_x = prev_y
-                self.selection_delta_char_y = -prev_x
-            elif prev_x > 0 and prev_y < 0:
-                self.selection_delta_char_x = prev_y
-                self.selection_delta_char_y = -prev_x
+        self.moved_text = [list(row) for row in self.moved_text]
+
+        center_x = start_x_char + (width - 2) // 2
+        center_y = start_y_char + (height - 2) // 2
+
+        self.selection_start_x_char = center_x - (height - 2) // 2 + 1
+        self.selection_start_y_char = center_y - (width - 2) // 2 + 1
+        self.selection_delta_char_x = height - 2
+        self.selection_delta_char_y = width - 2
 
         start_x_char, start_y_char, width, height = self.translate(
                 self.selection_start_x_char,
