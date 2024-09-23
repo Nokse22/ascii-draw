@@ -49,10 +49,13 @@ There are many tools and features available such as:</p>
   </branding>
 
   <releases>
-    <release version="1.0.0" date="2024-09-21">
+    <release version="1.0.0" date="2024-09-23">
 		  <description translate="no">
 		    <p>Added selection rotation</p>
 		    <p>Added selection deletion</p>
+		    <p>Added copying selection</p>
+		    <p>Added ability to write vertical text</p>
+		    <p>Improved sidebar design</p>
 		    <p>Added Italian translation (albano battistella)</p>
 		    <p>Added Norwegian Bokmaal translation (Brage Fuglseth)</p>
 		  </description>
