@@ -28,6 +28,7 @@
                           </object>
                         </property>
                         <property name="monospace">True</property>
+                        <property name="accepts-tab">false</property>
                         <property name="css-classes">flat</property>
                         <property name="left-margin">12</property>
                         <property name="top-margin">12</property>
@@ -97,10 +98,6 @@
                     <child>
                       <object class="GtkListBox" id="font_box">
                         <property name="css-classes">navigation-sidebar</property>
-                        <property name="margin-bottom">6</property>
-                        <property name="margin-end">6</property>
-                        <property name="margin-start">6</property>
-                        <property name="margin-top">6</property>
                       </object>
                     </child>
                   </object>

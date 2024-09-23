@@ -429,7 +429,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def on_save_file_response(self, dialog, response, callback=None):
         try:
             file = dialog.save_finish(response)
-        except:
+        except Exception:
             return
 
         print(f"Selected File: {file.get_path()}")

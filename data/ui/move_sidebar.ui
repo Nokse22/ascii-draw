@@ -12,7 +12,6 @@
         <property name="css-classes">boxed-list-separate</property>
         <child>
           <object class="AdwActionRow">
-            <property name="css-classes">card</property>
             <property name="hexpand">True</property>
             <property name="title" translatable="yes">Rotate</property>
             <property name="valign">start</property>
@@ -36,7 +35,24 @@
         </child>
         <child>
           <object class="AdwActionRow">
-            <property name="css-classes">card</property>
+            <property name="hexpand">True</property>
+            <property name="title" translatable="yes">Copy Selection</property>
+            <property name="valign">start</property>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkButton" id="copy_button">
+                    <property name="icon-name">edit-copy-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
             <property name="hexpand">True</property>
             <property name="title" translatable="yes">Delete Selection</property>
             <property name="valign">start</property>

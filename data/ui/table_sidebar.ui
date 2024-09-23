@@ -57,22 +57,17 @@
           </object>
         </child>
         <child>
-          <object class="GtkListBox">
-            <property name="css-classes">boxed-list-separate</property>
-            <property name="selection-mode">none</property>
+          <object class="GtkScrolledWindow">
+            <property name="vexpand">True</property>
+            <property name="overflow">hidden</property>
+            <property name="css-classes">card</property>
             <child>
-              <object class="GtkScrolledWindow">
-                <property name="vexpand">True</property>
-                <property name="overflow">hidden</property>
-                <child>
-                  <object class="GtkBox" id="rows_box">
-                    <property name="margin-bottom">6</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-start">6</property>
-                    <property name="margin-top">6</property>
-                    <property name="orientation">vertical</property>
-                  </object>
-                </child>
+              <object class="GtkBox" id="rows_box">
+                <property name="margin-bottom">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">6</property>
+                <property name="orientation">vertical</property>
               </object>
             </child>
           </object>

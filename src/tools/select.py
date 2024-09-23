@@ -41,6 +41,7 @@ class Select(Tool):
         self._sidebar = builder.get_object("move_stack_page")
         self.counterclockwise_button = builder.get_object("counterclockwise_button")
         self.clockwise_button = builder.get_object("clockwise_button")
+        self.copy_button = builder.get_object("copy_button")
         self.delete_button = builder.get_object("delete_button")
 
         self.selection = Adw.Bin(
@@ -76,8 +77,8 @@ class Select(Tool):
         self.clockwise_button.connect(
             "clicked", lambda *args: self.rotate(90))
 
-        self.delete_button.connect(
-            "clicked", self.delete_selection)
+        self.copy_button.connect("clicked", self.copy_selection)
+        self.delete_button.connect("clicked", self.delete_selection)
 
     @GObject.Property(type=str, default='#')
     def style(self):
@@ -282,7 +283,6 @@ class Select(Tool):
         )
 
     def rotate(self, angle):
-        print("rotate")
         if angle not in [90, -90]:
             raise ValueError("Angle must be 90 or -90 degrees")
 
@@ -384,3 +384,25 @@ class Select(Tool):
             text += '\n'
 
         return text
+
+    def copy_selection(self, *args):
+        start_x_char, start_y_char, width, height = self.translate(
+                self.selection_start_x_char,
+                self.selection_start_y_char,
+                self.selection_delta_char_x,
+                self.selection_delta_char_y
+        )
+
+        selected_text = ""
+
+        for y in range(1, int(height)):
+            line = ""
+            for x in range(1, int(width)):
+                line += self.canvas.get_char_at(
+                        start_x_char + x,
+                        start_y_char + y
+                    ) or " "
+            selected_text += line + "\n"
+
+        clipboard = Gdk.Display().get_default().get_clipboard()
+        clipboard.set(selected_text)
