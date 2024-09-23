@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-23 17:01+0200\n"
+"POT-Creation-Date: 2024-09-23 19:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,35 +74,39 @@ msgid "Character Picker"
 msgstr ""
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:25
-msgid "Select and Move"
+msgid "Move and Rotate selection"
 msgstr ""
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:26
 msgid "Flood Fill"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:192
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:195
 msgid "ASCII Art of an old television"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:197
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:200
 msgid "CPU simplified structure"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:202
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:205
 msgid "Table of countries, capitals and population"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:207
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:210
 msgid "A flowchart to fix a lamp"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:212
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:215
 msgid "An example of a treeview"
 msgstr ""
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:217
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:220
 msgid "Cartesian, stepped and freehand lines"
+msgstr ""
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:225
+msgid "Move and Rotate Tool"
 msgstr ""
 
 #: data/gtk/help-overlay.ui:11
@@ -218,119 +222,143 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: data/ui/window.ui:98
+#: data/ui/window.ui:65 src/window.py:607
+msgid "Undo"
+msgstr ""
+
+#: data/ui/window.ui:73
+msgid "Redo"
+msgstr ""
+
+#: data/ui/window.ui:80
+msgid "Toggle Sidebar"
+msgstr ""
+
+#: data/ui/window.ui:101
 msgid "Rectangle Ctrl+R"
 msgstr ""
 
-#: data/ui/window.ui:108
+#: data/ui/window.ui:111
 msgid "Filled rectangle Ctrl+Shift+R"
 msgstr ""
 
-#: data/ui/window.ui:118
+#: data/ui/window.ui:121
 msgid "Line Ctrl+L"
 msgstr ""
 
-#: data/ui/window.ui:128
+#: data/ui/window.ui:131
 msgid "Freehand Ctrl+F"
 msgstr ""
 
-#: data/ui/window.ui:138
+#: data/ui/window.ui:141
 msgid "Text Ctrl+T"
 msgstr ""
 
-#: data/ui/window.ui:153
+#: data/ui/window.ui:156
 msgid "Table Ctrl+Shift+T"
 msgstr ""
 
-#: data/ui/window.ui:163
+#: data/ui/window.ui:166
 msgid "Tree view Ctrl+U"
 msgstr ""
 
-#: data/ui/window.ui:173
+#: data/ui/window.ui:176
 msgid "Eraser Ctrl+E"
 msgstr ""
 
-#: data/ui/window.ui:183
+#: data/ui/window.ui:186
 msgid "Picker Ctrl+P"
 msgstr ""
 
-#: data/ui/window.ui:193
+#: data/ui/window.ui:196
 msgid "Move Ctrl+M"
 msgstr ""
 
-#: data/ui/window.ui:203
+#: data/ui/window.ui:206
 msgid "Fill Ctrl+Shift+F"
 msgstr ""
 
-#: data/ui/window.ui:215
+#: data/ui/window.ui:216
 msgid "Primary Character"
 msgstr ""
 
-#: data/ui/window.ui:224
+#: data/ui/window.ui:227
 msgid "Secondary Character"
 msgstr ""
 
-#: data/ui/window.ui:274
+#: data/ui/window.ui:251
+msgid "Close Sidebar"
+msgstr ""
+
+#: data/ui/window.ui:258
+msgid "Main Menu"
+msgstr ""
+
+#: data/ui/window.ui:265
+msgid "Resize Canvas"
+msgstr ""
+
+#: data/ui/window.ui:284
 msgid "Width"
 msgstr ""
 
-#: data/ui/window.ui:289
+#: data/ui/window.ui:299
 msgid "Height"
 msgstr ""
 
-#: data/ui/window.ui:294
+#: data/ui/window.ui:304
 msgid "Change size"
 msgstr ""
 
-#: data/ui/window.ui:336
+#: data/ui/window.ui:346
 msgid "ASCII"
 msgstr ""
 
-#: data/ui/window.ui:358
+#: data/ui/window.ui:368
 msgid "Character"
 msgstr ""
 
-#: data/ui/window.ui:381
+#: data/ui/window.ui:391
 msgid "Style"
 msgstr ""
 
-#: data/ui/window.ui:410
+#: data/ui/window.ui:420
 msgid "Clear Canvas"
 msgstr ""
 
-#: data/ui/window.ui:416
+#: data/ui/window.ui:426
 msgid "New Palette"
 msgstr ""
 
-#: data/ui/window.ui:420
+#: data/ui/window.ui:430
 msgid "New Palette From Canvas"
 msgstr ""
 
-#: data/ui/window.ui:424
+#: data/ui/window.ui:434
 msgid "Open Palettes Folder"
 msgstr ""
 
-#: data/ui/window.ui:430
+#: data/ui/window.ui:440
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: data/ui/window.ui:434
+#: data/ui/window.ui:444
 msgid "About ASCII Draw"
 msgstr ""
 
-#: data/ui/window.ui:444
+#: data/ui/window.ui:454
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: data/ui/window.ui:448
+#: data/ui/window.ui:458
 msgid "Save As"
 msgstr ""
 
-#: data/ui/window.ui:454
+#: data/ui/window.ui:464
 msgid "Open"
 msgstr ""
 
-#: data/ui/window.ui:458 src/window.py:416
+#: data/ui/window.ui:468 src/window.py:416
 msgid "New Canvas"
 msgstr ""
 
@@ -428,10 +456,6 @@ msgstr ""
 
 #: src/window.py:452
 msgid "Saved successfully"
-msgstr ""
-
-#: src/window.py:607
-msgid "Undo"
 msgstr ""
 
 #: src/window.py:614
