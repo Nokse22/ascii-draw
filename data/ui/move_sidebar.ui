@@ -36,7 +36,7 @@
         <child>
           <object class="AdwActionRow">
             <property name="hexpand">True</property>
-            <property name="title" translatable="yes">Copy Selection</property>
+            <property name="title" translatable="yes">Copy</property>
             <property name="valign">start</property>
             <child>
               <object class="GtkBox">
@@ -54,7 +54,7 @@
         <child>
           <object class="AdwActionRow">
             <property name="hexpand">True</property>
-            <property name="title" translatable="yes">Delete Selection</property>
+            <property name="title" translatable="yes">Delete</property>
             <property name="valign">start</property>
             <child>
               <object class="GtkBox">

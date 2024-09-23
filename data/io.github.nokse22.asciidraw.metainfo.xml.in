@@ -22,7 +22,7 @@ There are many tools and features available such as:</p>
 	    <li>Tree View</li>
 	    <li>Eraser</li>
 	    <li>Character Picker</li>
-	    <li>Select and Move</li>
+	    <li>Move and Rotate selection</li>
 	    <li>Flood Fill</li>
     </ul>
 	  You can also organize characters into custom palettes.
@@ -218,6 +218,11 @@ There are many tools and features available such as:</p>
 	  <screenshot>
 	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2006.png</image>
 	    <caption>Cartesian, stepped and freehand lines</caption>
+	  </screenshot>
+
+	  <screenshot>
+	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2007.png</image>
+	    <caption>Move and Rotate Tool</caption>
 	  </screenshot>
   </screenshots>
 

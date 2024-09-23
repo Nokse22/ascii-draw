@@ -62,6 +62,7 @@
 											<object class="GtkButton" id="undo_button">
 												<property name="icon-name">edit-undo-symbolic</property>
 												<property name="sensitive">False</property>
+											  <property name="tooltip-text" translatable="yes">Undo</property>
 												<signal name="clicked" handler="undo_first_change"/>
 											</object>
 										</child>
@@ -69,12 +70,14 @@
 											<object class="GtkButton" id="redo_button">
 												<property name="icon-name">edit-redo-symbolic</property>
 												<property name="sensitive">False</property>
+											  <property name="tooltip-text" translatable="yes">Redo</property>
 												<signal name="clicked" handler="redo_last_change"/>
 											</object>
 										</child>
 										<child type="end">
 											<object class="GtkToggleButton" id="sidebar_show_button">
 												<property name="active">True</property>
+											  <property name="tooltip-text" translatable="yes">Toggle Sidebar</property>
 												<property name="icon-name">sidebar-show-right-symbolic</property>
 											</object>
 										</child>
@@ -207,21 +210,25 @@
 												<child>
 													<object class="GtkToggleButton" id="primary_char_button">
 														<property name="active">True</property>
-														<property name="css-classes">circular
-ascii</property>
 														<property name="halign">end</property>
 														<property name="hexpand">True</property>
 														<property name="label">#</property>
 														<property name="tooltip-text" translatable="yes">Primary Character</property>
+													  <style>
+													    <class name="circular"/>
+													    <class name="ascii"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="secondary_char_button">
-														<property name="css-classes">circular
-ascii</property>
 														<property name="group">primary_char_button</property>
 														<property name="label">+</property>
 														<property name="tooltip-text" translatable="yes">Secondary Character</property>
+													  <style>
+													    <class name="circular"/>
+													    <class name="ascii"/>
+													  </style>
 													</object>
 												</child>
 											</object>
@@ -241,18 +248,21 @@ ascii</property>
 									<object class="GtkButton" id="close_sidebar_button">
 										<property name="visible">false</property>
 										<property name="icon-name">right-large-symbolic</property>
+									  <property name="tooltip-text" translatable="yes">Close Sidebar</property>
 										<signal name="clicked" handler="close_sidebar"/>
 									</object>
 								</child>
 								<child type="start">
 									<object class="GtkMenuButton">
 										<property name="icon-name">open-menu-symbolic</property>
+									  <property name="tooltip-text" translatable="yes">Main Menu</property>
 										<property name="menu-model">primary_menu</property>
 									</object>
 								</child>
 								<child type="end">
 									<object class="GtkMenuButton">
-										<property name="icon-name">list-add-symbolic</property>
+										<property name="icon-name">resize-symbolic</property>
+									  <property name="tooltip-text" translatable="yes">Resize Canvas</property>
 										<property name="popover">
 											<object class="GtkPopover">
 												<signal name="closed" handler="on_increase_size_activated"/>

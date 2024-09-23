@@ -26,9 +26,7 @@
                 <property name="top-margin">12</property>
                 <property name="bottom-margin">12</property>
                 <property name="right-margin">12</property>
-                <style>
-                  <class name="flat"/>
-                </style>
+                <property name="css-classes">flat</property>
               </object>
             </child>
           </object>
