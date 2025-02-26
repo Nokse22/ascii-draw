@@ -22,7 +22,7 @@ msgstr ""
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:51
 #: src/main.py:129
 msgid "ASCII Draw"
-msgstr "ASCII Draw"
+msgstr "Desenho ASCII"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:9
 msgid "GNOME;GTK;Graphics;Art;"
@@ -62,7 +62,7 @@ msgstr "Texto com fontes figlet"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 src/tools/table.py:113
 msgid "Table"
-msgstr "Mesa"
+msgstr "Tabela"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
 msgid "Tree View"
@@ -185,7 +185,7 @@ msgstr "Texto"
 #: data/gtk/help-overlay.ui:97
 msgctxt "shortcut window"
 msgid "Table"
-msgstr "Mesa"
+msgstr "Tabela"
 
 #: data/gtk/help-overlay.ui:103
 msgctxt "shortcut window"
