@@ -26,7 +26,7 @@ msgstr "ASCII Draw"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:9
 msgid "GNOME;GTK;Graphics;Art;"
-msgstr "Gnome; gtk; gráficos; art;"
+msgstr "GNOME;GTK;Gráficos;Arte;"
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:10
 msgid "Sketch anything using characters"
