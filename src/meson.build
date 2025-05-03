@@ -24,7 +24,6 @@ ascii_draw_sources = [
   'main.py',
   'window.py',
   'palette.py',
-  'tool.py',
   'new_palette_window.py',
 ]
 

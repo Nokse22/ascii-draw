@@ -1,6 +1,6 @@
 # main.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -234,6 +234,9 @@ class AsciiDrawApplication(Adw.Application):
 
             dialog.choose(None, self.on_save_file_with_name_response)
             return True
+
+        else:
+            self.quit()
 
     def on_save_file_with_name_response(self, dialog, task, *args):
         response = dialog.choose_finish(task)
