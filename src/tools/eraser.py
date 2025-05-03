@@ -1,6 +1,6 @@
 # eraser.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ from gi.repository import GObject
 
 from .tool import Tool
 
+from gettext import gettext as _
+
 
 class Eraser(Tool):
     def __init__(self, *args, **kwargs):
@@ -35,7 +37,8 @@ class Eraser(Tool):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
-        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/eraser_sidebar.ui")
+        builder = Gtk.Builder.new_from_resource(
+            "/io/github/nokse22/asciidraw/ui/eraser_sidebar.ui")
         self._sidebar = builder.get_object("eraser_stack_page")
         self.eraser_adjustment = builder.get_object("eraser_adjustment")
 
@@ -62,14 +65,16 @@ class Eraser(Tool):
         self.notify('size')
 
     def on_drag_begin(self, gesture, start_x, start_y):
-        if not self._active: return
+        if not self._active:
+            return
         self.start_x = start_x
         self.start_y = start_y
 
         self.canvas.add_undo_action(_("Eraser"))
 
     def on_drag_follow(self, gesture, end_x, end_y):
-        if not self._active: return
+        if not self._active:
+            return
 
         start_x_char = self.start_x // self.x_mul
         start_y_char = self.start_y // self.y_mul
@@ -83,21 +88,26 @@ class Eraser(Tool):
         x_coord = (self.start_x + self.end_x)/self.x_mul
         y_coord = (self.start_y + self.end_y)/self.y_mul
         for delta in self.brush_sizes[int(self._size - 1)]:
-            self.canvas.set_char_at(x_coord + delta[0], y_coord + delta[1], " ", True)
+            self.canvas.set_char_at(
+                x_coord + delta[0], y_coord + delta[1], " ", True)
         self.canvas.update()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
-        if not self._active: return
+        if not self._active:
+            return
         pass
 
     def on_click_pressed(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
         pass
 
     def on_click_stopped(self, click):
-        if not self._active: return
+        if not self._active:
+            return
         pass
 
     def on_click_released(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
         pass

@@ -95,51 +95,61 @@
 												<property name="spacing">6</property>
 												<child>
 													<object class="GtkToggleButton" id="rectangle_button">
-														<property name="css-classes">flat</property>
 														<property name="halign">center</property>
 														<property name="icon-name">rectangle-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Rectangle Ctrl+R</property>
 														<signal name="clicked" handler="on_choose_rectangle"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="filled_rectangle_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">filled-rectangle-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Filled rectangle Ctrl+Shift+R</property>
 														<signal name="clicked" handler="on_choose_filled_rectangle"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="line_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">line-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Line Ctrl+L</property>
 														<signal name="clicked" handler="on_choose_line"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="free_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">paintbrush-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Freehand Ctrl+F</property>
 														<signal name="clicked" handler="on_choose_free"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="text_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">text-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Text Ctrl+T</property>
 														<signal name="clicked" handler="on_choose_text"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 											</object>
@@ -149,62 +159,74 @@
 												<property name="spacing">6</property>
 												<child>
 													<object class="GtkToggleButton" id="table_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">table-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Table Ctrl+Shift+T</property>
 														<signal name="clicked" handler="on_choose_table"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="tree_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">tree-list-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Tree view Ctrl+U</property>
 														<signal name="clicked" handler="on_choose_tree_list"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="eraser_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">eraser-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Eraser Ctrl+E</property>
 														<signal name="clicked" handler="on_choose_eraser"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="picker_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">color-select-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Picker Ctrl+P</property>
 														<signal name="clicked" handler="on_choose_picker"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="move_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">edit-select-all-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Move Ctrl+M</property>
 														<signal name="clicked" handler="on_choose_select"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
 													<object class="GtkToggleButton" id="fill_button">
-														<property name="css-classes">flat</property>
 														<property name="group">rectangle_button</property>
 														<property name="halign">center</property>
 														<property name="icon-name">fill-tool-symbolic</property>
 														<property name="tooltip-text" translatable="yes">Fill Ctrl+Shift+F</property>
 														<signal name="clicked" handler="on_choose_fill"/>
+													  <style>
+													    <class name="flat"/>
+													  </style>
 													</object>
 												</child>
 												<child>
@@ -320,10 +342,10 @@
 									<object class="GtkBox">
 										<property name="orientation">vertical</property>
 										<child>
-											<object class="GtkStack" id="sidebar_stack">
+											<object class="AdwViewStack" id="sidebar_stack">
 												<property name="vexpand">True</property>
 												<child>
-													<object class="GtkStackPage" id="character_stack_page">
+													<object class="AdwViewStackPage" id="character_stack_page">
 														<property name="child">
 															<object class="GtkBox">
 																<property name="orientation">vertical</property>
@@ -369,7 +391,7 @@
 													</object>
 												</child>
 												<child>
-													<object class="GtkStackPage" id="style_stack_page">
+													<object class="AdwViewStackPage" id="style_stack_page">
 														<property name="child">
 															<object class="GtkScrolledWindow">
 																<property name="hscrollbar-policy">never</property>
@@ -396,14 +418,17 @@
 									</object>
 								</property>
 								<child type="top">
-									<object class="GtkStackSwitcher" id="sidebar_stack_switcher">
-										<property name="css-classes">switcher</property>
+									<object class="AdwInlineViewSwitcher" id="sidebar_stack_switcher">
 										<property name="hexpand">True</property>
 										<property name="margin-bottom">6</property>
-										<property name="margin-end">3</property>
-										<property name="margin-start">3</property>
+										<property name="margin-end">6</property>
+										<property name="margin-start">6</property>
 										<property name="margin-top">6</property>
 										<property name="stack">sidebar_stack</property>
+									  <property name="display-mode">icons</property>
+									  <style>
+									    <class name="flat"/>
+									  </style>
 									</object>
 								</child>
 							</object>

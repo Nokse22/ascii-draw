@@ -1,6 +1,6 @@
 # tree.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
-import pyfiglet
 import emoji
 
 from .tool import Tool
+
 
 class Tree(Tool):
     def __init__(self, *args, **kwargs):
@@ -38,7 +37,8 @@ class Tree(Tool):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
-        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/tree_sidebar.ui")
+        builder = Gtk.Builder.new_from_resource(
+            "/io/github/nokse22/asciidraw/ui/tree_sidebar.ui")
         self._sidebar = builder.get_object("tree_stack_page")
         self.text_entry_buffer = builder.get_object("text_entry_buffer")
         self.enter_button = builder.get_object("enter_button")
@@ -61,7 +61,8 @@ class Tree(Tool):
 
         self._transparent = False
 
-        self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
+        self.text_entry_buffer.connect_after(
+            "insert-text", self.on_text_inserted)
         self.text_entry_buffer.connect("changed", self.preview)
         self.enter_button.connect("activated", self.insert)
         self.text_entry_buffer.bind_property("text", self, "text")
@@ -88,13 +89,15 @@ class Tree(Tool):
         self.notify('text')
 
     def on_drag_begin(self, gesture, start_x, start_y):
-        if not self._active: return
+        if not self._active:
+            return
 
         self.drag_start_x = start_x
         self.drag_start_y = start_y
 
     def on_drag_follow(self, gesture, x, y):
-        if not self._active: return
+        if not self._active:
+            return
 
         self.drag_x = int((x + self.drag_start_x) // self.x_mul - self.drag_start_x// self.x_mul)
         self.drag_y = int((y + self.drag_start_y) // self.y_mul - self.drag_start_y// self.y_mul)
@@ -103,7 +106,8 @@ class Tree(Tool):
         self.preview()
 
     def on_drag_end(self, gesture, delta_x, delta_y):
-        if not self._active: return
+        if not self._active:
+            return
 
         self.tree_x += self.drag_x
         self.tree_y += self.drag_y
@@ -112,7 +116,8 @@ class Tree(Tool):
         self.drag_y = 0
 
     def on_click_pressed(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
 
         x_char = int(x / self.x_mul)
         y_char = int(y / self.y_mul)
@@ -124,15 +129,19 @@ class Tree(Tool):
         self.preview()
 
     def on_click_stopped(self, click):
-        if not self._active: return
+        if not self._active:
+            return
         pass
 
     def on_click_released(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
         pass
 
     def preview(self, *args):
-        if not self._active: return
+        if not self._active:
+            return
+
         self.canvas.clear_preview()
         self.draw_tree(self.tree_x + self.drag_x, self.tree_y + self.drag_y, False)
         self.canvas.update_preview()
@@ -162,10 +171,9 @@ class Tree(Tool):
                     previos_spaces = 0
                     indent_level = current_indent - 1
                     for i in range(line_number - 1, 0, -1):
-                        # print(indent_level, indent_space, leading_spaces[i])
                         if i != 0:
-                            leading_spaces[i] #previous spaces
-                            indent_space # current spaces
+                            leading_spaces[i]  # previous spaces
+                            indent_space  # current spaces
                             if leading_spaces[i] < indent_space:
                                 break
                             if leading_spaces[i] < previos_spaces:
@@ -178,26 +186,32 @@ class Tree(Tool):
             leading_spaces.append(indent_space)
             processed_lines.append([indent_level, stripped_line])
 
-        tree_structure = ""
-
         y = tree_y
         for index, (indent, text) in enumerate(processed_lines):
             x = tree_x + (indent) * 4
             self.canvas.draw_text(x, y, text, False, draw)
             if indent != 0:
-                self.canvas.set_char_at(x - 1, y, " ", draw)
-                self.canvas.set_char_at(x - 2, y, self.canvas.bottom_horizontal(), draw)
-                self.canvas.set_char_at(x - 3, y, self.canvas.bottom_horizontal(), draw)
-                self.canvas.set_char_at(x - 4, y, self.canvas.bottom_left(), draw)
+                self.canvas.set_char_at(
+                    x - 1, y, " ", draw)
+                self.canvas.set_char_at(
+                    x - 2, y, self.canvas.bottom_horizontal(), draw)
+                self.canvas.set_char_at(
+                    x - 3, y, self.canvas.bottom_horizontal(), draw)
+                self.canvas.set_char_at(
+                    x - 4, y, self.canvas.bottom_left(), draw)
 
                 prev_index = index - 1
                 while processed_lines[prev_index][0] != processed_lines[index][0] - 1:
                     if prev_index < 0:
                         break
                     if processed_lines[prev_index][0] == processed_lines[index][0]:
-                        self.canvas.set_char_at(x - 4, y - (index - prev_index), self.canvas.right_intersect(), draw)
+                        self.canvas.set_char_at(
+                            x - 4, y - (index - prev_index),
+                            self.canvas.right_intersect(), draw)
                     else:
-                        self.canvas.set_char_at(x - 4, y - (index - prev_index), self.canvas.left_vertical(), draw)
+                        self.canvas.set_char_at(
+                            x - 4, y - (index - prev_index),
+                            self.canvas.left_vertical(), draw)
                     prev_index -= 1
             y += 1
 
@@ -205,7 +219,7 @@ class Tree(Tool):
         if emoji.is_emoji(text):
             start_iter = loc.copy()
             start_iter.backward_char()
-            buffer.delete(start_iter ,loc)
+            buffer.delete(start_iter, loc)
             buffer.insert(start_iter, "X")
             return
         spaces = 0
@@ -227,7 +241,7 @@ class Tree(Tool):
         elif text == "\t":
             start_iter = loc.copy()
             start_iter.backward_char()
-            buffer.delete(start_iter ,loc)
+            buffer.delete(start_iter, loc)
             buffer.insert(start_iter, " ")
 
         self.preview()

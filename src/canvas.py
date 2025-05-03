@@ -1,6 +1,6 @@
 # canvas.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,11 +19,8 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
-import threading
-import math
-import emoji
 
 class Change():
     def __init__(self, _name):
@@ -38,6 +35,7 @@ class Change():
 
     def __repr__(self):
         return f"The change named {self.name} has {len(self.changes)} changes"
+
 
 @Gtk.Template(resource_path='/io/github/nokse22/asciidraw/ui/canvas.ui')
 class Canvas(Adw.Bin):
@@ -83,7 +81,8 @@ class Canvas(Adw.Bin):
         self.fixed.add_controller(self.zoom_gesture)
 
         self.draw_drawing_area.set_draw_func(self.drawing_function, None)
-        self.preview_drawing_area.set_draw_func(self.preview_drawing_function, None)
+        self.preview_drawing_area.set_draw_func(
+            self.preview_drawing_function, None)
 
         self.x_mul = 12
         self.y_mul = 24
@@ -91,7 +90,8 @@ class Canvas(Adw.Bin):
         self.canvas_width = 40
         self.canvas_height = 20
 
-        self.draw_drawing_area.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
+        self.draw_drawing_area.set_size_request(
+            self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
 
         for y in range(self.canvas_height):
             new_line = []
@@ -167,7 +167,9 @@ class Canvas(Adw.Bin):
 
         for y, line in enumerate(self.drawing):
             for x, char in enumerate(line):
-                cr.move_to(x * self.x_mul, (y + 1) * self.y_mul * self.scale_factor - 5)
+                cr.move_to(
+                    x * self.x_mul,
+                    (y + 1) * self.y_mul * self.scale_factor - 5)
                 cr.show_text(char)
 
     def preview_drawing_function(self, area, cr, width, height, data):
@@ -177,7 +179,9 @@ class Canvas(Adw.Bin):
 
         for y, line in enumerate(self.preview):
             for x, char in enumerate(line):
-                cr.move_to(x * self.x_mul, (y + 1) * self.y_mul * self.scale_factor - 5)
+                cr.move_to(
+                    x * self.x_mul,
+                    (y + 1) * self.y_mul * self.scale_factor - 5)
                 cr.show_text(char)
 
     def update(self):
@@ -189,13 +193,14 @@ class Canvas(Adw.Bin):
     def undo(self):
         try:
             change_object = self.undo_changes[-1]
-        except:
+        except Exception:
             return
         redo_object = Change(change_object.name)
         for x, y, char in change_object.changes:
-            if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+            if (y >= len(self.drawing) or x >= len(self.drawing[0])
+                    or x < 0 or y < 0):
                 return
-            redo_object.add_change(x, y, self.get_char_at(x,y))
+            redo_object.add_change(x, y, self.get_char_at(x, y))
             self.drawing[int(y)][int(x)] = char
 
         self.redo_changes.append(redo_object)
@@ -206,13 +211,14 @@ class Canvas(Adw.Bin):
     def redo(self):
         try:
             change_object = self.redo_changes[-1]
-        except:
+        except Exception:
             return
         self.add_undo_action(change_object.name)
         for x, y, char in change_object.changes:
-            if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+            if (y >= len(self.drawing) or x >= len(self.drawing[0])
+                    or x < 0 or y < 0):
                 return
-            self.undo_changes[-1].add_change(x, y, self.get_char_at(x,y))
+            self.undo_changes[-1].add_change(x, y, self.get_char_at(x, y))
             self.drawing[int(y)][int(x)] = char
         self.redo_changes.pop(-1)
         self.emit("redo-removed")
@@ -225,7 +231,9 @@ class Canvas(Adw.Bin):
         self.is_saved = False
 
     def get_char_at(self, x: int, y: int, draw=True):
-        if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0: return
+        if (y >= len(self.drawing) or x >= len(self.drawing[0])
+                or x < 0 or y < 0):
+            return
         if draw:
             return self.drawing[int(y)][int(x)]
         return self.preview[int(y)][int(x)]
@@ -247,7 +255,8 @@ class Canvas(Adw.Bin):
         return self.secondary_char
 
     def draw_text(self, start_x, start_y, text, transparent, draw):
-        if text == "": return
+        if text == "":
+            return
         _layer = self.drawing if draw else self.preview
 
         self.__draw_text(start_x, start_y, text, transparent, draw, _layer)
@@ -256,7 +265,6 @@ class Canvas(Adw.Bin):
         lines = text.splitlines()
         max_line_length = max(len(line) for line in lines)
         array2 = [list(line.ljust(max_line_length)) for line in lines]
-        # array2 = [list(line) for line in lines]
 
         rows1, cols1 = len(_layer), len(_layer[0])
         rows2, cols2 = len(array2), len(array2[0])
@@ -273,22 +281,39 @@ class Canvas(Adw.Bin):
                         continue
                     if draw:
                         prev_char = self.get_char_at(new_j, new_i)
-                        self.undo_changes[-1].add_change(new_j, new_i, prev_char)
+                        self.undo_changes[-1].add_change(
+                            new_j, new_i, prev_char)
                     _layer[int(new_i)][int(new_j)] = array2[i][j]
 
     def draw_rectangle(self, start_x_char, start_y_char, width, height, draw):
         if width <= 1 or height <= 1:
             return
 
-        self.horizontal_line(start_y_char, start_x_char + 1, width - 2, self.top_horizontal(), draw)
-        self.horizontal_line(start_y_char + height - 1, start_x_char + 1, width - 2, self.bottom_horizontal(), draw)
-        self.vertical_line(start_x_char, start_y_char + 1, height - 2, self.left_vertical(), draw)
-        self.vertical_line(start_x_char + width - 1, start_y_char + 1, height - 2, self.right_vertical(), draw)
+        self.horizontal_line(
+            start_y_char, start_x_char + 1, width - 2,
+            self.top_horizontal(), draw)
+        self.horizontal_line(
+            start_y_char + height - 1, start_x_char + 1, width - 2,
+            self.bottom_horizontal(), draw)
+        self.vertical_line(
+            start_x_char, start_y_char + 1, height - 2,
+            self.left_vertical(), draw)
+        self.vertical_line(
+            start_x_char + width - 1, start_y_char + 1, height - 2,
+            self.right_vertical(), draw)
 
-        self.set_char_at(start_x_char + width - 1, start_y_char, self.top_right(), draw)
-        self.set_char_at(start_x_char + width - 1, start_y_char + height  - 1, self.bottom_right(), draw)
-        self.set_char_at(start_x_char, start_y_char, self.top_left(), draw)
-        self.set_char_at(start_x_char, start_y_char + height - 1, self.bottom_left(), draw)
+        self.set_char_at(
+            start_x_char + width - 1, start_y_char,
+            self.top_right(), draw)
+        self.set_char_at(
+            start_x_char + width - 1, start_y_char + height - 1,
+            self.bottom_right(), draw)
+        self.set_char_at(
+            start_x_char, start_y_char,
+            self.top_left(), draw)
+        self.set_char_at(
+            start_x_char, start_y_char + height - 1,
+            self.bottom_left(), draw)
 
     def horizontal_line(self, y, start_x, length, char, draw):
         if length < 0:
@@ -297,7 +322,9 @@ class Canvas(Adw.Bin):
 
         for x in range(abs(length)):
             prev_label = self.get_char_at(start_x + x, y, draw)
-            if (prev_label == self.left_vertical() or prev_label == self.right_vertical()) and self.crossing() != " ":
+            if ((prev_label == self.left_vertical()
+                    or prev_label == self.right_vertical())
+                    and self.crossing() != " "):
                 self.set_char_at(start_x + x, y, self.crossing(), draw)
             else:
                 self.set_char_at(start_x + x, y, char, draw)
@@ -309,7 +336,9 @@ class Canvas(Adw.Bin):
 
         for y in range(abs(length)):
             prev_label = self.get_char_at(x, start_y + y, draw)
-            if (prev_label == self.top_horizontal() or prev_label == self.bottom_horizontal()) and self.crossing() != " ":
+            if ((prev_label == self.top_horizontal() or
+                    prev_label == self.bottom_horizontal()) and
+                    self.crossing() != " "):
                 self.set_char_at(x, start_y + y, self.crossing(), draw)
             else:
                 self.set_char_at(x, start_y + y, char, draw)
@@ -328,14 +357,16 @@ class Canvas(Adw.Bin):
         _layer[int(y)][int(x)] = char
 
     def draw_at(self, x, y):
-        if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+        if (y >= len(self.drawing) or x >= len(self.drawing[0])
+                or x < 0 or y < 0):
             return
         prev_char = self.get_char_at(x, y)
         self.undo_changes[-1].add_change(x, y, prev_char)
         self.drawing[int(y)][int(x)] = self.get_selected_char()
 
     def draw_inverted_at(self, x, y):
-        if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+        if (y >= len(self.drawing) or x >= len(self.drawing[0])
+                or x < 0 or y < 0):
             return
         prev_char = self.get_char_at(x, y)
         self.undo_changes[-1].add_change(x, y, prev_char)
@@ -381,7 +412,8 @@ class Canvas(Adw.Bin):
     def wipe_canvas(self):
         for y in range(self.canvas_height):
             for x in range(self.canvas_width):
-                if y >= len(self.drawing) or x >= len(self.drawing[0]) or x < 0 or y < 0:
+                if (y >= len(self.drawing) or x >= len(self.drawing[0])
+                        or x < 0 or y < 0):
                     return
                 self.drawing[int(y)][int(x)] = ""
 
@@ -403,7 +435,8 @@ class Canvas(Adw.Bin):
             self.drawing.append(new_line)
             self.preview.append(new_line)
 
-        self.draw_drawing_area.set_size_request(self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
+        self.draw_drawing_area.set_size_request(
+            self.canvas_width*self.x_mul, self.canvas_height*self.y_mul)
 
         self.__draw_text(0, 0, content, False, False, self.drawing)
 
@@ -421,9 +454,6 @@ class Canvas(Adw.Bin):
         lines = content.split('\n')
         num_lines = len(lines)
         max_chars = max(len(line) for line in lines)
-        # if num_lines > self.canvas_max_x or max_chars > self.canvas_max_y:
-        #     toast = Adw.Toast(title=_("Opened file exceeds the maximum canvas size"))
-        #     self.toast_overlay.add_toast(toast)
         self.change_canvas_size(max(max_chars, 10), max(num_lines - 1, 5))
         self.clear_preview()
         self.__draw_text(0, 0, content, False, False, self.drawing)
@@ -431,35 +461,51 @@ class Canvas(Adw.Bin):
 
     def top_horizontal(self):
         return self.styles[self._style - 1][0]
+
     def bottom_horizontal(self):
         return self.styles[self._style - 1][1]
+
     def left_vertical(self):
         return self.styles[self._style - 1][2]
+
     def right_vertical(self):
         return self.styles[self._style - 1][3]
+
     def top_left(self):
         return self.styles[self._style - 1][4]
+
     def top_right(self):
         return self.styles[self._style - 1][5]
+
     def bottom_right(self):
         return self.styles[self._style - 1][6]
+
     def bottom_left(self):
         return self.styles[self._style - 1][7]
+
     def up_arrow(self):
         return self.styles[self._style - 1][13]
+
     def down_arrow(self):
         return self.styles[self._style - 1][14]
+
     def left_arrow(self):
         return self.styles[self._style - 1][16]
+
     def right_arrow(self):
         return self.styles[self._style - 1][15]
+
     def crossing(self):
         return self.styles[self._style - 1][8]
+
     def right_intersect(self):
         return self.styles[self._style - 1][9]
+
     def left_intersect(self):
         return self.styles[self._style - 1][10]
+
     def top_intersect(self):
         return self.styles[self._style - 1][11]
+
     def bottom_intersect(self):
         return self.styles[self._style - 1][12]

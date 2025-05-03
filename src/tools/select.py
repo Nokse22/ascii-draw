@@ -1,6 +1,6 @@
 # select.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ from gi.repository import Gdk, GObject
 
 from .tool import Tool
 
+from gettext import gettext as _
+
 
 class Select(Tool):
     def __init__(self, *args, **kwargs):
@@ -37,17 +39,18 @@ class Select(Tool):
         self.canvas.click_gesture.connect("released", self.on_click_released)
         self.canvas.click_gesture.connect("stopped", self.on_click_stopped)
 
-        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/move_sidebar.ui")
+        builder = Gtk.Builder.new_from_resource(
+            "/io/github/nokse22/asciidraw/ui/move_sidebar.ui")
         self._sidebar = builder.get_object("move_stack_page")
-        self.counterclockwise_button = builder.get_object("counterclockwise_button")
+        self.counterclockwise_button = builder.get_object(
+            "counterclockwise_button")
         self.clockwise_button = builder.get_object("clockwise_button")
         self.copy_button = builder.get_object("copy_button")
         self.delete_button = builder.get_object("delete_button")
 
         self.selection = Adw.Bin(
             css_classes=["selection"],
-            cursor=Gdk.Cursor.new_from_name("move")
-        )
+            cursor=Gdk.Cursor.new_from_name("move"))
 
         self.x_mul = 12
         self.y_mul = 24
@@ -66,6 +69,7 @@ class Select(Tool):
 
         self.has_selection = False
         self.is_dragging = False
+        self.is_duplicating = False
 
         self.moved_text = []
 
@@ -105,6 +109,11 @@ class Select(Tool):
         if not self._active:
             return
 
+        if gesture.get_last_event().get_modifier_state() == 4:  # CONTROL MASK
+            self.is_duplicating = True
+        else:
+            self.is_duplicating = False
+
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
 
@@ -112,8 +121,7 @@ class Select(Tool):
             self.selection_start_x_char,
             self.selection_start_y_char,
             self.selection_delta_char_x,
-            self.selection_delta_char_y
-        )
+            self.selection_delta_char_y)
 
         if (this_x_char > (start_x_char)
                 and this_x_char < (start_x_char + width)
@@ -131,7 +139,8 @@ class Select(Tool):
                             start_x_char + x, start_y_char + y) or " ")
                 self.moved_text.append(line)
 
-            self.delete_selection()
+            if not self.is_duplicating:
+                self.delete_selection()
 
         else:
             self.selection_start_x_char = this_x // self.x_mul
@@ -165,15 +174,13 @@ class Select(Tool):
                     self.selection_start_x_char,
                     self.selection_start_y_char,
                     self.selection_delta_char_x,
-                    self.selection_delta_char_y
-                )
+                    self.selection_delta_char_y)
 
                 self.canvas.draw_text(
                     start_x_char + self.dragging_delta_char_x + 1,
                     start_y_char + self.dragging_delta_char_y + 1,
                     self.get_moved_string(),
-                    True, False
-                )
+                    True, False)
 
                 self.update_selection()
 
@@ -205,14 +212,12 @@ class Select(Tool):
                 self.selection_start_x_char,
                 self.selection_start_y_char,
                 self.selection_delta_char_x,
-                self.selection_delta_char_y
-            )
+                self.selection_delta_char_y)
 
             self.canvas.draw_text(
                 start_x_char + 1, start_y_char + 1,
                 self.get_moved_string(),
-                True, True
-            )
+                True, True)
 
             self.moved_text = []
             self.dragging_delta_char_x = 0
@@ -268,19 +273,16 @@ class Select(Tool):
                 self.selection_start_x_char,
                 self.selection_start_y_char,
                 self.selection_delta_char_x,
-                self.selection_delta_char_y
-        )
+                self.selection_delta_char_y)
 
         self.canvas.fixed.move(
             self.selection,
             (start_x_char + self.dragging_delta_char_x + 1) * self.x_mul,
-            (start_y_char + self.dragging_delta_char_y + 1) * self.y_mul
-        )
+            (start_y_char + self.dragging_delta_char_y + 1) * self.y_mul)
 
         self.selection.set_size_request(
             (width - 1) * self.x_mul,
-            (height - 1) * self.y_mul
-        )
+            (height - 1) * self.y_mul)
 
     def rotate(self, angle):
         if angle not in [90, -90]:
@@ -292,8 +294,7 @@ class Select(Tool):
                 self.selection_start_x_char,
                 self.selection_start_y_char,
                 self.selection_delta_char_x,
-                self.selection_delta_char_y
-        )
+                self.selection_delta_char_y)
 
         for y in range(1, int(height)):
             line = []
@@ -326,8 +327,7 @@ class Select(Tool):
                 self.selection_start_x_char,
                 self.selection_start_y_char,
                 self.selection_delta_char_x,
-                self.selection_delta_char_y
-        )
+                self.selection_delta_char_y)
 
         self.delete_selection()
 
@@ -335,8 +335,7 @@ class Select(Tool):
             start_x_char + 1,
             start_y_char + 1,
             self.get_moved_string(),
-            True, True
-        )
+            True, True)
 
         self.update_selection()
 

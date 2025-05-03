@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <interface>
   <requires lib="gtk" version="4.12"/>
-  <object class="GtkStackPage" id="tree_stack_page">
+  <object class="AdwViewStackPage" id="tree_stack_page">
     <property name="child">
       <object class="GtkBox">
         <property name="margin-start">12</property>
@@ -26,14 +26,19 @@
                 <property name="top-margin">12</property>
                 <property name="bottom-margin">12</property>
                 <property name="right-margin">12</property>
-                <property name="css-classes">flat</property>
+                <style>
+							    <class name="flat"/>
+                  <class name="monospace"/>
+							  </style>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkListBox">
-            <property name="css-classes">boxed-list</property>
+            <style>
+              <class name="boxed-list"/>
+            </style>
             <child>
               <object class="AdwButtonRow" id="enter_button">
                 <property name="title" translatable="yes">Enter</property>
