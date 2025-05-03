@@ -26,7 +26,8 @@ class Tool():
         self.drag_gesture = _drag_gesture
         self.click_gesture = _click_gesture
 
-        self.active = GObject.Property(type=bool, default=False, flags=GObject.ParamFlags.READWRITE)
+        self.active = GObject.Property(
+            type=bool, default=False, flags=GObject.ParamFlags.READWRITE)
 
     def on_drag_begin(self, gesture, start_x, start_y):
         pass

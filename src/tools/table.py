@@ -1,6 +1,6 @@
 # table.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
 from .tool import Tool
+
+from gettext import gettext as _
+
 
 class Table(Tool):
     def __init__(self, *args, **kwargs):
@@ -34,7 +36,8 @@ class Table(Tool):
 
         self.canvas.click_gesture.connect("pressed", self.on_click_pressed)
 
-        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/table_sidebar.ui")
+        builder = Gtk.Builder.new_from_resource(
+            "/io/github/nokse22/asciidraw/ui/table_sidebar.ui")
         self._sidebar = builder.get_object("table_stack_page")
         self.rows_box = builder.get_object("rows_box")
         self.add_row_button = builder.get_object("add_row_button")
@@ -183,7 +186,8 @@ class Table(Tool):
             for row in range(self.rows_number - 1):
                 y += 2
                 self.canvas.horizontal_line(
-                    y, table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
+                    y, table_x + 1, width - 2,
+                    self.canvas.bottom_horizontal(), draw)
                 self.canvas.set_char_at(
                     table_x, y, self.canvas.right_intersect(), draw)
                 self.canvas.set_char_at(
@@ -191,11 +195,14 @@ class Table(Tool):
         elif int(table_type) == 0 and len(table) > 1:  # first line divided
             y += 2
             self.canvas.horizontal_line(
-                y, table_x + 1, width - 2, self.canvas.bottom_horizontal(), draw)
+                y, table_x + 1, width - 2,
+                self.canvas.bottom_horizontal(), draw)
             self.canvas.set_char_at(
-                table_x, y, self.canvas.right_intersect(), draw)
+                table_x, y,
+                self.canvas.right_intersect(), draw)
             self.canvas.set_char_at(
-                table_x + width - 1, y, self.canvas.left_intersect(), draw)
+                table_x + width - 1, y,
+                self.canvas.left_intersect(), draw)
 
         y = table_y + 1
         x = table_x + 1

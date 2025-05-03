@@ -1,6 +1,6 @@
 # freehand.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
-from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject, Gtk
 
 from .tool import Tool
+
+from gettext import gettext as _
+
 
 class Freehand(Tool):
     def __init__(self, *args, **kwargs):
@@ -30,9 +31,11 @@ class Freehand(Tool):
         self.canvas.drag_gesture.connect("drag-begin", self.on_drag_begin)
         self.canvas.drag_gesture.connect("drag-update", self.on_drag_follow)
 
-        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/freehand_sidebar.ui")
+        builder = Gtk.Builder.new_from_resource(
+            "/io/github/nokse22/asciidraw/ui/freehand_sidebar.ui")
         self._sidebar = builder.get_object("freehand_stack_page")
-        self.freehand_brush_adjustment  = builder.get_object("freehand_brush_adjustment")
+        self.freehand_brush_adjustment = builder.get_object(
+            "freehand_brush_adjustment")
 
         self.start_x = 0
         self.start_y = 0
@@ -58,14 +61,17 @@ class Freehand(Tool):
         self.notify('size')
 
     def on_drag_begin(self, gesture, start_x, start_y):
-        if not self._active: return
+        if not self._active:
+            return
+
         self.start_x = start_x
         self.start_y = start_y
 
         self.canvas.add_undo_action(_("Freehand"))
 
     def on_drag_follow(self, gesture, end_x, end_y):
-        if not self._active: return
+        if not self._active:
+            return
 
         button = gesture.get_current_button()
 
@@ -80,7 +86,13 @@ class Freehand(Tool):
 
         x_coord = (self.start_x + self.end_x)//self.x_mul
         y_coord = (self.start_y + self.end_y)//self.y_mul
+
         for delta in self.brush_sizes[int(self._size - 1)]:
-            if button == 1: self.canvas.draw_at(x_coord + delta[0], y_coord + delta[1])
-            elif button == 3: self.canvas.draw_inverted_at(x_coord + delta[0], y_coord + delta[1])
+            if button == 1:
+                self.canvas.draw_at(
+                    x_coord + delta[0], y_coord + delta[1])
+            elif button == 3:
+                self.canvas.draw_inverted_at(
+                    x_coord + delta[0], y_coord + delta[1])
+
         self.canvas.update()

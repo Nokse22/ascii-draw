@@ -1,6 +1,6 @@
 # flood_fill.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,14 +17,16 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
-from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
-class Fill(GObject.GObject):
-    def __init__(self, _canvas, *args, **kwargs):
+from .tool import Tool
+
+from gettext import gettext as _
+
+
+class Fill(Tool):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.canvas = _canvas
 
         self._active = False
 
@@ -53,7 +55,9 @@ class Fill(GObject.GObject):
         self.notify('active')
 
     def on_click_pressed(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
+
         x_char = int(x / self.x_mul)
         y_char = int(y / self.y_mul)
 
@@ -62,19 +66,24 @@ class Fill(GObject.GObject):
         button = click.get_current_button()
 
         if button == 1:
-            flood_fill(self.canvas, x_char, y_char, self.canvas.get_selected_char())
+            flood_fill(
+                self.canvas, x_char, y_char, self.canvas.get_selected_char())
         elif button == 3:
-            flood_fill(self.canvas, x_char, y_char, self.canvas.get_unselected_char())
+            flood_fill(
+                self.canvas, x_char, y_char, self.canvas.get_unselected_char())
 
         self.canvas.update()
 
     def on_click_stopped(self, click):
-        if not self._active: return
+        if not self._active:
+            return
         pass
 
     def on_click_released(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
         pass
+
 
 def flood_fill(canvas, start_x, start_y, replacement_char):
     target_char = canvas.get_char_at(start_x, start_y)

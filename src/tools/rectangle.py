@@ -1,6 +1,6 @@
 # rectangle.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
-from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import GObject
 
 from .tool import Tool
+
+from gettext import gettext as _
+
 
 class Rectangle(Tool):
     def __init__(self, *args, **kwargs):
@@ -56,12 +57,16 @@ class Rectangle(Tool):
         self.notify('style')
 
     def on_drag_begin(self, gesture, start_x, start_y):
-        if not self._active: return
+        if not self._active:
+            return
+
         self.start_x = start_x
         self.start_y = start_y
 
     def on_drag_follow(self, gesture, end_x, end_y):
-        if not self._active: return
+        if not self._active:
+            return
+
         if self.flip:
             end_x = - end_x
         start_x_char = self.start_x // self.x_mul
@@ -85,10 +90,12 @@ class Rectangle(Tool):
             height = - height
             start_y_char -= height
         height += 1
-        self.canvas.draw_rectangle(start_x_char, start_y_char, width, height, False)
+        self.canvas.draw_rectangle(
+            start_x_char, start_y_char, width, height, False)
 
     def on_drag_end(self, gesture, delta_x, delta_y):
-        if not self._active: return
+        if not self._active:
+            return
 
         self.canvas.clear_preview()
 
@@ -112,5 +119,6 @@ class Rectangle(Tool):
             height = - height
             start_y_char -= height
         height += 1
-        self.canvas.draw_rectangle(start_x_char, start_y_char, width, height, True)
+        self.canvas.draw_rectangle(
+            start_x_char, start_y_char, width, height, True)
         self.canvas.update()

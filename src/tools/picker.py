@@ -1,6 +1,6 @@
 # picker.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,13 +17,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import Adw
-from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
-
 from .tool import Tool
 
-import pyfiglet
 
 class Picker(Tool):
     def __init__(self, *args, **kwargs):
@@ -39,7 +34,9 @@ class Picker(Tool):
         self.y_mul = 24
 
     def on_click_pressed(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
+
         if self.flip:
             if self.drawing_area_width == 0:
                 self.update_area_width()
@@ -51,9 +48,11 @@ class Picker(Tool):
         self.canvas.set_selected_char(char)
 
     def on_click_stopped(self, click):
-        if not self._active: return
+        if not self._active:
+            return
         pass
 
     def on_click_released(self, click, arg, x, y):
-        if not self._active: return
+        if not self._active:
+            return
         pass

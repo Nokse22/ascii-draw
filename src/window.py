@@ -1,6 +1,6 @@
 # window.py
 #
-# Copyright 2023 Nokse
+# Copyright 2023-2025 Nokse
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,8 +24,11 @@ from gi.repository import Gdk, Gio, GObject
 from .palette import Palette
 from .new_palette_window import NewPaletteDialog
 
-from .tools import *
+from .tools import Freehand, Eraser, Rectangle, FilledRectangle
+from .tools import Text, Table, Picker, Tree, Fill, Select, Line
 from .canvas import Canvas
+
+from gettext import gettext as _
 
 import unicodedata
 import os
@@ -80,26 +83,30 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         self.settings = Gio.Settings.new('io.github.nokse22.asciidraw')
 
-        self.settings.bind("window-width", self, "default-width", Gio.SettingsBindFlags.DEFAULT)
-        self.settings.bind("window-height", self, "default-height", Gio.SettingsBindFlags.DEFAULT)
+        self.settings.bind(
+            "window-width", self, "default-width",
+            Gio.SettingsBindFlags.DEFAULT)
+        self.settings.bind(
+            "window-height", self, "default-height",
+            Gio.SettingsBindFlags.DEFAULT)
 
         self.styles = [
-                ["─", "─", "│", "│", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
-                ["╶", "╶", "╎", "╎", "┌", "┐", "┘","└", "┼", "├", "┤", "┴","┬", "∧", "∨", ">", "<"],
-                ["─", "─", "│", "│", "╭", "╮", "╯","╰", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["▁", "▔", "▏", "▕", "▁", "▁", "▔","▔", " ", "▏", "▕", "▔","▁", "∧", "∨", ">", "<"],
-                ["━", "━", "┃", "┃", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
-                ["╺", "╺", "╏", "╏", "┏", "┓", "┛","┗", "╋", "┣", "┫", "┻","┳", "▲", "▼", "▶", "◀"],
-                ["═", "═", "║", "║", "╔", "╗", "╝","╚", "╬", "╠", "╣", "╩","╦", "A", "V", ">", "<"],
-                ["-", "-", "|", "|", "+", "+", "+","+", "+", "+", "+", "+","+", "↑", "↓", "→", "←"],
-                ["_", "_", "│", "│", " ", " ", "│","│", "│", "│", "│", "│","_", "▲", "▼", "▶", "◀"],
-                ["•", "•", "•", "•", "•", "•", "•","•", "•", "•", "•", "•","•", "▲", "▼", ">", "<"],
-                ["·", "·", "·", "·", ".", ".", "'","'", "·", "·", "·", "·","·", "∧", "∨", ">", "<"],
-                ["═", "═", "│", "│", "╒", "╕", "╛","╘", "╪", "╞", "╡", "╧","╤", "▲", "▼", "▶", "◀"],
-                ["─", "─", "║", "║", "╓", "╖", "╜","╙", "╫", "╟", "╢", "╨","╥", "▲", "▼", ">", "<"],
-                ["─", "─", "│", "│", "╔", "╗", "╝","╚", "┼", "├", "┤", "┴","┬", "▲", "▼", ">", "<"],
-                ["▄", "▀", "▐", "▌", "▗", "▖", "▘","▝", "▛", "▐", "▌", "▀","▄", "▲", "▼", "▶", "◀"],
-                ["▀", "▄", "▌", "▐", "▛", "▜", "▟","▙", "▜", "▙", "▟", "▟","▜", "▲", "▼", "▶", "◀"],
+                ["─", "─", "│", "│", "┌", "┐", "┘", "└", "┼", "├", "┤", "┴", "┬", "∧", "∨", ">", "<"],
+                ["╶", "╶", "╎", "╎", "┌", "┐", "┘", "└", "┼", "├", "┤", "┴", "┬", "∧", "∨", ">", "<"],
+                ["─", "─", "│", "│", "╭", "╮", "╯", "╰", "┼", "├", "┤", "┴", "┬", "▲", "▼", ">", "<"],
+                ["▁", "▔", "▏", "▕", "▁", "▁", "▔", "▔", " ", "▏", "▕", "▔", "▁", "∧", "∨", ">", "<"],
+                ["━", "━", "┃", "┃", "┏", "┓", "┛", "┗", "╋", "┣", "┫", "┻", "┳", "▲", "▼", "▶", "◀"],
+                ["╺", "╺", "╏", "╏", "┏", "┓", "┛", "┗", "╋", "┣", "┫", "┻", "┳", "▲", "▼", "▶", "◀"],
+                ["═", "═", "║", "║", "╔", "╗", "╝", "╚", "╬", "╠", "╣", "╩", "╦", "A", "V", ">", "<"],
+                ["-", "-", "|", "|", "+", "+", "+", "+", "+", "+", "+", "+", "+", "↑", "↓", "→", "←"],
+                ["_", "_", "│", "│", " ", " ", "│", "│", "│", "│", "│", "│", "_", "▲", "▼", "▶", "◀"],
+                ["•", "•", "•", "•", "•", "•", "•", "•", "•", "•", "•", "•", "•", "▲", "▼", ">", "<"],
+                ["·", "·", "·", "·", ".", ".", "'", "'", "·", "·", "·", "·", "·", "∧", "∨", ">", "<"],
+                ["═", "═", "│", "│", "╒", "╕", "╛", "╘", "╪", "╞", "╡", "╧", "╤", "▲", "▼", "▶", "◀"],
+                ["─", "─", "║", "║", "╓", "╖", "╜", "╙", "╫", "╟", "╢", "╨", "╥", "▲", "▼", ">", "<"],
+                ["─", "─", "│", "│", "╔", "╗", "╝", "╚", "┼", "├", "┤", "┴", "┬", "▲", "▼", ">", "<"],
+                ["▄", "▀", "▐", "▌", "▗", "▖", "▘", "▝", "▛", "▐", "▌", "▀", "▄", "▲", "▼", "▶", "◀"],
+                ["▀", "▄", "▌", "▐", "▛", "▜", "▟", "▙", "▜", "▙", "▟", "▟", "▜", "▲", "▼", "▶", "◀"],
         ]
 
         text_direction = self.save_import_button.get_child().get_direction()
@@ -110,53 +117,81 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.flip = True
 
         self.canvas = Canvas(self.styles, self.flip)
-        self.canvas.bind_property('primary_selected', self.primary_char_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
-        self.canvas.bind_property('primary_char', self.primary_char_button, 'label', GObject.BindingFlags.BIDIRECTIONAL)
-        self.canvas.bind_property('secondary_char', self.secondary_char_button, 'label', GObject.BindingFlags.BIDIRECTIONAL)
+        self.canvas.bind_property(
+            'primary_selected', self.primary_char_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
+        self.canvas.bind_property(
+            'primary_char', self.primary_char_button, 'label',
+            GObject.BindingFlags.BIDIRECTIONAL)
+        self.canvas.bind_property(
+            'secondary_char', self.secondary_char_button, 'label',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.canvas.connect("undo-added", self.on_undo_added)
         self.canvas.connect("undo-removed", self.on_undo_removed)
         self.canvas.connect("redo-removed", self.on_redo_removed)
         self.toast_overlay.set_child(self.canvas)
 
         self.freehand_tool = Freehand(self.canvas)
-        self.freehand_tool.bind_property('active', self.free_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.freehand_tool.bind_property(
+            'active', self.free_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.freehand_tool.add_sidebar_to(self.sidebar_stack)
 
         self.eraser_tool = Eraser(self.canvas)
-        self.eraser_tool.bind_property('active', self.eraser_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.eraser_tool.bind_property(
+            'active', self.eraser_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.eraser_tool.add_sidebar_to(self.sidebar_stack)
 
         self.rectangle_tool = Rectangle(self.canvas)
-        self.rectangle_tool.bind_property('active', self.rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.rectangle_tool.bind_property(
+            'active', self.rectangle_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
 
         self.filled_rectangle_tool = FilledRectangle(self.canvas)
-        self.filled_rectangle_tool.bind_property('active', self.filled_rectangle_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.filled_rectangle_tool.bind_property(
+            'active', self.filled_rectangle_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
 
         self.line_tool = Line(self.canvas)
-        self.line_tool.bind_property('active', self.line_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.line_tool.bind_property(
+            'active', self.line_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.line_tool.add_sidebar_to(self.sidebar_stack)
 
         self.move_tool = Select(self.canvas)
-        self.move_tool.bind_property('active', self.move_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.move_tool.bind_property(
+            'active', self.move_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.move_tool.add_sidebar_to(self.sidebar_stack)
 
         self.text_tool = Text(self.canvas)
-        self.text_tool.bind_property('active', self.text_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.text_tool.bind_property(
+            'active', self.text_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.text_tool.add_sidebar_to(self.sidebar_stack)
 
         self.table_tool = Table(self.canvas)
-        self.table_tool.bind_property('active', self.table_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.table_tool.bind_property(
+            'active', self.table_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.table_tool.add_sidebar_to(self.sidebar_stack)
 
         self.picker_tool = Picker(self.canvas)
-        self.picker_tool.bind_property('active', self.picker_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.picker_tool.bind_property(
+            'active', self.picker_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
 
         self.tree_tool = Tree(self.canvas)
-        self.tree_tool.bind_property('active', self.tree_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.tree_tool.bind_property(
+            'active', self.tree_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
         self.tree_tool.add_sidebar_to(self.sidebar_stack)
 
         self.fill_tool = Fill(self.canvas)
-        self.fill_tool.bind_property('active', self.fill_button, 'active', GObject.BindingFlags.BIDIRECTIONAL)
+        self.fill_tool.bind_property(
+            'active', self.fill_button, 'active',
+            GObject.BindingFlags.BIDIRECTIONAL)
 
         prev_btn = None
 
@@ -169,31 +204,36 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 name = style[4] + style[0] + style[0] + style[0] + style[5] + "  " + style[2] + " " + style[16] + style[0] + style[0] + style[5] + "  " + style[3] + "  "  + style[13] + "\n"
                 name += style[2] + "   " + style[3] + "  " + style[2] + "    " + style[3] + "  " + style[3] + "  " + style[3] + "\n"
                 name += style[7] + style[1] + style[1] + style[1] + style[6] + "  " + style[7] + style[1] + style[1] + style[15] + " " + style[3] + "  " + style[14] + "  " + style[3]
-            label = Gtk.Label(label = name)
-            style_btn = Gtk.ToggleButton(css_classes=["flat", "styles-preview"])
+            label = Gtk.Label(label=name)
+            style_btn = Gtk.ToggleButton(
+                css_classes=["flat", "styles-preview"])
             style_btn.set_child(label)
-            if prev_btn != None:
+            if prev_btn is not None:
                 style_btn.set_group(prev_btn)
             prev_btn = style_btn
-            style_btn.connect("toggled", self.on_style_changed, self.lines_styles_box)
+            style_btn.connect(
+                "toggled", self.on_style_changed, self.lines_styles_box)
             self.lines_styles_box.append(style_btn)
 
         self.lines_styles_box.get_first_child().set_active(True)
 
         default_palettes_ranges = [
-            {"name" : "ASCII", "ranges" : [(0x0020, 0x007F)]},
-            {"name" : "Extended ASCII", "ranges" : [(0x00A1, 0x00AD), (0x00AE, 0x0180), (0x0100, 0x0180)]},
-            {"name" : "Box Drawing", "ranges" : [(0x2500, 0x2580)]},
-            {"name" : "Block Elements", "ranges" : [(0x2580, 0x25A0)]},
-            {"name" : "Geometric Shapes", "ranges" : [(0x25A0, 0x25FC), (0x25FF, 0x2600)]},
-            {"name" : "Arrows", "ranges" : [(0x2190, 0x21FF)]},
-            # {"name" : "Braille Patterns", "ranges" : [(0x2800, 0x28FF)]},
-            {"name" : "Mathematical", "ranges" : [(0x2200, 0x22C7), (0x22CB, 0x22EA)]},
-            # {"name" : "Greek and Coptic", "ranges" : [(0x0370,0x03FF)]},
-            # {"name" : "Cyrillic", "ranges" : [(0x0400,0x04FF)]},
-            # {"name" : "Hebrew", "ranges" : [(0x0590,0x05FF)]},
-            # {"name" : "Hiragana", "ranges" : [(0x3040,0x309F)]},
-            # {"name" : "Katakana", "ranges" : [(0x30A0,0x30FF)]},
+            {"name": "ASCII", "ranges": [(0x0020, 0x007F)]},
+            {"name": "Extended ASCII", "ranges": [
+                (0x00A1, 0x00AD), (0x00AE, 0x0180), (0x0100, 0x0180)]},
+            {"name": "Box Drawing", "ranges": [(0x2500, 0x2580)]},
+            {"name": "Block Elements", "ranges": [(0x2580, 0x25A0)]},
+            {"name": "Geometric Shapes", "ranges": [
+                (0x25A0, 0x25FC), (0x25FF, 0x2600)]},
+            {"name": "Arrows", "ranges": [(0x2190, 0x21FF)]},
+            # {"name": "Braille Patterns", "ranges": [(0x2800, 0x28FF)]},
+            {"name": "Mathematical", "ranges": [
+                (0x2200, 0x22C7), (0x22CB, 0x22EA)]},
+            # {"name": "Greek and Coptic", "ranges": [(0x0370,0x03FF)]},
+            # {"name": "Cyrillic", "ranges": [(0x0400,0x04FF)]},
+            # {"name": "Hebrew", "ranges": [(0x0590,0x05FF)]},
+            # {"name": "Hiragana", "ranges": [(0x3040,0x309F)]},
+            # {"name": "Katakana", "ranges": [(0x30A0,0x30FF)]},
         ]
 
         for raw_palette in default_palettes_ranges:
@@ -221,7 +261,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
                 data_dir = os.path.join(xdg_data_home, 'ascii-draw', 'data')
             else:
                 home = os.path.expanduser("~")
-                data_dir = os.path.join(home, '.local', 'share', 'ascii-draw', 'data')
+                data_dir = os.path.join(
+                    home, '.local', 'share', 'ascii-draw', 'data')
             self.data_dir = data_dir
 
         self.palettes = []
@@ -265,15 +306,18 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         self.add_palette_to_ui(palette)
 
     def add_palette_to_ui(self, palette):
-        flow_box = Gtk.FlowBox(homogeneous=True, selection_mode=0, margin_top=3, margin_bottom=3, margin_start=3, margin_end=3, valign=Gtk.Align.START)
+        flow_box = Gtk.FlowBox(
+            homogeneous=True, selection_mode=0, margin_top=3, margin_bottom=3,
+            margin_start=3, margin_end=3, valign=Gtk.Align.START)
         for char in palette.chars:
             new_button = Gtk.Button(label=char, css_classes=["flat", "ascii"])
             new_button.connect("clicked", self.change_char, flow_box)
-            # new_button.set_tooltip_text(f"{char} : {unicodedata.name(char).title()}")
             new_button.set_has_tooltip(True)
-            new_button.connect("query-tooltip", self.on_show_char_tooltip, char)
+            new_button.connect(
+                "query-tooltip", self.on_show_char_tooltip, char)
             flow_box.append(new_button)
-        scrolled_window = Gtk.ScrolledWindow(name=palette.name, hexpand=True, vexpand=True)
+        scrolled_window = Gtk.ScrolledWindow(
+            name=palette.name, hexpand=True, vexpand=True)
         scrolled_window.set_child(flow_box)
         self.chars_carousel.append(scrolled_window)
 
@@ -282,7 +326,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.char_carousel_go_next.set_sensitive(True)
 
     def on_show_char_tooltip(self, btn, x, y, keyboard, tooltip, _char):
-        builder = Gtk.Builder.new_from_resource("/io/github/nokse22/asciidraw/ui/unicode_tooltip.ui")
+        builder = Gtk.Builder.new_from_resource(
+            "/io/github/nokse22/asciidraw/ui/unicode_tooltip.ui")
 
         main_box = builder.get_object("main_box")
         char_label = builder.get_object("char_label")
@@ -290,7 +335,8 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         char_name_label = builder.get_object("char_name_label")
 
         char_label.set_label(_char)
-        unicode_label.set_label(f"U+{hex(ord(_char))[2:].upper().rjust(4, '0')}")
+        unicode_label.set_label(
+            f"U+{hex(ord(_char))[2:].upper().rjust(4, '0')}")
         char_name_label.set_label(unicodedata.name(_char).title())
 
         tooltip.set_custom(main_box)
@@ -344,9 +390,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.open_file_callback()
 
     def open_file_callback(self):
-        dialog = Gtk.FileDialog(
-            title=_("Open File"),
-        )
+        dialog = Gtk.FileDialog(title=_("Open File"))
         dialog.open(self, None, self.on_open_file_response)
         self.canvas.clear_preview()
 
@@ -383,10 +427,13 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         dialog.add_response("discard", _("Discard"))
         dialog.add_response("save", _("Save"))
 
-        dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_response_appearance(
+            "discard", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_response_appearance(
+            "save", Adw.ResponseAppearance.SUGGESTED)
 
-        dialog.choose(self, None, self.on_save_changes_message_response, callback)
+        dialog.choose(
+            self, None, self.on_save_changes_message_response, callback)
 
     def on_save_changes_message_response(self, dialog, task, callback=None):
         response = dialog.choose_finish(task)
@@ -479,7 +526,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     def on_style_changed(self, btn, box):
         child = box.get_first_child()
         index = 1
-        while child != None:
+        while child is not None:
             if child.get_active():
                 self.style = index
                 self.canvas.style = index
@@ -499,40 +546,40 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_choose_picker")
     def on_choose_picker(self, btn):
         print("picker")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("character_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_rectangle")
     def on_choose_rectangle(self, btn):
         print("rect")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("style_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_filled_rectangle")
     def on_choose_filled_rectangle(self, btn):
         print("f rect")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("character_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_line")
     def on_choose_line(self, btn):
         print("line")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("line_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_text")
     def on_choose_text(self, btn):
         print("text")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("text_page")
         self.canvas.clear_preview()
         self.text_tool.preview_text()
@@ -540,48 +587,48 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback("on_choose_table")
     def on_choose_table(self, btn):
         print("table")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("table_page")
         self.table_tool.preview()
 
     @Gtk.Template.Callback("on_choose_tree_list")
     def on_choose_tree_list(self, btn):
         print("tree")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("tree_page")
         self.tree_tool.preview()
 
     @Gtk.Template.Callback("on_choose_select")
     def on_choose_select(self, btn):
         print("move")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("move_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_free")
     def on_choose_free(self, btn):
         print("free")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("freehand_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_eraser")
     def on_choose_eraser(self, btn):
         print("eraser")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("eraser_page")
         self.canvas.clear_preview()
 
     @Gtk.Template.Callback("on_choose_fill")
     def on_choose_fill(self, btn):
         print("fill")
-        current_sidebar = self.sidebar_stack.get_visible_child_name()
-        if current_sidebar != "character_page" and current_sidebar != "style_page":
+        curr_sidebar = self.sidebar_stack.get_visible_child_name()
+        if curr_sidebar != "character_page" and curr_sidebar != "style_page":
             self.sidebar_stack.set_visible_child_name("character_page")
         self.canvas.clear_preview()
 
@@ -611,17 +658,20 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
             self.undo_button.set_sensitive(False)
             self.undo_button.set_tooltip_text("")
         else:
-            self.undo_button.set_tooltip_text(_("Undo ") + self.canvas.undo_changes[-1].name)
+            self.undo_button.set_tooltip_text(
+                _("Undo ") + self.canvas.undo_changes[-1].name)
 
         self.redo_button.set_sensitive(True)
-        self.redo_button.set_tooltip_text(_("Redo ") + self.canvas.redo_changes[-1].name)
+        self.redo_button.set_tooltip_text(
+            _("Redo ") + self.canvas.redo_changes[-1].name)
 
     def on_redo_removed(self, widget):
         if len(self.canvas.redo_changes) == 0:
             self.redo_button.set_sensitive(False)
             self.redo_button.set_tooltip_text("")
         else:
-            self.redo_button.set_tooltip_text(_("Redo ") + self.canvas.redo_changes[-1].name)
+            self.redo_button.set_tooltip_text(
+                _("Redo ") + self.canvas.redo_changes[-1].name)
 
     @Gtk.Template.Callback("undo_first_change")
     def undo_first_change(self, *args):

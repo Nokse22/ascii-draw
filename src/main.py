@@ -22,6 +22,8 @@ import sys
 from gi.repository import Gio, Adw
 from .window import AsciiDrawWindow
 
+from gettext import gettext as _
+
 
 class AsciiDrawApplication(Adw.Application):
     """The main application singleton class."""
@@ -30,41 +32,71 @@ class AsciiDrawApplication(Adw.Application):
         super().__init__(application_id='io.github.nokse22.asciidraw',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
 
-        # self.create_action('quit', self.on_quit, ['<primary>q'])
-        self.create_action('about', self.on_about_action)
-        self.create_action('preferences', self.on_preferences_action)
+        self.create_action(
+            'quit', self.on_shutdown, ['<primary>q', '<primary>w'])
+        self.create_action(
+            'about', self.on_about_action)
+        self.create_action(
+            'preferences', self.on_preferences_action)
 
-        self.create_action('open-palettes-folder', self.on_open_palettes_folder_action)
+        self.create_action(
+            'open-palettes-folder', self.on_open_palettes_folder_action)
 
-        self.create_action('save', self.on_save_as_action, ['<control>s'])
-        self.create_action('save-as', self.on_save_as_action, ['<control><shift>s'])
-        self.create_action('copy-to-clipboard', self.on_copy_to_clipboard_action)
-        self.create_action('open', self.on_open_action, ['<control>o'])
-        self.create_action('new-canvas', self.on_new_canvas_action, ['<control>n'])
+        self.create_action(
+            'save', self.on_save_as_action, ['<control>s'])
+        self.create_action(
+            'save-as', self.on_save_as_action, ['<control><shift>s'])
+        self.create_action(
+            'copy-to-clipboard', self.on_copy_to_clipboard_action)
+        self.create_action(
+            'open', self.on_open_action, ['<control>o'])
+        self.create_action(
+            'new-canvas', self.on_new_canvas_action, ['<control>n'])
 
-        self.create_action('undo', self.on_undo_action, ['<control>z'])
-        self.create_action('redo', self.on_redo_action, ['<control><shift>z', '<control>y'])
+        self.create_action(
+            'undo', self.on_undo_action, ['<control>z', "Undo", "Back"])
+        self.create_action(
+            'redo', self.on_redo_action,
+            ['<control><shift>z', '<control>y', "Redo", "Forward"])
 
-        self.create_action('rectangle-tool', self.select_rectangle_tool, ['<control>r'])
-        self.create_action('filled-rectangle-tool', self.select_filled_rectangle_tool, ['<control><shift>r'])
-        self.create_action('line-tool', self.select_line_tool, ['<control>l'])
-        self.create_action('text-tool', self.select_text_tool, ['<control>t'])
-        self.create_action('table-tool', self.select_table_tool, ['<control><shift>t'])
-        self.create_action('tree-tool', self.select_tree_tool, ['<control>U'])
-        self.create_action('free-tool', self.select_free_tool, ['<control>f'])
-        self.create_action('eraser-tool', self.select_eraser_tool, ['<control>e'])
-        self.create_action('picker-tool', self.select_picker_tool, ['<control>p'])
-        self.create_action('move-tool', self.select_move_tool, ['<control>m'])
-        self.create_action('fill-tool', self.select_fill_tool, ['<control><shift>f'])
+        self.create_action(
+            'rectangle-tool', self.select_rectangle_tool, ['<control>r'])
+        self.create_action(
+            'filled-rectangle-tool', self.select_filled_rectangle_tool,
+            ['<control><shift>r'])
+        self.create_action(
+            'line-tool', self.select_line_tool, ['<control>l'])
+        self.create_action(
+            'text-tool', self.select_text_tool, ['<control>t'])
+        self.create_action(
+            'table-tool', self.select_table_tool, ['<control><shift>t'])
+        self.create_action(
+            'tree-tool', self.select_tree_tool, ['<control>U'])
+        self.create_action(
+            'free-tool', self.select_free_tool, ['<control>f'])
+        self.create_action(
+            'eraser-tool', self.select_eraser_tool, ['<control>e'])
+        self.create_action(
+            'picker-tool', self.select_picker_tool, ['<control>p'])
+        self.create_action(
+            'move-tool', self.select_move_tool, ['<control>m'])
+        self.create_action(
+            'fill-tool', self.select_fill_tool, ['<control><shift>f'])
 
-        self.create_action('delete-selection', self.on_delete_clicked, ['Delete'])
+        self.create_action(
+            'delete-selection', self.on_delete_clicked, ['Delete'])
 
-        self.create_action('new-palette', self.on_new_palette_action)
-        self.create_action('open-palette-folder', self.on_open_palette_folder_action)
-        self.create_action('new-palette-from-canvas', self.on_new_palette_from_canvas_action)
-        self.create_action('import-palettes', self.on_import_palettes_action)
+        self.create_action(
+            'new-palette', self.on_new_palette_action)
+        self.create_action(
+            'open-palette-folder', self.on_open_palette_folder_action)
+        self.create_action(
+            'new-palette-from-canvas', self.on_new_palette_from_canvas_action)
+        self.create_action(
+            'import-palettes', self.on_import_palettes_action)
 
-        self.create_action('clear-canvas', self.on_clear_canvas_action)
+        self.create_action(
+            'clear-canvas', self.on_clear_canvas_action)
 
     def on_open_palettes_folder_action(self, *args):
         self.win.open_palettes_dir()
