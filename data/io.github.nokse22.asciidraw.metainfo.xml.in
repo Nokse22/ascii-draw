@@ -49,6 +49,12 @@ There are many tools and features available such as:</p>
   </branding>
 
   <releases>
+    <release version="1.0.0" date="2025-05-10">
+		  <description translate="no">
+		    <p>Updated to latest GNOME runtime</p>
+		    <p>Added duplicating with select+ctrl</p>
+		  </description>
+	  </release>
     <release version="1.0.0" date="2024-09-23">
 		  <description translate="no">
 		    <p>Added selection rotation</p>
