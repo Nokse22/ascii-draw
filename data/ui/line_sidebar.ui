@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <interface>
   <requires lib="gtk" version="4.12"/>
-  <object class="GtkStackPage" id="line_stack_page">
+  <object class="AdwViewStackPage" id="line_stack_page">
     <property name="child">
       <object class="GtkListBox">
         <property name="valign">start</property>
