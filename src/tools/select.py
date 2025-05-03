@@ -69,6 +69,7 @@ class Select(Tool):
 
         self.has_selection = False
         self.is_dragging = False
+        self.is_duplicating = False
 
         self.moved_text = []
 
@@ -108,6 +109,11 @@ class Select(Tool):
         if not self._active:
             return
 
+        if gesture.get_last_event().get_modifier_state() == 4:  # CONTROL MASK
+            self.is_duplicating = True
+        else:
+            self.is_duplicating = False
+
         this_x_char = this_x // self.x_mul
         this_y_char = this_y // self.y_mul
 
@@ -133,7 +139,8 @@ class Select(Tool):
                             start_x_char + x, start_y_char + y) or " ")
                 self.moved_text.append(line)
 
-            self.delete_selection()
+            if not self.is_duplicating:
+                self.delete_selection()
 
         else:
             self.selection_start_x_char = this_x // self.x_mul
