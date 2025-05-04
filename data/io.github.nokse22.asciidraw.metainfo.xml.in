@@ -49,10 +49,13 @@ There are many tools and features available such as:</p>
   </branding>
 
   <releases>
-    <release version="1.0.0" date="2025-05-10">
+    <release version="1.1.0" date="2025-05-03">
 		  <description translate="no">
 		    <p>Updated to latest GNOME runtime</p>
 		    <p>Added duplicating with select+ctrl</p>
+		    <p>Added braille patterns palette</p>
+		    <p>Added Chinese translation (LRoInT)</p>
+		    <p>Added Portuguese translation (John Peter Sa)</p>
 		  </description>
 	  </release>
     <release version="1.0.0" date="2024-09-23">

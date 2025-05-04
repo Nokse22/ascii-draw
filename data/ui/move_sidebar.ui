@@ -3,30 +3,73 @@
   <requires lib="gtk" version="4.12"/>
   <object class="AdwViewStackPage" id="move_stack_page">
     <property name="child">
-      <object class="GtkListBox">
-        <property name="valign">start</property>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">18</property>
         <property name="margin-bottom">12</property>
         <property name="margin-end">12</property>
         <property name="margin-start">12</property>
         <property name="margin-top">6</property>
-        <property name="css-classes">boxed-list-separate</property>
         <child>
-          <object class="AdwActionRow">
-            <property name="hexpand">True</property>
-            <property name="title" translatable="yes">Rotate</property>
+          <object class="GtkListBox">
             <property name="valign">start</property>
+            <property name="css-classes">boxed-list-separate</property>
             <child>
-              <object class="GtkBox">
-                <property name="spacing">6</property>
-                <property name="valign">center</property>
+              <object class="AdwActionRow">
+                <property name="hexpand">True</property>
+                <property name="title" translatable="yes">Rotate</property>
+                <property name="valign">start</property>
                 <child>
-                  <object class="GtkButton" id="counterclockwise_button">
-                    <property name="icon-name">rotate-left-symbolic</property>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkButton" id="counterclockwise_button">
+                        <property name="icon-name">rotate-left-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="clockwise_button">
+                        <property name="icon-name">rotate-right-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="hexpand">True</property>
+                <property name="title" translatable="yes">Copy</property>
+                <property name="valign">start</property>
                 <child>
-                  <object class="GtkButton" id="clockwise_button">
-                    <property name="icon-name">rotate-right-symbolic</property>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkButton" id="copy_button">
+                        <property name="icon-name">edit-copy-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="hexpand">True</property>
+                <property name="title" translatable="yes">Delete</property>
+                <property name="valign">start</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkButton" id="delete_button">
+                        <property name="icon-name">user-trash-symbolic</property>
+                        <property name="css-classes">destructive-action</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -34,40 +77,9 @@
           </object>
         </child>
         <child>
-          <object class="AdwActionRow">
-            <property name="hexpand">True</property>
-            <property name="title" translatable="yes">Copy</property>
-            <property name="valign">start</property>
-            <child>
-              <object class="GtkBox">
-                <property name="spacing">6</property>
-                <property name="valign">center</property>
-                <child>
-                  <object class="GtkButton" id="copy_button">
-                    <property name="icon-name">edit-copy-symbolic</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwActionRow">
-            <property name="hexpand">True</property>
-            <property name="title" translatable="yes">Delete</property>
-            <property name="valign">start</property>
-            <child>
-              <object class="GtkBox">
-                <property name="spacing">6</property>
-                <property name="valign">center</property>
-                <child>
-                  <object class="GtkButton" id="delete_button">
-                    <property name="icon-name">user-trash-symbolic</property>
-                    <property name="css-classes">destructive-action</property>
-                  </object>
-                </child>
-              </object>
-            </child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Press CTRL and move to duplicate</property>
+            <property name="css-classes">dimmed</property>
           </object>
         </child>
       </object>
