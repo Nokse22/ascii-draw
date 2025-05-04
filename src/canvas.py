@@ -162,7 +162,7 @@ class Canvas(Adw.Bin):
 
     def drawing_function(self, area, cr, width, height, data):
         cr.set_source_rgb(self.color, self.color, self.color)
-        cr.select_font_face("monospace")
+        cr.select_font_face("Adwaita Mono")
         cr.set_font_size(20 * self.scale_factor)
 
         for y, line in enumerate(self.drawing):
@@ -174,7 +174,7 @@ class Canvas(Adw.Bin):
 
     def preview_drawing_function(self, area, cr, width, height, data):
         cr.set_source_rgb(self.color, self.color, self.color)
-        cr.select_font_face("monospace")
+        cr.select_font_face("Adwaita Mono")
         cr.set_font_size(20 * self.scale_factor)
 
         for y, line in enumerate(self.preview):

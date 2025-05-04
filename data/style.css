@@ -3,7 +3,7 @@
  */
 
 .styles-preview {
-    font-family: Monospace;
+    font-family: "Adwaita Mono";
     font-size: 20px;
     opacity:0.8;
     color: var(--window-fg-color);
@@ -20,17 +20,17 @@
     opacity:0.4;
 }
 .ascii {
-    font-family: Monospace;
+    font-family: "Adwaita Mono";
     font-size: 20px;
     color: var(--window-fg-color);
 }
 .mono-entry {
-    font-family: Monospace;
+    font-family: "Adwaita Mono";
     font-size: 20px;
     background: var(--window-bg-color);
 }
 .font-preview {
-    font-family: Monospace;
+    font-family: "Adwaita Mono";
     font-size: 8px;
     color: var(--window-fg-color);
 }
