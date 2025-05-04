@@ -281,7 +281,7 @@ msgstr "移动 Ctrl+M"
 
 #: data/ui/window.ui:206
 msgid "Fill Ctrl+Shift+F"
-msgstr "填充 Ctrl+Shift+F
+msgstr "填充 Ctrl+Shift+F"
 
 #: data/ui/window.ui:216
 msgid "Primary Character"
@@ -289,7 +289,7 @@ msgstr "边框"
 
 #: data/ui/window.ui:227
 msgid "Secondary Character"
-msgstr "填充
+msgstr "填充"
 
 #: data/ui/window.ui:251
 msgid "Close Sidebar"
