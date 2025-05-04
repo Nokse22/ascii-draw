@@ -1,0 +1,472 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# LRoInT <lumaochen@yeah.net>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-05 23:12+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: LRoInT <lumaochen@yeah.net>\n"
+"Language-Team: null\n"
+"Language: zh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:3
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:51
+#: src/main.py:129
+msgid "ASCII Draw"
+msgstr "ASCII 绘画"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:9
+msgid "GNOME;GTK;Graphics;Art;"
+msgstr "GNOME;GTK;Graphics;Art;"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:10
+msgid "Sketch anything using characters"
+msgstr "使用字符绘制任何内容"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13
+msgid ""
+"Draw diagrams, tables, tree view, art and more using only characters. There "
+"are many tools and features available such as:"
+msgstr ""
+"仅使用字符绘制图表、表格、树状视图、艺术等。"
+"有许多工具，例如："
+
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
+msgid "Rectangle using multiple line styles"
+msgstr "使用多种线条样式的矩形"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
+msgid "Filled Rectangle using border and fill characters"
+msgstr "使用边框和填充字符的填充矩形"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18
+msgid "Cartesian, Freehand and Stepped line, also with arrows"
+msgstr "笛卡尔、手绘和阶梯线，也带箭头"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19
+msgid "Freehand Brush"
+msgstr "画笔"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20
+msgid "Text with FIGlet fonts"
+msgstr "FIGlet 字体文本"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 src/tools/table.py:113
+msgid "Table"
+msgstr "表格"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+msgid "Tree View"
+msgstr "查看树视图"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:23 src/tools/eraser.py:69
+msgid "Eraser"
+msgstr "橡皮擦"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:24
+msgid "Character Picker"
+msgstr "选择字符"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:25
+msgid "Move and Rotate selection"
+msgstr "移动和旋转"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:26
+msgid "Flood Fill"
+msgstr "填充"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:195
+msgid "ASCII Art of an old television"
+msgstr "旧电视的 ASCII 艺术"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:200
+msgid "CPU simplified structure"
+msgstr "CPU 简化结构"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:205
+msgid "Table of countries, capitals and population"
+msgstr "国家、首都和人口表"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:210
+msgid "A flowchart to fix a lamp"
+msgstr "固定灯的流程图"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:215
+msgid "An example of a treeview"
+msgstr "树视图示例"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:220
+msgid "Cartesian, stepped and freehand lines"
+msgstr "笛卡尔、阶梯和手绘线"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:225
+msgid "Move and Rotate Tool"
+msgstr "移动和旋转工具"
+
+# 快捷键窗口
+#: data/gtk/help-overlay.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "常规"
+
+#: data/gtk/help-overlay.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "显示快捷键"
+
+#: data/gtk/help-overlay.ui:26
+msgctxt "shortcut window"
+msgid "Save"
+msgstr "保存"
+
+#: data/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Save As"
+msgstr "另存为"
+
+#: data/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Open"
+msgstr "打开"
+
+#: data/gtk/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "New Canvas"
+msgstr "新文件"
+
+#: data/gtk/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Undo"
+msgstr "撤销"
+
+#: data/gtk/help-overlay.ui:56
+msgctxt "shortcut window"
+msgid "Redo"
+msgstr "恢复"
+
+#: data/gtk/help-overlay.ui:64
+msgctxt "shortcut window"
+msgid "Tools"
+msgstr "工具"
+
+#: data/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Rectangle"
+msgstr "矩形"
+
+#: data/gtk/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Filled Rectangle"
+msgstr "矩形填充"
+
+#: data/gtk/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Line"
+msgstr "线条"
+
+#: data/gtk/help-overlay.ui:85
+msgctxt "shortcut window"
+msgid "Freehand Brush"
+msgstr "画笔"
+
+#: data/gtk/help-overlay.ui:91
+msgctxt "shortcut window"
+msgid "Text"
+msgstr "文本"
+
+#: data/gtk/help-overlay.ui:97
+msgctxt "shortcut window"
+msgid "Table"
+msgstr "表格"
+
+#: data/gtk/help-overlay.ui:103
+msgctxt "shortcut window"
+msgid "Tree View"
+msgstr "树视图"
+
+#: data/gtk/help-overlay.ui:109
+msgctxt "shortcut window"
+msgid "Eraser"
+msgstr "橡皮擦"
+
+#: data/gtk/help-overlay.ui:115
+msgctxt "shortcut window"
+msgid "Picker"
+msgstr "选择"
+
+#: data/gtk/help-overlay.ui:121
+msgctxt "shortcut window"
+msgid "Move"
+msgstr "移动"
+
+#: data/gtk/help-overlay.ui:127
+msgctxt "shortcut window"
+msgid "Fill"
+msgstr "填充"
+
+#: data/ui/new_palette.ui:10
+msgid "New palette"
+msgstr "新建字符集"
+
+#: data/ui/new_palette.ui:38
+msgid "Palette name"
+msgstr "字符集名称"
+
+#: data/ui/new_palette.ui:70 data/ui/window.ui:56 src/main.py:175
+#: src/main.py:196 src/window.py:384
+msgid "Save"
+msgstr "保存"
+
+#: data/ui/window.ui:65 src/window.py:607
+msgid "Undo"
+msgstr "撤销"
+
+#: data/ui/window.ui:73
+msgid "Redo"
+msgstr "恢复"
+
+#: data/ui/window.ui:80
+msgid "Toggle Sidebar"
+msgstr "显示侧边栏"
+
+#: data/ui/window.ui:101
+msgid "Rectangle Ctrl+R"
+msgstr "矩形 Ctrl+R"
+
+#: data/ui/window.ui:111
+msgid "Filled rectangle Ctrl+Shift+R"
+msgstr "填充矩形 Ctrl+Shift+R"
+
+#: data/ui/window.ui:121
+msgid "Line Ctrl+L"
+msgstr "线条 Ctrl+L"
+
+#: data/ui/window.ui:131
+msgid "Freehand Ctrl+F"
+msgstr "画笔 Ctrl+F"
+
+#: data/ui/window.ui:141
+msgid "Text Ctrl+T"
+msgstr "文本 Ctrl+T"
+
+#: data/ui/window.ui:156
+msgid "Table Ctrl+Shift+T"
+msgstr "表格 Ctrl+Shift+T"
+
+#: data/ui/window.ui:166
+msgid "Tree view Ctrl+U"
+msgstr "树视图 Ctrl+U"
+
+#: data/ui/window.ui:176
+msgid "Eraser Ctrl+E"
+msgstr "橡皮擦 Ctrl+E"
+
+#: data/ui/window.ui:186
+msgid "Picker Ctrl+P"
+msgstr "选择 Ctrl+P"
+
+#: data/ui/window.ui:196
+msgid "Move Ctrl+M"
+msgstr "移动 Ctrl+M"
+
+#: data/ui/window.ui:206
+msgid "Fill Ctrl+Shift+F"
+msgstr "填充 Ctrl+Shift+F
+
+#: data/ui/window.ui:216
+msgid "Primary Character"
+msgstr "边框"
+
+#: data/ui/window.ui:227
+msgid "Secondary Character"
+msgstr "填充
+
+#: data/ui/window.ui:251
+msgid "Close Sidebar"
+msgstr "关闭侧边栏"
+
+#: data/ui/window.ui:258
+msgid "Main Menu"
+msgstr "菜单"
+
+#: data/ui/window.ui:265
+msgid "Resize Canvas"
+msgstr "调整大小"
+
+#: data/ui/window.ui:284
+msgid "Width"
+msgstr "宽"
+
+#: data/ui/window.ui:299
+msgid "Height"
+msgstr "高"
+
+#: data/ui/window.ui:304
+msgid "Change size"
+msgstr "改变大小"
+
+#: data/ui/window.ui:346
+msgid "ASCII"
+msgstr "ASCII"
+
+#: data/ui/window.ui:368
+msgid "Character"
+msgstr "字符"
+
+#: data/ui/window.ui:391
+msgid "Style"
+msgstr "风格"
+
+#: data/ui/window.ui:420
+msgid "Clear Canvas"
+msgstr "清空画布"
+
+#: data/ui/window.ui:426
+msgid "New Palette"
+msgstr "新字符集"
+
+#: data/ui/window.ui:430
+msgid "New Palette From Canvas"
+msgstr "从画布创建新字符集"
+
+#: data/ui/window.ui:434
+msgid "Open Palettes Folder"
+msgstr "打开字符集文件夹"
+
+#: data/ui/window.ui:440
+msgid "Keyboard Shortcuts"
+msgstr "快捷键"
+
+#: data/ui/window.ui:444
+msgid "About ASCII Draw"
+msgstr "关于 ASCII 绘画"
+
+#: data/ui/window.ui:454
+msgid "Copy To Clipboard"
+msgstr "复制"
+
+#: data/ui/window.ui:458
+msgid "Save As"
+msgstr "另存为"
+
+#: data/ui/window.ui:464
+msgid "Open"
+msgstr "打开"
+
+#: data/ui/window.ui:468 src/window.py:416
+msgid "New Canvas"
+msgstr "新文件"
+
+#: src/main.py:76
+msgid "Clear"
+msgstr "清空"
+
+#: src/main.py:140
+msgid "translator-credits"
+msgstr ""
+
+#: src/main.py:166
+msgid "Save File?"
+msgstr "保存文件?"
+
+#: src/main.py:167
+msgid ""
+"You have never saved this file. Changes which are not saved will be "
+"permanently lost."
+msgstr "您从未保存过此文件。未保存的更改将会丢失"
+
+#: src/main.py:173 src/main.py:194 src/window.py:382
+msgid "Cancel"
+msgstr "取消"
+
+#: src/main.py:174 src/main.py:195 src/window.py:383
+msgid "Discard"
+msgstr "不保存"
+
+#: src/main.py:187
+msgid "Save changes?"
+msgstr "未保存的更改"
+
+#: src/main.py:188 src/window.py:378
+msgid ""
+"The opened file contains unsaved changes. Changes which are not saved will "
+"be permanently lost."
+msgstr "您从未保存过此文件。未保存的更改将会丢失"
+
+#: src/tools/filled_rectangle.py:115
+msgid "Filled Rectangle"
+msgstr "填充矩形"
+
+#: src/tools/freehand.py:65
+msgid "Freehand"
+msgstr "画笔"
+
+#: src/tools/line.py:99
+msgid "Freehand Line"
+msgstr "线条"
+
+#: src/tools/line.py:150
+msgid "Cartesian Line"
+msgstr ""
+
+#: src/tools/line.py:153
+msgid "Step Line"
+msgstr ""
+
+#: src/tools/rectangle.py:105
+msgid "Rectangle"
+msgstr "矩形"
+
+#: src/tools/select.py:124
+msgid "Move"
+msgstr "移动"
+
+#: src/tools/select.py:289
+msgid "Rotate"
+msgstr "旋转"
+
+#: src/tools/text.py:187
+msgid "Text"
+msgstr "文本"
+
+#: src/tools/tree.py:141
+msgid "Tree"
+msgstr "树视图"
+
+#: src/window.py:348
+msgid "Open File"
+msgstr "打开文件"
+
+#: src/window.py:377
+msgid "Save Changes?"
+msgstr "未保存的更改"
+
+#: src/window.py:424
+msgid "Save File"
+msgstr "保存文件"
+
+#: src/window.py:425
+msgid "drawing.txt"
+msgstr "drawing.txt"
+
+#: src/window.py:452
+msgid "Saved successfully"
+msgstr "已保存"
+
+#: src/window.py:614
+msgid "Undo "
+msgstr "撤销"
+
+#: src/window.py:617 src/window.py:624
+msgid "Redo "
+msgstr "恢复"
