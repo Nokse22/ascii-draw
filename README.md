@@ -41,20 +41,20 @@ ASCII Draw is a powerful and intuitive application that lets you create stunning
 <summary>📸 <strong>View More Screenshots</strong></summary>
 
 <div align="center">
-  <img src="data/resources/screenshot 02.png" width="600" alt="Drawing Tools"/>
-  <br><em>Comprehensive drawing tools and character palette</em><br><br>
+  <img src="data/resources/screenshot 02.png" width="600" alt="Drawing Interface"/>
+  <br><em>Intuitive drawing interface with various tools</em><br><br>
   
-  <img src="data/resources/screenshot 03.png" width="600" alt="Diagram Example"/>
-  <br><em>Create complex flowcharts and diagrams</em><br><br>
+  <img src="data/resources/screenshot 03.png" width="600" alt="Text Features"/>
+  <br><em>Advanced text manipulation and formatting options</em><br><br>
   
-  <img src="data/resources/screenshot 04.png" width="600" alt="ASCII Art"/>
-  <br><em>Express creativity with ASCII art</em><br><br>
+  <img src="data/resources/screenshot 04.png" width="600" alt="Character Selection"/>
+  <br><em>Wide selection of ASCII characters and symbols</em><br><br>
   
-  <img src="data/resources/screenshot 05.png" width="600" alt="Interface Overview"/>
-  <br><em>Clean and intuitive user interface</em><br><br>
+  <img src="data/resources/screenshot 05.png" width="600" alt="Drawing Tools"/>
+  <br><em>Various drawing tools for precise artwork creation</em><br><br>
   
-  <img src="data/resources/screenshot 06.png" width="600" alt="Export Options"/>
-  <br><em>Multiple export and sharing options</em>
+  <img src="data/resources/screenshot 06.png" width="600" alt="Save Options"/>
+  <br><em>Save as text file or copy to clipboard</em>
 </div>
 
 </details>
@@ -96,7 +96,7 @@ cd ascii-draw
 
 - **Operating System**: Linux (GNOME desktop environment recommended)
 - **Python**: 3.8 or higher
-- **Dependencies**: GTK4, Adwaita
+- **Dependencies**: GTK4, libadwaita, pyfiglet, emoji
 
 ---
 
