@@ -24,18 +24,34 @@
 
 ## ✨ Features
 
-ASCII Draw is a powerful and intuitive application that lets you create stunning diagrams, flowcharts, and artwork using only ASCII characters. Whether you're documenting code, creating technical diagrams, or expressing your creativity, ASCII Draw provides all the tools you need.
+**Sketch anything using characters** - ASCII Draw is a powerful and intuitive application that lets you draw diagrams, tables, tree views, art and more using only characters. Whether you're documenting code, creating technical diagrams, or expressing your creativity, ASCII Draw provides all the professional tools you need.
 
 <div align="center">
   <img src="data/resources/screenshot 01.png" width="800" alt="ASCII Draw Main Interface"/>
 </div>
 
+### 🛠️ Comprehensive Tool Set
+
+- **🔲 Rectangle Tools**: Multiple line styles for borders and frames
+- **🎨 Filled Rectangles**: Customizable border and fill characters
+- **📏 Line Drawing**: Cartesian, Freehand, and Stepped lines with optional arrows
+- **🖌️ Freehand Brush**: Natural drawing experience for artistic expression
+- **📝 Text with FIGlet Fonts**: Stylized text using beautiful ASCII font styles
+- **📊 Table Creator**: Professional table formatting and alignment
+- **🌳 Tree View**: Hierarchical structures and organizational charts
+- **🧹 Eraser**: Precise deletion and editing capabilities
+- **🔤 Character Picker**: Extensive library of ASCII characters and symbols
+- **↔️ Selection Tools**: Move and rotate selections with ease
+- **🪣 Flood Fill**: Quickly fill areas with chosen characters
+
 ### 🎨 What You Can Create
 
 - **Technical Diagrams**: Flowcharts, network diagrams, system architectures
 - **Code Documentation**: Visual representations for README files and documentation
+- **Data Visualization**: Tables, charts, and structured data displays
 - **Creative Art**: ASCII art and decorative elements
 - **Educational Content**: Visual aids for presentations and tutorials
+- **Organizational Charts**: Tree structures and hierarchical displays
 
 <details>
 <summary>📸 <strong>View More Screenshots</strong></summary>
