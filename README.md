@@ -75,6 +75,10 @@
 
 </details>
 
+## 💬 Chat
+
+To chat about ASCII Draw, share what you made or ask for help when contributing you can join our Matrix [#ascii-draw:matrix.org](https://matrix.to/#/%23ascii-draw:matrix.org)
+
 ---
 
 ## 🚀 Installation
@@ -103,7 +107,6 @@ git clone https://github.com/Nokse22/ascii-draw.git
 cd ascii-draw
 
 # Open in GNOME Builder and click "Run Project"
-# Or follow the build instructions in the project documentation
 ```
 
 ---
