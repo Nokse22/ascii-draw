@@ -22,8 +22,8 @@
         "*.a"
     ],
     "modules" : [
-	"python3-pyfiglet.json",
-	"python3-emoji.json",
+        "build-aux/python3-pyfiglet.json",
+        "build-aux/python3-emoji.json",
         {
             "name" : "ascii-draw",
             "builddir" : true,
