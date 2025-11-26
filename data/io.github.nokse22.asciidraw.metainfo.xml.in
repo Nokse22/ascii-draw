@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
   <name>ASCII Draw</name>
-	<id>io.github.nokse22.asciidraw</id>
+  <id>io.github.nokse22.asciidraw</id>
   <provides>
     <id>io.github.nokse22.asciidraw.desktop</id>
   </provides>
-	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>GPL-3.0-or-later</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
   <summary>Sketch anything using characters</summary>
 
-	<description>
-	  <p>Draw diagrams, tables, tree view, art and more using only characters.
+  <description>
+    <p>Draw diagrams, tables, tree view, art and more using only characters.
 There are many tools and features available such as:</p>
-	  <ul>
-	    <li>Rectangle using multiple line styles</li>
-	    <li>Filled Rectangle using border and fill characters</li>
-	    <li>Cartesian, Freehand and Stepped line, also with arrows</li>
-	    <li>Freehand Brush</li>
-	    <li>Text with FIGlet fonts</li>
-	    <li>Table</li>
-	    <li>Tree View</li>
-	    <li>Eraser</li>
-	    <li>Character Picker</li>
-	    <li>Move and Rotate selection</li>
-	    <li>Flood Fill</li>
-	  </ul>
-	  <p>You can also organize characters into custom palettes.</p>
-	</description>
+    <ul>
+      <li>Rectangle using multiple line styles</li>
+      <li>Filled Rectangle using border and fill characters</li>
+      <li>Cartesian, Freehand and Stepped line, also with arrows</li>
+      <li>Freehand Brush</li>
+      <li>Text with FIGlet fonts</li>
+      <li>Table</li>
+      <li>Tree View</li>
+      <li>Eraser</li>
+      <li>Character Picker</li>
+      <li>Move and Rotate selection</li>
+      <li>Flood Fill</li>
+    </ul>
+    <p>You can also organize characters into custom palettes.</p>
+  </description>
 
   <developer id="io.github.nokse22">
     <name translate="no">Nokse</name>
   </developer>
 
-	<content_rating type="oars-1.1" />
+  <content_rating type="oars-1.1" />
 
   <launchable type="desktop-id">io.github.nokse22.asciidraw.desktop</launchable>
   <translation type="gettext">ascii-draw</translation>
@@ -50,189 +50,189 @@ There are many tools and features available such as:</p>
 
   <releases>
     <release version="1.1.0" date="2025-05-03">
-		  <description translate="no">
-		    <p>Updated to latest GNOME runtime</p>
-		    <p>Added duplicating with select+ctrl</p>
-		    <p>Added braille patterns palette</p>
-		    <p>Added Chinese translation (LRoInT)</p>
-		    <p>Added Portuguese translation (John Peter Sa)</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Updated to latest GNOME runtime</p>
+        <p>Added duplicating with select+ctrl</p>
+        <p>Added braille patterns palette</p>
+        <p>Added Chinese translation (LRoInT)</p>
+        <p>Added Portuguese translation (John Peter Sa)</p>
+      </description>
+    </release>
     <release version="1.0.0" date="2024-09-23">
-		  <description translate="no">
-		    <p>Added selection rotation</p>
-		    <p>Added selection deletion</p>
-		    <p>Added copying selection</p>
-		    <p>Added ability to write vertical text</p>
-		    <p>Improved sidebar design</p>
-		    <p>Added Italian translation (albano battistella)</p>
-		    <p>Added Norwegian Bokmaal translation (Brage Fuglseth)</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Added selection rotation</p>
+        <p>Added selection deletion</p>
+        <p>Added copying selection</p>
+        <p>Added ability to write vertical text</p>
+        <p>Improved sidebar design</p>
+        <p>Added Italian translation (albano battistella)</p>
+        <p>Added Norwegian Bokmaal translation (Brage Fuglseth)</p>
+      </description>
+    </release>
     <release version="0.4.0" date="2024-07-08">
-		  <description translate="no">
-		    <p>Improved app design</p>
-		    <p>Fixed bug when monospace font is not present</p>
-		    <p>Added a menu entry to open the directory where custom palettes are stored</p>
-		    <p>Added Bulgarian translation (twlvnn)</p>
-		    <p>Improved dark mode style (Tanmay Patil)</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Improved app design</p>
+        <p>Fixed bug when monospace font is not present</p>
+        <p>Added a menu entry to open the directory where custom palettes are stored</p>
+        <p>Added Bulgarian translation (twlvnn)</p>
+        <p>Improved dark mode style (Tanmay Patil)</p>
+      </description>
+    </release>
     <release version="0.3.4" date="2024-05-15">
-		  <description translate="no">
-		    <p>Added a tooltip to know the name and code of a character</p>
-		    <p>Added Flood fill tool</p>
-		    <p>Removed soft hyphen character</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Added a tooltip to know the name and code of a character</p>
+        <p>Added Flood fill tool</p>
+        <p>Removed soft hyphen character</p>
+      </description>
+    </release>
     <release version="0.3.3" date="2024-05-10">
-		  <description translate="no">
-		    <p>Split Extended Latin palette in ASCII and Extended ASCII</p>
-		    <p>Added Hindi translation (Scrambled777)</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Split Extended Latin palette in ASCII and Extended ASCII</p>
+        <p>Added Hindi translation (Scrambled777)</p>
+      </description>
+    </release>
     <release version="0.3.2" date="2024-03-26">
-		  <description translate="no">
-		    <p>Fixed bug when running outside sandbox</p>
+      <description translate="no">
+        <p>Fixed bug when running outside sandbox</p>
         <p>Added redo shortcut</p>
         <p>Updated shortcut window</p>
-		  </description>
-	  </release>
+      </description>
+    </release>
     <release version="0.3.1" date="2024-03-26">
-		  <description translate="no">
-		    <p>Used latest Libadwaita widgets</p>
+      <description translate="no">
+        <p>Used latest Libadwaita widgets</p>
         <p>Added redo</p>
         <p>Fixed bugs</p>
-		  </description>
-	  </release>
+      </description>
+    </release>
     <release version="0.3.0" date="2024-03-10">
-		  <description translate="no">
-		    <p>Improved design and usability</p>
-		    <p>Greatly improved performance (bigger canvas allowed)</p>
-		    <p>Added new stepped line tool</p>
-		    <p>Added move tool</p>
-		    <p>Added custom palettes</p>
-		    <p>Divided available characters into palettes</p>
-		    <p>Improved selected characters with a primary and secondary</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Improved design and usability</p>
+        <p>Greatly improved performance (bigger canvas allowed)</p>
+        <p>Added new stepped line tool</p>
+        <p>Added move tool</p>
+        <p>Added custom palettes</p>
+        <p>Divided available characters into palettes</p>
+        <p>Improved selected characters with a primary and secondary</p>
+      </description>
+    </release>
     <release version="0.2.0" date="2023-09-26">
-		  <description translate="no">
-		    <p>Improved sidebar for better usability</p>
-		    <p>Fixed typo</p>
-		    <p>Updated runtime to 45</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Improved sidebar for better usability</p>
+        <p>Fixed typo</p>
+        <p>Updated runtime to 45</p>
+      </description>
+    </release>
     <release version="0.1.9" date="2023-09-06">
-		  <description translate="no">
-			  <p>Improved saving</p>
-		    <p>Improved changing canvas size function</p>
-		    <p>Added opening files</p>
-		    <p>Fixed bugs</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Improved saving</p>
+        <p>Improved changing canvas size function</p>
+        <p>Added opening files</p>
+        <p>Fixed bugs</p>
+      </description>
+    </release>
     <release version="0.1.8" date="2023-08-28">
-		  <description translate="no">
-			  <p>Added tree view tool</p>
-		    <p>Fixed bugs with sidebar show button</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Added tree view tool</p>
+        <p>Fixed bugs with sidebar show button</p>
+      </description>
+    </release>
     <release version="0.1.7" date="2023-08-27">
-		  <description translate="no">
-			  <p>Added tables</p>
-		    <p>Improved sidebar</p>
-		    <p>Improved text tool</p>
-		    <p>Fixed bugs</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Added tables</p>
+        <p>Improved sidebar</p>
+        <p>Improved text tool</p>
+        <p>Fixed bugs</p>
+      </description>
+    </release>
     <release version="0.1.6" date="2023-08-26">
-		  <description translate="no">
-			  <p>Remove unusable fonts</p>
-		    <p>Added brush and eraser sizes</p>
-		    <p>Added transparent mode to text tool</p>
-		    <p>Added many more chars in the list</p>
-		    <p>Reorganized chars list</p>
-		    <p>Added new box/lines styles</p>
-		    <p>Improved lines styles</p>
-		    <p>Added transparent mode for text</p>
-		    <p>Fixed bug with tabs</p>
-		    <p>Fixed bugs when writing emojis in the text tool</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Remove unusable fonts</p>
+        <p>Added brush and eraser sizes</p>
+        <p>Added transparent mode to text tool</p>
+        <p>Added many more chars in the list</p>
+        <p>Reorganized chars list</p>
+        <p>Added new box/lines styles</p>
+        <p>Improved lines styles</p>
+        <p>Added transparent mode for text</p>
+        <p>Fixed bug with tabs</p>
+        <p>Fixed bugs when writing emojis in the text tool</p>
+      </description>
+    </release>
     <release version="0.1.5" date="2023-08-25">
-		  <description translate="no">
-			  <p>Added big text with a lot of fonts using pyfiglet</p>
-		    <p>Fixed some contrast problems</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Added big text with a lot of fonts using pyfiglet</p>
+        <p>Fixed some contrast problems</p>
+      </description>
+    </release>
     <release version="0.1.4" date="2023-08-23">
-		  <description translate="no">
-			  <p>New icon</p>
-		    <p>Fixed bugs when increasing canvas size</p>
-		    <p>Updated screenshots</p>
-		    <p>Fixed some bugs with lines/arrows</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>New icon</p>
+        <p>Fixed bugs when increasing canvas size</p>
+        <p>Updated screenshots</p>
+        <p>Fixed some bugs with lines/arrows</p>
+      </description>
+    </release>
     <release version="0.1.3" date="2023-08-23">
-		  <description translate="no">
-			  <p>Undo functionality (Ctrl+Z)</p>
-		    <p>Performance improvements</p>
-		    <p>Improved text insertion with preview</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Undo functionality (Ctrl+Z)</p>
+        <p>Performance improvements</p>
+        <p>Improved text insertion with preview</p>
+      </description>
+    </release>
     <release version="0.1.2" date="2023-08-22">
-		  <description translate="no">
-			  <p>Fixed some bugs</p>
-		    <p>Added new tool: Filled Rectangle</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Fixed some bugs</p>
+        <p>Added new tool: Filled Rectangle</p>
+      </description>
+    </release>
     <release version="0.1.1" date="2023-08-21">
-		  <description translate="no">
-			  <p>Fixed many bugs with right to left text direction</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>Fixed many bugs with right to left text direction</p>
+      </description>
+    </release>
     <release version="0.1.0" date="2023-08-20">
-		  <description translate="no">
-			  <p>First release!</p>
-		  </description>
-	  </release>
+      <description translate="no">
+        <p>First release!</p>
+      </description>
+    </release>
   </releases>
 
-	<screenshots>
+  <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2001.png</image>
       <caption>ASCII Art of an old television</caption>
     </screenshot>
 
-	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2002.png</image>
-	    <caption>CPU simplified structure</caption>
-	  </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2002.png</image>
+      <caption>CPU simplified structure</caption>
+    </screenshot>
 
-	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2003.png</image>
-	    <caption>Table of countries, capitals and population</caption>
-	  </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2003.png</image>
+      <caption>Table of countries, capitals and population</caption>
+    </screenshot>
 
-	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2004.png</image>
-	    <caption>A flowchart to fix a lamp</caption>
-	  </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2004.png</image>
+      <caption>A flowchart to fix a lamp</caption>
+    </screenshot>
 
-	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2005.png</image>
-	    <caption>An example of a treeview</caption>
-	  </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2005.png</image>
+      <caption>An example of a treeview</caption>
+    </screenshot>
 
-	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2006.png</image>
-	    <caption>Cartesian, stepped and freehand lines</caption>
-	  </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2006.png</image>
+      <caption>Cartesian, stepped and freehand lines</caption>
+    </screenshot>
 
-	  <screenshot>
-	    <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2007.png</image>
-	    <caption>Move and Rotate Tool</caption>
-	  </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nokse22/ascii-draw/master/data/resources/screenshot%2007.png</image>
+      <caption>Move and Rotate Tool</caption>
+    </screenshot>
   </screenshots>
 
 </component>
