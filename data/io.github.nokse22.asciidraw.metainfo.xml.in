@@ -49,6 +49,12 @@ There are many tools and features available such as:</p>
   </branding>
 
   <releases>
+    <release version="1.2.0" date="2025-11-26">
+      <description translate="no">
+        <p>Updated to latest GNOME runtime</p>
+        <p>Added Vietnamese translation (hthienloc)</p>
+      </description>
+    </release>
     <release version="1.1.0" date="2025-05-03">
       <description translate="no">
         <p>Updated to latest GNOME runtime</p>
