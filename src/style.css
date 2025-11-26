@@ -56,3 +56,17 @@
 .selection {
     border: 2px dashed mix(var(--accent-color), white, 0.4);
 }
+
+@media (prefers-color-scheme: dark) {
+  .ascii-preview {
+      background: transparent;
+      background-size: 12px 24px;
+      background-image:
+          linear-gradient(to right, #363636 1px, transparent 1px),
+          linear-gradient(to bottom, #363636 1px, transparent 1px);
+      box-shadow:
+          inset 0px 0px 0px 1px #555555,
+          0px 0px 6px 6px var(--headerbar-shade-color);
+      opacity:0.4;
+  }
+}
