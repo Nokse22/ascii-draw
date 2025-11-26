@@ -20,7 +20,7 @@ msgstr ""
 "X-Generator: Poedit 3.4.2\n"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:3
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:592
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/ui/window.ui:592
 #: src/main.py:166
 msgid "ASCII Draw"
 msgstr "ASCII Çizim"
@@ -74,7 +74,7 @@ msgstr "Dolu Dikdörtgen"
 msgid "Text with FIGlet fonts"
 msgstr "FIGlet yazı tipli metin"
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19 data/ui/window.ui:213
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19 src/ui/window.ui:213
 #: src/tools/table.py:107
 msgid "Table"
 msgstr "Tablo"
@@ -83,7 +83,7 @@ msgstr "Tablo"
 msgid "Tree View"
 msgstr "Ağaç Görünümü"
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 data/ui/window.ui:391
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21 src/ui/window.ui:391
 #: src/tools/eraser.py:84
 msgid "Eraser"
 msgstr "Silgi"
@@ -92,271 +92,271 @@ msgstr "Silgi"
 msgid "Character Picker"
 msgstr "Karakter Seçici"
 
-#: data/gtk/help-overlay.ui:11
+#: src/shortcuts-dialog.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Genel"
 
-#: data/gtk/help-overlay.ui:14
+#: src/shortcuts-dialog.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
 msgstr "Kısayolları Göster"
 
-#: data/gtk/help-overlay.ui:20
+#: src/shortcuts-dialog.ui:20
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Çık"
 
-#: data/gtk/help-overlay.ui:28
+#: src/shortcuts-dialog.ui:28
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "Araçlar"
 
-#: data/gtk/help-overlay.ui:31
+#: src/shortcuts-dialog.ui:31
 msgctxt "shortcut window"
 msgid "Rectangle"
 msgstr "Dörtgen"
 
-#: data/gtk/help-overlay.ui:37
+#: src/shortcuts-dialog.ui:37
 msgctxt "shortcut window"
 msgid "Filled Rectangle"
 msgstr "Dolu Dikdörtgen"
 
-#: data/gtk/help-overlay.ui:43
+#: src/shortcuts-dialog.ui:43
 msgctxt "shortcut window"
 msgid "Line"
 msgstr "Çizgi"
 
-#: data/gtk/help-overlay.ui:49
+#: src/shortcuts-dialog.ui:49
 msgctxt "shortcut window"
 msgid "Arrow"
 msgstr "Ok"
 
-#: data/gtk/help-overlay.ui:55
+#: src/shortcuts-dialog.ui:55
 msgctxt "shortcut window"
 msgid "Freehand Line"
 msgstr "Serbest Çizgi"
 
-#: data/gtk/help-overlay.ui:61
+#: src/shortcuts-dialog.ui:61
 msgctxt "shortcut window"
 msgid "Freehand Brush"
 msgstr "Serbest Fırça"
 
-#: data/gtk/help-overlay.ui:67
+#: src/shortcuts-dialog.ui:67
 msgctxt "shortcut window"
 msgid "Text"
 msgstr "Metin"
 
-#: data/gtk/help-overlay.ui:73
+#: src/shortcuts-dialog.ui:73
 msgctxt "shortcut window"
 msgid "Table"
 msgstr "Tablo"
 
-#: data/gtk/help-overlay.ui:79
+#: src/shortcuts-dialog.ui:79
 msgctxt "shortcut window"
 msgid "Tree View"
 msgstr "Ağaç Görünümü"
 
-#: data/gtk/help-overlay.ui:85
+#: src/shortcuts-dialog.ui:85
 msgctxt "shortcut window"
 msgid "Eraser"
 msgstr "Silgi"
 
-#: data/gtk/help-overlay.ui:91
+#: src/shortcuts-dialog.ui:91
 msgctxt "shortcut window"
 msgid "Picker"
 msgstr "Seçici"
 
-#: data/ui/new_palette.ui:11
+#: src/ui/new_palette.ui:11
 msgid "New palette"
 msgstr "Yeni palet"
 
-#: data/ui/new_palette.ui:35
+#: src/ui/new_palette.ui:35
 msgid "Palette name"
 msgstr "Palet adı"
 
-#: data/ui/new_palette.ui:57 data/ui/window.ui:597 src/main.py:209
+#: src/ui/new_palette.ui:57 src/ui/window.ui:597 src/main.py:209
 #: src/window.py:482
 msgid "Save"
 msgstr "Kaydet"
 
-#: data/ui/window.ui:87
+#: src/ui/window.ui:87
 msgid "Spaces do not overwrite "
 msgstr "Boşluklar üzerine yazmaz "
 
-#: data/ui/window.ui:88
+#: src/ui/window.ui:88
 msgid "Transparent spaces"
 msgstr "Saydam boşluklar"
 
-#: data/ui/window.ui:94 data/ui/window.ui:205 data/ui/window.ui:249
+#: src/ui/window.ui:94 src/ui/window.ui:205 src/ui/window.ui:249
 msgid "Enter"
 msgstr "Gir"
 
-#: data/ui/window.ui:102 src/tools/text.py:144
+#: src/ui/window.ui:102 src/tools/text.py:144
 msgid "Text"
 msgstr "Metin"
 
-#: data/ui/window.ui:131
+#: src/ui/window.ui:131
 msgid "Colums"
 msgstr "Sütun"
 
-#: data/ui/window.ui:137
+#: src/ui/window.ui:137
 msgid "Rows"
 msgstr "Satır"
 
-#: data/ui/window.ui:146
+#: src/ui/window.ui:146
 msgid "Add a row"
 msgstr "Satır ekle"
 
-#: data/ui/window.ui:154
+#: src/ui/window.ui:154
 msgid "Delete rows"
 msgstr "Satırları Sil"
 
-#: data/ui/window.ui:188
+#: src/ui/window.ui:188
 msgid "First line divided"
 msgstr "İlk satır bölünmüş"
 
-#: data/ui/window.ui:189
+#: src/ui/window.ui:189
 msgid "Divide each row"
 msgstr "Her satırı ayır"
 
-#: data/ui/window.ui:190
+#: src/ui/window.ui:190
 msgid "Not divided"
 msgstr "Ayrılmamış"
 
-#: data/ui/window.ui:195 data/ui/window.ui:328
+#: src/ui/window.ui:195 src/ui/window.ui:328
 msgid "Type"
 msgstr "Tür"
 
-#: data/ui/window.ui:257
+#: src/ui/window.ui:257
 msgid "Tree view"
 msgstr "Ağaç görünümü"
 
-#: data/ui/window.ui:274 data/ui/window.ui:367
+#: src/ui/window.ui:274 src/ui/window.ui:367
 msgid "Size"
 msgstr "Boyut"
 
-#: data/ui/window.ui:298 data/ui/window.ui:323 src/tools/freehand.py:85
+#: src/ui/window.ui:298 src/ui/window.ui:323 src/tools/freehand.py:85
 msgid "Freehand"
 msgstr "Serbest Çizim"
 
-#: data/ui/window.ui:321
+#: src/ui/window.ui:321
 msgid "Cartesian"
 msgstr "Kartezyen"
 
-#: data/ui/window.ui:322
+#: src/ui/window.ui:322
 msgid "Step"
 msgstr "Adım"
 
-#: data/ui/window.ui:341
+#: src/ui/window.ui:341
 msgid "Arrow"
 msgstr "Ok"
 
-#: data/ui/window.ui:350
+#: src/ui/window.ui:350
 msgid "Line"
 msgstr "Çizgi"
 
-#: data/ui/window.ui:416
+#: src/ui/window.ui:416
 msgid "Extended latin"
 msgstr "Genişletilmiş Latince"
 
-#: data/ui/window.ui:541
+#: src/ui/window.ui:541
 msgid "Character"
 msgstr "Karakter"
 
-#: data/ui/window.ui:562
+#: src/ui/window.ui:562
 msgid "Style"
 msgstr "Biçem"
 
-#: data/ui/window.ui:641
+#: src/ui/window.ui:641
 msgid "Width"
 msgstr "Genişlik"
 
-#: data/ui/window.ui:656
+#: src/ui/window.ui:656
 msgid "Height"
 msgstr "Yükseklik"
 
-#: data/ui/window.ui:661
+#: src/ui/window.ui:661
 msgid "Change size"
 msgstr "Boyut Değiştir"
 
-#: data/ui/window.ui:689
+#: src/ui/window.ui:689
 msgid "Rectangle Ctrl+R"
 msgstr "Dörtgen Ctrl+R"
 
-#: data/ui/window.ui:699
+#: src/ui/window.ui:699
 msgid "Filled rectangle Ctrl+Shift+R"
 msgstr "Dolu Dörtgen Ctrl+Shift+R"
 
-#: data/ui/window.ui:709
+#: src/ui/window.ui:709
 msgid "Line Ctrl+L"
 msgstr "Çizgi Ctrl+L"
 
-#: data/ui/window.ui:719
+#: src/ui/window.ui:719
 msgid "Freehand Ctrl+F"
 msgstr "Serbest Seçim Ctrl+F"
 
-#: data/ui/window.ui:729
+#: src/ui/window.ui:729
 msgid "Text Ctrl+T"
 msgstr "Metin Ctrl+T"
 
-#: data/ui/window.ui:744
+#: src/ui/window.ui:744
 msgid "Table Ctrl+Shift+T"
 msgstr "Tablo Ctrl+Shift+T"
 
-#: data/ui/window.ui:754
+#: src/ui/window.ui:754
 msgid "Tree view Ctrl+U"
 msgstr "Ağaç Görünümü Ctrl+U"
 
-#: data/ui/window.ui:764
+#: src/ui/window.ui:764
 msgid "Eraser Ctrl+E"
 msgstr "Silgi Ctrl+E"
 
-#: data/ui/window.ui:774
+#: src/ui/window.ui:774
 msgid "Picker Ctrl+P"
 msgstr "Seçici Ctrl+P"
 
-#: data/ui/window.ui:794
+#: src/ui/window.ui:794
 msgid "Primary Character"
 msgstr "Birincil Karakter"
 
-#: data/ui/window.ui:802
+#: src/ui/window.ui:802
 msgid "Secondary Character"
 msgstr "İkincil Karakter"
 
-#: data/ui/window.ui:817
+#: src/ui/window.ui:817
 msgid "Clear Canvas"
 msgstr "Tuvali Temizle"
 
-#: data/ui/window.ui:823
+#: src/ui/window.ui:823
 msgid "New Palette"
 msgstr "Yeni Palet"
 
-#: data/ui/window.ui:827
+#: src/ui/window.ui:827
 msgid "New Palette From Canvas"
 msgstr "Tuvalden Yeni Palet"
 
-#: data/ui/window.ui:833
+#: src/ui/window.ui:833
 msgid "Keyboard Shortcuts"
 msgstr "Klavye Kısayolları"
 
-#: data/ui/window.ui:837
+#: src/ui/window.ui:837
 msgid "About ASCII Draw"
 msgstr "ASCII Çizim Hakkında"
 
-#: data/ui/window.ui:847
+#: src/ui/window.ui:847
 msgid "Copy To Clipboard"
 msgstr "Panoya Kopyala"
 
-#: data/ui/window.ui:851
+#: src/ui/window.ui:851
 msgid "Save As"
 msgstr "Farklı Kaydet"
 
-#: data/ui/window.ui:857
+#: src/ui/window.ui:857
 msgid "Open"
 msgstr "Aç"
 
-#: data/ui/window.ui:861
+#: src/ui/window.ui:861
 msgid "New Canvas"
 msgstr "Yeni Tuval"
 

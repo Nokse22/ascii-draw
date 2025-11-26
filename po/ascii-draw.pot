@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:2
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:51
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/ui/window.ui:51
 #: src/main.py:153
 msgid "ASCII Draw"
 msgstr ""
@@ -58,7 +58,7 @@ msgid "Text with FIGlet fonts"
 msgstr ""
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:21
-#: data/ui/table_sidebar.ui:114 src/tools/table.py:116
+#: src/ui/table_sidebar.ui:114 src/tools/table.py:116
 msgid "Table"
 msgstr ""
 
@@ -67,7 +67,7 @@ msgid "Tree View"
 msgstr ""
 
 #: data/io.github.nokse22.asciidraw.metainfo.xml.in:23
-#: data/ui/eraser_sidebar.ui:41 src/tools/eraser.py:73
+#: src/ui/eraser_sidebar.ui:41 src/tools/eraser.py:73
 msgid "Eraser"
 msgstr ""
 
@@ -111,371 +111,371 @@ msgstr ""
 msgid "Move and Rotate Tool"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:11
+#: src/shortcuts-dialog.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:14
+#: src/shortcuts-dialog.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:26
+#: src/shortcuts-dialog.ui:26
 msgctxt "shortcut window"
 msgid "Save"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:32
+#: src/shortcuts-dialog.ui:32
 msgctxt "shortcut window"
 msgid "Save As"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:38
+#: src/shortcuts-dialog.ui:38
 msgctxt "shortcut window"
 msgid "Open"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:44
+#: src/shortcuts-dialog.ui:44
 msgctxt "shortcut window"
 msgid "New Canvas"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:50
+#: src/shortcuts-dialog.ui:50
 msgctxt "shortcut window"
 msgid "Undo"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:56
+#: src/shortcuts-dialog.ui:56
 msgctxt "shortcut window"
 msgid "Redo"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:64
+#: src/shortcuts-dialog.ui:64
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:67
+#: src/shortcuts-dialog.ui:67
 msgctxt "shortcut window"
 msgid "Rectangle"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:73
+#: src/shortcuts-dialog.ui:73
 msgctxt "shortcut window"
 msgid "Filled Rectangle"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:79
+#: src/shortcuts-dialog.ui:79
 msgctxt "shortcut window"
 msgid "Line"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:85
+#: src/shortcuts-dialog.ui:85
 msgctxt "shortcut window"
 msgid "Freehand Brush"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:91
+#: src/shortcuts-dialog.ui:91
 msgctxt "shortcut window"
 msgid "Text"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:97
+#: src/shortcuts-dialog.ui:97
 msgctxt "shortcut window"
 msgid "Table"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:103
+#: src/shortcuts-dialog.ui:103
 msgctxt "shortcut window"
 msgid "Tree View"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:109
+#: src/shortcuts-dialog.ui:109
 msgctxt "shortcut window"
 msgid "Eraser"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:115
+#: src/shortcuts-dialog.ui:115
 msgctxt "shortcut window"
 msgid "Picker"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:121
+#: src/shortcuts-dialog.ui:121
 msgctxt "shortcut window"
 msgid "Move"
 msgstr ""
 
-#: data/gtk/help-overlay.ui:127
+#: src/shortcuts-dialog.ui:127
 msgctxt "shortcut window"
 msgid "Fill"
 msgstr ""
 
-#: data/ui/new_palette.ui:10
+#: src/ui/new_palette.ui:10
 msgid "New palette"
 msgstr ""
 
-#: data/ui/new_palette.ui:38
+#: src/ui/new_palette.ui:38
 msgid "Palette name"
 msgstr ""
 
-#: data/ui/new_palette.ui:70 data/ui/window.ui:56 src/main.py:187
+#: src/ui/new_palette.ui:70 src/ui/window.ui:56 src/main.py:187
 #: src/main.py:208 src/window.py:433
 msgid "Save"
 msgstr ""
 
-#: data/ui/window.ui:65 src/window.py:659
+#: src/ui/window.ui:65 src/window.py:659
 msgid "Undo"
 msgstr ""
 
-#: data/ui/window.ui:73
+#: src/ui/window.ui:73
 msgid "Redo"
 msgstr ""
 
-#: data/ui/window.ui:80
+#: src/ui/window.ui:80
 msgid "Toggle Sidebar"
 msgstr ""
 
-#: data/ui/window.ui:100
+#: src/ui/window.ui:100
 msgid "Rectangle Ctrl+R"
 msgstr ""
 
-#: data/ui/window.ui:112
+#: src/ui/window.ui:112
 msgid "Filled rectangle Ctrl+Shift+R"
 msgstr ""
 
-#: data/ui/window.ui:124
+#: src/ui/window.ui:124
 msgid "Line Ctrl+L"
 msgstr ""
 
-#: data/ui/window.ui:136
+#: src/ui/window.ui:136
 msgid "Freehand Ctrl+F"
 msgstr ""
 
-#: data/ui/window.ui:148
+#: src/ui/window.ui:148
 msgid "Text Ctrl+T"
 msgstr ""
 
-#: data/ui/window.ui:165
+#: src/ui/window.ui:165
 msgid "Table Ctrl+Shift+T"
 msgstr ""
 
-#: data/ui/window.ui:177
+#: src/ui/window.ui:177
 msgid "Tree view Ctrl+U"
 msgstr ""
 
-#: data/ui/window.ui:189
+#: src/ui/window.ui:189
 msgid "Eraser Ctrl+E"
 msgstr ""
 
-#: data/ui/window.ui:201
+#: src/ui/window.ui:201
 msgid "Picker Ctrl+P"
 msgstr ""
 
-#: data/ui/window.ui:213
+#: src/ui/window.ui:213
 msgid "Move Ctrl+M"
 msgstr ""
 
-#: data/ui/window.ui:225
+#: src/ui/window.ui:225
 msgid "Fill Ctrl+Shift+F"
 msgstr ""
 
-#: data/ui/window.ui:238
+#: src/ui/window.ui:238
 msgid "Primary Character"
 msgstr ""
 
-#: data/ui/window.ui:249
+#: src/ui/window.ui:249
 msgid "Secondary Character"
 msgstr ""
 
-#: data/ui/window.ui:273
+#: src/ui/window.ui:273
 msgid "Close Sidebar"
 msgstr ""
 
-#: data/ui/window.ui:280
+#: src/ui/window.ui:280
 msgid "Main Menu"
 msgstr ""
 
-#: data/ui/window.ui:287
+#: src/ui/window.ui:287
 msgid "Resize Canvas"
 msgstr ""
 
-#: data/ui/window.ui:306
+#: src/ui/window.ui:306
 msgid "Width"
 msgstr ""
 
-#: data/ui/window.ui:321
+#: src/ui/window.ui:321
 msgid "Height"
 msgstr ""
 
-#: data/ui/window.ui:326
+#: src/ui/window.ui:326
 msgid "Change size"
 msgstr ""
 
-#: data/ui/window.ui:368
+#: src/ui/window.ui:368
 msgid "ASCII"
 msgstr ""
 
-#: data/ui/window.ui:390
+#: src/ui/window.ui:390
 msgid "Character"
 msgstr ""
 
-#: data/ui/window.ui:413
+#: src/ui/window.ui:413
 msgid "Style"
 msgstr ""
 
-#: data/ui/window.ui:445
+#: src/ui/window.ui:445
 msgid "Clear Canvas"
 msgstr ""
 
-#: data/ui/window.ui:451
+#: src/ui/window.ui:451
 msgid "New Palette"
 msgstr ""
 
-#: data/ui/window.ui:455
+#: src/ui/window.ui:455
 msgid "New Palette From Canvas"
 msgstr ""
 
-#: data/ui/window.ui:459
+#: src/ui/window.ui:459
 msgid "Open Palettes Folder"
 msgstr ""
 
-#: data/ui/window.ui:465
+#: src/ui/window.ui:465
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: data/ui/window.ui:469
+#: src/ui/window.ui:469
 msgid "About ASCII Draw"
 msgstr ""
 
-#: data/ui/window.ui:479
+#: src/ui/window.ui:479
 msgid "Copy To Clipboard"
 msgstr ""
 
-#: data/ui/window.ui:483
+#: src/ui/window.ui:483
 msgid "Save As"
 msgstr ""
 
-#: data/ui/window.ui:489
+#: src/ui/window.ui:489
 msgid "Open"
 msgstr ""
 
-#: data/ui/window.ui:493 src/window.py:468
+#: src/ui/window.ui:493 src/window.py:468
 msgid "New Canvas"
 msgstr ""
 
-#: data/ui/eraser_sidebar.ui:17 data/ui/freehand_sidebar.ui:17
+#: src/ui/eraser_sidebar.ui:17 src/ui/freehand_sidebar.ui:17
 msgid "Size"
 msgstr ""
 
-#: data/ui/freehand_sidebar.ui:41 data/ui/line_sidebar.ui:21
+#: src/ui/freehand_sidebar.ui:41 src/ui/line_sidebar.ui:21
 #: src/tools/freehand.py:70
 msgid "Freehand"
 msgstr ""
 
-#: data/ui/line_sidebar.ui:19
+#: src/ui/line_sidebar.ui:19
 msgid "Cartesian"
 msgstr ""
 
-#: data/ui/line_sidebar.ui:20
+#: src/ui/line_sidebar.ui:20
 msgid "Step"
 msgstr ""
 
-#: data/ui/line_sidebar.ui:26 data/ui/table_sidebar.ui:91
+#: src/ui/line_sidebar.ui:26 src/ui/table_sidebar.ui:91
 msgid "Type"
 msgstr ""
 
-#: data/ui/line_sidebar.ui:31
+#: src/ui/line_sidebar.ui:31
 msgid "Arrow"
 msgstr ""
 
-#: data/ui/line_sidebar.ui:38
+#: src/ui/line_sidebar.ui:38
 msgid "Line"
 msgstr ""
 
-#: data/ui/move_sidebar.ui:20 src/tools/select.py:291
+#: src/ui/move_sidebar.ui:20 src/tools/select.py:291
 msgid "Rotate"
 msgstr ""
 
-#: data/ui/move_sidebar.ui:43
+#: src/ui/move_sidebar.ui:43
 msgid "Copy"
 msgstr ""
 
-#: data/ui/move_sidebar.ui:61
+#: src/ui/move_sidebar.ui:61
 msgid "Delete"
 msgstr ""
 
-#: data/ui/move_sidebar.ui:81
+#: src/ui/move_sidebar.ui:81
 msgid "Press CTRL and move to duplicate"
 msgstr ""
 
-#: data/ui/move_sidebar.ui:89 src/tools/select.py:132
+#: src/ui/move_sidebar.ui:89 src/tools/select.py:132
 msgid "Move"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:28
+#: src/ui/table_sidebar.ui:28
 msgid "Columns"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:34
+#: src/ui/table_sidebar.ui:34
 msgid "Rows"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:43
+#: src/ui/table_sidebar.ui:43
 msgid "Add a row"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:50
+#: src/ui/table_sidebar.ui:50
 msgid "Delete rows"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:84
+#: src/ui/table_sidebar.ui:84
 msgid "First line divided"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:85
+#: src/ui/table_sidebar.ui:85
 msgid "Divide each row"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:86
+#: src/ui/table_sidebar.ui:86
 msgid "Not divided"
 msgstr ""
 
-#: data/ui/table_sidebar.ui:102 data/ui/text_sidebar.ui:75
-#: data/ui/tree_sidebar.ui:44
+#: src/ui/table_sidebar.ui:102 src/ui/text_sidebar.ui:75
+#: src/ui/tree_sidebar.ui:44
 msgid "Enter"
 msgstr ""
 
-#: data/ui/text_sidebar.ui:47
+#: src/ui/text_sidebar.ui:47
 msgid "Choose Font"
 msgstr ""
 
-#: data/ui/text_sidebar.ui:58
+#: src/ui/text_sidebar.ui:58
 msgid "Vertical Text"
 msgstr ""
 
-#: data/ui/text_sidebar.ui:63
+#: src/ui/text_sidebar.ui:63
 msgid "Spaces do not overwrite"
 msgstr ""
 
-#: data/ui/text_sidebar.ui:64
+#: src/ui/text_sidebar.ui:64
 msgid "Transparent spaces"
 msgstr ""
 
-#: data/ui/text_sidebar.ui:115 src/main.py:185 src/main.py:206
+#: src/ui/text_sidebar.ui:115 src/main.py:185 src/main.py:206
 #: src/window.py:431
 msgid "Cancel"
 msgstr ""
 
-#: data/ui/text_sidebar.ui:121
+#: src/ui/text_sidebar.ui:121
 msgid "Select"
 msgstr ""
 
-#: data/ui/text_sidebar.ui:137 src/tools/text.py:187
+#: src/ui/text_sidebar.ui:137 src/tools/text.py:187
 msgid "Text"
 msgstr ""
 
-#: data/ui/tree_sidebar.ui:56
+#: src/ui/tree_sidebar.ui:56
 msgid "Tree view"
 msgstr ""
 

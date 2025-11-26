@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:3
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:51
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/ui/window.ui:51
 #: src/main.py:129
 msgid "ASCII Draw"
 msgstr "Desenho ASCII"
@@ -112,256 +112,256 @@ msgstr "Linhas cartesianas, pisadas e à mão livre"
 msgid "Move and Rotate Tool"
 msgstr "Mover e girar a ferramenta"
 
-#: data/gtk/help-overlay.ui:11
+#: src/shortcuts-dialog.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Em geral"
 
-#: data/gtk/help-overlay.ui:14
+#: src/shortcuts-dialog.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
 msgstr "Mostre atalhos"
 
-#: data/gtk/help-overlay.ui:26
+#: src/shortcuts-dialog.ui:26
 msgctxt "shortcut window"
 msgid "Save"
 msgstr "Salve"
 
-#: data/gtk/help-overlay.ui:32
+#: src/shortcuts-dialog.ui:32
 msgctxt "shortcut window"
 msgid "Save As"
 msgstr "Salve como"
 
-#: data/gtk/help-overlay.ui:38
+#: src/shortcuts-dialog.ui:38
 msgctxt "shortcut window"
 msgid "Open"
 msgstr "Abrir"
 
-#: data/gtk/help-overlay.ui:44
+#: src/shortcuts-dialog.ui:44
 msgctxt "shortcut window"
 msgid "New Canvas"
 msgstr "Nova tela"
 
-#: data/gtk/help-overlay.ui:50
+#: src/shortcuts-dialog.ui:50
 msgctxt "shortcut window"
 msgid "Undo"
 msgstr "Desfazer"
 
-#: data/gtk/help-overlay.ui:56
+#: src/shortcuts-dialog.ui:56
 msgctxt "shortcut window"
 msgid "Redo"
 msgstr "Refazer"
 
-#: data/gtk/help-overlay.ui:64
+#: src/shortcuts-dialog.ui:64
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "Ferramentas"
 
-#: data/gtk/help-overlay.ui:67
+#: src/shortcuts-dialog.ui:67
 msgctxt "shortcut window"
 msgid "Rectangle"
 msgstr "Retângulo"
 
-#: data/gtk/help-overlay.ui:73
+#: src/shortcuts-dialog.ui:73
 msgctxt "shortcut window"
 msgid "Filled Rectangle"
 msgstr "Retângulo preenchido"
 
-#: data/gtk/help-overlay.ui:79
+#: src/shortcuts-dialog.ui:79
 msgctxt "shortcut window"
 msgid "Line"
 msgstr "Linha"
 
-#: data/gtk/help-overlay.ui:85
+#: src/shortcuts-dialog.ui:85
 msgctxt "shortcut window"
 msgid "Freehand Brush"
 msgstr "Escova à mão livre"
 
-#: data/gtk/help-overlay.ui:91
+#: src/shortcuts-dialog.ui:91
 msgctxt "shortcut window"
 msgid "Text"
 msgstr "Texto"
 
-#: data/gtk/help-overlay.ui:97
+#: src/shortcuts-dialog.ui:97
 msgctxt "shortcut window"
 msgid "Table"
 msgstr "Tabela"
 
-#: data/gtk/help-overlay.ui:103
+#: src/shortcuts-dialog.ui:103
 msgctxt "shortcut window"
 msgid "Tree View"
 msgstr "Vista em árvore"
 
-#: data/gtk/help-overlay.ui:109
+#: src/shortcuts-dialog.ui:109
 msgctxt "shortcut window"
 msgid "Eraser"
 msgstr "Apagador"
 
-#: data/gtk/help-overlay.ui:115
+#: src/shortcuts-dialog.ui:115
 msgctxt "shortcut window"
 msgid "Picker"
 msgstr "Picker"
 
-#: data/gtk/help-overlay.ui:121
+#: src/shortcuts-dialog.ui:121
 msgctxt "shortcut window"
 msgid "Move"
 msgstr "Mover"
 
-#: data/gtk/help-overlay.ui:127
+#: src/shortcuts-dialog.ui:127
 msgctxt "shortcut window"
 msgid "Fill"
 msgstr "Preencher"
 
-#: data/ui/new_palette.ui:10
+#: src/ui/new_palette.ui:10
 msgid "New palette"
 msgstr "Nova paleta"
 
-#: data/ui/new_palette.ui:38
+#: src/ui/new_palette.ui:38
 msgid "Palette name"
 msgstr "Nome da paleta"
 
-#: data/ui/new_palette.ui:70 data/ui/window.ui:56 src/main.py:175
+#: src/ui/new_palette.ui:70 src/ui/window.ui:56 src/main.py:175
 #: src/main.py:196 src/window.py:384
 msgid "Save"
 msgstr "Salve"
 
-#: data/ui/window.ui:65 src/window.py:607
+#: src/ui/window.ui:65 src/window.py:607
 msgid "Undo"
 msgstr "Desfazer"
 
-#: data/ui/window.ui:73
+#: src/ui/window.ui:73
 msgid "Redo"
 msgstr "Refazer"
 
-#: data/ui/window.ui:80
+#: src/ui/window.ui:80
 msgid "Toggle Sidebar"
 msgstr "Alterne a barra lateral"
 
-#: data/ui/window.ui:101
+#: src/ui/window.ui:101
 msgid "Rectangle Ctrl+R"
 msgstr "Retângulo ctrl+r"
 
-#: data/ui/window.ui:111
+#: src/ui/window.ui:111
 msgid "Filled rectangle Ctrl+Shift+R"
 msgstr "Retângulo preenchido ctrl+shift+r"
 
-#: data/ui/window.ui:121
+#: src/ui/window.ui:121
 msgid "Line Ctrl+L"
 msgstr "Linha ctrl+l"
 
-#: data/ui/window.ui:131
+#: src/ui/window.ui:131
 msgid "Freehand Ctrl+F"
 msgstr "Desenho livre Ctrl+F"
 
-#: data/ui/window.ui:141
+#: src/ui/window.ui:141
 msgid "Text Ctrl+T"
 msgstr "Texto ctrl+t"
 
-#: data/ui/window.ui:156
+#: src/ui/window.ui:156
 msgid "Table Ctrl+Shift+T"
 msgstr "Tabela Ctrl+Shift+T"
 
-#: data/ui/window.ui:166
+#: src/ui/window.ui:166
 msgid "Tree view Ctrl+U"
 msgstr "Vista de árvore Ctrl+u"
 
-#: data/ui/window.ui:176
+#: src/ui/window.ui:176
 msgid "Eraser Ctrl+E"
 msgstr "Borracha Ctrl+E"
 
-#: data/ui/window.ui:186
+#: src/ui/window.ui:186
 msgid "Picker Ctrl+P"
 msgstr "Seletor Ctrl+P"
 
-#: data/ui/window.ui:196
+#: src/ui/window.ui:196
 msgid "Move Ctrl+M"
 msgstr "\"Mover Ctrl+M\""
 
-#: data/ui/window.ui:206
+#: src/ui/window.ui:206
 msgid "Fill Ctrl+Shift+F"
 msgstr "Preencher Ctrl+Shift+F"
 
-#: data/ui/window.ui:216
+#: src/ui/window.ui:216
 msgid "Primary Character"
 msgstr "Caráter primário"
 
-#: data/ui/window.ui:227
+#: src/ui/window.ui:227
 msgid "Secondary Character"
 msgstr "Caráter secundário"
 
-#: data/ui/window.ui:251
+#: src/ui/window.ui:251
 msgid "Close Sidebar"
 msgstr "Barra lateral próxima"
 
-#: data/ui/window.ui:258
+#: src/ui/window.ui:258
 msgid "Main Menu"
 msgstr "Menu principal"
 
-#: data/ui/window.ui:265
+#: src/ui/window.ui:265
 msgid "Resize Canvas"
 msgstr "Redimensione tela"
 
-#: data/ui/window.ui:284
+#: src/ui/window.ui:284
 msgid "Width"
 msgstr "Largura"
 
-#: data/ui/window.ui:299
+#: src/ui/window.ui:299
 msgid "Height"
 msgstr "Altura"
 
-#: data/ui/window.ui:304
+#: src/ui/window.ui:304
 msgid "Change size"
 msgstr "Tamanho da mudança"
 
-#: data/ui/window.ui:346
+#: src/ui/window.ui:346
 msgid "ASCII"
 msgstr "ASCII"
 
-#: data/ui/window.ui:368
+#: src/ui/window.ui:368
 msgid "Character"
 msgstr "Personagem"
 
-#: data/ui/window.ui:391
+#: src/ui/window.ui:391
 msgid "Style"
 msgstr "Estilo"
 
-#: data/ui/window.ui:420
+#: src/ui/window.ui:420
 msgid "Clear Canvas"
 msgstr "Limpar Tela"
 
-#: data/ui/window.ui:426
+#: src/ui/window.ui:426
 msgid "New Palette"
 msgstr "Nova paleta"
 
-#: data/ui/window.ui:430
+#: src/ui/window.ui:430
 msgid "New Palette From Canvas"
 msgstr "Nova paleta da tela"
 
-#: data/ui/window.ui:434
+#: src/ui/window.ui:434
 msgid "Open Palettes Folder"
 msgstr "Pasta de paletas abertas"
 
-#: data/ui/window.ui:440
+#: src/ui/window.ui:440
 msgid "Keyboard Shortcuts"
 msgstr "Atalhos de teclado"
 
-#: data/ui/window.ui:444
+#: src/ui/window.ui:444
 msgid "About ASCII Draw"
 msgstr "Sobre o ASCII Draw"
 
-#: data/ui/window.ui:454
+#: src/ui/window.ui:454
 msgid "Copy To Clipboard"
 msgstr "Cópia para a área de transferência"
 
-#: data/ui/window.ui:458
+#: src/ui/window.ui:458
 msgid "Save As"
 msgstr "Salve como"
 
-#: data/ui/window.ui:464
+#: src/ui/window.ui:464
 msgid "Open"
 msgstr "Abrir"
 
-#: data/ui/window.ui:468 src/window.py:416
+#: src/ui/window.ui:468 src/window.py:416
 msgid "New Canvas"
 msgstr "Nova tela"
 

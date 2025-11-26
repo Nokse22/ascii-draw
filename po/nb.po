@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Poedit 3.4.4\n"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:3
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:490
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/ui/window.ui:490
 #: src/main.py:170
 msgid "ASCII Draw"
 msgstr "ASCII Draw"
@@ -63,7 +63,7 @@ msgstr "Pensel"
 msgid "Text with FIGlet fonts"
 msgstr "Bannertekst"
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18 data/ui/window.ui:214
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18 src/ui/window.ui:214
 #: src/tools/table.py:123
 msgid "Table"
 msgstr "Tabell"
@@ -72,7 +72,7 @@ msgstr "Tabell"
 msgid "Tree View"
 msgstr "Flytskjema"
 
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 data/ui/window.ui:392
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20 src/ui/window.ui:392
 #: src/tools/eraser.py:84
 msgid "Eraser"
 msgstr "Viskelær"
@@ -109,295 +109,295 @@ msgstr "En trestruktur"
 msgid "Cartesian, stepped and freehand lines"
 msgstr "Forskjellige linjer"
 
-#: data/gtk/help-overlay.ui:11
+#: src/shortcuts-dialog.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Generelt"
 
-#: data/gtk/help-overlay.ui:14
+#: src/shortcuts-dialog.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
 msgstr "Vis tastatursnarveier"
 
-#: data/gtk/help-overlay.ui:26
+#: src/shortcuts-dialog.ui:26
 msgctxt "shortcut window"
 msgid "Save"
 msgstr "Lagre"
 
-#: data/gtk/help-overlay.ui:32
+#: src/shortcuts-dialog.ui:32
 msgctxt "shortcut window"
 msgid "Save As"
 msgstr "Lagre som"
 
-#: data/gtk/help-overlay.ui:38
+#: src/shortcuts-dialog.ui:38
 msgctxt "shortcut window"
 msgid "Open"
 msgstr "Åpne"
 
-#: data/gtk/help-overlay.ui:44
+#: src/shortcuts-dialog.ui:44
 msgctxt "shortcut window"
 msgid "New Canvas"
 msgstr "Nytt lerret"
 
-#: data/gtk/help-overlay.ui:50
+#: src/shortcuts-dialog.ui:50
 msgctxt "shortcut window"
 msgid "Undo"
 msgstr "Angre"
 
-#: data/gtk/help-overlay.ui:56
+#: src/shortcuts-dialog.ui:56
 msgctxt "shortcut window"
 msgid "Redo"
 msgstr "Gjør om"
 
-#: data/gtk/help-overlay.ui:64
+#: src/shortcuts-dialog.ui:64
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "Verktøy"
 
-#: data/gtk/help-overlay.ui:67
+#: src/shortcuts-dialog.ui:67
 msgctxt "shortcut window"
 msgid "Rectangle"
 msgstr "Rektangel"
 
-#: data/gtk/help-overlay.ui:73
+#: src/shortcuts-dialog.ui:73
 msgctxt "shortcut window"
 msgid "Filled Rectangle"
 msgstr "Fylt rektangel"
 
-#: data/gtk/help-overlay.ui:79
+#: src/shortcuts-dialog.ui:79
 msgctxt "shortcut window"
 msgid "Line"
 msgstr "Linje"
 
-#: data/gtk/help-overlay.ui:85
+#: src/shortcuts-dialog.ui:85
 msgctxt "shortcut window"
 msgid "Freehand Brush"
 msgstr "Frihåndspensel"
 
-#: data/gtk/help-overlay.ui:91
+#: src/shortcuts-dialog.ui:91
 msgctxt "shortcut window"
 msgid "Text"
 msgstr "Tekst"
 
-#: data/gtk/help-overlay.ui:97
+#: src/shortcuts-dialog.ui:97
 msgctxt "shortcut window"
 msgid "Table"
 msgstr "Tabell"
 
-#: data/gtk/help-overlay.ui:103
+#: src/shortcuts-dialog.ui:103
 msgctxt "shortcut window"
 msgid "Tree View"
 msgstr "Trestruktur"
 
-#: data/gtk/help-overlay.ui:109
+#: src/shortcuts-dialog.ui:109
 msgctxt "shortcut window"
 msgid "Eraser"
 msgstr "Viskelær"
 
-#: data/gtk/help-overlay.ui:115
+#: src/shortcuts-dialog.ui:115
 msgctxt "shortcut window"
 msgid "Picker"
 msgstr "Markering"
 
-#: data/gtk/help-overlay.ui:121
+#: src/shortcuts-dialog.ui:121
 msgctxt "shortcut window"
 msgid "Move"
 msgstr "Flytting"
 
-#: data/ui/new_palette.ui:10
+#: src/ui/new_palette.ui:10
 msgid "New palette"
 msgstr "Ny palett"
 
-#: data/ui/new_palette.ui:38
+#: src/ui/new_palette.ui:38
 msgid "Palette name"
 msgstr "Navn"
 
-#: data/ui/new_palette.ui:70 data/ui/window.ui:495 src/main.py:215
+#: src/ui/new_palette.ui:70 src/ui/window.ui:495 src/main.py:215
 #: src/main.py:234 src/window.py:469
 msgid "Save"
 msgstr "Lagre"
 
-#: data/ui/window.ui:88
+#: src/ui/window.ui:88
 msgid "Spaces do not overwrite "
 msgstr "Hindre mellomrom i å overskrive eksisterende tegn "
 
-#: data/ui/window.ui:89
+#: src/ui/window.ui:89
 msgid "Transparent spaces"
 msgstr "Gjennomsiktige mellomrom"
 
-#: data/ui/window.ui:95 data/ui/window.ui:206 data/ui/window.ui:250
+#: src/ui/window.ui:95 src/ui/window.ui:206 src/ui/window.ui:250
 msgid "Enter"
 msgstr "Enter"
 
-#: data/ui/window.ui:103 src/tools/text.py:134
+#: src/ui/window.ui:103 src/tools/text.py:134
 msgid "Text"
 msgstr "Tekst"
 
-#: data/ui/window.ui:132
+#: src/ui/window.ui:132
 msgid "Columns"
 msgstr "Kolonner"
 
-#: data/ui/window.ui:138
+#: src/ui/window.ui:138
 msgid "Rows"
 msgstr "Rader"
 
-#: data/ui/window.ui:147
+#: src/ui/window.ui:147
 msgid "Add a row"
 msgstr "Legg til rad"
 
-#: data/ui/window.ui:155
+#: src/ui/window.ui:155
 msgid "Delete rows"
 msgstr "Sett rader"
 
-#: data/ui/window.ui:189
+#: src/ui/window.ui:189
 msgid "First line divided"
 msgstr "Første rad"
 
-#: data/ui/window.ui:190
+#: src/ui/window.ui:190
 msgid "Divide each row"
 msgstr "Alle rader"
 
-#: data/ui/window.ui:191
+#: src/ui/window.ui:191
 msgid "Not divided"
 msgstr "Ingen"
 
-#: data/ui/window.ui:196 data/ui/window.ui:329
+#: src/ui/window.ui:196 src/ui/window.ui:329
 msgid "Type"
 msgstr "Separering"
 
-#: data/ui/window.ui:258
+#: src/ui/window.ui:258
 msgid "Tree view"
 msgstr "Trestruktur"
 
-#: data/ui/window.ui:275 data/ui/window.ui:368
+#: src/ui/window.ui:275 src/ui/window.ui:368
 msgid "Size"
 msgstr "Størrelse"
 
-#: data/ui/window.ui:299 data/ui/window.ui:324 src/tools/freehand.py:80
+#: src/ui/window.ui:299 src/ui/window.ui:324 src/tools/freehand.py:80
 msgid "Freehand"
 msgstr "Frihånd"
 
-#: data/ui/window.ui:322
+#: src/ui/window.ui:322
 msgid "Cartesian"
 msgstr "Hjørne"
 
-#: data/ui/window.ui:323
+#: src/ui/window.ui:323
 msgid "Step"
 msgstr "Trapp"
 
-#: data/ui/window.ui:342
+#: src/ui/window.ui:342
 msgid "Arrow"
 msgstr "Pil"
 
-#: data/ui/window.ui:351
+#: src/ui/window.ui:351
 msgid "Line"
 msgstr "Linje"
 
-#: data/ui/window.ui:417
+#: src/ui/window.ui:417
 msgid "ASCII"
 msgstr "ASCII"
 
-#: data/ui/window.ui:439
+#: src/ui/window.ui:439
 msgid "Character"
 msgstr "Tegn"
 
-#: data/ui/window.ui:460
+#: src/ui/window.ui:460
 msgid "Style"
 msgstr "Stil"
 
-#: data/ui/window.ui:547
+#: src/ui/window.ui:547
 msgid "Width"
 msgstr "Bredde"
 
-#: data/ui/window.ui:562
+#: src/ui/window.ui:562
 msgid "Height"
 msgstr "Høyde"
 
-#: data/ui/window.ui:567
+#: src/ui/window.ui:567
 msgid "Change size"
 msgstr "Endre størrelse"
 
-#: data/ui/window.ui:595
+#: src/ui/window.ui:595
 msgid "Rectangle Ctrl+R"
 msgstr "Rektangel (Ctrl+R)"
 
-#: data/ui/window.ui:605
+#: src/ui/window.ui:605
 msgid "Filled rectangle Ctrl+Shift+R"
 msgstr "Fylt rektangel (Ctrl+Shift+R)"
 
-#: data/ui/window.ui:615
+#: src/ui/window.ui:615
 msgid "Line Ctrl+L"
 msgstr "Linje (Ctrl+R)"
 
-#: data/ui/window.ui:625
+#: src/ui/window.ui:625
 msgid "Freehand Ctrl+F"
 msgstr "Frihånd (Ctrl+F)"
 
-#: data/ui/window.ui:635
+#: src/ui/window.ui:635
 msgid "Text Ctrl+T"
 msgstr "Tekst (Ctrl+T)"
 
-#: data/ui/window.ui:650
+#: src/ui/window.ui:650
 msgid "Table Ctrl+Shift+T"
 msgstr "Tabell (Ctrl+Shift+T)"
 
-#: data/ui/window.ui:660
+#: src/ui/window.ui:660
 msgid "Tree view Ctrl+U"
 msgstr "Trestruktur (Ctrl+U)"
 
-#: data/ui/window.ui:670
+#: src/ui/window.ui:670
 msgid "Eraser Ctrl+E"
 msgstr "Viskelær (Ctrl+E)"
 
-#: data/ui/window.ui:680
+#: src/ui/window.ui:680
 msgid "Picker Ctrl+P"
 msgstr "Markering (Ctrl+P)"
 
-#: data/ui/window.ui:690
+#: src/ui/window.ui:690
 msgid "Move Ctrl+M"
 msgstr "Flytting (Ctrl+M)"
 
-#: data/ui/window.ui:702
+#: src/ui/window.ui:702
 msgid "Primary Character"
 msgstr "Primærtegn"
 
-#: data/ui/window.ui:711
+#: src/ui/window.ui:711
 msgid "Secondary Character"
 msgstr "Sekundærtegn"
 
-#: data/ui/window.ui:726
+#: src/ui/window.ui:726
 msgid "Clear Canvas"
 msgstr "Tøm lerret"
 
-#: data/ui/window.ui:732
+#: src/ui/window.ui:732
 msgid "New Palette"
 msgstr "Ny palett"
 
-#: data/ui/window.ui:736
+#: src/ui/window.ui:736
 msgid "New Palette From Canvas"
 msgstr "Ny palett fra lerret"
 
-#: data/ui/window.ui:742
+#: src/ui/window.ui:742
 msgid "Keyboard Shortcuts"
 msgstr "Tastatursnarveier"
 
-#: data/ui/window.ui:746
+#: src/ui/window.ui:746
 msgid "About ASCII Draw"
 msgstr "Om ASCII Draw"
 
-#: data/ui/window.ui:756
+#: src/ui/window.ui:756
 msgid "Copy To Clipboard"
 msgstr "Kopier"
 
-#: data/ui/window.ui:760
+#: src/ui/window.ui:760
 msgid "Save As"
 msgstr "Lagre som"
 
-#: data/ui/window.ui:766
+#: src/ui/window.ui:766
 msgid "Open"
 msgstr "Åpne"
 
-#: data/ui/window.ui:770 src/window.py:498
+#: src/ui/window.ui:770 src/window.py:498
 msgid "New Canvas"
 msgstr "Nytt lerret"
 

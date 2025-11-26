@@ -7,15 +7,6 @@ desktop_file = i18n.merge_file(
   install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
-pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-
-gnome.compile_resources('ascii-draw',
-  'ascii-draw.gresource.xml',
-  gresource_bundle: true,
-  install: true,
-  install_dir: pkgdatadir,
-)
-
 desktop_utils = find_program('desktop-file-validate', required: false)
 if desktop_utils.found()
   test('Validate desktop file', desktop_utils, args: [desktop_file])
@@ -44,5 +35,3 @@ if compile_schemas.found()
        compile_schemas,
        args: ['--strict', '--dry-run', meson.current_source_dir()])
 endif
-
-subdir('icons')

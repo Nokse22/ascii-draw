@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/io.github.nokse22.asciidraw.desktop.in:3
-#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 data/ui/window.ui:51
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/ui/window.ui:51
 #: src/main.py:129
 msgid "ASCII Draw"
 msgstr "ASCII 绘画"
@@ -114,256 +114,256 @@ msgid "Move and Rotate Tool"
 msgstr "移动和旋转工具"
 
 # 快捷键窗口
-#: data/gtk/help-overlay.ui:11
+#: src/shortcuts-dialog.ui:11
 msgctxt "shortcut window"
 msgid "General"
 msgstr "常规"
 
-#: data/gtk/help-overlay.ui:14
+#: src/shortcuts-dialog.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
 msgstr "显示快捷键"
 
-#: data/gtk/help-overlay.ui:26
+#: src/shortcuts-dialog.ui:26
 msgctxt "shortcut window"
 msgid "Save"
 msgstr "保存"
 
-#: data/gtk/help-overlay.ui:32
+#: src/shortcuts-dialog.ui:32
 msgctxt "shortcut window"
 msgid "Save As"
 msgstr "另存为"
 
-#: data/gtk/help-overlay.ui:38
+#: src/shortcuts-dialog.ui:38
 msgctxt "shortcut window"
 msgid "Open"
 msgstr "打开"
 
-#: data/gtk/help-overlay.ui:44
+#: src/shortcuts-dialog.ui:44
 msgctxt "shortcut window"
 msgid "New Canvas"
 msgstr "新文件"
 
-#: data/gtk/help-overlay.ui:50
+#: src/shortcuts-dialog.ui:50
 msgctxt "shortcut window"
 msgid "Undo"
 msgstr "撤销"
 
-#: data/gtk/help-overlay.ui:56
+#: src/shortcuts-dialog.ui:56
 msgctxt "shortcut window"
 msgid "Redo"
 msgstr "恢复"
 
-#: data/gtk/help-overlay.ui:64
+#: src/shortcuts-dialog.ui:64
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "工具"
 
-#: data/gtk/help-overlay.ui:67
+#: src/shortcuts-dialog.ui:67
 msgctxt "shortcut window"
 msgid "Rectangle"
 msgstr "矩形"
 
-#: data/gtk/help-overlay.ui:73
+#: src/shortcuts-dialog.ui:73
 msgctxt "shortcut window"
 msgid "Filled Rectangle"
 msgstr "矩形填充"
 
-#: data/gtk/help-overlay.ui:79
+#: src/shortcuts-dialog.ui:79
 msgctxt "shortcut window"
 msgid "Line"
 msgstr "线条"
 
-#: data/gtk/help-overlay.ui:85
+#: src/shortcuts-dialog.ui:85
 msgctxt "shortcut window"
 msgid "Freehand Brush"
 msgstr "画笔"
 
-#: data/gtk/help-overlay.ui:91
+#: src/shortcuts-dialog.ui:91
 msgctxt "shortcut window"
 msgid "Text"
 msgstr "文本"
 
-#: data/gtk/help-overlay.ui:97
+#: src/shortcuts-dialog.ui:97
 msgctxt "shortcut window"
 msgid "Table"
 msgstr "表格"
 
-#: data/gtk/help-overlay.ui:103
+#: src/shortcuts-dialog.ui:103
 msgctxt "shortcut window"
 msgid "Tree View"
 msgstr "树视图"
 
-#: data/gtk/help-overlay.ui:109
+#: src/shortcuts-dialog.ui:109
 msgctxt "shortcut window"
 msgid "Eraser"
 msgstr "橡皮擦"
 
-#: data/gtk/help-overlay.ui:115
+#: src/shortcuts-dialog.ui:115
 msgctxt "shortcut window"
 msgid "Picker"
 msgstr "选择"
 
-#: data/gtk/help-overlay.ui:121
+#: src/shortcuts-dialog.ui:121
 msgctxt "shortcut window"
 msgid "Move"
 msgstr "移动"
 
-#: data/gtk/help-overlay.ui:127
+#: src/shortcuts-dialog.ui:127
 msgctxt "shortcut window"
 msgid "Fill"
 msgstr "填充"
 
-#: data/ui/new_palette.ui:10
+#: src/ui/new_palette.ui:10
 msgid "New palette"
 msgstr "新建字符集"
 
-#: data/ui/new_palette.ui:38
+#: src/ui/new_palette.ui:38
 msgid "Palette name"
 msgstr "字符集名称"
 
-#: data/ui/new_palette.ui:70 data/ui/window.ui:56 src/main.py:175
+#: src/ui/new_palette.ui:70 src/ui/window.ui:56 src/main.py:175
 #: src/main.py:196 src/window.py:384
 msgid "Save"
 msgstr "保存"
 
-#: data/ui/window.ui:65 src/window.py:607
+#: src/ui/window.ui:65 src/window.py:607
 msgid "Undo"
 msgstr "撤销"
 
-#: data/ui/window.ui:73
+#: src/ui/window.ui:73
 msgid "Redo"
 msgstr "恢复"
 
-#: data/ui/window.ui:80
+#: src/ui/window.ui:80
 msgid "Toggle Sidebar"
 msgstr "显示侧边栏"
 
-#: data/ui/window.ui:101
+#: src/ui/window.ui:101
 msgid "Rectangle Ctrl+R"
 msgstr "矩形 Ctrl+R"
 
-#: data/ui/window.ui:111
+#: src/ui/window.ui:111
 msgid "Filled rectangle Ctrl+Shift+R"
 msgstr "填充矩形 Ctrl+Shift+R"
 
-#: data/ui/window.ui:121
+#: src/ui/window.ui:121
 msgid "Line Ctrl+L"
 msgstr "线条 Ctrl+L"
 
-#: data/ui/window.ui:131
+#: src/ui/window.ui:131
 msgid "Freehand Ctrl+F"
 msgstr "画笔 Ctrl+F"
 
-#: data/ui/window.ui:141
+#: src/ui/window.ui:141
 msgid "Text Ctrl+T"
 msgstr "文本 Ctrl+T"
 
-#: data/ui/window.ui:156
+#: src/ui/window.ui:156
 msgid "Table Ctrl+Shift+T"
 msgstr "表格 Ctrl+Shift+T"
 
-#: data/ui/window.ui:166
+#: src/ui/window.ui:166
 msgid "Tree view Ctrl+U"
 msgstr "树视图 Ctrl+U"
 
-#: data/ui/window.ui:176
+#: src/ui/window.ui:176
 msgid "Eraser Ctrl+E"
 msgstr "橡皮擦 Ctrl+E"
 
-#: data/ui/window.ui:186
+#: src/ui/window.ui:186
 msgid "Picker Ctrl+P"
 msgstr "选择 Ctrl+P"
 
-#: data/ui/window.ui:196
+#: src/ui/window.ui:196
 msgid "Move Ctrl+M"
 msgstr "移动 Ctrl+M"
 
-#: data/ui/window.ui:206
+#: src/ui/window.ui:206
 msgid "Fill Ctrl+Shift+F"
 msgstr "填充 Ctrl+Shift+F"
 
-#: data/ui/window.ui:216
+#: src/ui/window.ui:216
 msgid "Primary Character"
 msgstr "边框"
 
-#: data/ui/window.ui:227
+#: src/ui/window.ui:227
 msgid "Secondary Character"
 msgstr "填充"
 
-#: data/ui/window.ui:251
+#: src/ui/window.ui:251
 msgid "Close Sidebar"
 msgstr "关闭侧边栏"
 
-#: data/ui/window.ui:258
+#: src/ui/window.ui:258
 msgid "Main Menu"
 msgstr "菜单"
 
-#: data/ui/window.ui:265
+#: src/ui/window.ui:265
 msgid "Resize Canvas"
 msgstr "调整大小"
 
-#: data/ui/window.ui:284
+#: src/ui/window.ui:284
 msgid "Width"
 msgstr "宽"
 
-#: data/ui/window.ui:299
+#: src/ui/window.ui:299
 msgid "Height"
 msgstr "高"
 
-#: data/ui/window.ui:304
+#: src/ui/window.ui:304
 msgid "Change size"
 msgstr "改变大小"
 
-#: data/ui/window.ui:346
+#: src/ui/window.ui:346
 msgid "ASCII"
 msgstr "ASCII"
 
-#: data/ui/window.ui:368
+#: src/ui/window.ui:368
 msgid "Character"
 msgstr "字符"
 
-#: data/ui/window.ui:391
+#: src/ui/window.ui:391
 msgid "Style"
 msgstr "风格"
 
-#: data/ui/window.ui:420
+#: src/ui/window.ui:420
 msgid "Clear Canvas"
 msgstr "清空画布"
 
-#: data/ui/window.ui:426
+#: src/ui/window.ui:426
 msgid "New Palette"
 msgstr "新字符集"
 
-#: data/ui/window.ui:430
+#: src/ui/window.ui:430
 msgid "New Palette From Canvas"
 msgstr "从画布创建新字符集"
 
-#: data/ui/window.ui:434
+#: src/ui/window.ui:434
 msgid "Open Palettes Folder"
 msgstr "打开字符集文件夹"
 
-#: data/ui/window.ui:440
+#: src/ui/window.ui:440
 msgid "Keyboard Shortcuts"
 msgstr "快捷键"
 
-#: data/ui/window.ui:444
+#: src/ui/window.ui:444
 msgid "About ASCII Draw"
 msgstr "关于 ASCII 绘画"
 
-#: data/ui/window.ui:454
+#: src/ui/window.ui:454
 msgid "Copy To Clipboard"
 msgstr "复制"
 
-#: data/ui/window.ui:458
+#: src/ui/window.ui:458
 msgid "Save As"
 msgstr "另存为"
 
-#: data/ui/window.ui:464
+#: src/ui/window.ui:464
 msgid "Open"
 msgstr "打开"
 
-#: data/ui/window.ui:468 src/window.py:416
+#: src/ui/window.ui:468 src/window.py:416
 msgid "New Canvas"
 msgstr "新文件"
 

@@ -1,15 +1,15 @@
 data/io.github.nokse22.asciidraw.desktop.in
 data/io.github.nokse22.asciidraw.metainfo.xml.in
-data/gtk/help-overlay.ui
-data/ui/new_palette.ui
-data/ui/window.ui
-data/ui/eraser_sidebar.ui
-data/ui/freehand_sidebar.ui
-data/ui/line_sidebar.ui
-data/ui/move_sidebar.ui
-data/ui/table_sidebar.ui
-data/ui/text_sidebar.ui
-data/ui/tree_sidebar.ui
+src/shortcuts-dialog.ui
+src/ui/new_palette.ui
+src/ui/window.ui
+src/ui/eraser_sidebar.ui
+src/ui/freehand_sidebar.ui
+src/ui/line_sidebar.ui
+src/ui/move_sidebar.ui
+src/ui/table_sidebar.ui
+src/ui/text_sidebar.ui
+src/ui/tree_sidebar.ui
 
 src/main.py
 src/tools/eraser.py
