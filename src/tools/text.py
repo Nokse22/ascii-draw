@@ -103,8 +103,8 @@ class Text(Tool):
 
         self.font_box.select_row(self.previous_font)
 
+        self.insert_text_signal = self.text_entry_buffer.connect("insert-text", self.on_text_inserted)
         self.text_entry_buffer.connect_after("changed", self.preview_text)
-        self.text_entry_buffer.connect_after("insert-text", self.on_text_inserted)
         self.enter_button.connect("activated", self.insert_text)
         self.text_entry_buffer.bind_property("text", self, "text")
         self.transparent_check.bind_property("active", self, "transparent")
@@ -214,12 +214,21 @@ class Text(Tool):
         self.preview_text()
 
     def on_text_inserted(self, buffer, loc, text, length):
-        if emoji.is_emoji(text):
-            start_iter = loc.copy()
-            start_iter.backward_char()
-            buffer.delete(start_iter ,loc)
-            buffer.insert(start_iter, "X")
-            return
+        self.text_entry_buffer.handler_block(self.insert_text_signal)
+
+        filtered = emoji.replace_emoji(text, replace="")
+
+        if filtered != text:
+            buffer.stop_emission("insert-text")
+
+            mark = buffer.create_mark(None, loc, left_gravity=True)
+            iter_at_mark = buffer.get_iter_at_mark(mark)
+
+            buffer.insert(iter_at_mark, filtered)
+
+            buffer.delete_mark(mark)
+
+        self.text_entry_buffer.handler_unblock(self.insert_text_signal)
 
     def show_font_selection(self, *args):
         self.text_sidebar_stack.set_visible_child_name("font_chooser")
