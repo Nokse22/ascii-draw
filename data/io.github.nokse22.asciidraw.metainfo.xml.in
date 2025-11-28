@@ -49,6 +49,11 @@ There are many tools and features available such as:</p>
   </branding>
 
   <releases>
+    <release version="1.3.0" date="2025-11-28">
+      <description translate="no">
+        <p>Various bug fixes</p>
+      </description>
+    </release>
     <release version="1.2.0" date="2025-11-26">
       <description translate="no">
         <p>Updated to latest GNOME runtime</p>
