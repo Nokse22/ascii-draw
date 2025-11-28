@@ -14,6 +14,7 @@
           <object class="GtkListBox">
             <property name="valign">start</property>
             <property name="css-classes">boxed-list-separate</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="AdwActionRow">
                 <property name="hexpand">True</property>
