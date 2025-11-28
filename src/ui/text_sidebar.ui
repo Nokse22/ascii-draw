@@ -9,6 +9,8 @@
             <property name="name">main_sidebar</property>
             <property name="title">Text Sidebar</property>
             <property name="child">
+              <object class="GtkScrolledWindow">
+                <child>
               <object class="GtkBox">
                 <property name="margin-start">12</property>
                 <property name="margin-top">6</property>
@@ -80,6 +82,8 @@
                     </child>
                   </object>
                 </child>
+              </object>
+                  </child>
               </object>
             </property>
           </object>
