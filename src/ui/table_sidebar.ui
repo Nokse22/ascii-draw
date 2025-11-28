@@ -3,6 +3,8 @@
   <requires lib="gtk" version="4.12"/>
   <object class="AdwViewStackPage" id="table_stack_page">
     <property name="child">
+      <object class="GtkScrolledWindow">
+        <child>
       <object class="GtkBox">
         <property name="margin-bottom">12</property>
         <property name="margin-end">12</property>
@@ -107,6 +109,8 @@
             </child>
           </object>
         </child>
+      </object>
+          </child>
       </object>
     </property>
     <property name="icon-name">table-symbolic</property>
