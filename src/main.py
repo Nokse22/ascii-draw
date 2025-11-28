@@ -159,6 +159,10 @@ class AsciiDrawApplication(Adw.Application):
             developers=['Nokse'],
             license_type="GTK_LICENSE_GPL_3_0",
             copyright='© 2023 Nokse')
+
+        about.add_link(_("Donate with Ko-Fi"), "https://ko-fi.com/nokse22")
+        about.add_link(_("Donate with Github"), "https://github.com/sponsors/Nokse22")
+
         # Translator credits. Replace "translator-credits" with your name/username, and optionally an email or URL.
         # One name per line, please do not remove previous names.
         about.set_translator_credits(_("translator-credits"))
