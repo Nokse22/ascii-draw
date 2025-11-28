@@ -70,3 +70,7 @@
       opacity:0.4;
   }
 }
+
+flowbox flowboxchild:hover {
+  background-color: transparent;
+}
