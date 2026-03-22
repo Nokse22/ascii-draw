@@ -1,5 +1,5 @@
 <div align="center">
-  <img height="128" src="data/icons/hicolor/scalable/apps/io.github.nokse22.asciidraw.svg" alt="ASCII Draw Logo"/>
+  <img height="128" src="src/icons/hicolor/scalable/apps/io.github.nokse22.asciidraw.svg" alt="ASCII Draw Logo"/>
   
   # ASCII Draw
   
