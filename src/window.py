@@ -244,7 +244,7 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
         for raw_palette in default_palettes_ranges:
             palette_chars = ""
             for code_range in raw_palette["ranges"]:
-                for code_point in range(code_range[0], code_range[1]):
+                for code_point in range(code_range[0], code_range[1] + 1):
                     palette_chars += chr(code_point)
 
             new_palette = Palette(raw_palette["name"], palette_chars)
