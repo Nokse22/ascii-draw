@@ -89,10 +89,6 @@ To chat about ASCII Draw, share what you made or ask for help when contributing 
   <a href='https://flathub.org/apps/io.github.nokse22.asciidraw'>
     <img height='80' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/>
   </a>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://snapcraft.io/ascii-draw">
-    <img height='80' alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg"/>
-  </a>
 </div>
 
 ### ⚡ From Source
