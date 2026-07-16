@@ -1,0 +1,571 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-04 15:09+0200\n"
+"PO-Revision-Date: 2026-07-12 13:12-0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:2
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:3 src/ui/window.ui:51
+#: src/main.py:153
+msgid "ASCII Draw"
+msgstr "ASCII Draw"
+
+#: data/io.github.nokse22.asciidraw.desktop.in:8
+msgid "GNOME;GTK;Graphics;Art;"
+msgstr "GNOME;GTK;Graphics;Art;"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:10
+msgid "Sketch anything using characters"
+msgstr "Dibuja lo que sea usando caracteres"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:13
+msgid ""
+"Draw diagrams, tables, tree view, art and more using only characters. There "
+"are many tools and features available such as:"
+msgstr ""
+"Crea diagramas, tablas, interfáces, dibujos y mucho más usando unicamente "
+"caracteres. Hay diferentes herramientas y caracteristicas disponibles como "
+"lo son:"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:16
+msgid "Rectangle using multiple line styles"
+msgstr "Rectangulo con dferentes estilos de línea"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:17
+msgid "Filled Rectangle using border and fill characters"
+msgstr "Rellena el rectangulo usando bordes y caracteres de relleno"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:18
+msgid "Cartesian, Freehand and Stepped line, also with arrows"
+msgstr "Lineas cartesianas, trazos libre y escalonados, tambien con flechas"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:19
+msgid "Freehand Brush"
+msgstr "Pincel con trazo libre"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:20
+msgid "Text with FIGlet fonts"
+msgstr "Texto con fuentes FIGlet"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:21
+#: src/ui/table_sidebar.ui:114 src/tools/table.py:116
+msgid "Table"
+msgstr "Tabla"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:22
+msgid "Tree View"
+msgstr "Vista de árbol"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:23
+#: src/ui/eraser_sidebar.ui:41 src/tools/eraser.py:73
+msgid "Eraser"
+msgstr "Borrador"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:24
+msgid "Character Picker"
+msgstr "Selector de personaje"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:25
+msgid "Move and Rotate selection"
+msgstr "Mueve y rota lo seleccionado"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:26
+msgid "Flood Fill"
+msgstr "Relleno"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:204
+msgid "ASCII Art of an old television"
+msgstr "Arte de ASCII de una tv vieja"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:209
+msgid "CPU simplified structure"
+msgstr "Estructura simplificada de una CPU"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:214
+msgid "Table of countries, capitals and population"
+msgstr "Tabla de paises, sus capitales y poblaciones"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:219
+msgid "A flowchart to fix a lamp"
+msgstr "Un diagrama de flujo para reparar una lampara"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:224
+msgid "An example of a treeview"
+msgstr "Ejemplo de vista de arbol"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:229
+msgid "Cartesian, stepped and freehand lines"
+msgstr "Lineas cartesianas, escalonadas y trazos a mano libre"
+
+#: data/io.github.nokse22.asciidraw.metainfo.xml.in:234
+msgid "Move and Rotate Tool"
+msgstr "Herramienta para mover y rotar"
+
+#: src/shortcuts-dialog.ui:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: src/shortcuts-dialog.ui:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Mostrar atajos"
+
+#: src/shortcuts-dialog.ui:26
+msgctxt "shortcut window"
+msgid "Save"
+msgstr "Guardar"
+
+#: src/shortcuts-dialog.ui:32
+msgctxt "shortcut window"
+msgid "Save As"
+msgstr "Guardar como"
+
+#: src/shortcuts-dialog.ui:38
+msgctxt "shortcut window"
+msgid "Open"
+msgstr "Abrir"
+
+#: src/shortcuts-dialog.ui:44
+msgctxt "shortcut window"
+msgid "New Canvas"
+msgstr "Lienzo nuevo"
+
+#: src/shortcuts-dialog.ui:50
+msgctxt "shortcut window"
+msgid "Undo"
+msgstr "Deshacer"
+
+#: src/shortcuts-dialog.ui:56
+msgctxt "shortcut window"
+msgid "Redo"
+msgstr "Recuperar"
+
+#: src/shortcuts-dialog.ui:64
+msgctxt "shortcut window"
+msgid "Tools"
+msgstr "Herramientas"
+
+#: src/shortcuts-dialog.ui:67
+msgctxt "shortcut window"
+msgid "Rectangle"
+msgstr "Rectangulo"
+
+#: src/shortcuts-dialog.ui:73
+msgctxt "shortcut window"
+msgid "Filled Rectangle"
+msgstr "Rectangulo con relleno"
+
+#: src/shortcuts-dialog.ui:79
+msgctxt "shortcut window"
+msgid "Line"
+msgstr "Línea"
+
+#: src/shortcuts-dialog.ui:85
+msgctxt "shortcut window"
+msgid "Freehand Brush"
+msgstr "Pincel a mano alzada"
+
+#: src/shortcuts-dialog.ui:91
+msgctxt "shortcut window"
+msgid "Text"
+msgstr "Texto"
+
+#: src/shortcuts-dialog.ui:97
+msgctxt "shortcut window"
+msgid "Table"
+msgstr "Tabla"
+
+#: src/shortcuts-dialog.ui:103
+msgctxt "shortcut window"
+msgid "Tree View"
+msgstr "Vista de árbol"
+
+#: src/shortcuts-dialog.ui:109
+msgctxt "shortcut window"
+msgid "Eraser"
+msgstr "Borrador"
+
+#: src/shortcuts-dialog.ui:115
+msgctxt "shortcut window"
+msgid "Picker"
+msgstr "Selector"
+
+#: src/shortcuts-dialog.ui:121
+msgctxt "shortcut window"
+msgid "Move"
+msgstr "Mover"
+
+#: src/shortcuts-dialog.ui:127
+msgctxt "shortcut window"
+msgid "Fill"
+msgstr "Rellenar"
+
+#: src/ui/new_palette.ui:10
+msgid "New palette"
+msgstr "Paleta nueva"
+
+#: src/ui/new_palette.ui:38
+msgid "Palette name"
+msgstr "Nombre de la paleta"
+
+#: src/ui/new_palette.ui:70 src/ui/window.ui:56 src/main.py:187 src/main.py:208
+#: src/window.py:433
+msgid "Save"
+msgstr "Guardar"
+
+#: src/ui/window.ui:65 src/window.py:659
+msgid "Undo"
+msgstr "Deshacer"
+
+#: src/ui/window.ui:73
+msgid "Redo"
+msgstr "Recuperar"
+
+#: src/ui/window.ui:80
+msgid "Toggle Sidebar"
+msgstr "Alternar menu lateral"
+
+#: src/ui/window.ui:100
+msgid "Rectangle Ctrl+R"
+msgstr "Crea un rectangulo: Ctrl + Shift + R"
+
+#: src/ui/window.ui:112
+msgid "Filled rectangle Ctrl+Shift+R"
+msgstr "Rellena el rectangulo:  Ctrl+Shift+R"
+
+#: src/ui/window.ui:124
+msgid "Line Ctrl+L"
+msgstr "Crea una linea: Ctrl+L"
+
+#: src/ui/window.ui:136
+msgid "Freehand Ctrl+F"
+msgstr "Haz trazos libres: Ctrl+F"
+
+#: src/ui/window.ui:148
+msgid "Text Ctrl+T"
+msgstr "Agrega texto: Ctrl+T"
+
+#: src/ui/window.ui:165
+msgid "Table Ctrl+Shift+T"
+msgstr "Crea una tabla: Ctrl+Shift+T"
+
+#: src/ui/window.ui:177
+msgid "Tree view Ctrl+U"
+msgstr "Agrega vista de árbol: Ctrl+U"
+
+#: src/ui/window.ui:189
+msgid "Eraser Ctrl+E"
+msgstr "Borra con: Ctrl+E"
+
+#: src/ui/window.ui:201
+msgid "Picker Ctrl+P"
+msgstr "Seleciona con:  Ctrl+P"
+
+#: src/ui/window.ui:213
+msgid "Move Ctrl+M"
+msgstr "Mueve con: Ctrl+M"
+
+#: src/ui/window.ui:225
+msgid "Fill Ctrl+Shift+F"
+msgstr "Agrega relleno con: Ctrl+Shift+F"
+
+#: src/ui/window.ui:238
+msgid "Primary Character"
+msgstr "Primer carácter"
+
+#: src/ui/window.ui:249
+msgid "Secondary Character"
+msgstr "Segundo carácter"
+
+#: src/ui/window.ui:273
+msgid "Close Sidebar"
+msgstr "Cerrer menú"
+
+#: src/ui/window.ui:280
+msgid "Main Menu"
+msgstr "Menú principal"
+
+#: src/ui/window.ui:287
+msgid "Resize Canvas"
+msgstr "Cambiar tamaño del lienzo"
+
+#: src/ui/window.ui:306
+msgid "Width"
+msgstr "Ancho"
+
+#: src/ui/window.ui:321
+msgid "Height"
+msgstr "Alto"
+
+#: src/ui/window.ui:326
+msgid "Change size"
+msgstr "Cambiar tamaño"
+
+#: src/ui/window.ui:368
+msgid "ASCII"
+msgstr "ASCII"
+
+#: src/ui/window.ui:390
+msgid "Character"
+msgstr "Carácter"
+
+#: src/ui/window.ui:413
+msgid "Style"
+msgstr "Estilo"
+
+#: src/ui/window.ui:445
+msgid "Clear Canvas"
+msgstr "Limpiar lienzo"
+
+#: src/ui/window.ui:451
+msgid "New Palette"
+msgstr "Nueva paleta"
+
+#: src/ui/window.ui:455
+msgid "New Palette From Canvas"
+msgstr "Paleta nueva a partir de un lienzo"
+
+#: src/ui/window.ui:459
+msgid "Open Palettes Folder"
+msgstr "Abrir folder de paletas"
+
+#: src/ui/window.ui:465
+msgid "Keyboard Shortcuts"
+msgstr "Atajos de teclado"
+
+#: src/ui/window.ui:469
+msgid "About ASCII Draw"
+msgstr "Sobre ASCII Draw"
+
+#: src/ui/window.ui:479
+msgid "Copy To Clipboard"
+msgstr "Copiar en el portapepeles"
+
+#: src/ui/window.ui:483
+msgid "Save As"
+msgstr "Guardar como"
+
+#: src/ui/window.ui:489
+msgid "Open"
+msgstr "Abrir"
+
+#: src/ui/window.ui:493 src/window.py:468
+msgid "New Canvas"
+msgstr "Lienzo nuevo"
+
+#: src/ui/eraser_sidebar.ui:17 src/ui/freehand_sidebar.ui:17
+msgid "Size"
+msgstr "Tamaño"
+
+#: src/ui/freehand_sidebar.ui:41 src/ui/line_sidebar.ui:21
+#: src/tools/freehand.py:70
+msgid "Freehand"
+msgstr "Trazo libre"
+
+#: src/ui/line_sidebar.ui:19
+msgid "Cartesian"
+msgstr "Línea cartesiana"
+
+#: src/ui/line_sidebar.ui:20
+msgid "Step"
+msgstr "Paso"
+
+#: src/ui/line_sidebar.ui:26 src/ui/table_sidebar.ui:91
+msgid "Type"
+msgstr "Digita"
+
+#: src/ui/line_sidebar.ui:31
+msgid "Arrow"
+msgstr "Flecha"
+
+#: src/ui/line_sidebar.ui:38
+msgid "Line"
+msgstr "Línea"
+
+#: src/ui/move_sidebar.ui:20 src/tools/select.py:291
+msgid "Rotate"
+msgstr "Rotar"
+
+#: src/ui/move_sidebar.ui:43
+msgid "Copy"
+msgstr "Copiar"
+
+#: src/ui/move_sidebar.ui:61
+msgid "Delete"
+msgstr "Borrar"
+
+#: src/ui/move_sidebar.ui:81
+msgid "Press CTRL and move to duplicate"
+msgstr "Presiona CTRL y muevelo para duplicar"
+
+#: src/ui/move_sidebar.ui:89 src/tools/select.py:132
+msgid "Move"
+msgstr "Mueve"
+
+#: src/ui/table_sidebar.ui:28
+msgid "Columns"
+msgstr "Columnas"
+
+#: src/ui/table_sidebar.ui:34
+msgid "Rows"
+msgstr "Filas"
+
+#: src/ui/table_sidebar.ui:43
+msgid "Add a row"
+msgstr "Agregar una fila"
+
+#: src/ui/table_sidebar.ui:50
+msgid "Delete rows"
+msgstr "Borrar las filas"
+
+#: src/ui/table_sidebar.ui:84
+msgid "First line divided"
+msgstr "Primera linea dividida"
+
+#: src/ui/table_sidebar.ui:85
+msgid "Divide each row"
+msgstr "Dividir cada fila"
+
+#: src/ui/table_sidebar.ui:86
+msgid "Not divided"
+msgstr "No dividida"
+
+#: src/ui/table_sidebar.ui:102 src/ui/text_sidebar.ui:75
+#: src/ui/tree_sidebar.ui:44
+msgid "Enter"
+msgstr "Ingresas"
+
+#: src/ui/text_sidebar.ui:47
+msgid "Choose Font"
+msgstr "Escoger fuente"
+
+#: src/ui/text_sidebar.ui:58
+msgid "Vertical Text"
+msgstr "Texto en vertical"
+
+#: src/ui/text_sidebar.ui:63
+msgid "Spaces do not overwrite"
+msgstr "No sobreescribir los espacios"
+
+#: src/ui/text_sidebar.ui:64
+msgid "Transparent spaces"
+msgstr "Espacios transparentes"
+
+#: src/ui/text_sidebar.ui:115 src/main.py:185 src/main.py:206 src/window.py:431
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/ui/text_sidebar.ui:121
+msgid "Select"
+msgstr "Seleccionar"
+
+#: src/ui/text_sidebar.ui:137 src/tools/text.py:187
+msgid "Text"
+msgstr "Texto"
+
+#: src/ui/tree_sidebar.ui:56
+msgid "Tree view"
+msgstr "Vista en árbol"
+
+#: src/main.py:106
+msgid "Clear"
+msgstr "Limpiar"
+
+#: src/main.py:164
+msgid "translator-credits"
+msgstr "Esmeralda: https://github.com/3smer4ld4"
+
+#: src/main.py:178
+msgid "Save File?"
+msgstr "¿Desea guardar el archivo?"
+
+#: src/main.py:179
+msgid ""
+"You have never saved this file. Changes which are not saved will be "
+"permanently lost."
+msgstr ""
+"No se ha guardadp este archivo. Los cambios que no han sido guardados se "
+"perderán para siempre."
+
+#: src/main.py:186 src/main.py:207 src/window.py:432
+msgid "Discard"
+msgstr "Descartar"
+
+#: src/main.py:199
+msgid "Save changes?"
+msgstr "¿Guardar los cambios?"
+
+#: src/main.py:200 src/window.py:427
+msgid ""
+"The opened file contains unsaved changes. Changes which are not saved will "
+"be permanently lost."
+msgstr ""
+"El archivo abierto posee cambios sin guardar. Los cambios que no han sido "
+"guardados se perderan para siempre."
+
+#: src/tools/filled_rectangle.py:120
+msgid "Filled Rectangle"
+msgstr "Rellenar Rectangulo"
+
+#: src/tools/line.py:105
+msgid "Freehand Line"
+msgstr "Linea a trazo libre"
+
+#: src/tools/line.py:159
+msgid "Cartesian Line"
+msgstr "Linea cartesiana"
+
+#: src/tools/line.py:164
+msgid "Step Line"
+msgstr "Linea escalonada"
+
+#: src/tools/rectangle.py:112
+msgid "Rectangle"
+msgstr "Rectangulo"
+
+#: src/tools/tree.py:150
+msgid "Tree"
+msgstr "Árbol"
+
+#: src/window.py:398
+msgid "Open File"
+msgstr "Abrir archivo"
+
+#: src/window.py:426
+msgid "Save Changes?"
+msgstr "¿Desea guardar los cambios?"
+
+#: src/window.py:476
+msgid "Save File"
+msgstr "Guardar archivo"
+
+#: src/window.py:477
+msgid "drawing.txt"
+msgstr "drawing.txt"
+
+#: src/window.py:504
+msgid "Saved successfully"
+msgstr "Guardado exitoso"
+
+#: src/window.py:667
+msgid "Undo "
+msgstr "Deshacer "
+
+#: src/window.py:671 src/window.py:679
+msgid "Redo "
+msgstr "Recuperar "
