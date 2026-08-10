@@ -19,7 +19,7 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
-from gi.repository import Gdk, Gio, GObject
+from gi.repository import Gdk, Gio, GObject, GLib
 
 from .palette import Palette
 from .new_palette_window import NewPaletteDialog
@@ -520,6 +520,33 @@ class AsciiDrawWindow(Adw.ApplicationWindow):
 
         clipboard = Gdk.Display().get_default().get_clipboard()
         clipboard.set(text)
+
+    def paste_from_clipboard(self):
+        if not self.canvas.is_saved:
+            self.save_changes_message(self.paste_from_clipboard)
+            return
+
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        clipboard.read_text_async(None, self.on_clipboard_text_read)
+
+    def on_clipboard_text_read(self, clipboard, result):
+        try:
+            text = clipboard.read_text_finish(result)
+        except GLib.Error:
+            return
+
+        if not text:
+            return
+
+        # Clipboard text can use Windows line endings even when the app runs
+        # on Linux.  Normalize them before loading the drawing.
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        self.canvas.set_content(text)
+        self.canvas.is_saved = False
+        self.file_path = ""
+        self.title_widget.set_subtitle("")
+        toast = Adw.Toast(title=_("Pasted from clipboard"), timeout=2)
+        self.toast_overlay.add_toast(toast)
 
     @Gtk.Template.Callback("on_change_canvas_size_btn_clicked")
     def on_change_canvas_size_btn_clicked(self, btn):
