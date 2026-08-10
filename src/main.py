@@ -47,6 +47,9 @@ class AsciiDrawApplication(Adw.Application):
         self.create_action(
             'copy-to-clipboard', self.on_copy_to_clipboard_action)
         self.create_action(
+            'paste-from-clipboard', self.on_paste_from_clipboard_action,
+            ['<control>v'])
+        self.create_action(
             'open', self.on_open_action, ['<control>o'])
         self.create_action(
             'new-canvas', self.on_new_canvas_action, ['<control>n'])
@@ -120,6 +123,9 @@ class AsciiDrawApplication(Adw.Application):
 
     def on_copy_to_clipboard_action(self, *args):
         self.win.copy_to_clipboard()
+
+    def on_paste_from_clipboard_action(self, *args):
+        self.win.paste_from_clipboard()
 
     def on_save_as_action(self, *args):
         self.win.save_as_action()

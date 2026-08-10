@@ -470,6 +470,10 @@
 						<attribute name="label" translatable="yes">Copy To Clipboard</attribute>
 					</item>
 					<item>
+						<attribute name="action">app.paste-from-clipboard</attribute>
+						<attribute name="label" translatable="yes">Paste From Clipboard</attribute>
+					</item>
+					<item>
 						<attribute name="action">app.save-as</attribute>
 						<attribute name="label" translatable="yes">Save As</attribute>
 					</item>

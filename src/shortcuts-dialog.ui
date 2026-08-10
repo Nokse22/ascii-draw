@@ -42,6 +42,12 @@
         </child>
         <child>
           <object class="AdwShortcutsItem">
+            <property name="title" translatable="yes">Paste From Clipboard</property>
+            <property name="action-name">app.paste-from-clipboard</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwShortcutsItem">
             <property name="title" translatable="yes">Undo</property>
             <property name="action-name">app.undo</property>
           </object>
